@@ -22,37 +22,40 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.dataset;
+package com.github.mjeanroy.dbunit.json;
 
-import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
-import com.github.mjeanroy.dbunit.tests.utils.ReverseComparator;
-import org.junit.Test;
+import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
-import java.io.File;
-import java.util.Comparator;
+public final class JsonParserFactory {
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
+	// Ensure non instantation.
+	private JsonParserFactory() {
+	}
 
-public class DirectoryDataSetBuilderTest {
+	/**
+	 * Create default parser.
+	 * Implementation will be selected using classpath detection:
+	 * <ul>
+	 *   <li>If Jackson2 is available on classpath, then it is selected.</li>
+	 *   <li>If Gson is available on classpath, then it is selected.</li>
+	 *   <li>If Jackson1 is available on classpath, then it is selected.</li>
+	 *   <li>If none of these dependencies are available, an instance of {@link UnsupportedOperationException} is thrown.</li>
+	 * </ul>
+	 * @return
+	 */
+	public static JsonParser createDefault() {
+		if (ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")) {
+			return new Jackson2Parser();
+		}
 
-	@Test
-	public void it_should_create_directory_dataset() throws Exception {
-		File directory = getTestResource("/dataset/xml");
+		if (ClassUtils.isPresent("com.google.gson.Gson")) {
+			return new GsonParser();
+		}
 
-		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(directory)
-			.setCaseSensitiveTableNames(true)
-			.setComparator(new ReverseComparator<File>(new FileComparator()))
-			.build();
+		if (ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper")) {
+			return new Jackson1Parser();
+		}
 
-		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
-		assertThat(dataSet.getPath()).isEqualTo(directory);
-		assertThat(dataSet.getTableNames())
-			.isSortedAccordingTo(new Comparator<String>() {
-				@Override
-				public int compare(String t1, String t2) {
-					return t2.compareTo(t1);
-				}
-			});
+		throw new UnsupportedOperationException("Cannot create JSON parser, please add jackson or gson to your classpath");
 	}
 }

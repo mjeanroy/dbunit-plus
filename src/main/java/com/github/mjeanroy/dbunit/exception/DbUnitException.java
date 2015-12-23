@@ -32,7 +32,7 @@ import java.net.MalformedURLException;
  * DbUnit exception.
  * This is a small wrapper for checked exception.
  */
-public class DbUnitException extends RuntimeException {
+public class DbUnitException extends AbstractDbUnitException {
 
 	/**
 	 * Create exception.

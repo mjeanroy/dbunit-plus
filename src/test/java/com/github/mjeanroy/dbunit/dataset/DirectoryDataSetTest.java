@@ -41,7 +41,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
 
@@ -52,7 +52,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_return_table_names() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
 
 		String[] tableNames = dataSet.getTableNames();
@@ -64,7 +64,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_get_table() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
 
 		ITable t1 = dataSet.getTable("foo");
@@ -78,7 +78,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_get_table_metadata() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
 
 		ITableMetaData meta1 = dataSet.getTableMetaData("foo");
@@ -104,7 +104,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_iterate_over_tables() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
 
 		ITableIterator it = dataSet.iterator();
@@ -123,7 +123,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
 
 		ITableIterator it = dataSet.reverseIterator();
@@ -142,7 +142,7 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_check_for_case_insensitive_names() throws Exception {
-		File directory = getTestResource("/dataset");
+		File directory = getTestResource("/dataset/xml");
 		DirectoryDataSet d1 = new DirectoryDataSet(directory, false, new FileComparator());
 		DirectoryDataSet d2 = new DirectoryDataSet(directory, true, new FileComparator());
 

@@ -22,37 +22,30 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.dataset;
+package com.github.mjeanroy.dbunit.commons.reflection;
 
-import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
-import com.github.mjeanroy.dbunit.tests.utils.ReverseComparator;
-import org.junit.Test;
+/**
+ * Static Class Utilities.
+ */
+public final class ClassUtils {
 
-import java.io.File;
-import java.util.Comparator;
+	// Ensure non instantiation.
+	private ClassUtils() {
+	}
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class DirectoryDataSetBuilderTest {
-
-	@Test
-	public void it_should_create_directory_dataset() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-
-		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(directory)
-			.setCaseSensitiveTableNames(true)
-			.setComparator(new ReverseComparator<File>(new FileComparator()))
-			.build();
-
-		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
-		assertThat(dataSet.getPath()).isEqualTo(directory);
-		assertThat(dataSet.getTableNames())
-			.isSortedAccordingTo(new Comparator<String>() {
-				@Override
-				public int compare(String t1, String t2) {
-					return t2.compareTo(t1);
-				}
-			});
+	/**
+	 * Check if a given class is available on classpath.
+	 *
+	 * @param className Class FQN.
+	 * @return `true` if class is available, `false` otherwise.
+	 */
+	public static boolean isPresent(String className) {
+		try {
+			Class.forName(className);
+			return true;
+		}
+		catch (ClassNotFoundException ex) {
+			return false;
+		}
 	}
 }

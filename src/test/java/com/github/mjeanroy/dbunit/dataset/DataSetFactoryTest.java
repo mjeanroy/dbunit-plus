@@ -37,7 +37,7 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
-		File file = TestUtils.getTestResource("/dataset/foo.xml");
+		File file = TestUtils.getTestResource("/dataset/xml/foo.xml");
 
 		IDataSet dataSet = DataSetFactory.createDataSet(file);
 
@@ -54,7 +54,7 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_directory_data_set() throws Exception {
-		File file = TestUtils.getTestResource("/dataset");
+		File file = TestUtils.getTestResource("/dataset/xml");
 
 		IDataSet dataSet = DataSetFactory.createDataSet(file);
 
