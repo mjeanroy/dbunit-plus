@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.dataset;
 
 import com.github.mjeanroy.dbunit.tests.utils.TestUtils;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.Test;
 
@@ -61,5 +62,27 @@ public class DataSetFactoryTest {
 		assertThat(dataSet)
 			.isNotNull()
 			.isExactlyInstanceOf(DirectoryDataSet.class);
+	}
+
+	@Test
+	public void it_should_create_json_data_set() throws Exception {
+		File file = TestUtils.getTestResource("/dataset/json/foo.json");
+
+		IDataSet dataSet = DataSetFactory.createDataSet(file);
+
+		assertThat(dataSet)
+			.isNotNull()
+			.isExactlyInstanceOf(JsonDataSet.class);
+	}
+
+	@Test
+	public void it_should_create_csv_data_set() throws Exception {
+		File file = TestUtils.getTestResource("/dataset/csv/foo.csv");
+
+		IDataSet dataSet = DataSetFactory.createDataSet(file);
+
+		assertThat(dataSet)
+			.isNotNull()
+			.isExactlyInstanceOf(CsvDataSet.class);
 	}
 }
