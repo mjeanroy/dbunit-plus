@@ -22,54 +22,51 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.commons.collections;
 
-import java.io.File;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Builder to create mock {@link File} instances.
+ * Static Collection Utilities.
  */
-public class FileBuilder {
+public final class Collections {
 
-	private String path;
-
-	private boolean directory;
-
-	private boolean file;
-
-	private boolean canRead;
-
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
+	private Collections() {
 	}
 
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
+	/**
+	 * Map set of input to a set of outputs.
+	 * Each results is produce in iteration order.
+	 *
+	 * @param inputs Set of inputs.
+	 * @param mapper Mapper function.
+	 * @param <T> Type of inputs.
+	 * @param <U> Type of outputs.
+	 * @return Set of outputs.
+	 */
+	public static <T, U> Set<U> map(Set<T> inputs, Mapper<T, U> mapper) {
+		Set<U> outputs = new LinkedHashSet<U>();
+		for (T input : inputs) {
+			outputs.add(mapper.apply(input));
+		}
+		return outputs;
 	}
 
-	public FileBuilder isFile(boolean file) {
-		this.file = file;
-		return this;
-	}
-
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+	/**
+	 * Get a set of all keys found in a collection of {@link Map}.
+	 *
+	 * @param maps Collection of {@link Map}.
+	 * @param <T> Type of key.
+	 * @return Set of all keys.
+	 */
+	public static <T> Set<T> keys(Collection<Map<T, Object>> maps) {
+		Set<T> set = new LinkedHashSet<T>();
+		for (Map<T, Object> map : maps) {
+			set.addAll(map.keySet());
+		}
+		return set;
 	}
 }

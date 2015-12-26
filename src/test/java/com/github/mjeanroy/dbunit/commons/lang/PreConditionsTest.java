@@ -89,6 +89,33 @@ public class PreConditionsTest {
 	}
 
 	@Test
+	public void it_should_throw_illegal_argument_exception_if_file_is_not_a_file() {
+		String message = "should be a file";
+		File directory = new FileBuilder("foo.txt")
+			.isFile(false)
+			.build();
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.isFile(directory, message);
+	}
+
+	@Test
+	public void it_should_return_file_if_file_is_a_file() {
+		String message = "should be a file";
+		File directory = new FileBuilder("foo.txt")
+			.isFile(true)
+			.build();
+
+		File result = PreConditions.isFile(directory, message);
+
+		assertThat(result)
+			.isNotNull()
+			.isSameAs(directory);
+	}
+
+	@Test
 	public void it_should_throw_illegal_state_exception_if_file_is_not_readable() {
 		String message = "should be readable";
 		File directory = new FileBuilder("foo.txt")

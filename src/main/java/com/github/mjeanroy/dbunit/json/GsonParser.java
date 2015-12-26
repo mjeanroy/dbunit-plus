@@ -38,6 +38,8 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
 /**
  * Json Parser using Google Gson as internal implementation.
  */
@@ -64,9 +66,10 @@ public class GsonParser implements JsonParser {
 	 * Create parser using specific Gson mapper.
 	 *
 	 * @param gson Gson Mapper.
+	 * @throws NullPointerException If {@code gson} is {@code null}.
 	 */
-	GsonParser(Gson gson) {
-		this.gson = gson;
+	public GsonParser(Gson gson) {
+		this.gson = notNull(gson, "Gson Parser should not be null");
 	}
 
 	@Override

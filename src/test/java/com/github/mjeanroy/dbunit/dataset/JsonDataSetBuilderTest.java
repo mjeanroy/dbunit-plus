@@ -22,54 +22,44 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.dataset;
+
+import com.github.mjeanroy.dbunit.json.JsonParser;
+import org.junit.Test;
 
 import java.io.File;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 
-/**
- * Builder to create mock {@link File} instances.
- */
-public class FileBuilder {
+public class JsonDataSetBuilderTest {
 
-	private String path;
+	@Test
+	public void it_should_create_default_data_set_with_file() throws Exception {
+		File file = getTestResource("/dataset/json/foo.json");
+		JsonDataSet dataSet = new JsonDataSetBuilder(file).build();
 
-	private boolean directory;
-
-	private boolean file;
-
-	private boolean canRead;
-
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getFile()).isSameAs(file);
+		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
 	}
 
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
-	}
+	@Test
+	public void it_should_create_custom_data_set() throws Exception {
+		File file = getTestResource("/dataset/json/foo.json");
+		JsonParser parser = mock(JsonParser.class);
 
-	public FileBuilder isFile(boolean file) {
-		this.file = file;
-		return this;
-	}
+		JsonDataSet dataSet = new JsonDataSetBuilder()
+			.setJsonFile(file)
+			.setCaseSensitiveTableNames(true)
+			.setParser(parser)
+			.build();
 
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getFile()).isSameAs(file);
+		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
+		verify(parser).parse(file);
 	}
 }

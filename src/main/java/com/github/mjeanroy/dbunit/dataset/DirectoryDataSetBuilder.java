@@ -62,6 +62,13 @@ public class DirectoryDataSetBuilder {
 	private boolean caseSensitiveTableNames;
 
 	/**
+	 * Create builder.
+	 */
+	public DirectoryDataSetBuilder() {
+		this(null);
+	}
+
+	/**
 	 * Create build with directory path.
 	 *
 	 * @param path Directory path.
@@ -71,6 +78,18 @@ public class DirectoryDataSetBuilder {
 		this.path = path;
 		this.caseSensitiveTableNames = false;
 		this.comparator = COMPARATOR;
+	}
+
+	/**
+	 * Override directory path.
+	 *
+	 * @param path New directory.
+	 * @return Builder.
+	 */
+	public DirectoryDataSetBuilder setDirectory(File path) {
+		log.trace("Set path: {}", path);
+		this.path = path;
+		return this;
 	}
 
 	/**

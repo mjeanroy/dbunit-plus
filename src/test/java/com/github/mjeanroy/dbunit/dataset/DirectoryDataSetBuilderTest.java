@@ -25,34 +25,53 @@
 package com.github.mjeanroy.dbunit.dataset;
 
 import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
-import com.github.mjeanroy.dbunit.tests.utils.ReverseComparator;
 import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import java.io.File;
-import java.util.Comparator;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DirectoryDataSetBuilderTest {
 
 	@Test
+	public void it_should_create_default_directory_dataset() throws Exception {
+		File directory = getTestResource("/dataset/xml");
+		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(directory).build();
+
+		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
+		assertThat(dataSet.getPath()).isEqualTo(directory);
+		assertThat(dataSet.getTableNames()).isSorted();
+	}
+
+	@Test
 	public void it_should_create_directory_dataset() throws Exception {
 		File directory = getTestResource("/dataset/xml");
+		FileComparator comparator = mock(FileComparator.class);
+		when(comparator.compare(any(File.class), any(File.class))).thenAnswer(new Answer<Integer>() {
+			@Override
+			public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
+				File f1 = (File) invocationOnMock.getArguments()[0];
+				File f2 = (File) invocationOnMock.getArguments()[1];
+				return f2.compareTo(f1);
+			}
+		});
 
-		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(directory)
+		DirectoryDataSet dataSet = new DirectoryDataSetBuilder()
+			.setDirectory(directory)
 			.setCaseSensitiveTableNames(true)
-			.setComparator(new ReverseComparator<File>(new FileComparator()))
+			.setComparator(comparator)
 			.build();
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
 		assertThat(dataSet.getPath()).isEqualTo(directory);
-		assertThat(dataSet.getTableNames())
-			.isSortedAccordingTo(new Comparator<String>() {
-				@Override
-				public int compare(String t1, String t2) {
-					return t2.compareTo(t1);
-				}
-			});
+		verify(comparator, atLeastOnce()).compare(any(File.class), any(File.class));
 	}
 }

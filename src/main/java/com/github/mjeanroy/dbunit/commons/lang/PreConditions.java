@@ -72,6 +72,25 @@ public final class PreConditions {
 	}
 
 	/**
+	 * Ensure that given {@code file} is a file (not a directory).
+	 *
+	 * @param file File to check.
+	 * @param message Error message.
+	 * @param params Optional error message parameters.
+	 * @return File if it is not null and a file.
+	 * @throws NullPointerException If {@code file} is null.
+	 * @throws IllegalArgumentException If {@code file} is not a file.
+	 */
+	public static File isFile(File file, String message, Object... params) {
+		notNull(file, message);
+		if (!file.isFile()) {
+			throw new IllegalArgumentException(format(message, params));
+		}
+
+		return file;
+	}
+
+	/**
 	 * Ensure that given {@code file} can be read.
 	 *
 	 * @param file File to check.

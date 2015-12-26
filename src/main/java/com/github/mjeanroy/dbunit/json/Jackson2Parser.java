@@ -36,6 +36,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
 /**
  * Json Parser using Jackson2 as internal implementation.
  */
@@ -62,9 +64,10 @@ public class Jackson2Parser implements JsonParser {
 	 * Create parser with Jackson2 mapper.
 	 *
 	 * @param mapper Mapper.
+	 * @throws NullPointerException If {@code mapper} is {@code null}.
 	 */
-	Jackson2Parser(ObjectMapper mapper) {
-		this.mapper = mapper;
+	public Jackson2Parser(ObjectMapper mapper) {
+		this.mapper = notNull(mapper, "Jackson2 Object Mapper should not be null");
 	}
 
 	@Override

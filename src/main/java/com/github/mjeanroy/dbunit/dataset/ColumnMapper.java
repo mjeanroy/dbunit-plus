@@ -22,54 +22,38 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.dataset;
 
-import java.io.File;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.mjeanroy.dbunit.commons.collections.Mapper;
+import org.dbunit.dataset.Column;
+import org.dbunit.dataset.datatype.DataType;
 
 /**
- * Builder to create mock {@link File} instances.
+ * Mapper used to produce instance of {@link Column} (with
+ * an {@link DataType#UNKNOWN} data type.
  */
-public class FileBuilder {
+class ColumnMapper implements Mapper<String, Column> {
 
-	private String path;
+	/**
+	 * Static singleton.
+	 */
+	private static final ColumnMapper MAPPER = new ColumnMapper();
 
-	private boolean directory;
-
-	private boolean file;
-
-	private boolean canRead;
-
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
+	/**
+	 * Get mapper instance.
+	 *
+	 * @return Mapper instance.
+	 */
+	static ColumnMapper getInstance() {
+		return MAPPER;
 	}
 
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
+	// Ensure non instantation.
+	private ColumnMapper() {
 	}
 
-	public FileBuilder isFile(boolean file) {
-		this.file = file;
-		return this;
-	}
-
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+	@Override
+	public Column apply(String input) {
+		return new Column(input, DataType.UNKNOWN);
 	}
 }
