@@ -22,39 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.jdbc;
+
+import java.sql.Connection;
 
 /**
- * Abstract representation of library exception.
- * This exception should provide an unique way to cache low level exception.
+ * Factory that should create instance of {@link Connection}. This
+ * connection will be used to populate database.
+ *
+ * <p />
+ *
+ * <strong>Important:</strong> since instance of {@link Connection} are
+ * not thread safe, implementations should produce a new instance
+ * of {@link Connection} each calls
  */
-public abstract class AbstractDbUnitException extends RuntimeException {
+public interface JdbcConnectionFactory {
 
 	/**
-	 * Wrap original exception.
+	 * Create new instance of {@link Connection}.
 	 *
-	 * @param ex Original Exception.
+	 * @return SQL Connection.
 	 */
-	protected AbstractDbUnitException(Exception ex) {
-		super(ex);
-	}
+	Connection getConnection();
 
-	/**
-	 * Create new exception.
-	 *
-	 * @param message Exception message.
-	 */
-	protected AbstractDbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Create new exception.
-	 *
-	 * @param message Exception message.
-	 * @param ex Original Exception.
-	 */
-	protected AbstractDbUnitException(String message, Exception ex) {
-		super(message, ex);
-	}
 }

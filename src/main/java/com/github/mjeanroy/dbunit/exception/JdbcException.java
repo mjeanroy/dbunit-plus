@@ -24,37 +24,38 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
+import java.sql.SQLException;
+
 /**
- * Abstract representation of library exception.
- * This exception should provide an unique way to cache low level exception.
+ * Wrap external SQL exception.
  */
-public abstract class AbstractDbUnitException extends RuntimeException {
+public class JdbcException extends AbstractDbUnitException {
 
 	/**
-	 * Wrap original exception.
+	 * Wrap {@link java.sql.SQLException}.
 	 *
-	 * @param ex Original Exception.
+	 * @param e Original Exception.
 	 */
-	protected AbstractDbUnitException(Exception ex) {
-		super(ex);
+	public JdbcException(SQLException e) {
+		super(e);
 	}
 
 	/**
-	 * Create new exception.
+	 * Wrap {@link java.sql.SQLException}.
 	 *
-	 * @param message Exception message.
+	 * @param message Error message.
 	 */
-	protected AbstractDbUnitException(String message) {
+	public JdbcException(String message) {
 		super(message);
 	}
 
 	/**
-	 * Create new exception.
+	 * Wrap {@link java.lang.ClassNotFoundException}.
 	 *
-	 * @param message Exception message.
+	 * @param message Error message.
 	 * @param ex Original Exception.
 	 */
-	protected AbstractDbUnitException(String message, Exception ex) {
+	public JdbcException(String message, ClassNotFoundException ex) {
 		super(message, ex);
 	}
 }

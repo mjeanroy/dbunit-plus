@@ -22,39 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.commons.lang;
 
-/**
- * Abstract representation of library exception.
- * This exception should provide an unique way to cache low level exception.
- */
-public abstract class AbstractDbUnitException extends RuntimeException {
+import org.junit.Test;
 
-	/**
-	 * Wrap original exception.
-	 *
-	 * @param ex Original Exception.
-	 */
-	protected AbstractDbUnitException(Exception ex) {
-		super(ex);
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class ObjectsTest {
+
+	@Test
+	public void it_should_compare_objects() {
+		assertThat(Objects.equals(null, null)).isTrue();
+		assertThat(Objects.equals("foo", null)).isFalse();
+		assertThat(Objects.equals(null, "foo")).isFalse();
+		assertThat(Objects.equals("foo", "foo")).isTrue();
+		assertThat(Objects.equals("foo", "bar")).isFalse();
 	}
 
-	/**
-	 * Create new exception.
-	 *
-	 * @param message Exception message.
-	 */
-	protected AbstractDbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Create new exception.
-	 *
-	 * @param message Exception message.
-	 * @param ex Original Exception.
-	 */
-	protected AbstractDbUnitException(String message, Exception ex) {
-		super(message, ex);
+	@Test
+	public void it_should_compute_hash_code() {
+		assertThat(Objects.hashCode(null)).isZero();
+		assertThat(Objects.hashCode("foo")).isNotZero();
+		assertThat(Objects.hashCode("foo", "bar")).isNotZero();
 	}
 }
