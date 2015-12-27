@@ -22,19 +22,40 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.annotations;
 
-/**
- * DbUnit exception.
- */
-public class DbUnitException extends AbstractDbUnitException {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({
+	ElementType.TYPE,
+	ElementType.PACKAGE
+})
+public @interface DbUnitConfiguration {
 
 	/**
-	 * Create exception.
+	 * Get JDBC Connection URL.
 	 *
-	 * @param message Error message.
+	 * @return Connection URL.
 	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
+	String url();
+
+	/**
+	 * Get JDBC user name.
+	 *
+	 * @return User.
+	 */
+	String user();
+
+	/**
+	 * Get JDBC password.
+	 *
+	 * @return Password.
+	 */
+	String password();
 }

@@ -22,19 +22,37 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.junit;
 
-/**
- * DbUnit exception.
- */
-public class DbUnitException extends AbstractDbUnitException {
+import com.github.mjeanroy.dbunit.annotations.DbUnitConfiguration;
+import org.assertj.core.api.Condition;
+import org.junit.Test;
+import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
 
-	/**
-	 * Create exception.
-	 *
-	 * @param message Error message.
-	 */
-	public DbUnitException(String message) {
-		super(message);
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class DbUnitRunnerTest {
+
+	@Test
+	public void it_should_create_runner() throws Exception {
+		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
+		assertThat(runner.getTestRules(new TestClass()))
+			.isNotNull()
+			.isNotEmpty()
+			.areAtLeastOne(new Condition<TestRule>() {
+				@Override
+				public boolean matches(TestRule testRule) {
+					return testRule instanceof DbUnitRule;
+				}
+			});
+	}
+
+	@RunWith(DbUnitRunner.class)
+	@DbUnitConfiguration(url = "jdbc:hsqldb:file:testdb", user = "SA", password = "")
+	public static class TestClass {
+		@Test
+		public void test1() {
+		}
 	}
 }

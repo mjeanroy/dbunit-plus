@@ -37,9 +37,11 @@ public final class Annotations {
 			T annotation = null;
 
 			// First, search on method.
-			Method method = klass.getMethod(methodName);
-			if (method != null) {
-				annotation = method.getAnnotation(annotationClass);
+			if (methodName != null) {
+				Method method = klass.getMethod(methodName);
+				if (method != null) {
+					annotation = method.getAnnotation(annotationClass);
+				}
 			}
 
 			// Then, search on class.

@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.junit;
 
 import com.github.mjeanroy.dbunit.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.annotations.DbUnitSetupOperation;
+import com.github.mjeanroy.dbunit.annotations.DbUnitTearDownOperation;
 import com.github.mjeanroy.dbunit.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.operation.DbUnitOperation;
 import org.junit.After;
@@ -138,7 +139,7 @@ public class DbUnitRuleTest {
 
 	@DbUnitDataSet("/dataset/xml")
 	@DbUnitSetupOperation(DbUnitOperation.CLEAN_INSERT)
-	//@DbUnitTearDownOperation(DbUnitOperation.TRUNCATE_TABLE)
+	@DbUnitTearDownOperation(DbUnitOperation.TRUNCATE_TABLE)
 	private static class TestClassWithDataSet {
 		public void method1() {
 
