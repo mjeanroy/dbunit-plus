@@ -49,7 +49,7 @@ public class DbUnitRunnerTest {
 	}
 
 	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:file:testdb", user = "SA", password = "")
+	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 	public static class TestClass {
 		@Test
 		public void test1() {

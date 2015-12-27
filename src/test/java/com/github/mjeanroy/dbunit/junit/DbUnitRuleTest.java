@@ -156,7 +156,7 @@ public class DbUnitRuleTest {
 		public Connection getConnection() {
 			try {
 				Class.forName("org.hsqldb.jdbcDriver");
-				return DriverManager.getConnection("jdbc:hsqldb:file:testdb", "SA", "");
+				return DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "SA", "");
 			}
 			catch (Exception ex) {
 				throw new RuntimeException(ex);
