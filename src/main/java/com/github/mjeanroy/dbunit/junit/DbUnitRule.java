@@ -24,15 +24,19 @@
 
 package com.github.mjeanroy.dbunit.junit;
 
+import com.github.mjeanroy.dbunit.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.annotations.DbUnitSetupOperation;
+import com.github.mjeanroy.dbunit.annotations.DbUnitTearDownOperation;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.jdbc.JdbcDefaultConnectionFactory;
-import com.github.mjeanroy.dbunit.annotations.DbUnitDataSet;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -40,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.dataset.DataSetFactory.createDataSet;
@@ -53,22 +56,12 @@ public class DbUnitRule implements TestRule {
 	/**
 	 * Class Logger.
 	 */
-	private static Logger log = LoggerFactory.getLogger(DbUnitRule.class);
+	private static final Logger log = LoggerFactory.getLogger(DbUnitRule.class);
 
 	/**
 	 * Factory to create instance of {@link Connection} for each test.
 	 */
 	private final JdbcConnectionFactory connectionFactory;
-
-	/**
-	 * Database Connection, created before a test starts.
-	 */
-	private IDatabaseConnection dbConnection;
-
-	/**
-	 * Database Tester, created before a test starts.
-	 */
-	private IDatabaseTester dbTester;
 
 	/**
 	 * Create rule using {@link JdbcConfiguration} instance.
@@ -93,90 +86,112 @@ public class DbUnitRule implements TestRule {
 		return new Statement() {
 			@Override
 			public void evaluate() throws Throwable {
-				before(description);
+				DbUnitTestContext ctx = initialize(description);
+				if (ctx != null) {
+					setup(ctx);
+				}
+
 				try {
 					statement.evaluate();
 				}
 				finally {
-					after();
+					if (ctx != null) {
+						tearDown(ctx);
+					}
 				}
 			}
 		};
 	}
 
-	private void before(Description description) {
-		try {
-			DbUnitDataSet dataSet = findAnnotation(description.getTestClass(), description.getMethodName(), DbUnitDataSet.class);
-			if (dataSet != null && dataSet.value().length > 0) {
-				log.debug("Load dataSet: {}", dataSet.value());
+	private DbUnitTestContext initialize(Description description) {
+		Class<?> testClass = description.getTestClass();
+		String testMethod = description.getMethodName();
+		DbUnitDataSet annotation = findAnnotation(testClass, testMethod, DbUnitDataSet.class);
 
-				log.trace(" 1- Get SQL connection");
-				Connection conn = connectionFactory.getConnection();
-				dbConnection = new DatabaseConnection(conn);
-				dbTester = new DefaultDatabaseTester(dbConnection);
-
-				log.trace(" 2- Load data set");
-				dbTester.setDataSet(createDataSet(dataSet.value()));
-
-				log.trace(" 3- Trigger setup operations");
-				dbTester.onSetup();
+		if (annotation != null && annotation.value().length > 0) {
+			try {
+				IDataSet dataSet = createDataSet(annotation.value());
+				return new DbUnitTestContext(testClass, testMethod, dataSet);
+			}
+			catch (DataSetException ex) {
+				log.error(ex.getMessage(), ex);
+				throw new JdbcException(ex);
 			}
 		}
-		catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JdbcException(ex);
+		else {
+			log.warn("Cannot find @DbUnitDataSet annotation, skip.");
 		}
+
+		return null;
 	}
 
-	private void after() {
-		log.debug("Unload data set");
-
-		Exception ex1 = null;
-		Exception ex2 = null;
-
-		if (dbTester != null) {
-			log.trace(" 1- Trigger tearDown operations");
-			ex1 = closeDbTester();
-		}
-
-		if (dbConnection != null) {
-			log.trace(" 2- Close database connection");
-			ex2 = closeDbConnection();
-		}
-
-		// Throw first non null exception.
-		Exception ex = ex1 == null ? ex2 : ex1;
-		if (ex != null) {
-			throw new JdbcException(ex);
-		}
+	private void setup(DbUnitTestContext ctx) {
+		log.debug("Load dataSet");
+		setupOrTearDown(ctx, SETUP);
 	}
 
-	private Exception closeDbTester() {
+	private void tearDown(DbUnitTestContext ctx) {
+		log.debug("Unload dataSet");
+		setupOrTearDown(ctx, TEAR_DOWN);
+	}
+
+	private void setupOrTearDown(DbUnitTestContext ctx, DbOperation op) {
 		try {
-			dbTester.onTearDown();
-			return null;
-		}
-		catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			return ex;
-		}
-		finally {
-			dbTester = null;
-		}
-	}
+			log.trace(" 1- Get SQL connection");
+			Connection connection = connectionFactory.getConnection();
+			IDatabaseConnection dbConnection = new DatabaseConnection(connection);
+			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
-	private Exception closeDbConnection() {
-		try {
-			log.trace(" 1- Trigger tearDown operations");
+			log.trace(" 2- Load data set");
+			dbTester.setDataSet(ctx.getDataSet());
+
+			// Apply operation (setup or tear down).
+			op.apply(ctx, dbTester);
+
+			log.trace(" 5- Closing SQL connection");
 			dbConnection.close();
-			return null;
 		}
-		catch (SQLException ex) {
+		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-			return ex;
-		}
-		finally {
-			dbConnection = null;
+			throw new JdbcException(ex);
 		}
 	}
+
+	private static interface DbOperation {
+		void apply(DbUnitTestContext ctx, IDatabaseTester dbTester) throws Exception;
+	}
+
+	private static final DbOperation SETUP = new DbOperation() {
+		@Override
+		public void apply(DbUnitTestContext ctx, IDatabaseTester dbTester) throws Exception {
+			DbUnitSetupOperation op = findAnnotation(ctx.getTestClass(), ctx.getTestMethod(), DbUnitSetupOperation.class);
+			if (op != null) {
+				log.debug(" 3- Initialize setup operation");
+				dbTester.setSetUpOperation(op.value().getOperation());
+			}
+			else {
+				log.trace(" 3- No setup operation defined, use default");
+			}
+
+			log.trace(" 4- Trigger setup operations");
+			dbTester.onSetup();
+		}
+	};
+
+	private static final DbOperation TEAR_DOWN = new DbOperation() {
+		@Override
+		public void apply(DbUnitTestContext ctx, IDatabaseTester dbTester) throws Exception {
+			DbUnitTearDownOperation op = findAnnotation(ctx.getTestClass(), ctx.getTestMethod(), DbUnitTearDownOperation.class);
+			if (op != null) {
+				log.trace(" 3- Initialize tear down operation");
+				dbTester.setTearDownOperation(op.value().getOperation());
+			}
+			else {
+				log.trace(" 3- No tear down operation defined, use default");
+			}
+
+			log.trace(" 4- Trigger tearDown operation");
+			dbTester.onTearDown();
+		}
+	};
 }
