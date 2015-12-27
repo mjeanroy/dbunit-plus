@@ -22,38 +22,59 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.annotations;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Wrap external SQL exception.
+ * Data set annotation, used to specify which data set should be loaded for
+ * the next test.
+ *
+ * This annotation can be used on:
+ * <ul>
+ *   <li>Method (i.e test method).</li>
+ *   <li>Class (i.e test class).</li>
+ *   <li>Package (i.e package where test classes belongs)</li>
+ * </ul>
+ *
+ * For example:
+ *
+ * <pre><code>
+ *
+ *  @DbUnitDataSet("/dataset/xml")
+ *   public class TestClass {
+ *     @Rule
+ *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
+ *
+ *     @Test
+ *     public void test1() {
+ *     }
+ *
+ *     @Test
+ *     @DbUnitDataSet("/dataset/xml/table1.xml")
+ *     public void test2() {
+ *     }
+ *   }
+ *
+ * </code></pre>
  */
-public class JdbcException extends AbstractDbUnitException {
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({
+	ElementType.METHOD,
+	ElementType.TYPE,
+	ElementType.PACKAGE
+})
+public @interface DbUnitDataSet {
 
 	/**
-	 * Wrap exception.
+	 * Set of data set file to load.
 	 *
-	 * @param e Original Exception.
+	 * @return DataSet file to load.
 	 */
-	public JdbcException(Exception e) {
-		super(e);
-	}
-
-	/**
-	 * Wrap {@link java.sql.SQLException}.
-	 *
-	 * @param message Error message.
-	 */
-	public JdbcException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link java.lang.ClassNotFoundException}.
-	 *
-	 * @param message Error message.
-	 * @param ex Original Exception.
-	 */
-	public JdbcException(String message, ClassNotFoundException ex) {
-		super(message, ex);
-	}
+	String[] value() default {};
 }
