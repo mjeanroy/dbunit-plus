@@ -53,6 +53,44 @@ public final class PreConditions {
 	}
 
 	/**
+	 * Ensure that given {@code value} is not {@code null}, empty or blank.
+	 *
+	 * @param value Value to check.
+	 * @param message Error message.
+	 * @param params Optional error message parameters.
+	 * @return Value if it is not {@code null}, empty or blank.
+	 * @throws NullPointerException If {@code value} is null.
+	 * @throws IllegalArgumentException If {@code value} is empty or blank.
+	 */
+	public static String notBlank(String value, String message, Object... params) {
+		notNull(value, message, params);
+		if (value.trim().length() == 0) {
+			throw new IllegalArgumentException(format(message, params));
+		}
+		return value;
+	}
+
+	/**
+	 * Ensure that given {@code value} is not {@code null}, empty or blank and starts with
+	 * given {@code prefix}.
+	 *
+	 * @param value Value to check.
+	 * @param message Error message.
+	 * @param params Optional error message parameters.
+	 * @return Value if it is not {@code null}, empty or blank.
+	 * @throws NullPointerException If {@code value} is null.
+	 * @throws IllegalArgumentException If {@code value} is empty, blank, or does not start with {@code prefix}.
+	 */
+	public static String startsWith(String value, String prefix, String message, Object... params) {
+		notBlank(prefix, "Prefix should be defined");
+		notBlank(value, message, params);
+		if (!value.startsWith(prefix)) {
+			throw new IllegalArgumentException(format(message, params));
+		}
+		return value;
+	}
+
+	/**
 	 * Ensure that given {@code file} is a directory.
 	 *
 	 * @param file File to check.

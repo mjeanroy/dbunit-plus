@@ -24,17 +24,18 @@
 
 package com.github.mjeanroy.dbunit.dataset;
 
+import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.MalformedURLException;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static java.util.Arrays.asList;
 
 /**
  * Factory to create instance of {@link IDataSet}.
@@ -60,7 +61,29 @@ public final class DataSetFactory {
 	 */
 	public static IDataSet createDataSet(String path) throws DataSetException {
 		notNull(path, "Path must not be null to create data set");
-		return createDataSet(new File(path));
+		DataSetLoader loader = find(asList(DataSetLoader.values()), new DataSetLoaderMatcher(path));
+		if (loader == null) {
+			loader = DataSetLoader.CLASSPATH;
+		}
+
+		return createDataSet(loader.load(path));
+	}
+
+	/**
+	 * Create data set from collection of file path.
+	 *
+	 * @param paths List of file paths.
+	 * @return Instance of {@link IDataSet}.
+	 * @throws DataSetException If data set cannot be created.
+	 */
+	public static IDataSet createDataSet(String[] paths) throws DataSetException {
+		IDataSet[] dataSets = new IDataSet[paths.length];
+		int i = 0;
+		for (String path : paths) {
+			dataSets[i++] = createDataSet(path);
+		}
+
+		return new CompositeDataSet(dataSets);
 	}
 
 	/**
@@ -92,7 +115,7 @@ public final class DataSetFactory {
 		notNull(file, "File must not be null to create data set");
 
 		log.debug("Create data set from file: {}", file);
-		Type type = extractFileType(file);
+		DataSetType type = extractFileType(file);
 
 		log.trace(" - Found type: {}", type);
 		log.trace(" -> Create associated DataSet implementation");
@@ -107,89 +130,15 @@ public final class DataSetFactory {
 	 * @return Type.
 	 * @throws DataSetException If file type cannot be extracted.
 	 */
-	private static Type extractFileType(File file) throws DataSetException {
-		for (Type type : Type.values()) {
-			if (type.match(file)) {
-				return type;
-			}
-		}
+	private static DataSetType extractFileType(File file) throws DataSetException {
+		DataSetType type = find(asList(DataSetType.values()), new DataSetTypeMatcher(file));
 
 		// Cannot extract type of file.
-		throw new DataSetException("Cannot extract type of file '" + file + "'");
-	}
+		if (type == null) {
+			throw new DataSetException("Cannot extract type of file '" + file + "'");
+		}
 
-	private static enum Type {
-		JSON {
-			@Override
-			public boolean match(File file) {
-				return file.getName().toLowerCase().endsWith(".json");
-			}
-
-			@Override
-			public IDataSet create(File file) throws DataSetException {
-				return new JsonDataSetBuilder(file).build();
-			}
-		},
-
-		XML {
-			@Override
-			public boolean match(File file) {
-				return file.getName().toLowerCase().endsWith(".xml");
-			}
-
-			@Override
-			public IDataSet create(File file) throws DataSetException {
-				try {
-					return new FlatXmlDataSetBuilder()
-						.setColumnSensing(true)
-						.build(file);
-				}
-				catch (MalformedURLException ex) {
-					log.error(ex.getMessage(), ex);
-					throw new DataSetException(ex);
-				}
-			}
-		},
-
-		DIRECTORY {
-			@Override
-			public boolean match(File file) {
-				return file.isDirectory();
-			}
-
-			@Override
-			public IDataSet create(File file) throws DataSetException {
-				return new DirectoryDataSetBuilder(file).build();
-			}
-		},
-
-		CSV {
-			@Override
-			public boolean match(File file) {
-				return file.getName().toLowerCase().endsWith(".csv");
-			}
-
-			@Override
-			public IDataSet create(File file) throws DataSetException {
-				return new CsvDataSet(new File(file.getParent()));
-			}
-		};
-
-		/**
-		 * Check if given file match type.
-		 *
-		 * @param file File.
-		 * @return {@code true} if file match given type, {@code false} otherwise.
-		 */
-		public abstract boolean match(File file);
-
-		/**
-		 * Create data set from given file.
-		 *
-		 * @param file File.
-		 * @return Instance of {@link IDataSet}.
-		 */
-		public abstract IDataSet create(File file) throws DataSetException;
+		return type;
 	}
 
 }

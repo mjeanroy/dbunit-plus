@@ -62,6 +62,100 @@ public class PreConditionsTest {
 	}
 
 	@Test
+	public void it_should_throw_null_pointer_exception_if_value_is_null() {
+		String message = "should not be blank";
+
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.notBlank(null, message);
+	}
+
+	@Test
+	public void it_should_throw_illegal_argument_exception_if_value_is_empty() {
+		String message = "should not be blank";
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.notBlank("", message);
+	}
+
+	@Test
+	public void it_should_throw_illegal_argument_exception_if_value_is_blank() {
+		String message = "should not be blank";
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.notBlank("   ", message);
+	}
+
+	@Test
+	public void it_should_not_throw_exception_and_return_value_if_value_is_not_blank() {
+		String message = "should not be null";
+		String value = "value";
+
+		String result = PreConditions.notBlank(value, message);
+
+		assertThat(result)
+			.isNotNull()
+			.isSameAs(value);
+	}
+
+	@Test
+	public void startsWith_should_throw_null_pointer_exception_if_value_is_null() {
+		String message = "should not be blank";
+
+		thrown.expect(NullPointerException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.startsWith(null, "prefix", message);
+	}
+
+	@Test
+	public void startsWith_should_throw_illegal_argument_exception_if_value_is_empty() {
+		String message = "should not be blank";
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.startsWith("", "prefix", message);
+	}
+
+	@Test
+	public void startsWith_should_throw_illegal_argument_exception_if_value_is_blank() {
+		String message = "should not be blank";
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.startsWith("   ", "prefix", message);
+	}
+
+	@Test
+	public void startsWith_should_throw_illegal_argument_exception_if_value_does_not_start_with_prefix() {
+		String message = "should not be blank";
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.startsWith("foo:bar", "prefix", message);
+	}
+
+	@Test
+	public void startsWith_should_not_throw_exception_and_return_value_if_value_start_with_prefix() {
+		String message = "should not be null";
+		String value = "prefix:value";
+
+		String result = PreConditions.startsWith(value, "prefix", message);
+
+		assertThat(result)
+			.isNotNull()
+			.isSameAs(value);
+	}
+
+	@Test
 	public void it_should_throw_illegal_argument_exception_if_file_is_not_directory() {
 		String message = "should be a directory";
 		File directory = new FileBuilder("foo.txt")

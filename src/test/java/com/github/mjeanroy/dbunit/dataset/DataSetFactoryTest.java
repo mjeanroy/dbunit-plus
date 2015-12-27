@@ -25,16 +25,22 @@
 package com.github.mjeanroy.dbunit.dataset;
 
 import com.github.mjeanroy.dbunit.tests.utils.TestUtils;
+import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DataSetFactoryTest {
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
@@ -51,6 +57,78 @@ public class DataSetFactoryTest {
 			.isNotEmpty()
 			.hasSize(1)
 			.containsOnly("foo");
+	}
+
+	@Test
+	public void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
+		String path = "/dataset/xml/foo.xml";
+
+		IDataSet dataSet = DataSetFactory.createDataSet(path);
+
+		assertThat(dataSet)
+			.isNotNull()
+			.isExactlyInstanceOf(FlatXmlDataSet.class);
+
+		assertThat(dataSet.getTableNames())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(1)
+			.containsOnly("foo");
+	}
+
+	@Test
+	public void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
+		String path = "classpath:/dataset/xml/foo.xml";
+
+		IDataSet dataSet = DataSetFactory.createDataSet(path);
+
+		assertThat(dataSet)
+			.isNotNull()
+			.isExactlyInstanceOf(FlatXmlDataSet.class);
+
+		assertThat(dataSet.getTableNames())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(1)
+			.containsOnly("foo");
+	}
+
+	@Test
+	public void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
+		File file = TestUtils.getTestResource("/dataset/xml/foo.xml");
+		String path = "file:" + file.getAbsolutePath();
+
+		IDataSet dataSet = DataSetFactory.createDataSet(path);
+
+		assertThat(dataSet)
+			.isNotNull()
+			.isExactlyInstanceOf(FlatXmlDataSet.class);
+
+		assertThat(dataSet.getTableNames())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(1)
+			.containsOnly("foo");
+	}
+
+	@Test
+	public void it_should_create_data_set_from_array_of_path() throws Exception {
+		String[] path = new String[]{
+			"classpath:/dataset/xml/foo.xml",
+			"classpath:/dataset/xml/bar.xml"
+		};
+
+		IDataSet dataSet = DataSetFactory.createDataSet(path);
+
+		assertThat(dataSet)
+			.isNotNull()
+			.isExactlyInstanceOf(CompositeDataSet.class);
+
+		assertThat(dataSet.getTableNames())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.containsOnly("foo", "bar");
 	}
 
 	@Test

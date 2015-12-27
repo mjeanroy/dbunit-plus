@@ -56,6 +56,23 @@ public final class Collections {
 	}
 
 	/**
+	 * Find first value matching predicate.
+	 *
+	 * @param inputs Set of inputs.
+	 * @param predicate Predicate function.
+	 * @param <T> Type of inputs.
+	 * @return First input value matching predicate.
+	 */
+	public static <T> T find(Iterable<T> inputs, Predicate<T> predicate) {
+		for (T input : inputs) {
+			if (predicate.apply(input)) {
+				return input;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Get a set of all keys found in a collection of {@link Map}.
 	 *
 	 * @param maps Collection of {@link Map}.

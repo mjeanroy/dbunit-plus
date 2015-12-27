@@ -22,55 +22,34 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.dataset;
+
+import org.junit.Test;
 
 import java.io.File;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Builder to create mock {@link File} instances.
- */
-public class FileBuilder {
+public class DataSetTypeMatcherTest {
 
-	private String path;
+	@Test
+	public void it_should_match_given_file() {
+		DataSetType type1 = mock(DataSetType.class);
+		DataSetType type2 = mock(DataSetType.class);
 
-	private boolean directory;
+		File path = mock(File.class);
+		when(type1.match(path)).thenReturn(false);
+		when(type2.match(path)).thenReturn(true);
 
-	private boolean file;
+		DataSetTypeMatcher matcher = new DataSetTypeMatcher(path);
 
-	private boolean canRead;
+		assertThat(matcher.apply(type1)).isFalse();
+		verify(type1).match(path);
 
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
-	}
-
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
-	}
-
-	public FileBuilder isFile(boolean file) {
-		this.file = file;
-		return this;
-	}
-
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getName()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+		assertThat(matcher.apply(type2)).isTrue();
+		verify(type2).match(path);
 	}
 }

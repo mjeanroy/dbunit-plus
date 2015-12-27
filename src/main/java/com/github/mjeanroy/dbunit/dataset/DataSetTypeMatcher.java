@@ -22,55 +22,34 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.dataset;
+
+import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 
 import java.io.File;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 /**
- * Builder to create mock {@link File} instances.
+ * Implementation of {@link Predicate}: return {@code true} if instance
+ * of {@link DataSetType} match given {@code file}.
  */
-public class FileBuilder {
+class DataSetTypeMatcher implements Predicate<DataSetType> {
 
-	private String path;
+	/**
+	 * File path.
+	 */
+	private final File file;
 
-	private boolean directory;
-
-	private boolean file;
-
-	private boolean canRead;
-
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
-	}
-
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
-	}
-
-	public FileBuilder isFile(boolean file) {
+	/**
+	 * Create predicate.
+	 *
+	 * @param file File.
+	 */
+	DataSetTypeMatcher(File file) {
 		this.file = file;
-		return this;
 	}
 
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getName()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+	@Override
+	public boolean apply(DataSetType input) {
+		return input.match(file);
 	}
 }

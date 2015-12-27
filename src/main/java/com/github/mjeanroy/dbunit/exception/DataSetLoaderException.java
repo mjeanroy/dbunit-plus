@@ -22,55 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
-
-import java.io.File;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+package com.github.mjeanroy.dbunit.exception;
 
 /**
- * Builder to create mock {@link File} instances.
+ * Exception thrown when DataSet cannot be loaded.
  */
-public class FileBuilder {
+public class DataSetLoaderException extends AbstractDbUnitException {
 
-	private String path;
-
-	private boolean directory;
-
-	private boolean file;
-
-	private boolean canRead;
-
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
-	}
-
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
-	}
-
-	public FileBuilder isFile(boolean file) {
-		this.file = file;
-		return this;
-	}
-
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getName()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+	/**
+	 * Wrap original exception.
+	 *
+	 * @param ex Original Exception.
+	 */
+	public DataSetLoaderException(Exception ex) {
+		super(ex);
 	}
 }
