@@ -24,31 +24,47 @@
 
 package com.github.mjeanroy.dbunit.jdbc;
 
+import com.github.mjeanroy.dbunit.exception.JdbcException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * Factory that should create instance of {@link Connection}. This
- * connection will be used to populate database.
- *
- * <p />
- *
- * <strong>Important:</strong> since instance of {@link Connection} are
- * not thread safe, implementations should produce a new instance
- * of {@link Connection} each calls
+ * Implementation of {@link JdbcConnectionFactory} to produce instance
+ * of {@link Connection} from  given {@link DataSource}.
  */
-public interface JdbcConnectionFactory {
+public class JdbcDataSourceConnectionFactory implements JdbcConnectionFactory {
 
 	/**
-	 * Create new instance of {@link Connection}.
-	 *
-	 * <p />
-	 *
-	 * Since {@link Connection} class is not thread-safe, implementation should
-	 * create a new connection ready to use in current thread.
-	 *
-	 * @return SQL Connection.
-	 * @throws com.github.mjeanroy.dbunit.exception.JdbcException If an error occured while creating {@link Connection}.
+	 * Class Logger.
 	 */
-	Connection getConnection();
+	private static final Logger log = LoggerFactory.getLogger(JdbcDataSourceConnectionFactory.class);
 
+	/**
+	 * Connection DataSource.
+	 */
+	private final DataSource dataSource;
+
+	/**
+	 * Create new factory.
+	 *
+	 * @param dataSource Connection DataSource.
+	 */
+	public JdbcDataSourceConnectionFactory(DataSource dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	@Override
+	public Connection getConnection() {
+		try {
+			return dataSource.getConnection();
+		}
+		catch (SQLException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new JdbcException(ex);
+		}
+	}
 }
