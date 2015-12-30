@@ -22,37 +22,32 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
 import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-public class DbUnitRunnerTest {
+public class DataSetLoaderMatcherTest {
 
 	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
+	public void it_should_match_given_path() {
+		DataSetLoader loader1 = mock(DataSetLoader.class);
+		DataSetLoader loader2 = mock(DataSetLoader.class);
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
+		String path = "foo";
+		when(loader1.match(path)).thenReturn(false);
+		when(loader2.match(path)).thenReturn(true);
+
+		DataSetLoaderMatcher matcher = new DataSetLoaderMatcher(path);
+
+		assertThat(matcher.apply(loader1)).isFalse();
+		verify(loader1).match(path);
+
+		assertThat(matcher.apply(loader2)).isTrue();
+		verify(loader2).match(path);
 	}
 }

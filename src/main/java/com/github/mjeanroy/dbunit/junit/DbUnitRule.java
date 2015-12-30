@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.junit;
 
-import com.github.mjeanroy.dbunit.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.annotations.DbUnitSetupOperation;
-import com.github.mjeanroy.dbunit.annotations.DbUnitTearDownOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
-import com.github.mjeanroy.dbunit.jdbc.JdbcConfiguration;
-import com.github.mjeanroy.dbunit.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.dataset.DataSetFactory.createDataSet;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 
 /**
  * JUnit Rule to setup DbUnit database for each tests.

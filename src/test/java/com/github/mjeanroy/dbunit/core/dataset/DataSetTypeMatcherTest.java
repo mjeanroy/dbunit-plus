@@ -22,37 +22,34 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
 import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+
+import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-public class DbUnitRunnerTest {
+public class DataSetTypeMatcherTest {
 
 	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
+	public void it_should_match_given_file() {
+		DataSetType type1 = mock(DataSetType.class);
+		DataSetType type2 = mock(DataSetType.class);
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
+		File path = mock(File.class);
+		when(type1.match(path)).thenReturn(false);
+		when(type2.match(path)).thenReturn(true);
+
+		DataSetTypeMatcher matcher = new DataSetTypeMatcher(path);
+
+		assertThat(matcher.apply(type1)).isFalse();
+		verify(type1).match(path);
+
+		assertThat(matcher.apply(type2)).isTrue();
+		verify(type2).match(path);
 	}
 }

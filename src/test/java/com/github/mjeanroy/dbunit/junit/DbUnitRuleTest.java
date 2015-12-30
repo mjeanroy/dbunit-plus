@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.junit;
 
-import com.github.mjeanroy.dbunit.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.annotations.DbUnitSetupOperation;
-import com.github.mjeanroy.dbunit.annotations.DbUnitTearDownOperation;
-import com.github.mjeanroy.dbunit.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

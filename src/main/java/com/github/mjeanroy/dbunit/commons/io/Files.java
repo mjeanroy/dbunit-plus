@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import com.github.mjeanroy.dbunit.dataset.DirectoryDataSetBuilder;
+import com.github.mjeanroy.dbunit.core.dataset.DirectoryDataSetBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

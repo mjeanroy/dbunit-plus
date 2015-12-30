@@ -1,9 +1,9 @@
 package com.github.mjeanroy.dbunit.junit;
 
-import com.github.mjeanroy.dbunit.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import org.junit.rules.TestRule;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -11,7 +11,7 @@ import org.junit.runners.model.InitializationError;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.jdbc.JdbcConfiguration.newJdbcConfiguration;
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 
 public class DbUnitRunner extends BlockJUnit4ClassRunner {
 

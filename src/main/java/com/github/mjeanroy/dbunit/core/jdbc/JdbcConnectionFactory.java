@@ -22,37 +22,33 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import java.sql.Connection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ * Factory that should create instance of {@link Connection}. This
+ * connection will be used to populate database.
+ *
+ * <p />
+ *
+ * <strong>Important:</strong> since instance of {@link Connection} are
+ * not thread safe, implementations should produce a new instance
+ * of {@link Connection} each calls
+ */
+public interface JdbcConnectionFactory {
 
-public class DbUnitRunnerTest {
+	/**
+	 * Create new instance of {@link Connection}.
+	 *
+	 * <p />
+	 *
+	 * Since {@link Connection} class is not thread-safe, implementation should
+	 * create a new connection ready to use in current thread.
+	 *
+	 * @return SQL Connection.
+	 * @throws com.github.mjeanroy.dbunit.exception.JdbcException If an error occured while creating {@link Connection}.
+	 */
+	Connection getConnection();
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
-
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
-	}
 }

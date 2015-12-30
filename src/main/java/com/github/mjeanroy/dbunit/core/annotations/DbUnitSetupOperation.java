@@ -22,37 +22,39 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.annotations;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class DbUnitRunnerTest {
+/**
+ * Database operation to execute before test is executed.
+ *
+ * This annotation can be used on:
+ * <ul>
+ *   <li>Method (i.e test method).</li>
+ *   <li>Class (i.e test class).</li>
+ *   <li>Package (i.e package where test classes belongs)</li>
+ * </ul>
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({
+	ElementType.METHOD,
+	ElementType.TYPE,
+	ElementType.PACKAGE
+})
+public @interface DbUnitSetupOperation {
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
-
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
-	}
+	/**
+	 * Operation to load before test.
+	 *
+	 * @return Set of operation.
+	 */
+	DbUnitOperation value() default DbUnitOperation.CLEAN_INSERT;
 }

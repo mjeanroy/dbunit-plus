@@ -22,37 +22,38 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.commons.collections.Mapper;
+import org.dbunit.dataset.Column;
+import org.dbunit.dataset.datatype.DataType;
 
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ * Mapper used to produce instance of {@link Column} (with
+ * an {@link DataType#UNKNOWN} data type.
+ */
+class ColumnMapper implements Mapper<String, Column> {
 
-public class DbUnitRunnerTest {
+	/**
+	 * Static singleton.
+	 */
+	private static final ColumnMapper MAPPER = new ColumnMapper();
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	/**
+	 * Get mapper instance.
+	 *
+	 * @return Mapper instance.
+	 */
+	static ColumnMapper getInstance() {
+		return MAPPER;
 	}
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
+	// Ensure non instantation.
+	private ColumnMapper() {
+	}
+
+	@Override
+	public Column apply(String input) {
+		return new Column(input, DataType.UNKNOWN);
 	}
 }

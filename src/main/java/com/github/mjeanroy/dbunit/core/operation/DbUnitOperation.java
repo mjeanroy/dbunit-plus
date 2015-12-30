@@ -22,37 +22,44 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.operation;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import org.dbunit.operation.DatabaseOperation;
 
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ * Set of {@link DatabaseOperation} supported out of the box.
+ */
+public enum DbUnitOperation {
 
-public class DbUnitRunnerTest {
+	NONE(DatabaseOperation.NONE),
+	CLEAN_INSERT(DatabaseOperation.CLEAN_INSERT),
+	DELETE(DatabaseOperation.DELETE),
+	DELETE_ALL(DatabaseOperation.DELETE_ALL),
+	INSERT(DatabaseOperation.INSERT),
+	TRUNCATE_TABLE(DatabaseOperation.TRUNCATE_TABLE),
+	REFRESH(DatabaseOperation.REFRESH),
+	UPDATE(DatabaseOperation.UPDATE);
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	/**
+	 * Internal DBUnit {@link DatabaseOperation}.
+	 */
+	private final DatabaseOperation operation;
+
+	/**
+	 * Create instance.
+	 *
+	 * @param operation Database Operation.
+	 */
+	private DbUnitOperation(DatabaseOperation operation) {
+		this.operation = operation;
 	}
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
+	/**
+	 * Get DBUnit {@link DatabaseOperation} to execute.
+	 *
+	 * @return Operation to execute.
+	 */
+	public DatabaseOperation getOperation() {
+		return operation;
 	}
 }

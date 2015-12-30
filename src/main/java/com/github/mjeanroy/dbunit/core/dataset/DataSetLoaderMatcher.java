@@ -22,37 +22,32 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 
-import static org.assertj.core.api.Assertions.assertThat;
+/**
+ * Implementation of {@link Predicate}: return {@code true} if instance
+ * of {@link DataSetLoader} match given {@code path}.
+ */
+class DataSetLoaderMatcher implements Predicate<DataSetLoader> {
 
-public class DbUnitRunnerTest {
+	/**
+	 * File path.
+	 */
+	private final String path;
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	/**
+	 * Create predicate.
+	 *
+	 * @param path File path.
+	 */
+	DataSetLoaderMatcher(String path) {
+		this.path = path;
 	}
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
+	@Override
+	public boolean apply(DataSetLoader input) {
+		return input.match(path);
 	}
 }

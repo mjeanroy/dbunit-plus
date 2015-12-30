@@ -22,37 +22,44 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
+import com.github.mjeanroy.dbunit.json.JsonParser;
 import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
 
+import java.io.File;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-public class DbUnitRunnerTest {
+public class JsonDataSetBuilderTest {
 
 	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	public void it_should_create_default_data_set_with_file() throws Exception {
+		File file = getTestResource("/dataset/json/foo.json");
+		JsonDataSet dataSet = new JsonDataSetBuilder(file).build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getFile()).isSameAs(file);
+		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
 	}
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
+	@Test
+	public void it_should_create_custom_data_set() throws Exception {
+		File file = getTestResource("/dataset/json/foo.json");
+		JsonParser parser = mock(JsonParser.class);
+
+		JsonDataSet dataSet = new JsonDataSetBuilder()
+			.setJsonFile(file)
+			.setCaseSensitiveTableNames(true)
+			.setParser(parser)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getFile()).isSameAs(file);
+		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
+		verify(parser).parse(file);
 	}
 }

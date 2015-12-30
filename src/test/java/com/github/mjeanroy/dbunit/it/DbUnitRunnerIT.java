@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.it;
 
-import com.github.mjeanroy.dbunit.annotations.DbUnitConfiguration;
-import com.github.mjeanroy.dbunit.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.annotations.DbUnitSetupOperation;
-import com.github.mjeanroy.dbunit.annotations.DbUnitTearDownOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
 import com.github.mjeanroy.dbunit.junit.DbUnitRunner;
-import com.github.mjeanroy.dbunit.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;

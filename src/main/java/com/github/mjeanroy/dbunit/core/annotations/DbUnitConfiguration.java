@@ -22,37 +22,40 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.annotations;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({
+	ElementType.TYPE,
+	ElementType.PACKAGE
+})
+public @interface DbUnitConfiguration {
 
-public class DbUnitRunnerTest {
+	/**
+	 * Get JDBC Connection URL.
+	 *
+	 * @return Connection URL.
+	 */
+	String url();
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
+	/**
+	 * Get JDBC user name.
+	 *
+	 * @return User.
+	 */
+	String user();
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
-		}
-	}
+	/**
+	 * Get JDBC password.
+	 *
+	 * @return Password.
+	 */
+	String password();
 }

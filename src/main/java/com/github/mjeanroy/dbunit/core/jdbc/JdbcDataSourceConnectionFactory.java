@@ -22,37 +22,49 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.exception.JdbcException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-public class DbUnitRunnerTest {
+/**
+ * Implementation of {@link JdbcConnectionFactory} to produce instance
+ * of {@link Connection} from  given {@link DataSource}.
+ */
+public class JdbcDataSourceConnectionFactory implements JdbcConnectionFactory {
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClass.class);
-		assertThat(runner.getTestRules(new TestClass()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	/**
+	 * Class Logger.
+	 */
+	private static final Logger log = LoggerFactory.getLogger(JdbcDataSourceConnectionFactory.class);
+
+	/**
+	 * Connection DataSource.
+	 */
+	private final DataSource dataSource;
+
+	/**
+	 * Create new factory.
+	 *
+	 * @param dataSource Connection DataSource.
+	 */
+	public JdbcDataSourceConnectionFactory(DataSource dataSource) {
+		this.dataSource = dataSource;
 	}
 
-	@RunWith(DbUnitRunner.class)
-	@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	public static class TestClass {
-		@Test
-		public void test1() {
+	@Override
+	public Connection getConnection() {
+		try {
+			return dataSource.getConnection();
+		}
+		catch (SQLException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new JdbcException(ex);
 		}
 	}
 }
