@@ -13,8 +13,36 @@ import java.util.List;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 
+/**
+ * Implementation of JUnit {@link org.junit.runner.Runner} to fill and clear
+ * database between each tests.
+ *
+ * <p />
+ *
+ * Basically, this class add {@link DbUnitRule} to the test class when this runner is
+ * initialized.
+ *
+ * <p />
+ *
+ * DbUnit configuration should be set using {@link DbUnitConfiguration} configuration:
+ *
+ * <pre><code>
+ *   @RunWith(DbUnitRunner.class)
+ *   @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+ *   @DbUnitDataSet("classpath:/dataset/xml")
+ *   public MyDaoTest {
+ *     @Test
+ *     public void test1() {
+ *       // ...
+ *     }
+ *   }
+ * </code></pre>
+ */
 public class DbUnitRunner extends BlockJUnit4ClassRunner {
 
+	/**
+	 * DbUnit connection factory.
+	 */
 	private final JdbcConnectionFactory factory;
 
 	/**
