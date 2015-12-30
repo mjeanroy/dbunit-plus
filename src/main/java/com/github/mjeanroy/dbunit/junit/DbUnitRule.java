@@ -74,9 +74,9 @@ public class DbUnitRule implements TestRule {
 		return new Statement() {
 			@Override
 			public void evaluate() throws Throwable {
-				DbUnitRunner runner = new DbUnitRunner(description.getTestClass(), description.getMethodName());
+				DbUnitRunner runner = new DbUnitRunner(description.getTestClass(), description.getMethodName(), connectionFactory);
 				if (!runner.isNoOp()) {
-					runner.beforeTest(connectionFactory.getConnection());
+					runner.beforeTest();
 				}
 
 				try {
@@ -84,7 +84,7 @@ public class DbUnitRule implements TestRule {
 				}
 				finally {
 					if (!runner.isNoOp()) {
-						runner.afterTest(connectionFactory.getConnection());
+						runner.afterTest();
 					}
 				}
 			}

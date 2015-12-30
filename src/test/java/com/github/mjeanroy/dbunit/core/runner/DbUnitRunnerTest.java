@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
@@ -31,9 +33,12 @@ import org.dbunit.dataset.IDataSet;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import javax.sql.DataSource;
+
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class DbUnitRunnerTest {
 
@@ -44,8 +49,9 @@ public class DbUnitRunnerTest {
 	public void it_should_create_runner_and_read_data_set_on_class() throws Exception {
 		Class klass = TestClassWithDataSet.class;
 		String testMethod = "method1";
+		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 
-		DbUnitRunner runner = new DbUnitRunner(klass, testMethod);
+		DbUnitRunner runner = new DbUnitRunner(klass, testMethod, factory);
 
 		assertThat(readPrivate(runner, "testClass", Class.class))
 			.isNotNull()
@@ -54,6 +60,10 @@ public class DbUnitRunnerTest {
 		assertThat(readPrivate(runner, "testMethod", String.class))
 			.isNotNull()
 			.isSameAs(testMethod);
+
+		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+			.isNotNull()
+			.isSameAs(factory);
 
 		IDataSet dataSet = readPrivate(runner, "dataSet", IDataSet.class);
 		assertThat(dataSet).isNotNull();
@@ -67,8 +77,9 @@ public class DbUnitRunnerTest {
 	public void it_should_create_runner_and_read_data_set_on_method() throws Exception {
 		Class klass = TestClassWithDataSet.class;
 		String testMethod = "method2";
+		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 
-		DbUnitRunner runner = new DbUnitRunner(klass, testMethod);
+		DbUnitRunner runner = new DbUnitRunner(klass, testMethod, factory);
 
 		assertThat(readPrivate(runner, "testClass", Class.class))
 			.isNotNull()
@@ -77,6 +88,10 @@ public class DbUnitRunnerTest {
 		assertThat(readPrivate(runner, "testMethod", String.class))
 			.isNotNull()
 			.isSameAs(testMethod);
+
+		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+			.isNotNull()
+			.isSameAs(factory);
 
 		IDataSet dataSet = readPrivate(runner, "dataSet", IDataSet.class);
 		assertThat(dataSet).isNotNull();
@@ -90,8 +105,9 @@ public class DbUnitRunnerTest {
 	public void it_should_create_runner_and_not_fail_if_data_set_cannot_be_found() throws Exception {
 		Class klass = TestClassWithoutDataSet.class;
 		String testMethod = "method1";
+		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 
-		DbUnitRunner runner = new DbUnitRunner(klass, testMethod);
+		DbUnitRunner runner = new DbUnitRunner(klass, testMethod, factory);
 
 		assertThat(readPrivate(runner, "testClass", Class.class))
 			.isNotNull()
@@ -101,24 +117,41 @@ public class DbUnitRunnerTest {
 			.isNotNull()
 			.isSameAs(testMethod);
 
+		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+			.isNotNull()
+			.isSameAs(factory);
+
 		IDataSet dataSet = readPrivate(runner, "dataSet", IDataSet.class);
 		assertThat(dataSet).isNull();
+	}
+
+	@Test
+	public void it_should_create_runner_with_data_source() throws Exception {
+		Class klass = TestClassWithDataSet.class;
+		String testMethod = "method1";
+		DataSource dataSource = mock(DataSource.class);
+
+		DbUnitRunner runner = new DbUnitRunner(klass, testMethod, dataSource);
+
+		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+			.isNotNull()
+			.isExactlyInstanceOf(JdbcDataSourceConnectionFactory.class);
 	}
 
 	@Test
 	public void it_should_load_data_set() throws Exception {
 		Class klass = TestClassWithDataSet.class;
 		String testMethod = "method1";
-		DbUnitRunner runner = new DbUnitRunner(klass, testMethod);
+		DbUnitRunner runner = new DbUnitRunner(klass, testMethod, dbRule.getDb());
 
 		// Setup Operation
-		runner.beforeTest(dbRule.getConnection());
+		runner.beforeTest();
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
 
 		// Tear Down Operation
-		runner.afterTest(dbRule.getConnection());
+		runner.afterTest();
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
@@ -128,16 +161,16 @@ public class DbUnitRunnerTest {
 	public void it_should_load_data_set_with_custom_operation() throws Exception {
 		Class klass = TestClassWithDataSet.class;
 		String testMethod = "method3";
-		DbUnitRunner runner = new DbUnitRunner(klass, testMethod);
+		DbUnitRunner runner = new DbUnitRunner(klass, testMethod, dbRule.getDb());
 
 		// Setup Operation
-		runner.beforeTest(dbRule.getConnection());
+		runner.beforeTest();
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
 
 		// Tear Down Operation
-		runner.afterTest(dbRule.getConnection());
+		runner.afterTest();
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();

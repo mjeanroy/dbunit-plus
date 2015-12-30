@@ -27,6 +27,8 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import org.dbunit.DefaultDatabaseTester;
@@ -38,20 +40,39 @@ import org.dbunit.dataset.IDataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 
 public class DbUnitRunner {
 
+	/**
+	 * Class Logger.
+	 */
 	private static final Logger log = LoggerFactory.getLogger(DbUnitRunner.class);
 
+	/**
+	 * Test Class.
+	 */
 	private final Class<?> testClass;
 
+	/**
+	 * Test method: test method to execute.
+	 */
 	private final String testMethod;
 
+	/**
+	 * Factory used to retrieve SQL connection before and
+	 * after execution of test method.
+	 */
+	private final JdbcConnectionFactory factory;
+
+	/**
+	 * DbUnit data set to load before test method execution.
+	 */
 	private final IDataSet dataSet;
 
 	/**
@@ -61,19 +82,34 @@ public class DbUnitRunner {
 	 *
 	 * DbUnit DataSet will be automatically detected:
 	 * <ol>
-	 *   <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 *   <li>If class to test contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 *   <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
+	 * <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
+	 * <li>If class to test contains {@link DbUnitDataSet} annotation, it is used.</li>
+	 * <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
 	 * </ol>
 	 *
 	 * @param testClass Class to test.
 	 * @param testMethod Method to launch.
+	 * @param factory Factory to get new SQL connection before and after test methods.
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
-	public DbUnitRunner(Class<?> testClass, String testMethod) {
-		this.testClass = testClass;
+	public DbUnitRunner(Class<?> testClass, String testMethod, JdbcConnectionFactory factory) {
+		this.testClass = notNull(testClass, "Test Class must not be null");
 		this.testMethod = testMethod;
+		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 		this.dataSet = readDataSet();
+	}
+
+	/**
+	 * Create runner.
+	 *
+	 * @param testClass Class to test.
+	 * @param testMethod Method to launch.
+	 * @param dataSource DataSource to get new SQL connection before and after test methods.
+	 * @throws DbUnitException If dataSet parsing failed.
+	 * @see {#DbUnitRunner()}.
+	 */
+	public DbUnitRunner(Class<?> testClass, String testMethod, DataSource dataSource) {
+		this(testClass, testMethod, new JdbcDataSourceConnectionFactory(notNull(dataSource, "DataSource must not be null")));
 	}
 
 	/**
@@ -100,28 +136,49 @@ public class DbUnitRunner {
 		return null;
 	}
 
+	/**
+	 * Check if runner is a no-op runner (i.e data set is empty).
+	 *
+	 * @return {@code true} if runner is a no-op, {@code false} otherwise.
+	 */
 	public boolean isNoOp() {
 		return dataSet == null;
 	}
 
-	public void beforeTest(Connection connection) {
-		if (dataSet != null) {
-			setupOrTearDown(connection, SETUP);
+	/**
+	 * Load data set before test execution:
+	 * <ol>
+	 *   <li>Get new SQL connection.</li>
+	 *   <li>Load DataSet and execute setup operation.</li>
+	 *   <li>Close SQL connection.</li>
+	 * </ol>
+	 */
+	public void beforeTest() {
+		if (!isNoOp()) {
+			setupOrTearDown(SETUP);
 		}
 	}
 
-	public void afterTest(Connection connection) {
-		if (dataSet != null) {
-			setupOrTearDown(connection, TEAR_DOWN);
+	/**
+	 * Load data set before test execution:
+	 * <ol>
+	 *   <li>Get new SQL connection.</li>
+	 *   <li>Remove DataSet and execute tear down operation.</li>
+	 *   <li>Close SQL connection.</li>
+	 * </ol>
+	 */
+	public void afterTest() {
+		if (!isNoOp()) {
+			setupOrTearDown(TEAR_DOWN);
 		}
 	}
 
-	private void setupOrTearDown(Connection connection, DbOperation op) {
+	private void setupOrTearDown(DbOperation op) {
 		IDatabaseConnection dbConnection = null;
 
 		try {
 			log.trace(" 1- Get SQL connection");
-			dbConnection = new DatabaseConnection(connection);
+			dbConnection = new DatabaseConnection(factory.getConnection());
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
 			log.trace(" 2- Load data set");
