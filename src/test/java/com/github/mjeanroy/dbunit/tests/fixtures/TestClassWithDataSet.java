@@ -25,13 +25,13 @@
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
 @DbUnitDataSet("/dataset/xml")
-@DbUnitSetupOperation(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDownOperation(DbUnitOperation.TRUNCATE_TABLE)
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 public class TestClassWithDataSet {
 
 	public void method1() {

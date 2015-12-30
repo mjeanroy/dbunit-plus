@@ -25,8 +25,8 @@
 package com.github.mjeanroy.dbunit.junit;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
@@ -164,7 +164,7 @@ public class DbUnitRule implements TestRule {
 	private static final DbOperation SETUP = new DbOperation() {
 		@Override
 		public void apply(DbUnitTestContext ctx, IDatabaseTester dbTester) throws Exception {
-			DbUnitSetupOperation op = findAnnotation(ctx.getTestClass(), ctx.getTestMethod(), DbUnitSetupOperation.class);
+			DbUnitSetup op = findAnnotation(ctx.getTestClass(), ctx.getTestMethod(), DbUnitSetup.class);
 			if (op != null) {
 				log.debug(" 3- Initialize setup operation");
 				dbTester.setSetUpOperation(op.value().getOperation());
@@ -181,7 +181,7 @@ public class DbUnitRule implements TestRule {
 	private static final DbOperation TEAR_DOWN = new DbOperation() {
 		@Override
 		public void apply(DbUnitTestContext ctx, IDatabaseTester dbTester) throws Exception {
-			DbUnitTearDownOperation op = findAnnotation(ctx.getTestClass(), ctx.getTestMethod(), DbUnitTearDownOperation.class);
+			DbUnitTearDown op = findAnnotation(ctx.getTestClass(), ctx.getTestMethod(), DbUnitTearDown.class);
 			if (op != null) {
 				log.trace(" 3- Initialize tear down operation");
 				dbTester.setTearDownOperation(op.value().getOperation());

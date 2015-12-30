@@ -49,7 +49,7 @@ import java.lang.annotation.Target;
 	ElementType.TYPE,
 	ElementType.PACKAGE
 })
-public @interface DbUnitTearDownOperation {
+public @interface DbUnitTearDown {
 
 	/**
 	 * Operation to execute after a test is performed.

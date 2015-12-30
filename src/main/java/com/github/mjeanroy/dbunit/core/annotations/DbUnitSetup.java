@@ -49,7 +49,7 @@ import java.lang.annotation.Target;
 	ElementType.TYPE,
 	ElementType.PACKAGE
 })
-public @interface DbUnitSetupOperation {
+public @interface DbUnitSetup {
 
 	/**
 	 * Operation to load before test.
