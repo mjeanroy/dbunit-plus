@@ -37,8 +37,8 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitDataSet("/dataset/xml")
@@ -59,32 +59,20 @@ public class DbUnitRuleIT {
 
 	@BeforeClass
 	public static void setup() throws Exception {
-		assertThat(countFrom("foo")).isZero();
-		assertThat(countFrom("bar")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void test1() throws Exception {
-		assertThat(countFrom("foo")).isEqualTo(2);
-		assertThat(countFrom("bar")).isEqualTo(3);
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
 	}
 
 	@Test
 	@DbUnitDataSet("/dataset/xml/foo.xml")
 	public void test2() throws Exception {
-		assertThat(countFrom("foo")).isEqualTo(2);
-		assertThat(countFrom("bar")).isEqualTo(0);
-	}
-
-	private static int countFrom(String tableName) {
-		try {
-			Connection connection = dbRule.getConnection();
-			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
-			result.next();
-			return result.getInt("nb");
-		}
-		catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
 	}
 }

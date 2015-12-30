@@ -40,4 +40,9 @@ public class TestClassWithDataSet {
 	@DbUnitDataSet("/dataset/xml/foo.xml")
 	public void method2() {
 	}
+
+	@DbUnitSetup(DbUnitOperation.NONE)
+	@DbUnitTearDown(DbUnitOperation.NONE)
+	public void method3() {
+	}
 }

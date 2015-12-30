@@ -22,29 +22,20 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.utils;
+package com.github.mjeanroy.dbunit.tests.db;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-/**
- * Static Test Utilities.
- */
-public class TestUtils {
+public final class JdbcQueries {
 
-	public static File getTestResource(String path) throws Exception {
-		URL url = TestUtils.class.getResource(path);
-		URI uri = url.toURI();
-		return new File(uri);
+	private JdbcQueries() {
 	}
 
-	@SuppressWarnings("unchecked")
-	public static <T> T readPrivate(Object o, String field, Class<T> klass) throws Exception {
-		Class c = o.getClass();
-		Field f = c.getDeclaredField(field);
-		f.setAccessible(true);
-		return (T) f.get(o);
+	public static int countFrom(Connection connection, String tableName) throws SQLException {
+		ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
+		result.next();
+		return result.getInt("nb");
 	}
 }

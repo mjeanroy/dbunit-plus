@@ -22,29 +22,10 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.utils;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URL;
+public class TestClassWithoutDataSet {
 
-/**
- * Static Test Utilities.
- */
-public class TestUtils {
-
-	public static File getTestResource(String path) throws Exception {
-		URL url = TestUtils.class.getResource(path);
-		URI uri = url.toURI();
-		return new File(uri);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static <T> T readPrivate(Object o, String field, Class<T> klass) throws Exception {
-		Class c = o.getClass();
-		Field f = c.getDeclaredField(field);
-		f.setAccessible(true);
-		return (T) f.get(o);
+	public void method1() {
 	}
 }

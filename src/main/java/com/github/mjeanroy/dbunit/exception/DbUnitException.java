@@ -24,8 +24,15 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
+import org.dbunit.dataset.DataSetException;
+
 /**
  * DbUnit exception.
+ *
+ * <p />
+ *
+ * This exception should be thrown by JUnit rule and DbUnit runner
+ * when initialization failed because of bad configuration.
  */
 public class DbUnitException extends AbstractDbUnitException {
 
@@ -36,5 +43,14 @@ public class DbUnitException extends AbstractDbUnitException {
 	 */
 	public DbUnitException(String message) {
 		super(message);
+	}
+
+	/**
+	 * Wrap {@link DataSetException}.
+	 *
+	 * @param ex Original Exception.
+	 */
+	public DbUnitException(DataSetException ex) {
+		super(ex);
 	}
 }
