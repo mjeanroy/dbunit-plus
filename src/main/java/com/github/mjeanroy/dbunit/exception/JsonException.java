@@ -36,6 +36,7 @@ import java.io.IOException;
  * This exception should provide a unique way to handler JSON exception,
  * whatever the internal mapper library.
  */
+@SuppressWarnings("serial")
 public class JsonException extends AbstractDbUnitException {
 
 	/**

@@ -60,12 +60,13 @@ public class DbUnitRuleTest {
 		rule = new DbUnitRule(new EmbeddedDatabaseConnectionFactory(db.getDb()));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_load_database_for_class_test() throws Throwable {
 		Statement statement = mock(Statement.class);
 		Description description = mock(Description.class);
-		when(description.getTestClass()).thenReturn((Class) TestClassWithDataSet.class);
+		Class testClass = TestClassWithDataSet.class;
+		when(description.getTestClass()).thenReturn(testClass);
 		when(description.getMethodName()).thenReturn("method1");
 
 		Statement result = rule.apply(statement, description);
@@ -87,12 +88,13 @@ public class DbUnitRuleTest {
 		verify(statement).evaluate();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {
 		Statement statement = mock(Statement.class);
 		Description description = mock(Description.class);
-		when(description.getTestClass()).thenReturn((Class) TestClassWithDataSet.class);
+		Class testClass = TestClassWithDataSet.class;
+		when(description.getTestClass()).thenReturn(testClass);
 		when(description.getMethodName()).thenReturn("method2");
 
 		Statement result = rule.apply(statement, description);

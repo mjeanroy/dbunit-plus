@@ -50,7 +50,7 @@ public class DbUnitTestExecutionListenerTest {
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_prepare_test_and_initialize_runner() throws Exception {
 		TestContext ctx = mock(TestContext.class);
@@ -83,7 +83,7 @@ public class DbUnitTestExecutionListenerTest {
 		verify(appContext).getBean(DataSource.class);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_execute_before_test() throws Exception {
 		DbUnitRunner runner = mock(DbUnitRunner.class);
@@ -102,7 +102,7 @@ public class DbUnitTestExecutionListenerTest {
 		verify(runner).beforeTest(method);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_execute_after_test() throws Exception {
 		DbUnitRunner runner = mock(DbUnitRunner.class);

@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Exception thrown when DataSet cannot be loaded.
  */
+@SuppressWarnings("serial")
 public class DataSetLoaderException extends AbstractDbUnitException {
 
 	/**

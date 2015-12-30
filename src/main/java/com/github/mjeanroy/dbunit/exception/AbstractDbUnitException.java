@@ -28,6 +28,7 @@ package com.github.mjeanroy.dbunit.exception;
  * Abstract representation of library exception.
  * This exception should provide an unique way to cache low level exception.
  */
+@SuppressWarnings("serial")
 public abstract class AbstractDbUnitException extends RuntimeException {
 
 	/**

@@ -49,7 +49,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_and_read_data_set_on_class() throws Exception {
-		Class klass = TestClassWithDataSet.class;
+		Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
 		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 
 		DbUnitRunner runner = new DbUnitRunner(klass, factory);
@@ -72,7 +72,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_and_not_fail_if_data_set_cannot_be_found() throws Exception {
-		Class klass = TestClassWithoutDataSet.class;
+		Class<TestClassWithoutDataSet> klass = TestClassWithoutDataSet.class;
 		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 
 		DbUnitRunner runner = new DbUnitRunner(klass, factory);
@@ -91,7 +91,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_with_data_source() throws Exception {
-		Class klass = TestClassWithDataSet.class;
+		Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
 		DataSource dataSource = mock(DataSource.class);
 
 		DbUnitRunner runner = new DbUnitRunner(klass, dataSource);

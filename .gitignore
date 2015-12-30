@@ -2,5 +2,10 @@
 .idea/
 *.iml
 
+# Eclipse
+.classpath
+.project
+.settings/
+
 # Maven
 target/

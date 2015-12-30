@@ -40,7 +40,7 @@ public class TestUtils {
 		return new File(uri);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static <T> T readPrivate(Object o, String field, Class<T> klass) throws Exception {
 		Class c = o.getClass();
 		Field f = c.getDeclaredField(field);

@@ -214,7 +214,7 @@ public class DbUnitRunner {
 		}
 
 		try {
-			log.debug("Fond @DbUnitDataSet annotation, parse annotation value: {}", annotation.value());
+			log.debug("Fond @DbUnitDataSet annotation, parse annotation value: {}", (Object[]) annotation.value());
 			return createDataSet(annotation.value());
 		}
 		catch (DataSetException ex) {
@@ -224,12 +224,12 @@ public class DbUnitRunner {
 	}
 
 	private static interface DbOperation {
-		void apply(Class testClass, Method method, IDatabaseTester dbTester) throws Exception;
+		void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception;
 	}
 
 	private static final DbOperation SETUP = new DbOperation() {
 		@Override
-		public void apply(Class testClass, Method method, IDatabaseTester dbTester) throws Exception {
+		public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
 			DbUnitSetup op = findAnnotation(testClass, method, DbUnitSetup.class);
 			if (op != null) {
 				log.debug(" 3- Initialize setup operation");
@@ -246,7 +246,7 @@ public class DbUnitRunner {
 
 	private static final DbOperation TEAR_DOWN = new DbOperation() {
 		@Override
-		public void apply(Class testClass, Method method, IDatabaseTester dbTester) throws Exception {
+		public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
 			DbUnitTearDown op = findAnnotation(testClass, method, DbUnitTearDown.class);
 			if (op != null) {
 				log.trace(" 3- Initialize tear down operation");

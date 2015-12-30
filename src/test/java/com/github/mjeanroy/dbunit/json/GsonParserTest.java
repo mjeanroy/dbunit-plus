@@ -43,6 +43,7 @@ public class GsonParserTest {
 	@Rule
 	public ExpectedException thrown = none();
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_parse_file() throws Exception {
 		Gson gson = new Gson();
