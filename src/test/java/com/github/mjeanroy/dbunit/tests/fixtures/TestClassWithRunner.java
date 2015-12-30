@@ -22,28 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
-import org.assertj.core.api.Condition;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.junit.DbUnitRunner;
+import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.rules.TestRule;
+import org.junit.runner.RunWith;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class DbUnitRunnerTest {
+@RunWith(DbUnitRunner.class)
+@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@Ignore("This is a test fixtures")
+public class TestClassWithRunner {
 
 	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClassWithRunner.class);
-		assertThat(runner.getTestRules(new TestClassWithRunner()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	public void test1() {
 	}
+
 }

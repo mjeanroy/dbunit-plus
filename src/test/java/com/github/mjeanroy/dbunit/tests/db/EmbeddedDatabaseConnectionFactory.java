@@ -22,28 +22,37 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.tests.db;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.junit.rules.TestRule;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-public class DbUnitRunnerTest {
+public class EmbeddedDatabaseConnectionFactory implements JdbcConnectionFactory {
 
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClassWithRunner.class);
-		assertThat(runner.getTestRules(new TestClassWithRunner()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	/**
+	 * Embedded Database.
+	 */
+	private final EmbeddedDatabase db;
+
+	/**
+	 * Create factory.
+	 *
+	 * @param db Embedded Database.
+	 */
+	public EmbeddedDatabaseConnectionFactory(EmbeddedDatabase db) {
+		this.db = db;
+	}
+
+	@Override
+	public Connection getConnection() {
+		try {
+			return db.getConnection();
+		}
+		catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 }

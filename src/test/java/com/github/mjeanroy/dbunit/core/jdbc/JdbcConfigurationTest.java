@@ -33,7 +33,7 @@ public class JdbcConfigurationTest {
 
 	@Test
 	public void it_should_create_configuration() {
-		String url = "jdbc:hsqldb:file:database/testdb";
+		String url = "jdbc:hsqldb:mem:database/testdb";
 		String user = "SA";
 		String password = "";
 
@@ -47,22 +47,22 @@ public class JdbcConfigurationTest {
 
 	@Test
 	public void it_should_display_configuration() {
-		String url = "jdbc:hsqldb:file:database/testdb";
+		String url = "jdbc:hsqldb:mem:database/testdb";
 		String user = "SA";
 		String password = "";
 
 		JdbcConfiguration configuration = newJdbcConfiguration(url, user, password);
 
 		assertThat(configuration.toString())
-			.isEqualTo("JDBC{url=jdbc:hsqldb:file:database/testdb, user=SA, password=}");
+			.isEqualTo("JDBC{url=jdbc:hsqldb:mem:database/testdb, user=SA, password=}");
 	}
 
 	@Test
 	public void it_should_implement_equals() {
-		JdbcConfiguration c1 = newJdbcConfiguration("jdbc:hsqldb:file:database/testdb", "SA", "");
-		JdbcConfiguration c2 = newJdbcConfiguration("jdbc:hsqldb:file:database/testdb", "SA", "");
-		JdbcConfiguration c3 = newJdbcConfiguration("jdbc:hsqldb:file:database/testdb", "SA", "");
-		JdbcConfiguration c4 = newJdbcConfiguration("jdbc:hsqldb:file:database/testdb", "root", "");
+		JdbcConfiguration c1 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
+		JdbcConfiguration c2 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
+		JdbcConfiguration c3 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
+		JdbcConfiguration c4 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "root", "");
 
 		assertThat(c1.equals(c4)).isFalse();
 		assertThat(c1.equals(c2)).isTrue();
@@ -82,8 +82,8 @@ public class JdbcConfigurationTest {
 
 	@Test
 	public void it_should_implement_hash_code() {
-		JdbcConfiguration c1 = newJdbcConfiguration("jdbc:hsqldb:file:database/testdb", "SA", "");
-		JdbcConfiguration c2 = newJdbcConfiguration("jdbc:hsqldb:file:database/testdb", "SA", "");
+		JdbcConfiguration c1 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
+		JdbcConfiguration c2 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
 		assertThat(c1.hashCode()).isEqualTo(c2.hashCode());
 	}
 }

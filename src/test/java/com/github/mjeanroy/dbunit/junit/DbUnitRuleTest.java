@@ -24,13 +24,11 @@
 
 package com.github.mjeanroy.dbunit.junit;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import org.junit.After;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -38,7 +36,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,30 +47,16 @@ import static org.mockito.Mockito.when;
 
 public class DbUnitRuleTest {
 
-	private JdbcConnectionFactory factory;
+	@ClassRule
+	public static EmbeddedDatabaseRule db = new EmbeddedDatabaseRule();
 
 	private DbUnitRule rule;
 
 	@Before
 	public void setup() throws Exception {
-		factory = new HsqlDbConnectionFactory();
-		rule = new DbUnitRule(factory);
-
-		Connection connection = factory.getConnection();
-		connection.prepareStatement("DROP TABLE IF EXISTS foo").execute();
-		connection.prepareStatement("DROP TABLE IF EXISTS bar").execute();
-		connection.prepareStatement("CREATE TABLE foo (id int, name varchar(100))").execute();
-		connection.prepareStatement("CREATE TABLE bar (id int, title varchar(100))").execute();
-
 		assertThat(count("foo")).isZero();
 		assertThat(count("bar")).isZero();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		Connection connection = factory.getConnection();
-		connection.prepareStatement("DROP TABLE foo").execute();
-		connection.prepareStatement("DROP TABLE bar").execute();
+		rule = new DbUnitRule(new EmbeddedDatabaseConnectionFactory(db.getDb()));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -131,36 +114,9 @@ public class DbUnitRuleTest {
 	}
 
 	private int count(String table) throws Exception {
-		Connection connection = factory.getConnection();
+		Connection connection = db.getConnection();
 		ResultSet resultSet = connection.prepareStatement("SELECT COUNT(*) as nb FROM " + table).executeQuery();
 		resultSet.next();
 		return resultSet.getInt("nb");
-	}
-
-	@DbUnitDataSet("/dataset/xml")
-	@DbUnitSetupOperation(DbUnitOperation.CLEAN_INSERT)
-	@DbUnitTearDownOperation(DbUnitOperation.TRUNCATE_TABLE)
-	private static class TestClassWithDataSet {
-		public void method1() {
-
-		}
-
-		@DbUnitDataSet("/dataset/xml/foo.xml")
-		public void method2() {
-
-		}
-	}
-
-	private static class HsqlDbConnectionFactory implements JdbcConnectionFactory {
-		@Override
-		public Connection getConnection() {
-			try {
-				Class.forName("org.hsqldb.jdbcDriver");
-				return DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "SA", "");
-			}
-			catch (Exception ex) {
-				throw new RuntimeException(ex);
-			}
-		}
 	}
 }

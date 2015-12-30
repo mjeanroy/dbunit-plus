@@ -43,7 +43,7 @@ public class JdbcDefaultConnectionFactoryTest {
 
 	@Test
 	public void it_should_create_connection() throws Exception {
-		String url = "jdbc:hsqldb:file:database/testdb";
+		String url = "jdbc:hsqldb:mem:database/testdb";
 		String user = "SA";
 		String password = "";
 

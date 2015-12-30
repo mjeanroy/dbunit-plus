@@ -28,14 +28,15 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
-import com.github.mjeanroy.dbunit.junit.DbUnitRunner;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.junit.DbUnitRunner;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,50 +48,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DbUnitTearDownOperation(DbUnitOperation.TRUNCATE_TABLE)
 public class DbUnitRunnerIT {
 
+	@ClassRule
+	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
+
 	@BeforeClass
 	public static void setup() throws Exception {
-		Connection connection = createConnection();
-		connection.prepareStatement("DROP TABLE IF EXISTS foo").execute();
-		connection.prepareStatement("DROP TABLE IF EXISTS bar").execute();
-		connection.prepareStatement("CREATE TABLE foo (id int, name varchar(100))").execute();
-		connection.prepareStatement("CREATE TABLE bar (id int, title varchar(100))").execute();
-
 		assertThat(countFrom("foo")).isZero();
 		assertThat(countFrom("bar")).isZero();
 	}
 
 	@Test
 	public void test1() throws Exception {
-		int c1 = countFrom("foo");
-		int c2 = countFrom("bar");
-
-		assertThat(c1).isEqualTo(2);
-		assertThat(c2).isEqualTo(3);
+		assertThat(countFrom("foo")).isEqualTo(2);
+		assertThat(countFrom("bar")).isEqualTo(3);
 	}
 
 	@Test
 	@DbUnitDataSet("/dataset/xml/foo.xml")
 	public void test2() throws Exception {
-		int c1 = countFrom("foo");
-		int c2 = countFrom("bar");
-
-		assertThat(c1).isEqualTo(2);
-		assertThat(c2).isEqualTo(0);
-	}
-
-	private static Connection createConnection() {
-		try {
-			Class.forName("org.hsqldb.jdbcDriver");
-			return DriverManager.getConnection("jdbc:hsqldb:mem:testdb", "SA", "");
-		}
-		catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+		assertThat(countFrom("foo")).isEqualTo(2);
+		assertThat(countFrom("bar")).isEqualTo(0);
 	}
 
 	private static int countFrom(String tableName) {
 		try {
-			Connection connection = createConnection();
+			Connection connection = dbRule.getConnection();
 			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
 			result.next();
 			return result.getInt("nb");

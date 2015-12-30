@@ -76,7 +76,7 @@ public class JdbcDriverTest {
 
 	@Test
 	public void it_should_match_hsqldb_driver() {
-		String url = "jdbc:hsqldb:testdb";
+		String url = "jdbc:hsqldb:mem:testdb";
 		assertThat(JdbcDriver.HSQLDB.match(url)).isTrue();
 		assertThat(JdbcDriver.MSSQL.match(url)).isFalse();
 		assertThat(JdbcDriver.ORACLE.match(url)).isFalse();

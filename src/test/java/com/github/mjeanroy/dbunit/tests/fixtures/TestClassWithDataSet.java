@@ -22,69 +22,22 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetupOperation;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDownOperation;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.junit.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitDataSet("/dataset/xml")
 @DbUnitSetupOperation(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDownOperation(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleIT {
+public class TestClassWithDataSet {
 
-	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
-
-	@Rule
-	public DbUnitRule rule = new DbUnitRule(new JdbcConnectionFactory() {
-		@Override
-		public Connection getConnection() {
-			return dbRule.getConnection();
-		}
-	});
-
-	@BeforeClass
-	public static void setup() throws Exception {
-		assertThat(countFrom("foo")).isZero();
-		assertThat(countFrom("bar")).isZero();
+	public void method1() {
 	}
 
-	@Test
-	public void test1() throws Exception {
-		assertThat(countFrom("foo")).isEqualTo(2);
-		assertThat(countFrom("bar")).isEqualTo(3);
-	}
-
-	@Test
 	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
-		assertThat(countFrom("foo")).isEqualTo(2);
-		assertThat(countFrom("bar")).isEqualTo(0);
-	}
-
-	private static int countFrom(String tableName) {
-		try {
-			Connection connection = dbRule.getConnection();
-			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
-			result.next();
-			return result.getInt("nb");
-		}
-		catch (Exception ex) {
-			throw new RuntimeException(ex);
-		}
+	public void method2() {
 	}
 }
