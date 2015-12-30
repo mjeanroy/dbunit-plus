@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
@@ -116,9 +117,11 @@ public class DbUnitRunner {
 	}
 
 	private void setupOrTearDown(Connection connection, DbOperation op) {
+		IDatabaseConnection dbConnection = null;
+
 		try {
 			log.trace(" 1- Get SQL connection");
-			IDatabaseConnection dbConnection = new DatabaseConnection(connection);
+			dbConnection = new DatabaseConnection(connection);
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
 			log.trace(" 2- Load data set");
@@ -133,6 +136,17 @@ public class DbUnitRunner {
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			throw new JdbcException(ex);
+		}
+		finally {
+			if (dbConnection != null) {
+				try {
+					dbConnection.close();
+				}
+				catch (SQLException ex) {
+					// No worries
+					log.warn(ex.getMessage());
+				}
+			}
 		}
 	}
 
