@@ -31,20 +31,14 @@ import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Method;
 import java.sql.Connection;
 
 /**
  * JUnit Rule to setup DbUnit database for each tests.
  */
 public class DbUnitRule implements TestRule {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(DbUnitRule.class);
 
 	/**
 	 * Factory to create instance of {@link Connection} for each test.
@@ -74,18 +68,16 @@ public class DbUnitRule implements TestRule {
 		return new Statement() {
 			@Override
 			public void evaluate() throws Throwable {
-				DbUnitRunner runner = new DbUnitRunner(description.getTestClass(), description.getMethodName(), connectionFactory);
-				if (!runner.isNoOp()) {
-					runner.beforeTest();
-				}
+				Class<?> testClass = description.getTestClass();
+				Method method = testClass.getMethod(description.getMethodName());
+				DbUnitRunner runner = new DbUnitRunner(testClass, connectionFactory);
+				runner.beforeTest(method);
 
 				try {
 					statement.evaluate();
 				}
 				finally {
-					if (!runner.isNoOp()) {
-						runner.afterTest();
-					}
+					runner.afterTest(method);
 				}
 			}
 		};

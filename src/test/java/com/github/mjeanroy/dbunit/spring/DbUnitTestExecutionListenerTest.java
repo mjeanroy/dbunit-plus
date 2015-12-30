@@ -36,14 +36,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
 
 import javax.sql.DataSource;
-
 import java.lang.reflect.Method;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,21 +52,18 @@ public class DbUnitTestExecutionListenerTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void it_should_execute_before_test() throws Exception {
+	public void it_should_prepare_test_and_initialize_runner() throws Exception {
 		TestContext ctx = mock(TestContext.class);
 
 		Class testClass = TestClassWithDataSet.class;
 		when(ctx.getTestClass()).thenReturn(testClass);
-
-		Method method = testClass.getMethod("method1");
-		when(ctx.getTestMethod()).thenReturn(method);
 
 		ApplicationContext appContext = mock(ApplicationContext.class);
 		when(appContext.getBean(DataSource.class)).thenReturn(dbRule.getDb());
 		when(ctx.getApplicationContext()).thenReturn(appContext);
 
 		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
-		listener.beforeTestMethod(ctx);
+		listener.prepareTestInstance(ctx);
 
 		ArgumentCaptor<DbUnitRunner> captor = ArgumentCaptor.forClass(DbUnitRunner.class);
 		verify(ctx).setAttribute(same("DBUNIT_RUNNER"), captor.capture());
@@ -80,10 +75,6 @@ public class DbUnitTestExecutionListenerTest {
 			.isNotNull()
 			.isSameAs(testClass);
 
-		assertThat(readPrivate(runner, "testMethod", String.class))
-			.isNotNull()
-			.isEqualTo("method1");
-
 		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
 			.isNotNull()
 			.isExactlyInstanceOf(JdbcDataSourceConnectionFactory.class);
@@ -92,35 +83,41 @@ public class DbUnitTestExecutionListenerTest {
 		verify(appContext).getBean(DataSource.class);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Test
+	public void it_should_execute_before_test() throws Exception {
+		DbUnitRunner runner = mock(DbUnitRunner.class);
+		TestContext ctx = mock(TestContext.class);
+
+		Class klass = TestClassWithDataSet.class;
+		Method method = klass.getMethod("method1");
+		when(ctx.getTestClass()).thenReturn(klass);
+		when(ctx.getTestMethod()).thenReturn(method);
+		when(ctx.getAttribute("DBUNIT_RUNNER")).thenReturn(runner);
+
+		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		listener.beforeTestMethod(ctx);
+
+		verify(ctx).getAttribute("DBUNIT_RUNNER");
+		verify(runner).beforeTest(method);
+	}
+
+	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_execute_after_test() throws Exception {
 		DbUnitRunner runner = mock(DbUnitRunner.class);
-		when(runner.isNoOp()).thenReturn(false);
-
 		TestContext ctx = mock(TestContext.class);
+
+		Class klass = TestClassWithDataSet.class;
+		Method method = klass.getMethod("method1");
+		when(ctx.getTestClass()).thenReturn(klass);
+		when(ctx.getTestMethod()).thenReturn(method);
 		when(ctx.getAttribute("DBUNIT_RUNNER")).thenReturn(runner);
 
 		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 		listener.afterTestMethod(ctx);
 
 		verify(ctx).getAttribute("DBUNIT_RUNNER");
-		verify(runner).isNoOp();
-		verify(runner).afterTest();
-	}
-
-	@Test
-	public void it_should_not_execute_after_test_if_no_op() throws Exception {
-		DbUnitRunner runner = mock(DbUnitRunner.class);
-		when(runner.isNoOp()).thenReturn(true);
-
-		TestContext ctx = mock(TestContext.class);
-		when(ctx.getAttribute("DBUNIT_RUNNER")).thenReturn(runner);
-
-		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
-		listener.afterTestMethod(ctx);
-
-		verify(ctx).getAttribute("DBUNIT_RUNNER");
-		verify(runner).isNoOp();
-		verify(runner, never()).afterTest();
+		verify(runner).afterTest(method);
 	}
 }

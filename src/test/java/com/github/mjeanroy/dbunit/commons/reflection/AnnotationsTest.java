@@ -28,28 +28,35 @@ import org.junit.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Method;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnnotationsTest {
 
 	@Test
-	public void it_should_find_annotation_on_class() {
-		TestAnnotation annotation = Annotations.findAnnotation(TestClassAnnotation.class, "method1", TestAnnotation.class);
+	public void it_should_find_annotation_on_class() throws Exception {
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		Method method = klass.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("foo");
 	}
 
 	@Test
-	public void it_should_find_annotation_on_method() {
-		TestAnnotation annotation = Annotations.findAnnotation(TestClassAnnotation.class, "method2", TestAnnotation.class);
+	public void it_should_find_annotation_on_method() throws Exception {
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		Method method = klass.getMethod("method2");
+		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("bar");
 	}
 
 	@Test
-	public void it_should_not_find_annotation() {
-		TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, "method1", TestAnnotation.class);
+	public void it_should_not_find_annotation() throws Exception {
+		Class<TestClassWithoutAnnotation> klass = TestClassWithoutAnnotation.class;
+		Method method = klass.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
 		assertThat(annotation).isNull();
 	}
 

@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
@@ -60,11 +61,6 @@ public class DbUnitRunner {
 	private final Class<?> testClass;
 
 	/**
-	 * Test method: test method to execute.
-	 */
-	private final String testMethod;
-
-	/**
 	 * Factory used to retrieve SQL connection before and
 	 * after execution of test method.
 	 */
@@ -82,19 +78,16 @@ public class DbUnitRunner {
 	 *
 	 * DbUnit DataSet will be automatically detected:
 	 * <ol>
-	 * <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 * <li>If class to test contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 * <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
+	 *   <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
+	 *  <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
 	 * </ol>
 	 *
 	 * @param testClass Class to test.
-	 * @param testMethod Method to launch.
 	 * @param factory Factory to get new SQL connection before and after test methods.
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
-	public DbUnitRunner(Class<?> testClass, String testMethod, JdbcConnectionFactory factory) {
+	public DbUnitRunner(Class<?> testClass, JdbcConnectionFactory factory) {
 		this.testClass = notNull(testClass, "Test Class must not be null");
-		this.testMethod = testMethod;
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 		this.dataSet = readDataSet();
 	}
@@ -103,46 +96,12 @@ public class DbUnitRunner {
 	 * Create runner.
 	 *
 	 * @param testClass Class to test.
-	 * @param testMethod Method to launch.
 	 * @param dataSource DataSource to get new SQL connection before and after test methods.
 	 * @throws DbUnitException If dataSet parsing failed.
 	 * @see {#DbUnitRunner()}.
 	 */
-	public DbUnitRunner(Class<?> testClass, String testMethod, DataSource dataSource) {
-		this(testClass, testMethod, new JdbcDataSourceConnectionFactory(notNull(dataSource, "DataSource must not be null")));
-	}
-
-	/**
-	 * Read dbUnit dataSet.
-	 *
-	 * @return Parsed dataSet.
-	 * @throws DbUnitException If dataSet parsing failed.
-	 */
-	private IDataSet readDataSet() {
-		DbUnitDataSet annotation = findAnnotation(testClass, testMethod, DbUnitDataSet.class);
-
-		if (annotation != null && annotation.value().length > 0) {
-			try {
-				log.warn("Fond @DbUnitDataSet annotation, parse annotation value: {}", annotation.value());
-				return createDataSet(annotation.value());
-			}
-			catch (DataSetException ex) {
-				log.error(ex.getMessage(), ex);
-				throw new DbUnitException(ex);
-			}
-		}
-
-		log.warn("Cannot find @DbUnitDataSet annotation, skip.");
-		return null;
-	}
-
-	/**
-	 * Check if runner is a no-op runner (i.e data set is empty).
-	 *
-	 * @return {@code true} if runner is a no-op, {@code false} otherwise.
-	 */
-	public boolean isNoOp() {
-		return dataSet == null;
+	public DbUnitRunner(Class<?> testClass, DataSource dataSource) {
+		this(testClass, new JdbcDataSourceConnectionFactory(notNull(dataSource, "DataSource must not be null")));
 	}
 
 	/**
@@ -152,28 +111,34 @@ public class DbUnitRunner {
 	 *   <li>Load DataSet and execute setup operation.</li>
 	 *   <li>Close SQL connection.</li>
 	 * </ol>
+	 *
+	 * @param testMethod Method to execute.
 	 */
-	public void beforeTest() {
-		if (!isNoOp()) {
-			setupOrTearDown(SETUP);
-		}
+	public void beforeTest(Method testMethod) {
+		setupOrTearDown(testMethod, SETUP);
 	}
 
 	/**
-	 * Load data set before test execution:
+	 * Unload data set after test execution:
 	 * <ol>
 	 *   <li>Get new SQL connection.</li>
 	 *   <li>Remove DataSet and execute tear down operation.</li>
 	 *   <li>Close SQL connection.</li>
 	 * </ol>
+	 *
+	 * @param testMethod Executed method.
 	 */
-	public void afterTest() {
-		if (!isNoOp()) {
-			setupOrTearDown(TEAR_DOWN);
-		}
+	public void afterTest(Method testMethod) {
+		setupOrTearDown(testMethod, TEAR_DOWN);
 	}
 
-	private void setupOrTearDown(DbOperation op) {
+	private void setupOrTearDown(Method testMethod, DbOperation op) {
+		// Read dataSet from method.
+		IDataSet dataSet = readDataSet(notNull(testMethod, "Test method must not be null"));
+		if (dataSet == null) {
+			return;
+		}
+
 		IDatabaseConnection dbConnection = null;
 
 		try {
@@ -207,14 +172,65 @@ public class DbUnitRunner {
 		}
 	}
 
+	/**
+	 * Read dbUnit dataSet from class test class annotation.
+	 *
+	 * @return Parsed dataSet.
+	 * @throws DbUnitException If dataSet parsing failed.
+	 */
+	private IDataSet readDataSet() {
+		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		if (annotation != null && annotation.value().length > 0) {
+			return readAnnotationDataSet(annotation);
+		}
+
+		log.warn("Cannot find @DbUnitDataSet annotation, skip.");
+		return null;
+	}
+
+	/**
+	 * Read DbUnit from tested method.
+	 * If method is not annotated with {@link DbUnitDataSet}, dataSet from
+	 * class annotation is returned.
+	 *
+	 * @param method Tested method.
+	 * @return DataSet.
+	 */
+	private IDataSet readDataSet(Method method) {
+		return method.isAnnotationPresent(DbUnitDataSet.class) ?
+			readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) :
+			dataSet;
+	}
+
+	/**
+	 * Create dataSet from annotation parameter.
+	 *
+	 * @param annotation Annotation.
+	 * @return DataSet.
+	 */
+	private static IDataSet readAnnotationDataSet(DbUnitDataSet annotation) {
+		if (annotation.value().length == 0) {
+			return null;
+		}
+
+		try {
+			log.debug("Fond @DbUnitDataSet annotation, parse annotation value: {}", annotation.value());
+			return createDataSet(annotation.value());
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
+	}
+
 	private static interface DbOperation {
-		void apply(Class testClass, String testMethod, IDatabaseTester dbTester) throws Exception;
+		void apply(Class testClass, Method method, IDatabaseTester dbTester) throws Exception;
 	}
 
 	private static final DbOperation SETUP = new DbOperation() {
 		@Override
-		public void apply(Class testClass, String testMethod, IDatabaseTester dbTester) throws Exception {
-			DbUnitSetup op = findAnnotation(testClass, testMethod, DbUnitSetup.class);
+		public void apply(Class testClass, Method method, IDatabaseTester dbTester) throws Exception {
+			DbUnitSetup op = findAnnotation(testClass, method, DbUnitSetup.class);
 			if (op != null) {
 				log.debug(" 3- Initialize setup operation");
 				dbTester.setSetUpOperation(op.value().getOperation());
@@ -230,8 +246,8 @@ public class DbUnitRunner {
 
 	private static final DbOperation TEAR_DOWN = new DbOperation() {
 		@Override
-		public void apply(Class testClass, String testMethod, IDatabaseTester dbTester) throws Exception {
-			DbUnitTearDown op = findAnnotation(testClass, testMethod, DbUnitTearDown.class);
+		public void apply(Class testClass, Method method, IDatabaseTester dbTester) throws Exception {
+			DbUnitTearDown op = findAnnotation(testClass, method, DbUnitTearDown.class);
 			if (op != null) {
 				log.trace(" 3- Initialize tear down operation");
 				dbTester.setTearDownOperation(op.value().getOperation());

@@ -1,6 +1,5 @@
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import com.github.mjeanroy.dbunit.exception.ReflectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,39 +25,30 @@ public final class Annotations {
 	 * </ul>
 	 *
 	 * @param klass Class.
-	 * @param methodName Method name in given {@ccode class}.
+	 * @param method Method in given {@code class}.
 	 * @param annotationClass Annotation class to look fo.
 	 * @param <T> Type of annotation.
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends Annotation> T findAnnotation(Class klass, String methodName, Class<T> annotationClass) {
-		try {
-			T annotation = null;
+	public static <T extends Annotation> T findAnnotation(Class klass, Method method, Class<T> annotationClass) {
+		T annotation = null;
 
-			// First, search on method.
-			if (methodName != null) {
-				Method method = klass.getMethod(methodName);
-				if (method != null) {
-					annotation = method.getAnnotation(annotationClass);
-				}
-			}
-
-			// Then, search on class.
-			if (annotation == null) {
-				annotation = (T) klass.getAnnotation(annotationClass);
-			}
-
-			// Then, search on package.
-			if (annotation == null) {
-				annotation = (T) klass.getPackage().getAnnotation(annotationClass);
-			}
-
-			return annotation;
+		// First, search on method.
+		if (method != null) {
+			annotation = method.getAnnotation(annotationClass);
 		}
-		catch (NoSuchMethodException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new ReflectionException(ex);
+
+		// Then, search on class.
+		if (annotation == null) {
+			annotation = (T) klass.getAnnotation(annotationClass);
 		}
+
+		// Then, search on package.
+		if (annotation == null) {
+			annotation = klass.getPackage().getAnnotation(annotationClass);
+		}
+
+		return annotation;
 	}
 }

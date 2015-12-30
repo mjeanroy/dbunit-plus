@@ -45,27 +45,27 @@ public class DbUnitTestExecutionListener extends AbstractTestExecutionListener {
 	private static final String DBUNIT_RUNNER = "DBUNIT_RUNNER";
 
 	@Override
-	public void beforeTestMethod(TestContext ctx) throws Exception {
-		super.beforeTestMethod(ctx);
+	public void prepareTestInstance(TestContext ctx) throws Exception {
+		super.prepareTestInstance(ctx);
 
 		// Initialize runner
-		// TODO We should parse class dataSet once.
 		ApplicationContext appContext = ctx.getApplicationContext();
 		DataSource dataSource = appContext.getBean(DataSource.class);
-		DbUnitRunner runner = new DbUnitRunner(ctx.getTestClass(), ctx.getTestMethod().getName(), dataSource);
+		DbUnitRunner runner = new DbUnitRunner(ctx.getTestClass(), dataSource);
 		ctx.setAttribute(DBUNIT_RUNNER, runner);
+	}
 
-		if (!runner.isNoOp()) {
-			runner.beforeTest();
-		}
+	@Override
+	public void beforeTestMethod(TestContext ctx) throws Exception {
+		super.beforeTestMethod(ctx);
+		DbUnitRunner runner = (DbUnitRunner) ctx.getAttribute(DBUNIT_RUNNER);
+		runner.beforeTest(ctx.getTestMethod());
 	}
 
 	@Override
 	public void afterTestMethod(TestContext ctx) throws Exception {
 		super.afterTestMethod(ctx);
 		DbUnitRunner runner = (DbUnitRunner) ctx.getAttribute(DBUNIT_RUNNER);
-		if (!runner.isNoOp()) {
-			runner.afterTest();
-		}
+		runner.afterTest(ctx.getTestMethod());
 	}
 }
