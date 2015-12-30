@@ -90,4 +90,13 @@ public class DbUnitRule implements TestRule {
 			}
 		};
 	}
+
+	/**
+	 * Get new SQL connection.
+	 *
+	 * @return SQL Connection.
+	 */
+	public Connection getConnection() {
+		return connectionFactory.getConnection();
+	}
 }

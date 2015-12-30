@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.junit;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
@@ -36,8 +37,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -54,8 +55,8 @@ public class DbUnitRuleTest {
 
 	@Before
 	public void setup() throws Exception {
-		assertThat(count("foo")).isZero();
-		assertThat(count("bar")).isZero();
+		assertThat(countFrom(db.getConnection(), "foo")).isZero();
+		assertThat(countFrom(db.getConnection(), "bar")).isZero();
 		rule = new DbUnitRule(new EmbeddedDatabaseConnectionFactory(db.getDb()));
 	}
 
@@ -75,8 +76,8 @@ public class DbUnitRuleTest {
 		doAnswer(new Answer() {
 			@Override
 			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(count("foo")).isEqualTo(2);
-				assertThat(count("bar")).isEqualTo(3);
+				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
+				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
 				return null;
 			}
 		}).when(statement).evaluate();
@@ -102,8 +103,8 @@ public class DbUnitRuleTest {
 		doAnswer(new Answer() {
 			@Override
 			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(count("foo")).isEqualTo(2);
-				assertThat(count("bar")).isZero();
+				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
+				assertThat(countFrom(db.getConnection(), "bar")).isZero();
 				return null;
 			}
 		}).when(statement).evaluate();
@@ -113,10 +114,18 @@ public class DbUnitRuleTest {
 		verify(statement).evaluate();
 	}
 
-	private int count(String table) throws Exception {
-		Connection connection = db.getConnection();
-		ResultSet resultSet = connection.prepareStatement("SELECT COUNT(*) as nb FROM " + table).executeQuery();
-		resultSet.next();
-		return resultSet.getInt("nb");
+	@Test
+	public void it_should_get_connection() {
+		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
+
+		Connection connection = mock(Connection.class);
+		when(factory.getConnection()).thenReturn(connection);
+		DbUnitRule rule = new DbUnitRule(factory);
+
+		assertThat(rule.getConnection())
+			.isNotNull()
+			.isSameAs(connection);
+
+		verify(factory).getConnection();
 	}
 }
