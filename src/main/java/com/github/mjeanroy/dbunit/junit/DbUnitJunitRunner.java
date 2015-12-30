@@ -27,7 +27,7 @@ import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConf
  * DbUnit configuration should be set using {@link DbUnitConfiguration} configuration:
  *
  * <pre><code>
- *   @RunWith(DbUnitRunner.class)
+ *   @RunWith(DbUnitJunitRunner.class)
  *   @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
  *   @DbUnitDataSet("classpath:/dataset/xml")
  *   public MyDaoTest {
@@ -38,7 +38,7 @@ import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConf
  *   }
  * </code></pre>
  */
-public class DbUnitRunner extends BlockJUnit4ClassRunner {
+public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
 
 	/**
 	 * DbUnit connection factory.
@@ -51,7 +51,7 @@ public class DbUnitRunner extends BlockJUnit4ClassRunner {
 	 * @param klass Running class.
 	 * @throws InitializationError
 	 */
-	public DbUnitRunner(Class<?> klass) throws InitializationError {
+	public DbUnitJunitRunner(Class<?> klass) throws InitializationError {
 		super(klass);
 		this.factory = findConnectionFactory();
 	}

@@ -25,12 +25,12 @@
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import com.github.mjeanroy.dbunit.junit.DbUnitRunner;
+import com.github.mjeanroy.dbunit.junit.DbUnitJunitRunner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@RunWith(DbUnitRunner.class)
+@RunWith(DbUnitJunitRunner.class)
 @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 @Ignore("This is a test fixtures")
 public class TestClassWithRunner {

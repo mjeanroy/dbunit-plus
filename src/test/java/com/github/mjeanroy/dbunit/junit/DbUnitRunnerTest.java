@@ -35,7 +35,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner() throws Exception {
-		DbUnitRunner runner = new DbUnitRunner(TestClassWithRunner.class);
+		DbUnitJunitRunner runner = new DbUnitJunitRunner(TestClassWithRunner.class);
 		assertThat(runner.getTestRules(new TestClassWithRunner()))
 			.isNotNull()
 			.isNotEmpty()

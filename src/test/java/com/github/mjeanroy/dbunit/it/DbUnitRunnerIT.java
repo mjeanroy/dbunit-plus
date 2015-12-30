@@ -29,7 +29,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.junit.DbUnitRunner;
+import com.github.mjeanroy.dbunit.junit.DbUnitJunitRunner;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -41,7 +41,7 @@ import java.sql.ResultSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(DbUnitRunner.class)
+@RunWith(DbUnitJunitRunner.class)
 @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 @DbUnitDataSet("/dataset/xml")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
