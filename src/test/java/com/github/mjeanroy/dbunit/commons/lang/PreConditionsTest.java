@@ -104,6 +104,28 @@ public class PreConditionsTest {
 	}
 
 	@Test
+	public void it_should_throw_illegal_argument_exception_if_character_is_blank() {
+		String message = "should not be blank";
+
+		thrown.expect(IllegalArgumentException.class);
+		thrown.expectMessage(message);
+
+		PreConditions.notBlank(' ', message);
+	}
+
+	@Test
+	public void it_should_not_throw_exception_and_return_value_if_character_is_not_blank() {
+		String message = "should not be null";
+		char value = ';';
+
+		char result = PreConditions.notBlank(value, message);
+
+		assertThat(result)
+			.isNotNull()
+			.isSameAs(value);
+	}
+
+	@Test
 	public void startsWith_should_throw_null_pointer_exception_if_value_is_null() {
 		String message = "should not be blank";
 

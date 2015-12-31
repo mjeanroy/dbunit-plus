@@ -71,6 +71,24 @@ public final class PreConditions {
 	}
 
 	/**
+	 * Ensure that given {@code value} is not blank.
+	 *
+	 * @param value Value to check.
+	 * @param message Error message.
+	 * @param params Optional error message parameters.
+	 * @return Value if it is not {@code null}, empty or blank.
+	 * @throws NullPointerException If {@code value} is null.
+	 * @throws IllegalArgumentException If {@code value} is empty or blank.
+	 */
+	public static char notBlank(char value, String message, Object... params) {
+		if (value == ' ') {
+			throw new IllegalArgumentException(format(message, params));
+		}
+
+		return value;
+	}
+
+	/**
 	 * Ensure that given {@code value} is not {@code null}, empty or blank and starts with
 	 * given {@code prefix}.
 	 *
