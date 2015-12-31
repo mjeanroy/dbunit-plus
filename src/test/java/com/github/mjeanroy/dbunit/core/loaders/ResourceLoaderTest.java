@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.dataset;
+package com.github.mjeanroy.dbunit.core.loaders;
 
 import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
 import org.junit.Rule;
@@ -35,7 +35,7 @@ import java.io.File;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 
-public class DataSetLoaderTest {
+public class ResourceLoaderTest {
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
@@ -44,16 +44,14 @@ public class DataSetLoaderTest {
 	public ExpectedException thrown = none();
 
 	@Test
-	public void it_should_match_classpath_loader() {
+	public void it_should_find_classpath_loader() {
 		String path = "classpath:/dataset/xml/foo.xml";
-		assertThat(DataSetLoader.CLASSPATH.match(path)).isTrue();
-		assertThat(DataSetLoader.FILE_SYSTEM.match(path)).isFalse();
-		assertThat(DataSetLoader.URL.match(path)).isFalse();
+		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.CLASSPATH);
 	}
 
 	@Test
 	public void it_should_load_file_from_classpath() {
-		File file = DataSetLoader.CLASSPATH.load("classpath:/dataset/xml/foo.xml");
+		File file = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/foo.xml");
 		assertThat(file)
 			.isNotNull()
 			.exists();
@@ -63,15 +61,13 @@ public class DataSetLoaderTest {
 	public void it_should_fail_if_file_does_not_exist_in_classpath() {
 		thrown.expect(DataSetLoaderException.class);
 		thrown.expectMessage("File </dataset/xml/unknown.xml> does not exist in classpath");
-		DataSetLoader.CLASSPATH.load("classpath:/dataset/xml/unknown.xml");
+		ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/unknown.xml");
 	}
 
 	@Test
-	public void it_should_match_file_system_loader() {
+	public void it_should_find_file_system_loader() {
 		String path = "file:/dataset/xml/foo.xml";
-		assertThat(DataSetLoader.FILE_SYSTEM.match(path)).isTrue();
-		assertThat(DataSetLoader.CLASSPATH.match(path)).isFalse();
-		assertThat(DataSetLoader.URL.match(path)).isFalse();
+		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.FILE_SYSTEM);
 	}
 
 	@Test
@@ -79,7 +75,7 @@ public class DataSetLoaderTest {
 		File tmpFile = tmp.newFile("foo.xml");
 		String path = tmpFile.getAbsolutePath();
 
-		File file = DataSetLoader.FILE_SYSTEM.load("file:" + path);
+		File file = ResourceLoader.FILE_SYSTEM.load("file:" + path);
 		assertThat(file)
 			.isNotNull()
 			.exists()
@@ -90,22 +86,18 @@ public class DataSetLoaderTest {
 	public void it_should_fail_if_file_does_not_exist_in_file_system() {
 		thrown.expect(DataSetLoaderException.class);
 		thrown.expectMessage("File <file:/dataset/xml/unknown.xml> does not exist");
-		DataSetLoader.FILE_SYSTEM.load("file:/dataset/xml/unknown.xml");
+		ResourceLoader.FILE_SYSTEM.load("file:/dataset/xml/unknown.xml");
 	}
 
 	@Test
-	public void it_should_match_url_loader() {
+	public void it_should_find_url_loader() {
 		String path = "http://foo.com/dataset/xml/foo.xml";
-		assertThat(DataSetLoader.URL.match(path)).isTrue();
-		assertThat(DataSetLoader.FILE_SYSTEM.match(path)).isFalse();
-		assertThat(DataSetLoader.CLASSPATH.match(path)).isFalse();
+		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
 	}
 
 	@Test
-	public void it_should_match_url_loader_with_https() {
+	public void it_should_find_url_loader_with_https() {
 		String path = "https://foo.com/dataset/xml/foo.xml";
-		assertThat(DataSetLoader.URL.match(path)).isTrue();
-		assertThat(DataSetLoader.FILE_SYSTEM.match(path)).isFalse();
-		assertThat(DataSetLoader.CLASSPATH.match(path)).isFalse();
+		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
 	}
 }

@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
@@ -61,9 +62,9 @@ public final class DataSetFactory {
 	 */
 	public static IDataSet createDataSet(String path) throws DataSetException {
 		notNull(path, "Path must not be null to create data set");
-		DataSetLoader loader = find(asList(DataSetLoader.values()), new DataSetLoaderMatcher(path));
+		ResourceLoader loader = ResourceLoader.find(path);
 		if (loader == null) {
-			loader = DataSetLoader.CLASSPATH;
+			loader = ResourceLoader.CLASSPATH;
 		}
 
 		return createDataSet(loader.load(path));

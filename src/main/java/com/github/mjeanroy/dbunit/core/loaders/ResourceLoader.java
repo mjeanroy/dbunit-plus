@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.dataset;
+package com.github.mjeanroy.dbunit.core.loaders;
 
 import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
 import org.slf4j.Logger;
@@ -37,9 +37,9 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static java.util.Arrays.asList;
 
 /**
- * Implementations of strategies to load data set file.
+ * Implementations of strategies to load resources.
  */
-enum DataSetLoader {
+public enum ResourceLoader {
 
 	/**
 	 * Load file from classpath.
@@ -95,15 +95,15 @@ enum DataSetLoader {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(DataSetLoader.class);
+	private static final Logger log = LoggerFactory.getLogger(ResourceLoader.class);
 
 	/**
 	 * Prefix of file name.
 	 * For instance:
 	 * <ul>
-	 *   <li>{@code classpath:} for classpath loading.</li>
-	 *   <li>{@code file:} for file system loading</li>
-	 *   <li>{@code http:} for http loading</li>
+	 * <li>{@code classpath:} for classpath loading.</li>
+	 * <li>{@code file:} for file system loading</li>
+	 * <li>{@code http:} for http loading</li>
 	 * </ul>
 	 */
 	private final Collection<String> prefixes;
@@ -113,7 +113,7 @@ enum DataSetLoader {
 	 *
 	 * @param prefix Pattern prefix.
 	 */
-	private DataSetLoader(String... prefix) {
+	private ResourceLoader(String... prefix) {
 		this.prefixes = asList(prefix);
 	}
 
@@ -123,7 +123,7 @@ enum DataSetLoader {
 	 * @param name File name.
 	 * @return {@code true} if protocol match resource loader, {@code false} otherwise.
 	 */
-	public boolean match(String name) {
+	private boolean match(String name) {
 		notBlank(name, "File name should be defined");
 		return findPrefix(name.toLowerCase()) != null;
 	}
@@ -171,6 +171,22 @@ enum DataSetLoader {
 		for (String prefix : prefixes) {
 			if (name.startsWith(prefix)) {
 				return prefix;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Find loader according to given file pattern.
+	 *
+	 * @param value File pattern.
+	 * @return Matched loader.
+	 */
+	public static ResourceLoader find(String value) {
+		for (ResourceLoader loader : ResourceLoader.values()) {
+			if (loader.match(value)) {
+				return loader;
 			}
 		}
 
