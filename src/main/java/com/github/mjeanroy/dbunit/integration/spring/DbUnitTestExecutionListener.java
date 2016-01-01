@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.spring;
+package com.github.mjeanroy.dbunit.integration.spring;
 
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import org.springframework.context.ApplicationContext;

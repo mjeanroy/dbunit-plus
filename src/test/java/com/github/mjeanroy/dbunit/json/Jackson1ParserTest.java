@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.json;
 
 import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.json.Jackson1Parser;
 import com.github.mjeanroy.dbunit.tests.builders.FileBuilder;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;

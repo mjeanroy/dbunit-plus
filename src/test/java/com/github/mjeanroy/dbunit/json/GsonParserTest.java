@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import com.github.mjeanroy.dbunit.json.GsonParser;
 import com.google.gson.Gson;
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.integration.junit;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;

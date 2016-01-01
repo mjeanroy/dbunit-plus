@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.json.Jackson2Parser;
 import com.github.mjeanroy.dbunit.tests.builders.FileBuilder;
 import org.junit.Rule;
 import org.junit.Test;

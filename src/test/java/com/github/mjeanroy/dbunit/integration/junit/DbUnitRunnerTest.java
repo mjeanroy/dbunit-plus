@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.junit;
+package com.github.mjeanroy.dbunit.integration.junit;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
 import org.assertj.core.api.Condition;
