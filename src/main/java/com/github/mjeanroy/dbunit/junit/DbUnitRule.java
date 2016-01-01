@@ -68,23 +68,18 @@ public class DbUnitRule implements TestRule {
 		return new Statement() {
 			@Override
 			public void evaluate() throws Throwable {
-				Class<?> testClass = description.getTestClass();
-				DbUnitRunner runner = new DbUnitRunner(testClass, connectionFactory);
+				final Class<?> testClass = description.getTestClass();
+				final String methodName = description.getMethodName();
+				final Method method = methodName == null ? null : testClass.getMethod(methodName);
+				final DbUnitRunner runner = new DbUnitRunner(testClass, connectionFactory);
 
-				Method method = null;
-				String methodName = description.getMethodName();
-				if (methodName != null) {
-					method = testClass.getMethod(description.getMethodName());
-					runner.beforeTest(method);
-				}
+				runner.beforeTest(method);
 
 				try {
 					statement.evaluate();
 				}
 				finally {
-					if (method != null) {
-						runner.afterTest(method);
-					}
+					runner.afterTest(method);
 				}
 			}
 		};

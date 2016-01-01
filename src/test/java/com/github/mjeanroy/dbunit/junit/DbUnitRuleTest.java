@@ -88,6 +88,34 @@ public class DbUnitRuleTest {
 		verify(statement).evaluate();
 	}
 
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	@Test
+	public void it_should_load_database_for_class_rule() throws Throwable {
+		Statement statement = mock(Statement.class);
+		Description description = mock(Description.class);
+		Class testClass = TestClassWithDataSet.class;
+		when(description.getTestClass()).thenReturn(testClass);
+		when(description.getMethodName()).thenReturn(null);
+
+		Statement result = rule.apply(statement, description);
+
+		assertThat(result).isNotNull();
+		verify(statement, never()).evaluate();
+
+		doAnswer(new Answer() {
+			@Override
+			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
+				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
+				return null;
+			}
+		}).when(statement).evaluate();
+
+		result.evaluate();
+
+		verify(statement).evaluate();
+	}
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {

@@ -142,7 +142,7 @@ public class DbUnitRunner {
 
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
 		// Read dataSet from method.
-		IDataSet dataSet = readDataSet(notNull(testMethod, "Test method must not be null"));
+		IDataSet dataSet = readDataSet(testMethod);
 		if (dataSet == null) {
 			return;
 		}

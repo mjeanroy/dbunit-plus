@@ -121,6 +121,24 @@ public class DbUnitRunnerTest {
 	}
 
 	@Test
+	public void it_should_load_data_set_without_method_invocation() throws Exception {
+		Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+
+		// Setup Operation
+		runner.beforeTest(null);
+
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+
+		// Tear Down Operation
+		runner.afterTest(null);
+
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+	}
+
+	@Test
 	public void it_should_create_runner_and_read_data_set_on_method() throws Exception {
 		Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
 		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
