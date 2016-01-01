@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Mickael Jeanroy
+ * Copyright (c) 2015-2016 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,45 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.utils;
+package com.github.mjeanroy.dbunit.integration.spring;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URL;
+import org.springframework.test.context.TestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+import static java.util.Arrays.asList;
 
 /**
- * Static Test Utilities.
+ * Provide integration between spring {@link TransactionalTestExecutionListener} and
+ * custom {@link DbUnitTestExecutionListener}:
+ * <ol>
+ *   <li>{@link TransactionalTestExecutionListener} will be executed first.</li>
+ *   <li>{@link DbUnitTestExecutionListener} will be executed last.</li>
+ * </ol>
  */
-public class TestUtils {
+public class TransactionalDbUnitTestExecutionListener extends CompositeTestExecutionListener {
 
-	public static File getTestResource(String path) throws Exception {
-		URL url = TestUtils.class.getResource(path);
-		URI uri = url.toURI();
-		return new File(uri);
-	}
-
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> T readPrivate(Object o, String field, Class<T> klass) throws Exception {
-		Class c = o.getClass();
-		NoSuchFieldException ex = null;
-
-		while (c != null) {
-			try {
-				Field f = c.getDeclaredField(field);
-				f.setAccessible(true);
-				return (T) f.get(o);
-			}
-			catch (NoSuchFieldException e) {
-				c = c.getSuperclass();
-				ex = e;
-			}
-		}
-
-		if (ex != null) {
-			throw ex;
-		}
-
-		return null;
+	public TransactionalDbUnitTestExecutionListener() {
+		super(asList(
+			(TestExecutionListener) new TransactionalTestExecutionListener(),
+			(TestExecutionListener) new DbUnitTestExecutionListener()
+		));
 	}
 }
