@@ -88,7 +88,6 @@ public class DbUnitRuleTest {
 		verify(statement).evaluate();
 	}
 
-
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_load_database_for_class_rule() throws Throwable {
@@ -116,6 +115,7 @@ public class DbUnitRuleTest {
 
 		verify(statement).evaluate();
 	}
+
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {
