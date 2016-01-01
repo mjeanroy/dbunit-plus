@@ -56,6 +56,19 @@ public final class Collections {
 	}
 
 	/**
+	 * Apply function to each element of a collection.
+	 *
+	 * @param inputs Collection of inputs.
+	 * @param func Function to apply.
+	 * @param <T> Type of input.
+	 */
+	public static <T> void forEach(Iterable<T> inputs, Function<T> func) {
+		for (T input : inputs) {
+			func.apply(input);
+		}
+	}
+
+	/**
 	 * Find first value matching predicate.
 	 *
 	 * @param inputs Set of inputs.
@@ -77,11 +90,12 @@ public final class Collections {
 	 *
 	 * @param maps Collection of {@link Map}.
 	 * @param <T> Type of key.
+	 * @param <U> Type of values.
 	 * @return Set of all keys.
 	 */
-	public static <T> Set<T> keys(Collection<Map<T, Object>> maps) {
+	public static <T, U> Set<T> keys(Collection<Map<T, U>> maps) {
 		Set<T> set = new LinkedHashSet<T>();
-		for (Map<T, Object> map : maps) {
+		for (Map<T, U> map : maps) {
 			set.addAll(map.keySet());
 		}
 		return set;

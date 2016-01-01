@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Mickael Jeanroy
+ * Copyright (c) 2015;2016 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
-
-import org.dbunit.dataset.DataSetException;
-
-import java.sql.SQLException;
+package com.github.mjeanroy.dbunit.commons.collections;
 
 /**
- * DbUnit exception.
+ * Function that can be applied to any input.
  *
- * <p />
- *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
+ * @param <T>
  */
-@SuppressWarnings("serial")
-public class DbUnitException extends AbstractDbUnitException {
+public interface Function<T> {
 
 	/**
-	 * Create exception.
+	 * Apply function.
 	 *
-	 * @param message Error message.
+	 * @param input Input value.
 	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link DataSetException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(DataSetException ex) {
-		super(ex);
-	}
-
-	/**
-	 * Wrap {@link SQLException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(SQLException ex) {
-		super(ex);
-	}
+	void apply(T input);
 }

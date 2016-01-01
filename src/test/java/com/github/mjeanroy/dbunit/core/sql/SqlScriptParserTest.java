@@ -205,8 +205,84 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
+	public void it_should_parse_file_path() throws Exception {
+		String script = "/sql/init.sql";
+
+		List<String> queries = SqlScriptParser.parseScript(script, configuration);
+
+		assertThat(queries)
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(4)
+			.containsExactly(
+				"DROP TABLE IF EXISTS foo;",
+				"DROP TABLE IF EXISTS bar;",
+				"CREATE TABLE foo (id INT, name varchar(100));",
+				"CREATE TABLE bar (id INT, title varchar(100));"
+			);
+	}
+
+	@Test
+	public void it_should_parse_file_path_classpath() throws Exception {
+		String script = "classpath:/sql/init.sql";
+
+		List<String> queries = SqlScriptParser.parseScript(script, configuration);
+
+		assertThat(queries)
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(4)
+			.containsExactly(
+				"DROP TABLE IF EXISTS foo;",
+				"DROP TABLE IF EXISTS bar;",
+				"CREATE TABLE foo (id INT, name varchar(100));",
+				"CREATE TABLE bar (id INT, title varchar(100));"
+			);
+	}
+
+	@Test
 	public void it_should_execute_sql_file() throws Exception {
 		File script = getTestResource("/sql/init.sql");
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
+		when(connection.prepareStatement(anyString())).thenReturn(statement);
+
+		SqlScriptParser.executeScript(connection, script, configuration);
+
+		InOrder inOrder = inOrder(connection, statement);
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS foo;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS bar;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE foo (id INT, name varchar(100));");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE bar (id INT, title varchar(100));");
+		inOrder.verify(statement).execute();
+	}
+
+	@Test
+	public void it_should_execute_sql_file_path() throws Exception {
+		String script = "/sql/init.sql";
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
+		when(connection.prepareStatement(anyString())).thenReturn(statement);
+
+		SqlScriptParser.executeScript(connection, script, configuration);
+
+		InOrder inOrder = inOrder(connection, statement);
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS foo;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS bar;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE foo (id INT, name varchar(100));");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE bar (id INT, title varchar(100));");
+		inOrder.verify(statement).execute();
+	}
+
+	@Test
+	public void it_should_execute_sql_file_path_from_classpath() throws Exception {
+		String script = "classpath:/sql/init.sql";
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 		when(connection.prepareStatement(anyString())).thenReturn(statement);

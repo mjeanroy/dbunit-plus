@@ -37,19 +37,33 @@ import java.sql.SQLException;
  */
 public class EmbeddedDatabaseRule extends ExternalResource {
 
+	private final boolean loadScript;
+
 	/**
 	 * Embedded Database.
 	 */
 	private EmbeddedDatabase db;
 
+	public EmbeddedDatabaseRule() {
+		this(true);
+	}
+
+	public EmbeddedDatabaseRule(boolean loadScript) {
+		this.loadScript = loadScript;
+	}
+
 	@Override
 	protected void before() {
-		db = new EmbeddedDatabaseBuilder()
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.generateUniqueName(false)
-			.setName("testdb")
-			.addScript("classpath:/sql/init.sql")
-			.build();
+			.setName("testdb");
+
+		if (loadScript) {
+			builder.addScript("classpath:/sql/init.sql");
+		}
+
+		db = builder.build();
 	}
 
 	@Override

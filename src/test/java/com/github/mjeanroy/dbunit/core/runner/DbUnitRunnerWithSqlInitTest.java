@@ -22,52 +22,42 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it;
+package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.junit.DbUnitRule;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSetAndSqlInit;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 
-import java.sql.Connection;
+import java.lang.reflect.Method;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DbUnitDataSet("/dataset/xml")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleIT {
+public class DbUnitRunnerWithSqlInitTest {
 
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
 
-	@Rule
-	public DbUnitRule rule = new DbUnitRule(new JdbcConnectionFactory() {
-		@Override
-		public Connection getConnection() {
-			return dbRule.getConnection();
-		}
-	});
-
 	@Test
-	public void test1() throws Exception {
+	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
+		Class<TestClassWithDataSetAndSqlInit> klass = TestClassWithDataSetAndSqlInit.class;
+		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+
+		// Setup Operation
+		Method testMethod = klass.getMethod("method1");
+		runner.beforeTest(testMethod);
+
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
-	}
 
-	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
+		// Tear Down Operation
+		runner.afterTest(testMethod);
+
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
 	}
 }

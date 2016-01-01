@@ -34,6 +34,22 @@ public final class Objects {
 	}
 
 	/**
+	 * Get first non {@code null} value:
+	 * <ol>
+	 *   <li>If {@code o1} is not {@code null}, it is returned.</li>
+	 *   <li>Otherwise, return {@code o2}.</li>
+	 * </ol>
+	 *
+	 * @param o1 First value.
+	 * @param o2 Second value.
+	 * @param <T> Type of values.
+	 * @return First non {@code null} value.
+	 */
+	public static <T> T firstNonNull(T o1, T o2) {
+		return o1 == null ? o2 : o1;
+	}
+
+	/**
 	 * Check that two values are equals:
 	 * <ul>
 	 *   <li>If both are the same instances (or {@code null}, return {@code true}.</li>

@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
+import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
 import com.github.mjeanroy.dbunit.exception.SqlParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
+import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
 /**
  * Run SQL script against SQL {@link java.sql.Connection}.
@@ -76,6 +78,19 @@ public final class SqlScriptParser {
 	}
 
 	/**
+	 * Parse SQL script and return list of SQL query.
+	 *
+	 * @param path SQL file path.
+	 * @param configuration Parsing configuration.
+	 * @return List of query parsed in given input.
+	 * @throws SqlParserException If an error occurred during parsing.
+	 */
+	public static List<String> parseScript(String path, SqlScriptParserConfiguration configuration) {
+		ResourceLoader loader = firstNonNull(ResourceLoader.find(path), ResourceLoader.CLASSPATH);
+		return parseScript(loader.load(path), configuration);
+	}
+
+	/**
 	 * Parse SQL script file and return list of SQL query.
 	 *
 	 * @param sqlFile SQL File.
@@ -110,12 +125,25 @@ public final class SqlScriptParser {
 	 * Parse SQL script file and execute queries one by one (if a query failed, next queries are not executed).
 	 *
 	 * @param connection SQL Connection.
-	 * @param reader SQL Script.
+	 * @param sqlFile SQL Script.
 	 * @param configuration SQL parser configuration.
 	 * @throws SQLException If a query failed.
 	 */
-	public static void executeScript(Connection connection, File reader, SqlScriptParserConfiguration configuration) throws SQLException {
-		List<String> queries = parseScript(reader, configuration);
+	public static void executeScript(Connection connection, File sqlFile, SqlScriptParserConfiguration configuration) throws SQLException {
+		List<String> queries = parseScript(sqlFile, configuration);
+		executeQueries(connection, queries);
+	}
+
+	/**
+	 * Parse SQL script file and execute queries one by one (if a query failed, next queries are not executed).
+	 *
+	 * @param connection SQL connection.
+	 * @param sqlFilePath SQL script path.
+	 * @param configuration SQL parser configuration.
+	 * @throws SQLException If a query failed.
+	 */
+	public static void executeScript(Connection connection, String sqlFilePath, SqlScriptParserConfiguration configuration) throws SQLException {
+		List<String> queries = parseScript(sqlFilePath, configuration);
 		executeQueries(connection, queries);
 	}
 

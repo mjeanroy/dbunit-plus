@@ -22,52 +22,20 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.junit.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-
-import java.sql.Connection;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitDataSet("/dataset/xml")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
+@DbUnitInit(sql = "/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleIT {
+public class TestClassWithDataSetAndSqlInit {
 
-	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
-
-	@Rule
-	public DbUnitRule rule = new DbUnitRule(new JdbcConnectionFactory() {
-		@Override
-		public Connection getConnection() {
-			return dbRule.getConnection();
-		}
-	});
-
-	@Test
-	public void test1() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
-	}
-
-	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
+	public void method1() {
 	}
 }

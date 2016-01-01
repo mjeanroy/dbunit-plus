@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Mickael Jeanroy
+ * Copyright (c) 2015;2016 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,47 +22,24 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.runner;
 
-import org.dbunit.dataset.DataSetException;
+import org.dbunit.IDatabaseTester;
 
-import java.sql.SQLException;
+import java.lang.reflect.Method;
 
 /**
- * DbUnit exception.
- *
- * <p />
- *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
+ * Apply DbUnit database operation (setup or tear down).
  */
-@SuppressWarnings("serial")
-public class DbUnitException extends AbstractDbUnitException {
+interface DbOperation {
 
 	/**
-	 * Create exception.
+	 * Apply database operation.
 	 *
-	 * @param message Error message.
+	 * @param testClass Test Class.
+	 * @param method Executed method.
+	 * @param dbTester DbUnit database.
+	 * @throws Exception If an error occurred.
 	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link DataSetException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(DataSetException ex) {
-		super(ex);
-	}
-
-	/**
-	 * Wrap {@link SQLException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(SQLException ex) {
-		super(ex);
-	}
+	void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception;
 }

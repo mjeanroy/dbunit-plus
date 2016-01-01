@@ -25,10 +25,10 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
+import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import org.dbunit.DefaultDatabaseTester;
@@ -42,11 +42,16 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.sql.SQLException;
+import java.sql.Connection;
+import java.util.List;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
+import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
+import static java.util.Arrays.asList;
 
 public class DbUnitRunner {
 
@@ -78,8 +83,8 @@ public class DbUnitRunner {
 	 *
 	 * DbUnit DataSet will be automatically detected:
 	 * <ol>
-	 *   <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 *  <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
+	 * <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
+	 * <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
 	 * </ol>
 	 *
 	 * @param testClass Class to test.
@@ -90,6 +95,9 @@ public class DbUnitRunner {
 		this.testClass = notNull(testClass, "Test Class must not be null");
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 		this.dataSet = readDataSet();
+
+		// Then, run SQL initialization script
+		runSqlScript();
 	}
 
 	/**
@@ -115,7 +123,7 @@ public class DbUnitRunner {
 	 * @param testMethod Method to execute.
 	 */
 	public void beforeTest(Method testMethod) {
-		setupOrTearDown(testMethod, SETUP);
+		setupOrTearDown(testMethod, SetupDbOperation.getInstance());
 	}
 
 	/**
@@ -129,7 +137,7 @@ public class DbUnitRunner {
 	 * @param testMethod Executed method.
 	 */
 	public void afterTest(Method testMethod) {
-		setupOrTearDown(testMethod, TEAR_DOWN);
+		setupOrTearDown(testMethod, TearDownDbOperation.getInstance());
 	}
 
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
@@ -139,11 +147,12 @@ public class DbUnitRunner {
 			return;
 		}
 
+		Connection connection = factory.getConnection();
 		IDatabaseConnection dbConnection = null;
 
 		try {
 			log.trace(" 1- Get SQL connection");
-			dbConnection = new DatabaseConnection(factory.getConnection());
+			dbConnection = new DatabaseConnection(connection);
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
 			log.trace(" 2- Load data set");
@@ -161,14 +170,10 @@ public class DbUnitRunner {
 		}
 		finally {
 			if (dbConnection != null) {
-				try {
-					dbConnection.close();
-				}
-				catch (SQLException ex) {
-					// No worries
-					log.warn(ex.getMessage());
-				}
+				closeQuietly(dbConnection);
 			}
+
+			closeQuietly(connection);
 		}
 	}
 
@@ -197,7 +202,7 @@ public class DbUnitRunner {
 	 * @return DataSet.
 	 */
 	private IDataSet readDataSet(Method method) {
-		return method.isAnnotationPresent(DbUnitDataSet.class) ?
+		return method != null && method.isAnnotationPresent(DbUnitDataSet.class) ?
 			readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) :
 			dataSet;
 	}
@@ -223,41 +228,20 @@ public class DbUnitRunner {
 		}
 	}
 
-	private static interface DbOperation {
-		void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception;
+	/**
+	 * Run SQL initialization script when runner is initialized.
+	 * If a script failed, then entire process is stopped and an instance
+	 * of {@link DbUnitException} if thrown.
+	 */
+	private void runSqlScript() {
+		DbUnitInit annotation = findAnnotation(testClass, null, DbUnitInit.class);
+		if (annotation != null) {
+			List<String> scripts = asList(annotation.sql());
+			SqlScriptParserConfiguration configuration = builder()
+				.setDelimiter(annotation.delimiter())
+				.build();
+
+			forEach(scripts, new SqlScriptFunction(factory, configuration));
+		}
 	}
-
-	private static final DbOperation SETUP = new DbOperation() {
-		@Override
-		public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
-			DbUnitSetup op = findAnnotation(testClass, method, DbUnitSetup.class);
-			if (op != null) {
-				log.debug(" 3- Initialize setup operation");
-				dbTester.setSetUpOperation(op.value().getOperation());
-			}
-			else {
-				log.trace(" 3- No setup operation defined, use default");
-			}
-
-			log.trace(" 4- Trigger setup operations");
-			dbTester.onSetup();
-		}
-	};
-
-	private static final DbOperation TEAR_DOWN = new DbOperation() {
-		@Override
-		public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
-			DbUnitTearDown op = findAnnotation(testClass, method, DbUnitTearDown.class);
-			if (op != null) {
-				log.trace(" 3- Initialize tear down operation");
-				dbTester.setTearDownOperation(op.value().getOperation());
-			}
-			else {
-				log.trace(" 3- No tear down operation defined, use default");
-			}
-
-			log.trace(" 4- Trigger tearDown operation");
-			dbTester.onTearDown();
-		}
-	};
 }
