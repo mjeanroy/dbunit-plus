@@ -24,8 +24,10 @@
 
 package com.github.mjeanroy.dbunit.commons.collections;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -83,6 +85,17 @@ public final class Collections {
 			}
 		}
 		return null;
+	}
+
+	public static <T> List<T> filter(List<T> inputs, Predicate<T> predicate) {
+		List<T> outputs = new ArrayList<T>(inputs.size());
+		for (T input : inputs) {
+			if (predicate.apply(input)) {
+				outputs.add(input);
+			}
+		}
+
+		return outputs;
 	}
 
 	/**

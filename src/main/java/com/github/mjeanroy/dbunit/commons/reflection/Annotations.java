@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Mickael Jeanroy
+ * Copyright (c) 2015 - 2016 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +25,13 @@
 package com.github.mjeanroy.dbunit.commons.reflection;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
 
 /**
  * Static Annotation Utilities.
@@ -39,8 +45,8 @@ public final class Annotations {
 	/**
 	 * Find expected annotation on:
 	 * <ul>
-	 *   <li>Method if annotation is defined.</li>
-	 *   <li>Class if annotation is defined.</li>
+	 * <li>Method if annotation is defined.</li>
+	 * <li>Class if annotation is defined.</li>
 	 * </ul>
 	 *
 	 * @param klass Class.
@@ -68,5 +74,31 @@ public final class Annotations {
 		}
 
 		return annotation;
+	}
+
+	/**
+	 * Get all static fields annotated with given annotation.
+	 *
+	 * @param klass Class to analyze.
+	 * @param annotation Annotation to look for.
+	 * @param <T> Type of annotation.
+	 * @return List of fields annotated with given annotation.
+	 */
+	public static <T extends Annotation> List<Field> findStaticFieldAnnotatedWith(Class<?> klass, Class<T> annotation) {
+		List<Field> fields = findStaticFields(klass);
+		return filter(fields, new MemberAnnotatedWithPredicate<Field, T>(annotation));
+	}
+
+	/**
+	 * Get all static fields annotated with given annotation.
+	 *
+	 * @param klass Class to analyze.
+	 * @param annotation Annotation to look for.
+	 * @param <T> Type of annotation.
+	 * @return List of fields annotated with given annotation.
+	 */
+	public static <T extends Annotation> List<Method> findStaticMethodAnnotatedWith(Class<?> klass, Class<T> annotation) {
+		List<Method> fields = findStaticMethods(klass);
+		return filter(fields, new MemberAnnotatedWithPredicate<Method, T>(annotation));
 	}
 }

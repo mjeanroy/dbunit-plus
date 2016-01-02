@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Mickael Jeanroy
+ * Copyright (c) 2015 - 2016 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
@@ -38,10 +39,12 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.util.List;
@@ -50,10 +53,15 @@ import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
 import static java.util.Arrays.asList;
 
+/**
+ * Generic class to run DbUnit before/after test method invocation.
+ */
 public class DbUnitRunner {
 
 	/**
@@ -158,7 +166,7 @@ public class DbUnitRunner {
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
 			log.trace(" 2- Load data set");
-			dbTester.setDataSet(dataSet);
+			dbTester.setDataSet(runReplacements(testClass, dataSet));
 
 			// Apply operation (setup or tear down).
 			op.apply(testClass, testMethod, dbTester);
@@ -207,6 +215,29 @@ public class DbUnitRunner {
 		return method != null && method.isAnnotationPresent(DbUnitDataSet.class) ?
 			readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) :
 			dataSet;
+	}
+
+	/**
+	 * Find replacements objects and decorate original data set if some are found.
+	 *
+	 * @param testClass Test class.
+	 * @param dataSet Original data set.
+	 * @return New data set.
+	 */
+	private IDataSet runReplacements(Class<?> testClass, IDataSet dataSet) {
+		List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
+		List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
+		if (fields.isEmpty() && methods.isEmpty()) {
+			return dataSet;
+		}
+
+		ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet);
+
+		// Apply replacements.
+		forEach(fields, new MemberReplacementFunction<Field>(replacementDataSet));
+		forEach(methods, new MemberReplacementFunction<Method>(replacementDataSet));
+
+		return replacementDataSet;
 	}
 
 	/**

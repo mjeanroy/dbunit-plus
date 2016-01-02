@@ -24,11 +24,15 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
+import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -60,6 +64,40 @@ public class AnnotationsTest {
 		assertThat(annotation).isNull();
 	}
 
+	@Test
+	public void it_should_find_static_fields_annotated() {
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		List<Field> fields = Annotations.findStaticFieldAnnotatedWith(klass, TestAnnotation.class);
+
+		assertThat(fields)
+			.isNotNull()
+			.isNotEmpty()
+			.are(new Condition<Field>() {
+				@Override
+				public boolean matches(Field field) {
+					return field.isAnnotationPresent(TestAnnotation.class) &&
+						Modifier.isStatic(field.getModifiers());
+				}
+			});
+	}
+
+	@Test
+	public void it_should_find_static_methods_annotated() {
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		List<Method> methods = Annotations.findStaticMethodAnnotatedWith(klass, TestAnnotation.class);
+
+		assertThat(methods)
+			.isNotNull()
+			.isNotEmpty()
+			.are(new Condition<Method>() {
+				@Override
+				public boolean matches(Method method) {
+					return method.isAnnotationPresent(TestAnnotation.class) &&
+						Modifier.isStatic(method.getModifiers());
+				}
+			});
+	}
+
 	@Retention(RetentionPolicy.RUNTIME)
 	public static @interface TestAnnotation {
 		String value();
@@ -68,13 +106,23 @@ public class AnnotationsTest {
 	@TestAnnotation("foo")
 	public static class TestClassAnnotation {
 
-		public void method1() {
+		@TestAnnotation("foo")
+		private static int i1;
 
+		private static int i2;
+
+		@TestAnnotation("foo")
+		public static void m1() {
+		}
+
+		public static void m2() {
+		}
+
+		public void method1() {
 		}
 
 		@TestAnnotation("bar")
 		public void method2() {
-
 		}
 	}
 
