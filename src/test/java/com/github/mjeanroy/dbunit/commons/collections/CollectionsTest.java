@@ -48,7 +48,7 @@ public class CollectionsTest {
 	@Test
 	public void it_should_iterate_over_collection() {
 		List<Integer> list = asList(1, 2, 3);
-		Function func = mock(Function.class);
+		Function<Integer> func = mock(Function.class);
 
 		Collections.forEach(list, func);
 
