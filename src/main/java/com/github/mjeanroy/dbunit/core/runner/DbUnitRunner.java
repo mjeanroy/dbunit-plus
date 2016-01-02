@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
@@ -96,8 +97,9 @@ public class DbUnitRunner {
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 		this.dataSet = readDataSet();
 
-		// Then, run SQL initialization script
+		// Then, run SQL and/or liquibase initialization
 		runSqlScript();
+		runLiquibase();
 	}
 
 	/**
@@ -242,6 +244,19 @@ public class DbUnitRunner {
 				.build();
 
 			forEach(scripts, new SqlScriptFunction(factory, configuration));
+		}
+	}
+
+	/**
+	 * Run SQL initialization script when runner is initialized.
+	 * If a script failed, then entire process is stopped and an instance
+	 * of {@link DbUnitException} if thrown.
+	 */
+	private void runLiquibase() {
+		DbUnitLiquibase annotation = findAnnotation(testClass, null, DbUnitLiquibase.class);
+		if (annotation != null) {
+			List<String> changeLogs = asList(annotation.value());
+			forEach(changeLogs, new LiquibaseFunction(factory));
 		}
 	}
 }

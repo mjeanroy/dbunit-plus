@@ -22,58 +22,20 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import liquibase.exception.LiquibaseException;
-import org.dbunit.dataset.DataSetException;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-import java.sql.SQLException;
+@DbUnitDataSet("/dataset/xml")
+@DbUnitLiquibase("/liquibase/changelog.xml")
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+public class TestClassWithDataSetAndLiquibase {
 
-/**
- * DbUnit exception.
- *
- * <p />
- *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
- */
-@SuppressWarnings("serial")
-public class DbUnitException extends AbstractDbUnitException {
-
-	/**
-	 * Create exception.
-	 *
-	 * @param message Error message.
-	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link DataSetException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(DataSetException ex) {
-		super(ex);
-	}
-
-	/**
-	 * Wrap {@link SQLException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(SQLException ex) {
-		super(ex);
-	}
-
-	/**
-	 * Wrap {@link LiquibaseException}.
-	 * Wrap {@link LiquibaseException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(LiquibaseException ex) {
-		super(ex);
+	public void method1() {
 	}
 }

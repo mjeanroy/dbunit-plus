@@ -60,6 +60,7 @@
 		<hsqldb.version>2.3.3</hsqldb.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.2.4.RELEASE</spring.version>
+		<liquibase.version>3.4.2</liquibase.version>
 
 		<!-- Test Dependencies -->
 		<assertj.version>2.2.0</assertj.version>
@@ -123,6 +124,12 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>${hsqldb.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+			<version>${liquibase.version}</version>
 			<optional>true</optional>
 		</dependency>
 

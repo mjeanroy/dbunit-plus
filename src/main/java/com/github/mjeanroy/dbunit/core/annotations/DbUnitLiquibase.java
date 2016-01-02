@@ -22,58 +22,53 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.annotations;
 
-import liquibase.exception.LiquibaseException;
-import org.dbunit.dataset.DataSetException;
-
-import java.sql.SQLException;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * DbUnit exception.
+ * DbUnit liquibase integration: allow test to initialize database with
+ * liquibase and load DbUnit data set next.
  *
- * <p />
+ * This annotation can be used on:
+ * <ul>
+ *   <li>Class (i.e test class).</li>
+ *   <li>Package (i.e package where test classes belongs)</li>
+ * </ul>
  *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
+ * For example:
+ *
+ * <pre><code>
+ *
+ *   @DbUnitLiquibase("/liquibase/changelogs.xml")
+ *   @DbUnitDataSet("/dataset/xml")
+ *   public class TestClass {
+ *     @Rule
+ *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
+ *
+ *     @Test
+ *     public void test1() {
+ *     }
+ *   }
+ *
+ * </code></pre>
  */
-@SuppressWarnings("serial")
-public class DbUnitException extends AbstractDbUnitException {
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({
+	ElementType.TYPE,
+	ElementType.PACKAGE
+})
+public @interface DbUnitLiquibase {
 
 	/**
-	 * Create exception.
+	 * List of liquibase change logs to run (in order).
 	 *
-	 * @param message Error message.
+	 * @return List of liquibase change logs.
 	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link DataSetException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(DataSetException ex) {
-		super(ex);
-	}
-
-	/**
-	 * Wrap {@link SQLException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(SQLException ex) {
-		super(ex);
-	}
-
-	/**
-	 * Wrap {@link LiquibaseException}.
-	 * Wrap {@link LiquibaseException}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(LiquibaseException ex) {
-		super(ex);
-	}
+	String[] value() default {};
 }
