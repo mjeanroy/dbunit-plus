@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit.DbUnitRule;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
@@ -49,9 +49,9 @@ public class DbUnitClassRuleIT {
 
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
 
-	public static DbUnitRule dbUnitRule = new DbUnitRule(new JdbcConnectionFactory() {
+	public static DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
 		@Override
-		public Connection getConnection() {
+		protected Connection createConnection() {
 			return dbRule.getConnection();
 		}
 	});

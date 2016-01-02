@@ -30,13 +30,12 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
  * of {@link Connection} from {@link JdbcConfiguration}.
  */
-public class JdbcDefaultConnectionFactory implements JdbcConnectionFactory {
+public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
 
 	/**
 	 * Class Logger.
@@ -54,19 +53,14 @@ public class JdbcDefaultConnectionFactory implements JdbcConnectionFactory {
 	 * @param configuration JDBC Configuration.
 	 */
 	public JdbcDefaultConnectionFactory(JdbcConfiguration configuration) {
+		super();
 		this.configuration = configuration;
 	}
 
 	@Override
-	public Connection getConnection() {
-		try {
-			loadDriver(configuration.getUrl());
-			return DriverManager.getConnection(configuration.getUrl(), configuration.getUser(), configuration.getPassword());
-		}
-		catch (SQLException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JdbcException(ex);
-		}
+	protected Connection createConnection() throws Exception {
+		loadDriver(configuration.getUrl());
+		return DriverManager.getConnection(configuration.getUrl(), configuration.getUser(), configuration.getPassword());
 	}
 
 	private void loadDriver(String url) {

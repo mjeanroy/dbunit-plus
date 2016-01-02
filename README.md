@@ -166,7 +166,7 @@ import org.junit.Rule;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.integration.junit.DbUnitRule;
 import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRule;
 
@@ -177,9 +177,9 @@ public class MyRepositoryTest {
     public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
 
     @Rule
-    public DbUnitRule dbUnitRule = new DbUnitRule(new JdbcConnectionFactory {
+    public DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory {
         @Override
-        public Connection getConnection() {
+        protected Connection createConnection() throws Exception {
             return dbRule.getDb().getConnection();
         }
     });

@@ -24,40 +24,44 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.exception.JdbcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 
 /**
- * Implementation of {@link JdbcConnectionFactory} to produce instance
- * of {@link Connection} from  given {@link DataSource}.
+ * Abstract connection factory that can be used to automatically wrap exception.
  */
-public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
+public abstract class AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
 
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(JdbcDataSourceConnectionFactory.class);
-
-	/**
-	 * Connection DataSource.
-	 */
-	private final DataSource dataSource;
+	private static final Logger log = LoggerFactory.getLogger(AbstractJdbcConnectionFactory.class);
 
 	/**
 	 * Create new factory.
-	 *
-	 * @param dataSource Connection DataSource.
 	 */
-	public JdbcDataSourceConnectionFactory(DataSource dataSource) {
-		super();
-		this.dataSource = dataSource;
+	public AbstractJdbcConnectionFactory() {
 	}
 
 	@Override
-	protected Connection createConnection() throws Exception {
-		return dataSource.getConnection();
+	public Connection getConnection() {
+		try {
+			return createConnection();
+		}
+		catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			throw new JdbcException(ex);
+		}
 	}
+
+	/**
+	 * Create SQL connection (thrown exception will be catch and wrap into {@link JdbcException}.
+	 *
+	 * @return SQL Connection.
+	 * @throws Exception If an error occurred during creation.
+	 */
+	protected abstract Connection createConnection() throws Exception;
 }
