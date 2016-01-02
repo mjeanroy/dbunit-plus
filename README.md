@@ -7,6 +7,17 @@ Simple library to add lot of new features to DbUnit library:
 - Integration with Spring (spring `TestExecutionListener` and spring `EmbeddedDatabase`).
 - Integration with Liquibase.
 
+## Installation
+
+```xml
+<dependency>
+    <groupId>com.github.mjeanroy</groupId>
+    <artifactId>dbunit-plus</artifactId>
+    <version>0.1.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
 ## Basics
 
 Run DbUnit test by adding some simple annotations:
