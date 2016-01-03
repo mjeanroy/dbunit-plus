@@ -13,7 +13,7 @@ Simple library to add lot of new features to DbUnit library:
 <dependency>
     <groupId>com.github.mjeanroy</groupId>
     <artifactId>dbunit-plus</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1</version>
     <scope>test</scope>
 </dependency>
 ```
