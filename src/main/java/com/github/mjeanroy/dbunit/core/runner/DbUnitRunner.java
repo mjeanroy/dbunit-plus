@@ -194,7 +194,7 @@ public class DbUnitRunner {
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
 	private IDataSet readDataSet() {
-		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		DbUnitDataSet annotation = findAnnotation(testClass, null, DbUnitDataSet.class);
 		if (annotation != null && annotation.value().length > 0) {
 			return readAnnotationDataSet(annotation);
 		}

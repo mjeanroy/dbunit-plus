@@ -48,6 +48,15 @@ public class AnnotationsTest {
 	}
 
 	@Test
+	public void it_should_find_annotation_on_super_class() throws Exception {
+		Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
+		Method method = klass.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+		assertThat(annotation).isNotNull();
+		assertThat(annotation.value()).isEqualTo("foo");
+	}
+
+	@Test
 	public void it_should_find_annotation_on_method() throws Exception {
 		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
 		Method method = klass.getMethod("method2");
@@ -124,6 +133,10 @@ public class AnnotationsTest {
 		@TestAnnotation("bar")
 		public void method2() {
 		}
+	}
+
+	public class TestClassAnnotationChild extends TestClassAnnotation {
+
 	}
 
 	public static class TestClassWithoutAnnotation {

@@ -64,8 +64,10 @@ public final class Annotations {
 		}
 
 		// Then, search on class.
-		if (annotation == null) {
-			annotation = (T) klass.getAnnotation(annotationClass);
+		Class<?> current =  klass;
+		while (annotation == null && current != null) {
+			annotation = current.getAnnotation(annotationClass);
+			current = current.getSuperclass();
 		}
 
 		// Then, search on package.
