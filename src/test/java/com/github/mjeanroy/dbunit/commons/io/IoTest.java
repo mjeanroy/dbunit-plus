@@ -24,8 +24,6 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import liquibase.database.DatabaseConnection;
-import liquibase.exception.DatabaseException;
 import org.junit.Test;
 import org.mockito.InOrder;
 
@@ -55,23 +53,6 @@ public class IoTest {
 		doThrow(new IOException()).when(closeable).close();
 		boolean result = Io.closeQuietly(closeable);
 		verify(closeable).close();
-		assertThat(result).isFalse();
-	}
-
-	@Test
-	public void it_should_liquibase() throws Exception {
-		DatabaseConnection connection = mock(DatabaseConnection.class);
-		boolean result = Io.closeQuietly(connection);
-		verify(connection).close();
-		assertThat(result).isTrue();
-	}
-
-	@Test
-	public void it_should_liquibase_and_silent_error() throws Exception {
-		DatabaseConnection connection = mock(DatabaseConnection.class);
-		doThrow(new DatabaseException()).when(connection).close();
-		boolean result = Io.closeQuietly(connection);
-		verify(connection).close();
 		assertThat(result).isFalse();
 	}
 

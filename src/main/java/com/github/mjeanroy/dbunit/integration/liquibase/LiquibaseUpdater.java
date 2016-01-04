@@ -31,6 +31,7 @@ import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
@@ -110,8 +111,15 @@ public class LiquibaseUpdater {
 		}
 		finally {
 			log.trace("Close SQL connection");
-			closeQuietly(db);
 			closeQuietly(connection);
+
+			try {
+				db.close();
+			}
+			catch (DatabaseException ex) {
+				// No Worries.
+				log.warn(ex.getMessage());
+			}
 		}
 	}
 

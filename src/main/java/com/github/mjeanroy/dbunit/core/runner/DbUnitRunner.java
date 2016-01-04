@@ -47,6 +47,7 @@ import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
@@ -180,7 +181,13 @@ public class DbUnitRunner {
 		}
 		finally {
 			if (dbConnection != null) {
-				closeQuietly(dbConnection);
+				try {
+					dbConnection.close();
+				}
+				catch (SQLException ex) {
+					// No Worries.
+					log.warn(ex.getMessage());
+				}
 			}
 
 			closeQuietly(connection);

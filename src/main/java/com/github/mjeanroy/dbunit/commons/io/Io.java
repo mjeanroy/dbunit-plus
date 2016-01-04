@@ -24,9 +24,6 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import liquibase.database.DatabaseConnection;
-import liquibase.exception.LiquibaseException;
-import org.dbunit.database.IDatabaseConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +31,6 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
-import java.sql.SQLException;
 
 /**
  * Static IO Utilities.
@@ -107,44 +103,6 @@ public final class Io {
 			return true;
 		}
 		catch (Exception ex) {
-			// No Worries.
-			log.warn(ex.getMessage());
-			return false;
-		}
-	}
-
-	/**
-	 * Close DbUnit {@link IDatabaseConnection} instance. If an {@link SQLException} is thrown, it
-	 * is logged (with a warn level) and no exception is re-thrown.
-	 *
-	 * @param connection SQL connection to close.
-	 * @return {@code true} if close operation did not throw any exception, {@code false} otherwise.
-	 */
-	public static boolean closeQuietly(IDatabaseConnection connection) {
-		try {
-			connection.close();
-			return true;
-		}
-		catch (SQLException ex) {
-			// No Worries.
-			log.warn(ex.getMessage());
-			return false;
-		}
-	}
-
-	/**
-	 * Close Liquibase {@link DatabaseConnection} instance. If an {@link LiquibaseException} is thrown, it
-	 * is logged (with a warn level) and no exception is re-thrown.
-	 *
-	 * @param connection SQL connection to close.
-	 * @return {@code true} if close operation did not throw any exception, {@code false} otherwise.
-	 */
-	public static boolean closeQuietly(DatabaseConnection connection) {
-		try {
-			connection.close();
-			return true;
-		}
-		catch (LiquibaseException ex) {
 			// No Worries.
 			log.warn(ex.getMessage());
 			return false;
