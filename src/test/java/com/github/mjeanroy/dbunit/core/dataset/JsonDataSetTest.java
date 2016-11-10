@@ -114,6 +114,18 @@ public class JsonDataSetTest {
 	}
 
 	@Test
+	public void it_should_get_table_data() throws Exception {
+		File file = getTestResource("/dataset/json/foo.json");
+		JsonDataSet dataSet = new JsonDataSet(file, false, parser);
+		
+		ITable table = dataSet.getTable("foo");
+		
+		for (int row = 0; row < table.getRowCount(); row++) {
+			assertThat(table.getValue(row, "name")).isNotNull();	
+		}
+	}
+
+	@Test
 	public void it_should_iterate_over_tables() throws Exception {
 		File file = getTestResource("/dataset/json/foo.json");
 		JsonDataSet dataSet = new JsonDataSet(file, false, parser);
