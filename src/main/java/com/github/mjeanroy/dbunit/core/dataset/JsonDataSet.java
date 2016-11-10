@@ -175,6 +175,7 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 					log.trace(" - Row #{}, set value: {} -> {}", i, columnName, columnValue);
 					dbUnitTable.setValue(i, columnName, columnValue);
 				}
+				i++;
 			}
 
 			results.add(dbUnitTable);
