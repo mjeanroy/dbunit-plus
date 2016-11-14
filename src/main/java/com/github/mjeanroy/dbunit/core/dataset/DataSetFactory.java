@@ -54,11 +54,11 @@ public final class DataSetFactory {
 
 	/**
 	 * Create data set from file path.
+	 * See also {@link #createDataSet(java.io.File)}.
 	 *
 	 * @param path File path.
 	 * @return Instance of {@link IDataSet}.
 	 * @throws DataSetException If data set cannot be created.
-	 * @see {@link #createDataSet(java.io.File)}.
 	 */
 	public static IDataSet createDataSet(String path) throws DataSetException {
 		notNull(path, "Path must not be null to create data set");

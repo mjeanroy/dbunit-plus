@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.commons.collections;
 /**
  * Function that can be applied to any input.
  *
- * @param <T>
+ * @param <T> The type of input.
  */
 public interface Function<T> {
 

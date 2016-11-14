@@ -30,7 +30,7 @@ import java.sql.Connection;
  * Factory that should create instance of {@link Connection}. This
  * connection will be used to populate database.
  *
- * <p />
+ * <br>
  *
  * <strong>Important:</strong> since instance of {@link Connection} are
  * not thread safe, implementations should produce a new instance
@@ -41,7 +41,7 @@ public interface JdbcConnectionFactory {
 	/**
 	 * Create new instance of {@link Connection}.
 	 *
-	 * <p />
+	 * <br>
 	 *
 	 * Since {@link Connection} class is not thread-safe, implementation should
 	 * create a new connection ready to use in current thread.

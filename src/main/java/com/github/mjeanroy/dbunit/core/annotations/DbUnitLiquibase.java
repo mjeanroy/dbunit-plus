@@ -44,13 +44,13 @@ import java.lang.annotation.Target;
  *
  * <pre><code>
  *
- *   @DbUnitLiquibase("/liquibase/changelogs.xml")
- *   @DbUnitDataSet("/dataset/xml")
+ *   &#64;DbUnitLiquibase("/liquibase/changelogs.xml")
+ *   &#64;DbUnitDataSet("/dataset/xml")
  *   public class TestClass {
- *     @Rule
+ *     &#64;Rule
  *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
  *
- *     @Test
+ *     &#64;Test
  *     public void test1() {
  *     }
  *   }

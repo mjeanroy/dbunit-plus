@@ -17,25 +17,27 @@ import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConf
  * Implementation of JUnit {@link org.junit.runner.Runner} to fill and clear
  * database between each tests.
  *
- * <p />
+ * <br>
  *
  * Basically, this class add {@link DbUnitRule} to the test class when this runner is
  * initialized.
  *
- * <p />
+ * <br>
  *
  * DbUnit configuration should be set using {@link DbUnitConfiguration} configuration:
  *
  * <pre><code>
- *   @RunWith(DbUnitJunitRunner.class)
- *   @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
- *   @DbUnitDataSet("classpath:/dataset/xml")
+ *
+ *   &#64;RunWith(DbUnitJunitRunner.class)
+ *   &#64;DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+ *   &#64;bUnitDataSet("classpath:/dataset/xml")
  *   public MyDaoTest {
- *     @Test
+ *     &#64;Test
  *     public void test1() {
  *       // ...
  *     }
  *   }
+ *
  * </code></pre>
  */
 public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
@@ -49,7 +51,7 @@ public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
 	 * Create runner.
 	 *
 	 * @param klass Running class.
-	 * @throws InitializationError
+	 * @throws InitializationError If an error occured while creating Jdbc connection factory.
 	 */
 	public DbUnitJunitRunner(Class<?> klass) throws InitializationError {
 		super(klass);

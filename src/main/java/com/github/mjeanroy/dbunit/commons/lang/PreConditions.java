@@ -93,6 +93,7 @@ public final class PreConditions {
 	 * given {@code prefix}.
 	 *
 	 * @param value Value to check.
+	 * @param prefix The prefix to look for.
 	 * @param message Error message.
 	 * @param params Optional error message parameters.
 	 * @return Value if it is not {@code null}, empty or blank.

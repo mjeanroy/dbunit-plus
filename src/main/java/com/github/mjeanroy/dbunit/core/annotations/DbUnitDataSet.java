@@ -45,17 +45,17 @@ import java.lang.annotation.Target;
  *
  * <pre><code>
  *
- *  @DbUnitDataSet("/dataset/xml")
+ *  &#64;DbUnitDataSet("/dataset/xml")
  *   public class TestClass {
- *     @Rule
+ *     &#64;Rule
  *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
  *
- *     @Test
+ *     &#64;Test
  *     public void test1() {
  *     }
  *
- *     @Test
- *     @DbUnitDataSet("/dataset/xml/table1.xml")
+ *     &#64;Test
+ *     &#64;DbUnitDataSet("/dataset/xml/table1.xml")
  *     public void test2() {
  *     }
  *   }

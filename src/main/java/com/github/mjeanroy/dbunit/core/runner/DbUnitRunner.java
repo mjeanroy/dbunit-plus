@@ -89,7 +89,7 @@ public class DbUnitRunner {
 	/**
 	 * Create runner.
 	 *
-	 * <p />
+	 * <br>
 	 *
 	 * DbUnit DataSet will be automatically detected:
 	 * <ol>
@@ -113,11 +113,11 @@ public class DbUnitRunner {
 
 	/**
 	 * Create runner.
+	 * See also {#DbUnitRunner()}.
 	 *
 	 * @param testClass Class to test.
 	 * @param dataSource DataSource to get new SQL connection before and after test methods.
 	 * @throws DbUnitException If dataSet parsing failed.
-	 * @see {#DbUnitRunner()}.
 	 */
 	public DbUnitRunner(Class<?> testClass, DataSource dataSource) {
 		this(testClass, new JdbcDataSourceConnectionFactory(notNull(dataSource, "DataSource must not be null")));

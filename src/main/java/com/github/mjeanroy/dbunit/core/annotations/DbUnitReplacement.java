@@ -44,13 +44,13 @@ import java.lang.annotation.Target;
  *
  * <pre><code>
  *
- *   @DbUnitInit(sql = "/sql/schema.sql")
- *   @DbUnitDataSet("/dataset/xml")
+ *   &#64;DbUnitInit(sql = "/sql/schema.sql")
+ *   &#64;DbUnitDataSet("/dataset/xml")
  *   public class TestClass {
- *     @Rule
+ *     &#64;Rule
  *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
  *
- *     @Test
+ *     &#64;Test
  *     public void test1() {
  *     }
  *   }

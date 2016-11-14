@@ -52,11 +52,11 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 /**
  * Implementation of {@link IDataSet} with JSON file as input.
  *
- * <p />
+ * <p>
  *
  * A valid JSON file must respect this schema:
  *
- * <pre><code>
+ * <pre>{@code
  *   {
  *     "<table_name_1>": [
  *       { "col1": 1, "col2": "value" }
@@ -67,8 +67,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
  *       { "col1": 2, "col2": "value" }
  *     ]
  *   }
- * </code></pre>
- * ```
+ * }</pre>
  */
 public class JsonDataSet extends AbstractDataSet implements IDataSet {
 

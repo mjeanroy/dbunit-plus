@@ -41,7 +41,8 @@ public final class JsonParserFactory {
 	 *   <li>If Jackson1 is available on classpath, then it is selected.</li>
 	 *   <li>If none of these dependencies are available, an instance of {@link UnsupportedOperationException} is thrown.</li>
 	 * </ul>
-	 * @return
+	 *
+	 * @return The created parser.
 	 */
 	public static JsonParser createDefault() {
 		if (ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")) {

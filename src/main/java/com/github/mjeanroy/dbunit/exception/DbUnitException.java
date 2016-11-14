@@ -32,7 +32,7 @@ import java.sql.SQLException;
 /**
  * DbUnit exception.
  *
- * <p />
+ * <br>
  *
  * This exception should be thrown by JUnit rule and DbUnit runner
  * when initialization failed because of bad configuration.

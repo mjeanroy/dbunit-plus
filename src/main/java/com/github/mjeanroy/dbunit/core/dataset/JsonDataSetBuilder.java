@@ -35,7 +35,7 @@ import java.io.File;
 /**
  * Builder for {@link JsonDataSet} instances.
  *
- * <p />
+ * <br>
  *
  * If not set, JSON parser will be created using classpath detection.
  * Supported implementations are (checked in order):

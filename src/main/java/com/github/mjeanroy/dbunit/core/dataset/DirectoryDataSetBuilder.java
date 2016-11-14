@@ -120,7 +120,7 @@ public class DirectoryDataSetBuilder {
 	 * Build data set.
 	 *
 	 * @return New DataSet.
-	 * @throws DataSetException
+	 * @throws DataSetException If an error occured during dataset creation.
 	 */
 	public DirectoryDataSet build() throws DataSetException {
 		log.trace("Build instance of {}", getClass().getSimpleName());
