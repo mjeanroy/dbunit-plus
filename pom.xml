@@ -59,7 +59,7 @@
 		<hsqldb.version>2.3.4</hsqldb.version>
 		<junit.version>4.12</junit.version>
 		<spring.version>4.3.4.RELEASE</spring.version>
-		<liquibase.version>3.5.1</liquibase.version>
+		<liquibase.version>3.5.3</liquibase.version>
 
 		<!-- Test Dependencies -->
 		<assertj.version>2.5.0</assertj.version>
