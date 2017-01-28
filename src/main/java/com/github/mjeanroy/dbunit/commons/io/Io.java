@@ -31,6 +31,8 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Static IO Utilities.
@@ -91,18 +93,18 @@ public final class Io {
 	}
 
 	/**
-	 * Close {@link Closeable} instance. If an {@link IOException} is thrown, it
+	 * Close {@link Connection} instance. If an {@link SQLException} is thrown, it
 	 * is logged (with a warn level) and no exception is re-thrown.
 	 *
-	 * @param closeable Input to close.
-	 * @return {@code true} if close operation did not throw any exception, {@code false} otherwise.
+	 * @param connection Connection to close.
+	 * @return {@code true} if close operation did not throw any SQL exception, {@code false} otherwise.
 	 */
-	public static boolean closeQuietly(AutoCloseable closeable) {
+	public static boolean closeQuietly(Connection connection) {
 		try {
-			closeable.close();
+			connection.close();
 			return true;
 		}
-		catch (Exception ex) {
+		catch (SQLException ex) {
 			// No Worries.
 			log.warn(ex.getMessage());
 			return false;
