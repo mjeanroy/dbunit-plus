@@ -45,4 +45,23 @@ public class ReplacementsTest {
 			.containsEntry("foo", "bar")
 			.containsEntry("bar", 10);
 	}
+
+	@Test
+	public void it_should_build_immutable_replacement_object() {
+		Replacements.Builder builder = Replacements.builder()
+				.addReplacement("foo", "bar")
+				.addReplacement("bar", 10);
+
+		Replacements replacements = builder.build();
+		assertThat(replacements.getReplacements())
+				.hasSize(2)
+				.containsEntry("foo", "bar")
+				.containsEntry("bar", 10);
+
+		builder.addReplacement("baz", "baz");
+		assertThat(replacements.getReplacements())
+				.hasSize(2)
+				.containsEntry("foo", "bar")
+				.containsEntry("bar", 10);
+	}
 }

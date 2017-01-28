@@ -102,7 +102,7 @@ public class Replacements {
 		 * @return Replacements.
 		 */
 		public Replacements build() {
-			return new Replacements(replacements);
+			return new Replacements(new LinkedHashMap<String, Object>(replacements));
 		}
 	}
 }
