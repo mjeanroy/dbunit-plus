@@ -68,6 +68,18 @@
 		<logback.version>1.1.7</logback.version>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>jdk6</id>
+			<activation>
+				<jdk>1.6</jdk>
+			</activation>
+			<properties>
+				<jackson.version>2.3.5</jackson.version>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.dbunit</groupId>
