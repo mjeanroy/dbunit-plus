@@ -40,7 +40,7 @@
 		<!-- Settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.6</java.version>
-		<java.test.version>1.8</java.test.version>
+		<java.test.version>1.6</java.test.version>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.testTarget>${java.test.version}</maven.compiler.testTarget>
