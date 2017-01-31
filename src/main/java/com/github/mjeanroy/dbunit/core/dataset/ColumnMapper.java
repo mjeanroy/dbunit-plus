@@ -48,7 +48,7 @@ class ColumnMapper implements Mapper<String, Column> {
 		return MAPPER;
 	}
 
-	// Ensure non instantation.
+	// Ensure non instantiation.
 	private ColumnMapper() {
 	}
 

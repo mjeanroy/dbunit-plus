@@ -107,7 +107,7 @@ enum SqlQueryState {
 	 * <ol>
 	 *   <li>If it is the beginning of a line comment, end of the line is ignored.</li>
 	 *   <li>If it is the beginning of a block comment, ignore character and start new block section.</li>
-	 *   <li>If it is the escaper character, append it and start new escape section.</li>
+	 *   <li>If it is the escaped character, append it and start new escape section.</li>
 	 *   <li>If it is the beginning of a varchar (single or double quote), append it and start new varchar section.</li>
 	 *   <li>If it is the SQL delimiter, append it and flush current query.</li>
 	 *   <li>Otherwise, append character and go to the next one.</li>

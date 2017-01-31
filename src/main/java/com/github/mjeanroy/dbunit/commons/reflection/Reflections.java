@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Static Reflections Utilities.
  */
-public final class Reflections {
+final class Reflections {
 
 	// Ensure non instantiations.
 	private Reflections() {

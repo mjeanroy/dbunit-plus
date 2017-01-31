@@ -64,29 +64,23 @@ public class LiquibaseUpdateTest {
 	@Test
 	public void it_should_load_liquibase_changelogs() throws Exception {
 		String changeLog = "/liquibase/changelog.xml";
-		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
-		liquibaseUpdater.update();
-
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
-		verify(factory, atLeastOnce()).getConnection();
+		assertLiquibaseUpdate(changeLog);
 	}
 
 	@Test
 	public void it_should_load_liquibase_changelogs_from_classpath() throws Exception {
 		String changeLog = "classpath:/liquibase/changelog.xml";
-		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
-		liquibaseUpdater.update();
-
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
-		verify(factory, atLeastOnce()).getConnection();
+		assertLiquibaseUpdate(changeLog);
 	}
 
 	@Test
 	public void it_should_load_liquibase_changelogs_from_file_system() throws Exception {
 		File changeLogFile = getTestResource("/liquibase/changelog.xml");
 		String changeLog = "file:" + changeLogFile.getAbsolutePath();
+		assertLiquibaseUpdate(changeLog);
+	}
+
+	private void assertLiquibaseUpdate(String changeLog) throws Exception {
 		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 		liquibaseUpdater.update();
 

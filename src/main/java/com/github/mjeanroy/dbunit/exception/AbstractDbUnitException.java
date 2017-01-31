@@ -29,14 +29,14 @@ package com.github.mjeanroy.dbunit.exception;
  * This exception should provide an unique way to cache low level exception.
  */
 @SuppressWarnings("serial")
-public abstract class AbstractDbUnitException extends RuntimeException {
+abstract class AbstractDbUnitException extends RuntimeException {
 
 	/**
 	 * Wrap original exception.
 	 *
 	 * @param ex Original Exception.
 	 */
-	protected AbstractDbUnitException(Exception ex) {
+	AbstractDbUnitException(Exception ex) {
 		super(ex);
 	}
 
@@ -45,7 +45,7 @@ public abstract class AbstractDbUnitException extends RuntimeException {
 	 *
 	 * @param message Exception message.
 	 */
-	protected AbstractDbUnitException(String message) {
+	AbstractDbUnitException(String message) {
 		super(message);
 	}
 
@@ -55,7 +55,7 @@ public abstract class AbstractDbUnitException extends RuntimeException {
 	 * @param message Exception message.
 	 * @param ex Original Exception.
 	 */
-	protected AbstractDbUnitException(String message, Exception ex) {
+	AbstractDbUnitException(String message, Exception ex) {
 		super(message, ex);
 	}
 }

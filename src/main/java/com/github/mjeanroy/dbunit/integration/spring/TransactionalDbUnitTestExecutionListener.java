@@ -26,6 +26,8 @@ package com.github.mjeanroy.dbunit.integration.spring;
 
 import static java.util.Arrays.asList;
 
+import java.util.List;
+
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
@@ -39,10 +41,16 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
  */
 public class TransactionalDbUnitTestExecutionListener extends CompositeTestExecutionListener {
 
+	/**
+	 * Create listeners with defaults {@link TestExecutionListener} list.
+	 */
 	public TransactionalDbUnitTestExecutionListener() {
-		super(asList(
-			(TestExecutionListener) new TransactionalTestExecutionListener(),
-			(TestExecutionListener) new DbUnitTestExecutionListener()
-		));
+		super(listeners());
+	}
+
+	private static List<TestExecutionListener> listeners() {
+		TestExecutionListener transactionalTestExecutionListener = new TransactionalTestExecutionListener();
+		TestExecutionListener dbUnitTestExecutionListener = new DbUnitTestExecutionListener();
+		return asList(transactionalTestExecutionListener, dbUnitTestExecutionListener);
 	}
 }

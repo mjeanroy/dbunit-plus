@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
 public final class JsonParserFactory {
 
-	// Ensure non instantation.
+	// Ensure non instantiation.
 	private JsonParserFactory() {
 	}
 

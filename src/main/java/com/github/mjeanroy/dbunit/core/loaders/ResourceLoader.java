@@ -112,7 +112,7 @@ public enum ResourceLoader {
 	 *
 	 * @param prefix Pattern prefix.
 	 */
-	private ResourceLoader(String... prefix) {
+	ResourceLoader(String... prefix) {
 		this.prefixes = asList(prefix);
 	}
 
@@ -166,7 +166,7 @@ public enum ResourceLoader {
 	 * @param name File path.
 	 * @return Matching prefix.
 	 */
-	protected String findPrefix(String name) {
+	String findPrefix(String name) {
 		for (String prefix : prefixes) {
 			if (name.startsWith(prefix)) {
 				return prefix;

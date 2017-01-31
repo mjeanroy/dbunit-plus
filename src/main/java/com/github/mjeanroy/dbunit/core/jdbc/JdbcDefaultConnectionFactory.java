@@ -28,19 +28,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
  * of {@link Connection} from {@link JdbcConfiguration}.
  */
 public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(JdbcDefaultConnectionFactory.class);
 
 	/**
 	 * JDBC Configuration.

@@ -45,7 +45,7 @@ public final class DataSetFactory {
 	/**
 	 * Class Logger.
 	 */
-	private static Logger log = LoggerFactory.getLogger(DataSetFactory.class);
+	private static final Logger log = LoggerFactory.getLogger(DataSetFactory.class);
 
 	// Ensure non instantiation.
 	private DataSetFactory() {

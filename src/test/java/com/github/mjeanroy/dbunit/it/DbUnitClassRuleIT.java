@@ -47,9 +47,9 @@ import org.junit.rules.RuleChain;
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 public class DbUnitClassRuleIT {
 
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	private static final EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
 
-	public static DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
+	private static final DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
 		@Override
 		protected Connection createConnection() {
 			return dbRule.getConnection();

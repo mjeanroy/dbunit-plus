@@ -24,21 +24,27 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-import java.io.IOException;
-import java.sql.SQLException;
-
+/**
+ * Exception thrown if an error occurred during SQL parsing.
+ */
 @SuppressWarnings("serial")
 public class SqlParserException extends AbstractDbUnitException {
 
+	/**
+	 * Create exception with custom message.
+	 *
+	 * @param message Custom message.
+	 */
 	public SqlParserException(String message) {
 		super(message);
 	}
 
-	public SqlParserException(IOException ex) {
-		super(ex);
-	}
-
-	public SqlParserException(SQLException ex) {
+	/**
+	 * Create exception with original cause.
+	 *
+	 * @param ex Original cause.
+	 */
+	public SqlParserException(Exception ex) {
 		super(ex);
 	}
 }

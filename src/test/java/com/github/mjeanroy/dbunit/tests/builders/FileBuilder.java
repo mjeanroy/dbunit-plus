@@ -34,7 +34,7 @@ import java.io.File;
  */
 public class FileBuilder {
 
-	private String path;
+	private final String path;
 
 	private boolean directory;
 

@@ -135,11 +135,11 @@ public class AnnotationsTest {
 		}
 	}
 
-	public class TestClassAnnotationChild extends TestClassAnnotation {
+	private class TestClassAnnotationChild extends TestClassAnnotation {
 
 	}
 
-	public static class TestClassWithoutAnnotation {
+	private static class TestClassWithoutAnnotation {
 
 		public void method1() {
 

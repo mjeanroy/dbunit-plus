@@ -133,7 +133,7 @@ public class CompositeTestExecutionListener implements TestExecutionListener {
 		}
 	}
 
-	private static interface ListenerFunction {
+	private interface ListenerFunction {
 
 		void apply(TestExecutionListener listener) throws Exception;
 	}

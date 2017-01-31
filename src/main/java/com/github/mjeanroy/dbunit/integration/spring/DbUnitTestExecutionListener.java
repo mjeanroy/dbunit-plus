@@ -35,7 +35,7 @@ import org.springframework.test.context.support.AbstractTestExecutionListener;
  * Spring test execution listener running DbUnit data set before and after test methods:
  * <ol>
  *   <li>Get {@link DataSource} bean from {@link ApplicationContext}.</li>
- *   <li>Load data set, retrived using {@link com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet} annotation.</li>
+ *   <li>Load data set, retrieved using {@link com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet} annotation.</li>
  *   <li>Run setup operation before test method execution.</li>
  *   <li>Run tear down operation after test method method execution..</li>
  * </ol>

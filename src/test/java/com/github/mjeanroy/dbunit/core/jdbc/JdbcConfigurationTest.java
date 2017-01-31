@@ -68,7 +68,7 @@ public class JdbcConfigurationTest {
 		assertThat(c1.equals(c2)).isTrue();
 
 		// Reflective
-		assertThat(c1.equals(c1)).isTrue();
+		assertThat(c1).isEqualTo(c1);
 
 		// Symmetric
 		assertThat(c1.equals(c2)).isTrue();

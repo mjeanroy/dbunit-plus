@@ -64,8 +64,13 @@ public class ReflectionsTest {
 			return F1 + F2;
 		}
 
-		public int f1;
-		public int f2;
+		public final int f1;
+		public final int f2;
+
+		public TestClass() {
+			this.f1 = 0;
+			this.f2 = 0;
+		}
 
 		public int compute() {
 			return f1 + f2;

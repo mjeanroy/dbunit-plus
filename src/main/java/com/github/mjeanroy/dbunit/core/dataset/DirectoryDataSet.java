@@ -67,7 +67,7 @@ public class DirectoryDataSet implements IDataSet {
 	 * @param resource Directory.
 	 * @param caseSensitiveTableNames Case sensitivity flag.
 	 * @param comparator File comparator, used to sort files in given order.
-	 * @throws DataSetException
+	 * @throws DataSetException If an error occurred during dataset creation.
 	 */
 	DirectoryDataSet(Resource resource, boolean caseSensitiveTableNames, Comparator<File> comparator) throws DataSetException {
 		File directory = resource.toFile();

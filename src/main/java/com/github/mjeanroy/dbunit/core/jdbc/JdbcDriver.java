@@ -62,7 +62,7 @@ enum JdbcDriver {
 	 * @param id JDBC id.
 	 * @param driverName JDBC Driver Name.
 	 */
-	private JdbcDriver(String id, String driverName) {
+	JdbcDriver(String id, String driverName) {
 		this.id = id;
 		this.driverName = driverName;
 	}

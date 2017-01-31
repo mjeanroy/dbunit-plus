@@ -43,7 +43,7 @@ public final class Files {
 	/**
 	 * Class Logger.
 	 */
-	private static Logger log = LoggerFactory.getLogger(DirectoryDataSetBuilder.class);
+	private static final Logger log = LoggerFactory.getLogger(DirectoryDataSetBuilder.class);
 
 	// Ensure non instantiation.
 	private Files() {

@@ -50,7 +50,7 @@ public enum DbUnitOperation {
 	 *
 	 * @param operation Database Operation.
 	 */
-	private DbUnitOperation(DatabaseOperation operation) {
+	DbUnitOperation(DatabaseOperation operation) {
 		this.operation = operation;
 	}
 

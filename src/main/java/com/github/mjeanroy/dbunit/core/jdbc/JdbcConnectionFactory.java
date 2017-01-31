@@ -47,7 +47,7 @@ public interface JdbcConnectionFactory {
 	 * create a new connection ready to use in current thread.
 	 *
 	 * @return SQL Connection.
-	 * @throws com.github.mjeanroy.dbunit.exception.JdbcException If an error occured while creating {@link Connection}.
+	 * @throws com.github.mjeanroy.dbunit.exception.JdbcException If an error occurred while creating {@link Connection}.
 	 */
 	Connection getConnection();
 

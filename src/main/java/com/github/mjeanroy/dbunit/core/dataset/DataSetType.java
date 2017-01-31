@@ -98,7 +98,7 @@ enum DataSetType {
 	 */
 	private static final Logger log = LoggerFactory.getLogger(DataSetType.class);
 
-	private DataSetType() {
+	DataSetType() {
 	}
 
 	/**

@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.commons.collections;
 
 /**
- * Predicate: shoud return {@code true} if condition is ok, {@code false} otherwise.
+ * Predicate: should return {@code true} if condition is ok, {@code false} otherwise.
  *
  * @param <T> Type of inputs.
  */

@@ -51,7 +51,7 @@ public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
 	 * Create runner.
 	 *
 	 * @param klass Running class.
-	 * @throws InitializationError If an error occured while creating Jdbc connection factory.
+	 * @throws InitializationError If an error occurred while creating Jdbc connection factory.
 	 */
 	public DbUnitJunitRunner(Class<?> klass) throws InitializationError {
 		super(klass);

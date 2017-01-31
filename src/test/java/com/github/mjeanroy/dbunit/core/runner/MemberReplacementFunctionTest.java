@@ -52,7 +52,7 @@ public class MemberReplacementFunctionTest {
 		verify(dataSet).addReplacementObject("bar", "foo");
 	}
 
-	public static class TestClass {
+	private static class TestClass {
 		public static Replacements replacements = Replacements.builder()
 			.addReplacement("foo", "bar")
 			.build();

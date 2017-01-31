@@ -27,19 +27,11 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
  * of {@link Connection} from  given {@link DataSource}.
  */
 public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = LoggerFactory.getLogger(JdbcDataSourceConnectionFactory.class);
 
 	/**
 	 * Connection DataSource.

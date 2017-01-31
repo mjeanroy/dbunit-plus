@@ -40,12 +40,12 @@ public class DirectoryDataSetBuilder {
 	/**
 	 * Class Logger.
 	 */
-	private static Logger log = LoggerFactory.getLogger(DirectoryDataSetBuilder.class);
+	private static final Logger log = LoggerFactory.getLogger(DirectoryDataSetBuilder.class);
 
 	/**
 	 * Default Comparator.
 	 */
-	private static FileComparator COMPARATOR = new FileComparator();
+	private static final FileComparator COMPARATOR = new FileComparator();
 
 	/**
 	 * Directory resource.
@@ -121,7 +121,7 @@ public class DirectoryDataSetBuilder {
 	 * Build data set.
 	 *
 	 * @return New DataSet.
-	 * @throws DataSetException If an error occured during dataset creation.
+	 * @throws DataSetException If an error occurred during dataset creation.
 	 */
 	public DirectoryDataSet build() throws DataSetException {
 		log.trace("Build instance of {}", getClass().getSimpleName());

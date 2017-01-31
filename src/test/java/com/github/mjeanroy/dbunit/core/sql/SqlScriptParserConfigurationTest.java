@@ -75,7 +75,7 @@ public class SqlScriptParserConfigurationTest {
 		assertThat(c4.equals(c1)).isFalse();
 
 		// Reflective
-		assertThat(c1.equals(c1)).isTrue();
+		assertThat(c1).isEqualTo(c1);
 
 		// Symmetric
 		assertThat(c1.equals(c2)).isTrue();
