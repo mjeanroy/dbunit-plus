@@ -33,8 +33,8 @@ import java.net.URI;
 import java.util.Collection;
 
 import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Implementations of strategies to load resources.
@@ -94,7 +94,7 @@ public enum ResourceLoader {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(ResourceLoader.class);
+	private static final Logger log = Loggers.getLogger(ResourceLoader.class);
 
 	/**
 	 * Prefix of file name.

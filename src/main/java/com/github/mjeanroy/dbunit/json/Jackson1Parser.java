@@ -33,18 +33,18 @@ import java.util.Map;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Jackson1Parser implements JsonParser {
 
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(Jackson2Parser.class);
+	private static final Logger log = Loggers.getLogger(Jackson2Parser.class);
 
 	/**
 	 * Internal Jackson2 Mapper.

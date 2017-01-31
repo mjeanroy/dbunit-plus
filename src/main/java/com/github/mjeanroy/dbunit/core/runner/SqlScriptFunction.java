@@ -34,8 +34,8 @@ import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Function to execute SQL script against SQL connection.
@@ -50,7 +50,7 @@ class SqlScriptFunction implements Function<String> {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(SqlScriptFunction.class);
+	private static final Logger log = Loggers.getLogger(SqlScriptFunction.class);
 
 	/**
 	 * Factory to get new {@link Connection} before executing SQL script.

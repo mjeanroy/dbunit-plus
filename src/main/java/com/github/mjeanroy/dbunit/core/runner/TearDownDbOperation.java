@@ -29,9 +29,9 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnno
 import java.lang.reflect.Method;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.IDatabaseTester;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Apply tear down operations to the test database.
@@ -42,7 +42,7 @@ class TearDownDbOperation implements DbOperation {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(TearDownDbOperation.class);
+	private static final Logger log = Loggers.getLogger(TearDownDbOperation.class);
 
 	/**
 	 * Singleton Instance.

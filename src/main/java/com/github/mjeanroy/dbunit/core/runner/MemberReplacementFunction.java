@@ -32,9 +32,9 @@ import java.util.Map;
 
 import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.ReplacementDataSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Apply replacements to given {@link ReplacementDataSet}.
@@ -47,7 +47,7 @@ class MemberReplacementFunction<T extends Member> implements Function<T> {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(MemberReplacementFunction.class);
+	private static final Logger log = Loggers.getLogger(MemberReplacementFunction.class);
 
 	/**
 	 * DataSet to decorate with replacements.

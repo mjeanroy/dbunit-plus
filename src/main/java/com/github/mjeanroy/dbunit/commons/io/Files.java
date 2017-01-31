@@ -31,9 +31,8 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.dataset.DirectoryDataSetBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Static Files Utilities.
@@ -43,7 +42,7 @@ public final class Files {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(DirectoryDataSetBuilder.class);
+	private static final Logger log = Loggers.getLogger(Files.class);
 
 	// Ensure non instantiation.
 	private Files() {

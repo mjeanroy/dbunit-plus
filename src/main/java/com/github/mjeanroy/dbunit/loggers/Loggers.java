@@ -22,46 +22,26 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.jdbc;
+package com.github.mjeanroy.dbunit.loggers;
 
-import java.sql.Connection;
-
-import com.github.mjeanroy.dbunit.exception.JdbcException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import org.slf4j.LoggerFactory;
 
 /**
- * Abstract connection factory that can be used to automatically wrap exception.
+ * Logger factory.
  */
-public abstract class AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
+public final class Loggers {
 
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(AbstractJdbcConnectionFactory.class);
-
-	/**
-	 * Create new factory.
-	 */
-	public AbstractJdbcConnectionFactory() {
-	}
-
-	@Override
-	public Connection getConnection() {
-		try {
-			return createConnection();
-		}
-		catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JdbcException(ex);
-		}
+	// Ensure non instantiation.
+	private Loggers() {
 	}
 
 	/**
-	 * Create SQL connection (thrown exception will be catch and wrap into {@link JdbcException}.
+	 * Create logger.
 	 *
-	 * @return SQL Connection.
-	 * @throws Exception If an error occurred during creation.
+	 * @param klass Class.
+	 * @return The logger.
 	 */
-	protected abstract Connection createConnection() throws Exception;
+	public static Logger getLogger(Class<?> klass) {
+		return new Slf4jLogger(LoggerFactory.getLogger(klass));
+	}
 }

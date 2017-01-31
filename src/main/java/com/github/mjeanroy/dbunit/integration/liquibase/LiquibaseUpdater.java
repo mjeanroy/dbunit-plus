@@ -36,6 +36,8 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
@@ -46,8 +48,6 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Run liquibase change sets against SQL connection.
@@ -57,7 +57,7 @@ public class LiquibaseUpdater {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(LiquibaseUpdater.class);
+	private static final Logger log = Loggers.getLogger(LiquibaseUpdater.class);
 
 	/**
 	 * Liquibase change log path:

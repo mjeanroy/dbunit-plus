@@ -36,15 +36,15 @@ import java.util.List;
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
 import com.github.mjeanroy.dbunit.exception.SqlParserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Run SQL script against SQL {@link java.sql.Connection}.
  */
 public final class SqlScriptParser {
 
-	private static final Logger log = LoggerFactory.getLogger(SqlScriptParser.class);
+	private static final Logger log = Loggers.getLogger(SqlScriptParser.class);
 
 	// Ensure non instantiation.
 	private SqlScriptParser() {

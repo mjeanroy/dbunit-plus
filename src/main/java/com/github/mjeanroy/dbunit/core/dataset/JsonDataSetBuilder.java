@@ -27,9 +27,9 @@ package com.github.mjeanroy.dbunit.core.dataset;
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.json.JsonParserFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Builder for {@link JsonDataSet} instances.
@@ -49,7 +49,7 @@ public class JsonDataSetBuilder {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(JsonDataSetBuilder.class);
+	private static final Logger log = Loggers.getLogger(JsonDataSetBuilder.class);
 
 	/**
 	 * Factory used to create default JSON parser.

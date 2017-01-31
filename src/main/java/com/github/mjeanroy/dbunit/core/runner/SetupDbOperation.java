@@ -29,9 +29,9 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnno
 import java.lang.reflect.Method;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.IDatabaseTester;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Apply setup operations to the test database.
@@ -42,7 +42,7 @@ class SetupDbOperation implements DbOperation {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(SetupDbOperation.class);
+	private static final Logger log = Loggers.getLogger(SetupDbOperation.class);
 
 	/**
 	 * Singleton Instance.

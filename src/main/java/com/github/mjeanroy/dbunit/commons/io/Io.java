@@ -31,8 +31,8 @@ import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Static IO Utilities.
@@ -42,7 +42,7 @@ public final class Io {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(Io.class);
+	private static final Logger log = Loggers.getLogger(Io.class);
 
 	// Ensure non instantiation.
 	private Io() {

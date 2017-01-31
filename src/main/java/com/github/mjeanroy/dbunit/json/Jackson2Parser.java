@@ -35,8 +35,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Json Parser using Jackson2 as internal implementation.
@@ -46,7 +46,7 @@ public class Jackson2Parser implements JsonParser {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(Jackson2Parser.class);
+	private static final Logger log = Loggers.getLogger(Jackson2Parser.class);
 
 	/**
 	 * Internal Jackson2 Mapper.

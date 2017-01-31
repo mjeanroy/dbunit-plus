@@ -36,6 +36,8 @@ import java.util.Set;
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.json.JsonParser;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.AbstractDataSet;
 import org.dbunit.dataset.Column;
 import org.dbunit.dataset.DataSetException;
@@ -44,8 +46,6 @@ import org.dbunit.dataset.DefaultTableIterator;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link IDataSet} with JSON file as input.
@@ -72,7 +72,7 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(JsonDataSet.class);
+	private static final Logger log = Loggers.getLogger(JsonDataSet.class);
 
 	/**
 	 * JSON File.

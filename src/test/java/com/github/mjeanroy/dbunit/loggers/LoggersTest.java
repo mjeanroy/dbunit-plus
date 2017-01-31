@@ -22,46 +22,23 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.jdbc;
+package com.github.mjeanroy.dbunit.loggers;
 
-import java.sql.Connection;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.mjeanroy.dbunit.exception.JdbcException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import org.junit.Test;
 
-/**
- * Abstract connection factory that can be used to automatically wrap exception.
- */
-public abstract class AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
+public class LoggersTest {
 
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(AbstractJdbcConnectionFactory.class);
+	@Test
+	public void it_should_create_logger() throws Exception {
+		Logger log = Loggers.getLogger(LoggersTest.class);
+		assertThat(log)
+				.isNotNull()
+				.isExactlyInstanceOf(Slf4jLogger.class);
 
-	/**
-	 * Create new factory.
-	 */
-	public AbstractJdbcConnectionFactory() {
+		org.slf4j.Logger slf4j = readPrivate(log, "log", org.slf4j.Logger.class);
+		assertThat(slf4j.getName()).isEqualTo(LoggersTest.class.getName());
 	}
-
-	@Override
-	public Connection getConnection() {
-		try {
-			return createConnection();
-		}
-		catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JdbcException(ex);
-		}
-	}
-
-	/**
-	 * Create SQL connection (thrown exception will be catch and wrap into {@link JdbcException}.
-	 *
-	 * @return SQL Connection.
-	 * @throws Exception If an error occurred during creation.
-	 */
-	protected abstract Connection createConnection() throws Exception;
 }

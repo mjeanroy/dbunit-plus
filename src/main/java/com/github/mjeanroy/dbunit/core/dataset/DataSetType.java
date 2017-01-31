@@ -29,12 +29,12 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import java.io.File;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Set of data set implementation supported out of the box.
@@ -96,7 +96,7 @@ enum DataSetType {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(DataSetType.class);
+	private static final Logger log = Loggers.getLogger(DataSetType.class);
 
 	DataSetType() {
 	}

@@ -33,11 +33,11 @@ import java.util.Map;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Json Parser using Google Gson as internal implementation.
@@ -47,7 +47,7 @@ public class GsonParser implements JsonParser {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(GsonParser.class);
+	private static final Logger log = Loggers.getLogger(GsonParser.class);
 
 	/**
 	 * Internal parser.

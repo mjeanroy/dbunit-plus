@@ -27,8 +27,8 @@ package com.github.mjeanroy.dbunit.integration.spring;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
 
@@ -40,7 +40,7 @@ public class CompositeTestExecutionListener implements TestExecutionListener {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(CompositeTestExecutionListener.class);
+	private static final Logger log = Loggers.getLogger(CompositeTestExecutionListener.class);
 
 	/**
 	 * Set of listener to execute before test execution.

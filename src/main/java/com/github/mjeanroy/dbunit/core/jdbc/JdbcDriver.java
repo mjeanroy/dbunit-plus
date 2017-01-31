@@ -25,8 +25,8 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Set of Common JDBC Drivers.
@@ -44,7 +44,7 @@ enum JdbcDriver {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(JdbcDriver.class);
+	private static final Logger log = Loggers.getLogger(JdbcDriver.class);
 
 	/**
 	 * JDBC id (visible in JDBC Connection: jdbc:[id]:[connection).

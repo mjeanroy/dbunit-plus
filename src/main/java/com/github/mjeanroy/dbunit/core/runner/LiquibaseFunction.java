@@ -29,8 +29,8 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.integration.liquibase.LiquibaseUpdater;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Function to execute liquibase update script against SQL connection.
@@ -40,7 +40,7 @@ class LiquibaseFunction implements Function<String> {
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = LoggerFactory.getLogger(LiquibaseFunction.class);
+	private static final Logger log = Loggers.getLogger(LiquibaseFunction.class);
 
 	/**
 	 * Factory to get new {@link java.sql.Connection} before executing liquibase change sets.
