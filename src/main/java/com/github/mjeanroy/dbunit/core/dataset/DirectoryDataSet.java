@@ -24,23 +24,25 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import org.dbunit.dataset.CompositeDataSet;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ITable;
-import org.dbunit.dataset.ITableIterator;
-import org.dbunit.dataset.ITableMetaData;
-
-import java.io.File;
-import java.util.Comparator;
-import java.util.List;
-
 import static com.github.mjeanroy.dbunit.commons.io.Files.listFiles;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isDirectory;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isReadable;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 import static java.util.Collections.sort;
+
+import java.io.File;
+import java.util.Comparator;
+import java.util.List;
+
+import com.github.mjeanroy.dbunit.core.loaders.FileResource;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import org.dbunit.dataset.CompositeDataSet;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.ITableIterator;
+import org.dbunit.dataset.ITableMetaData;
 
 /**
  * Directory dataSet.
@@ -50,9 +52,9 @@ import static java.util.Collections.sort;
 public class DirectoryDataSet implements IDataSet {
 
 	/**
-	 * Directory path.
+	 * Directory.
 	 */
-	private final File path;
+	private final Resource resource;
 
 	/**
 	 * Internal data set.
@@ -62,27 +64,29 @@ public class DirectoryDataSet implements IDataSet {
 	/**
 	 * Create dataSet.
 	 *
-	 * @param path Directory path.
+	 * @param resource Directory.
 	 * @param caseSensitiveTableNames Case sensitivity flag.
 	 * @param comparator File comparator, used to sort files in given order.
 	 * @throws DataSetException
 	 */
-	DirectoryDataSet(File path, boolean caseSensitiveTableNames, Comparator<File> comparator) throws DataSetException {
-		isDirectory(path, "Path should be a valid directory");
-		isReadable(path, "Path should be readable");
+	DirectoryDataSet(Resource resource, boolean caseSensitiveTableNames, Comparator<File> comparator) throws DataSetException {
+		File directory = resource.toFile();
+
+		isDirectory(directory, "Path should be a valid directory");
+		isReadable(directory, "Path should be readable");
 		notNull(comparator, "Comparator should not be null");
 
 		// List all files and create composite data set.
-		List<File> files = listFiles(path);
+		List<File> files = listFiles(directory);
 		sort(files, comparator);
 
 		IDataSet[] dataSets = new IDataSet[files.size()];
 		int i = 0;
 		for (File file : files) {
-			dataSets[i++] = createDataSet(file);
+			dataSets[i++] = createDataSet(new FileResource(file));
 		}
 
-		this.path = path;
+		this.resource = resource;
 		this.dataSet = new CompositeDataSet(dataSets, true, caseSensitiveTableNames);
 	}
 
@@ -122,16 +126,16 @@ public class DirectoryDataSet implements IDataSet {
 	}
 
 	/**
-	 * Get {@link #path}.
+	 * Get {@link #resource}.
 	 *
-	 * @return {@link #path}
+	 * @return {@link #resource}
 	 */
-	public File getPath() {
-		return path;
+	public Resource getResource() {
+		return resource;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s{path=%s}", getClass().getSimpleName(), path);
+		return String.format("%s{resource=%s}", getClass().getSimpleName(), resource);
 	}
 }

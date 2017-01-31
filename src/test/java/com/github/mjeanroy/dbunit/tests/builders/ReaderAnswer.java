@@ -22,27 +22,44 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.tests.builders;
 
-import java.util.List;
-import java.util.Map;
+import java.io.Reader;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * Mockito {@link Answer} that can be used to return instances
+ * of {@link Reader} returned by a {@link ReaderFactory}.
  */
-public interface JsonParser {
+class ReaderAnswer implements Answer<Reader> {
 
 	/**
-	 * Read JSON File and return representation.
-	 *
-	 * @param resource Input resource.
-	 * @return DataSet representation.
-	 * @throws JsonException If parse/read operation fail (invalid schema, unreadable file).
+	 * Create answer.
+	 * @param factory The {@link Reader} factory.
+	 * @return The mockito answer.
 	 */
-	Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException;
+	static ReaderAnswer readerAnswer(ReaderFactory factory) {
+		return new ReaderAnswer(factory);
+	}
+
+	/**
+	 * The {@link Reader} factory.
+	 */
+	private final ReaderFactory factory;
+
+	/**
+	 * Create mockito {@link Answer} with factory.
+	 *
+	 * @param factory The {@link Reader} factory.
+	 */
+	private ReaderAnswer(ReaderFactory factory) {
+		this.factory = factory;
+	}
+
+	@Override
+	public Reader answer(InvocationOnMock invocation) throws Throwable {
+		return factory.create();
+	}
 }

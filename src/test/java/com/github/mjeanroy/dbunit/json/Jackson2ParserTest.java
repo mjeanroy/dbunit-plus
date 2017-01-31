@@ -27,19 +27,19 @@ package com.github.mjeanroy.dbunit.json;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.json.Jackson2Parser;
-import com.github.mjeanroy.dbunit.tests.builders.FileBuilder;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.hamcrest.core.Is.is;
@@ -57,9 +57,12 @@ public class Jackson2ParserTest {
 	public void it_should_parse_file() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		Jackson2Parser parser = new Jackson2Parser(mapper);
-		File file = getTestResource("/dataset/json/foo.json");
 
-		Map<String, List<Map<String, Object>>> tables = parser.parse(file);
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/json/foo.json")
+				.build();
+
+		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
 			.isNotNull()
@@ -96,46 +99,55 @@ public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_wrap_json_parse_exception() throws Exception {
-		File file = new FileBuilder("foo.txt").build();
-		JsonParseException ex = mock(JsonParseException.class);
+		Reader reader = mock(Reader.class);
+		Resource resource = new ResourceMockBuilder()
+				.withReader(reader)
+				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
-		when(mapper.readValue(file, Map.class)).thenThrow(ex);
+		JsonParseException ex = mock(JsonParseException.class);
+		when(mapper.readValue(reader, Map.class)).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
 
 		Jackson2Parser parser = new Jackson2Parser(mapper);
-		parser.parse(file);
+		parser.parse(resource);
 	}
 
 	@Test
 	public void it_should_wrap_json_mapping_exception() throws Exception {
-		File file = new FileBuilder("foo.txt").build();
-		JsonMappingException ex = mock(JsonMappingException.class);
+		Reader reader = mock(Reader.class);
+		Resource resource = new ResourceMockBuilder()
+				.withReader(reader)
+				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
-		when(mapper.readValue(file, Map.class)).thenThrow(ex);
+		JsonMappingException ex = mock(JsonMappingException.class);
+		when(mapper.readValue(reader, Map.class)).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
 
 		Jackson2Parser parser = new Jackson2Parser(mapper);
-		parser.parse(file);
+		parser.parse(resource);
 	}
 
 	@Test
 	public void it_should_wrap_io_exception() throws Exception {
-		File file = new FileBuilder("foo.txt").build();
-		IOException ex = mock(IOException.class);
+		Reader reader = mock(Reader.class);
+		Resource resource = new ResourceMockBuilder()
+				.withReader(reader)
+				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
-		when(mapper.readValue(file, Map.class)).thenThrow(ex);
+		IOException ex = mock(IOException.class);
+		when(mapper.readValue(reader, Map.class)).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
 
 		Jackson2Parser parser = new Jackson2Parser(mapper);
-		parser.parse(file);
+		parser.parse(resource);
 	}
 }

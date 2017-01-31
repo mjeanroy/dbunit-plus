@@ -24,6 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.keys;
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import org.dbunit.dataset.AbstractDataSet;
@@ -36,18 +46,6 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.keys;
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isFile;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isReadable;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Implementation of {@link IDataSet} with JSON file as input.
@@ -79,7 +77,7 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 	/**
 	 * JSON File.
 	 */
-	private final File file;
+	private final Resource resource;
 
 	/**
 	 * List of tables in {@code file}.
@@ -89,51 +87,49 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 	/**
 	 * Create JSON DataSet.
 	 *
-	 * @param file Input file.
+	 * @param resource Input resource.
 	 * @param caseSensitiveTableNames Case Insensitivity Flag.
-	 * @param parser JSON Parser (will be used to parser input file).
+	 * @param parser JSON Parser (will be used to parser input resource).
 	 * @throws DataSetException If JSON parsing fail.
 	 */
-	JsonDataSet(File file, boolean caseSensitiveTableNames, JsonParser parser) throws DataSetException {
+	JsonDataSet(Resource resource, boolean caseSensitiveTableNames, JsonParser parser) throws DataSetException {
 		super(caseSensitiveTableNames);
 
 		// Some preconditions.
-		notNull(file, "JSON File must not be null");
+		notNull(resource, "JSON File must not be null");
 		notNull(parser, "JSON Parser must not be null");
-		isFile(file, "JSON File must be a valid file");
-		isReadable(file, "JSON File must be readable");
 
 		// Everything seems ok, extract tables.
-		this.file = file;
-		this.tables = initialize(file, parser);
+		this.resource = resource;
+		this.tables = initialize(resource, parser);
 	}
 
 	/**
-	 * Create list of {@link ITable} from JSON file.
+	 * Create list of {@link ITable} from JSON resource.
 	 *
-	 * @param file JSON File.
+	 * @param resource JSON Resource.
 	 * @param parser JSON Parser.
 	 * @return List of {@link ITable}.
 	 * @throws DataSetException If an error occurred during parsing.
 	 */
-	private List<ITable> initialize(File file, JsonParser parser) throws DataSetException {
-		Map<String, List<Map<String, Object>>> tables = parse(file, parser);
+	private List<ITable> initialize(Resource resource, JsonParser parser) throws DataSetException {
+		Map<String, List<Map<String, Object>>> tables = parse(resource, parser);
 		return readTables(tables);
 	}
 
 	/**
-	 * Parse JSON file and produce map of table (i.e table names) with their rows (i.e list of
+	 * Parse JSON resource and produce map of table (i.e table names) with their rows (i.e list of
 	 * map with column name associated to the given value).
 	 *
-	 * @param file JSON File.
+	 * @param resource JSON Resource.
 	 * @param parser JSON Parser.
 	 * @return List of tables.
 	 * @throws DataSetException If an error occurred during JSON parsing (invalid schema, etc.).
 	 */
-	private Map<String, List<Map<String, Object>>> parse(File file, JsonParser parser) throws DataSetException {
+	private Map<String, List<Map<String, Object>>> parse(Resource resource, JsonParser parser) throws DataSetException {
 		try {
-			log.debug("Parsing file: {}", file);
-			return parser.parse(file);
+			log.debug("Parsing resource: {}", resource);
+			return parser.parse(resource);
 		}
 		catch (JsonException e) {
 			log.error(e.getMessage(), e);
@@ -189,11 +185,11 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 	}
 
 	/**
-	 * Gets {@link #file}.
+	 * Gets {@link #resource}.
 	 *
-	 * @return {@link #file}.
+	 * @return {@link #resource}.
 	 */
-	public File getFile() {
-		return file;
+	public Resource getResource() {
+		return resource;
 	}
 }

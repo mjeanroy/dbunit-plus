@@ -51,10 +51,10 @@ public class ResourceLoaderTest {
 
 	@Test
 	public void it_should_load_file_from_classpath() {
-		File file = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/foo.xml");
-		assertThat(file)
-			.isNotNull()
-			.exists();
+		Resource resource = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/foo.xml");
+		assertThat(resource).isNotNull();
+		assertThat(resource).isExactlyInstanceOf(FileResource.class);
+		assertThat(resource.exists()).isTrue();
 	}
 
 	@Test
@@ -75,11 +75,9 @@ public class ResourceLoaderTest {
 		File tmpFile = tmp.newFile("foo.xml");
 		String path = tmpFile.getAbsolutePath();
 
-		File file = ResourceLoader.FILE_SYSTEM.load("file:" + path);
-		assertThat(file)
-			.isNotNull()
-			.exists()
-			.isEqualTo(tmpFile);
+		Resource resource = ResourceLoader.FILE_SYSTEM.load("file:" + path);
+		assertThat(resource).isNotNull();
+		assertThat(resource).isExactlyInstanceOf(FileResource.class);
 	}
 
 	@Test

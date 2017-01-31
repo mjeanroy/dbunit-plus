@@ -24,22 +24,20 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
-import com.github.mjeanroy.dbunit.exception.SqlParserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
+import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
-import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
+import com.github.mjeanroy.dbunit.exception.SqlParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Run SQL script against SQL {@link java.sql.Connection}.
@@ -98,11 +96,10 @@ public final class SqlScriptParser {
 	 * @return List of query parsed in given input.
 	 * @throws SqlParserException If an error occurred during parsing.
 	 */
-	public static List<String> parseScript(File sqlFile, SqlScriptParserConfiguration configuration) {
+	public static List<String> parseScript(Resource sqlFile, SqlScriptParserConfiguration configuration) {
 		try {
-			return parseScript(new FileReader(sqlFile), configuration);
-		}
-		catch (FileNotFoundException ex) {
+			return parseScript(sqlFile.openReader(), configuration);
+		} catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new SqlParserException(ex);
 		}
@@ -129,7 +126,7 @@ public final class SqlScriptParser {
 	 * @param configuration SQL parser configuration.
 	 * @throws SQLException If a query failed.
 	 */
-	public static void executeScript(Connection connection, File sqlFile, SqlScriptParserConfiguration configuration) throws SQLException {
+	public static void executeScript(Connection connection, Resource sqlFile, SqlScriptParserConfiguration configuration) throws SQLException {
 		List<String> queries = parseScript(sqlFile, configuration);
 		executeQueries(connection, queries);
 	}

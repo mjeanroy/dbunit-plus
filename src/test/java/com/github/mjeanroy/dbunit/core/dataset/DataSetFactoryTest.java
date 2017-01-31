@@ -24,7 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.tests.utils.TestUtils;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
@@ -33,10 +39,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class DataSetFactoryTest {
 
 	@Rule
@@ -44,9 +46,12 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
-		File file = TestUtils.getTestResource("/dataset/xml/foo.xml");
+		Resource resource = new ResourceMockBuilder()
+				.setName("foo.xml")
+				.fromClasspath("/dataset/xml/foo.xml")
+				.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(file);
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet)
 			.isNotNull()
@@ -95,7 +100,7 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
-		File file = TestUtils.getTestResource("/dataset/xml/foo.xml");
+		File file = getTestResource("/dataset/xml/foo.xml");
 		String path = "file:" + file.getAbsolutePath();
 
 		IDataSet dataSet = DataSetFactory.createDataSet(path);
@@ -133,9 +138,13 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_directory_data_set() throws Exception {
-		File file = TestUtils.getTestResource("/dataset/xml");
+		Resource resource = new ResourceMockBuilder()
+				.setName("xml")
+				.setDirectory()
+				.fromClasspath("/dataset/xml")
+				.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(file);
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet)
 			.isNotNull()
@@ -144,9 +153,12 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_json_data_set() throws Exception {
-		File file = TestUtils.getTestResource("/dataset/json/foo.json");
+		Resource resource = new ResourceMockBuilder()
+				.setName("foo.json")
+				.fromClasspath("/dataset/json/foo.json")
+				.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(file);
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet)
 			.isNotNull()
@@ -155,9 +167,12 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_csv_data_set() throws Exception {
-		File file = TestUtils.getTestResource("/dataset/csv/foo.csv");
+		Resource resource = new ResourceMockBuilder()
+				.setName("foo.csv")
+				.fromClasspath("/dataset/csv/foo.csv")
+				.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(file);
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet)
 			.isNotNull()

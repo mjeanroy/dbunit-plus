@@ -24,21 +24,20 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.util.List;
+import java.util.Map;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.List;
-import java.util.Map;
-
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Json Parser using Google Gson as internal implementation.
@@ -74,12 +73,12 @@ public class GsonParser implements JsonParser {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, List<Map<String, Object>>> parse(File input) throws JsonException {
+	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
 		try {
-			Reader fileReader = new FileReader(input);
-			return (Map<String, List<Map<String, Object>>>) gson.fromJson(fileReader, Map.class);
+			Reader reader = resource.openReader();
+			return (Map<String, List<Map<String, Object>>>) gson.fromJson(reader, Map.class);
 		}
-		catch (FileNotFoundException ex) {
+		catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new JsonException(ex);
 		}

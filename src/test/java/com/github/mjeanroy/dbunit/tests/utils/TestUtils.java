@@ -32,12 +32,19 @@ import java.net.URL;
 /**
  * Static Test Utilities.
  */
-public class TestUtils {
+public final class TestUtils {
 
-	public static File getTestResource(String path) throws Exception {
-		URL url = TestUtils.class.getResource(path);
-		URI uri = url.toURI();
-		return new File(uri);
+	private TestUtils() {
+	}
+
+	public static File getTestResource(String path) {
+		try {
+			URL url = TestUtils.class.getResource(path);
+			URI uri = url.toURI();
+			return new File(uri);
+		} catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

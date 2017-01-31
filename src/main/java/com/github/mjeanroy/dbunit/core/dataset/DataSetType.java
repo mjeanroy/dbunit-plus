@@ -24,6 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+import java.io.File;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
@@ -31,61 +36,60 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-
 /**
  * Set of data set implementation supported out of the box.
  */
 enum DataSetType {
 	JSON {
 		@Override
-		boolean doMatch(File file) {
-			return file.getName().toLowerCase().endsWith(".json");
+		boolean doMatch(Resource resource) {
+			return resource.getFilename().toLowerCase().endsWith(".json");
 		}
 
 		@Override
-		IDataSet doCreate(File file) throws Exception {
-			return new JsonDataSetBuilder(file).build();
+		IDataSet doCreate(Resource resource) throws Exception {
+			return new JsonDataSetBuilder(resource).build();
 		}
 	},
 
 	XML {
 		@Override
-		boolean doMatch(File file) {
-			return file.getName().toLowerCase().endsWith(".xml");
+		boolean doMatch(Resource resource) {
+			return resource.getFilename().toLowerCase().endsWith(".xml");
 		}
 
 		@Override
-		IDataSet doCreate(File file) throws Exception {
+		IDataSet doCreate(Resource resource) throws Exception {
 			return new FlatXmlDataSetBuilder()
 				.setColumnSensing(true)
-				.build(file);
+				.build(resource.openReader());
 		}
 	},
 
 	DIRECTORY {
 		@Override
-		boolean doMatch(File file) {
-			return file.isDirectory();
+		boolean doMatch(Resource resource) {
+			return resource.isDirectory();
 		}
 
 		@Override
-		IDataSet doCreate(File file) throws Exception {
-			return new DirectoryDataSetBuilder(file).build();
+		IDataSet doCreate(Resource resource) throws Exception {
+			return new DirectoryDataSetBuilder(resource).build();
 		}
 	},
 
 	CSV {
 		@Override
-		boolean doMatch(File file) {
-			return file.getName().toLowerCase().endsWith(".csv");
+		boolean doMatch(Resource resource) {
+			return resource.getFilename().toLowerCase().endsWith(".csv");
 		}
 
 		@Override
-		IDataSet doCreate(File file) throws Exception {
-			return new CsvDataSet(new File(file.getParent()));
+		IDataSet doCreate(Resource resource) throws Exception {
+			final File file = resource.toFile();
+			final String parent = file.getParent();
+			final File parentDirectory = new File(parent);
+			return new CsvDataSet(parentDirectory);
 		}
 	};
 
@@ -98,26 +102,26 @@ enum DataSetType {
 	}
 
 	/**
-	 * Check if given file match type.
+	 * Check if given resource match type.
 	 *
-	 * @param file File.
-	 * @return {@code true} if file match given type, {@code false} otherwise.
+	 * @param resource Resource.
+	 * @return {@code true} if resource match given type, {@code false} otherwise.
 	 */
-	public boolean match(File file) {
-		notNull(file, "File should not be null");
-		return doMatch(file);
+	public boolean match(Resource resource) {
+		notNull(resource, "File should not be null");
+		return doMatch(resource);
 	}
 
 	/**
-	 * Create data set from given file.
+	 * Create data set from given resource.
 	 *
-	 * @param file File.
+	 * @param resource Resource.
 	 * @return Instance of {@link org.dbunit.dataset.IDataSet}.
 	 */
-	public IDataSet create(File file) throws DataSetException {
-		notNull(file, "File should not be null");
+	public IDataSet create(Resource resource) throws DataSetException {
+		notNull(resource, "File should not be null");
 		try {
-			return doCreate(file);
+			return doCreate(resource);
 		}
 		catch (DataSetException ex) {
 			log.error(ex.getMessage(), ex);
@@ -132,16 +136,16 @@ enum DataSetType {
 	/**
 	 * Check if given file match data set type.
 	 *
-	 * @param path File.
+	 * @param resource Resource.
 	 * @return {@code true} if type match given file, {@code false} otherwise.
 	 */
-	abstract boolean doMatch(File path);
+	abstract boolean doMatch(Resource resource);
 
 	/**
 	 * Check if given file match data set type.
 	 *
-	 * @param path File.
+	 * @param resource Resource.
 	 * @return {@code true} if type match given file, {@code false} otherwise.
 	 */
-	abstract IDataSet doCreate(File path) throws Exception;
+	abstract IDataSet doCreate(Resource resource) throws Exception;
 }

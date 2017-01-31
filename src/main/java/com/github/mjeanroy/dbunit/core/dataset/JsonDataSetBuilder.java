@@ -24,13 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.json.JsonParserFactory;
 import org.dbunit.dataset.DataSetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
 
 /**
  * Builder for {@link JsonDataSet} instances.
@@ -58,9 +57,9 @@ public class JsonDataSetBuilder {
 	private static final JsonParserFactoryFunction PARSER_FACTORY = new JsonParserFactoryFunction();
 
 	/**
-	 * JSON File.
+	 * JSON Resource.
 	 */
-	private File file;
+	private Resource resource;
 
 	/**
 	 * JSON parser (will be used to parse JSON file).
@@ -80,26 +79,26 @@ public class JsonDataSetBuilder {
 	}
 
 	/**
-	 * Create builder with JSON file.
+	 * Create builder with JSON resource.
 	 *
-	 * @param file JSON file.
+	 * @param resource JSON resource.
 	 */
-	public JsonDataSetBuilder(File file) {
-		log.trace("Set file: {}", file);
-		this.file = file;
+	public JsonDataSetBuilder(Resource resource) {
+		log.trace("Set resource: {}", resource);
+		this.resource = resource;
 		this.caseSensitiveTableNames = false;
 		this.parser = null;
 	}
 
 	/**
-	 * Initialize JSON file.
+	 * Initialize JSON resource.
 	 *
-	 * @param file JSON file.
+	 * @param resource JSON resource.
 	 * @return Builder.
 	 */
-	public JsonDataSetBuilder setJsonFile(File file) {
-		log.trace("Set file: {}", file);
-		this.file = file;
+	public JsonDataSetBuilder setJsonFile(Resource resource) {
+		log.trace("Set resource: {}", resource);
+		this.resource = resource;
 		return this;
 	}
 
@@ -137,10 +136,10 @@ public class JsonDataSetBuilder {
 		JsonParser parser = firstNonNull(this.parser, PARSER_FACTORY);
 
 		log.trace("Build instance of JsonDataSet");
-		log.trace(" - file: {}", file);
+		log.trace(" - resource: {}", resource);
 		log.trace(" - caseSensitiveTableNames: {}", caseSensitiveTableNames);
 		log.trace(" - parser: {}", parser);
-		return new JsonDataSet(file, caseSensitiveTableNames, parser);
+		return new JsonDataSet(resource, caseSensitiveTableNames, parser);
 	}
 
 	/**

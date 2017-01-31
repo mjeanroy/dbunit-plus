@@ -24,36 +24,41 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.Test;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
-		File directory = getTestResource("/dataset/xml");
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
 
-		assertThat(dataSet.getPath())
+		assertThat(dataSet.getResource())
 			.isNotNull()
-			.isEqualTo(directory);
+			.isEqualTo(resource);
 	}
 
 	@Test
 	public void it_should_return_table_names() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
 
 		String[] tableNames = dataSet.getTableNames();
 		assertThat(tableNames)
@@ -64,8 +69,11 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_get_table() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
 
 		ITable t1 = dataSet.getTable("foo");
 		ITable t2 = dataSet.getTable("bar");
@@ -78,8 +86,11 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_get_table_metadata() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
 
 		ITableMetaData meta1 = dataSet.getTableMetaData("foo");
 
@@ -104,8 +115,11 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_iterate_over_tables() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
 
 		ITableIterator it = dataSet.iterator();
 
@@ -123,8 +137,11 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet dataSet = new DirectoryDataSet(directory, false, new FileComparator());
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
 
 		ITableIterator it = dataSet.reverseIterator();
 
@@ -142,9 +159,12 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_check_for_case_insensitive_names() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet d1 = new DirectoryDataSet(directory, false, new FileComparator());
-		DirectoryDataSet d2 = new DirectoryDataSet(directory, true, new FileComparator());
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new FileComparator());
+		DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new FileComparator());
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();

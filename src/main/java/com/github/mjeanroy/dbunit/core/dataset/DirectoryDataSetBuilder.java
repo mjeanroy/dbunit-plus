@@ -24,12 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import java.io.File;
+import java.util.Comparator;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import org.dbunit.dataset.DataSetException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.Comparator;
 
 /**
  * Builder for {@link DirectoryDataSet} instances.
@@ -47,9 +48,9 @@ public class DirectoryDataSetBuilder {
 	private static FileComparator COMPARATOR = new FileComparator();
 
 	/**
-	 * Directory path.
+	 * Directory resource.
 	 */
-	private File path;
+	private Resource resource;
 
 	/**
 	 * File comparator.
@@ -69,13 +70,13 @@ public class DirectoryDataSetBuilder {
 	}
 
 	/**
-	 * Create build with directory path.
+	 * Create build with directory.
 	 *
-	 * @param path Directory path.
+	 * @param resource Directory.
 	 */
-	public DirectoryDataSetBuilder(File path) {
-		log.trace("Set path: {}", path);
-		this.path = path;
+	public DirectoryDataSetBuilder(Resource resource) {
+		log.trace("Set resource: {}", resource);
+		this.resource = resource;
 		this.caseSensitiveTableNames = false;
 		this.comparator = COMPARATOR;
 	}
@@ -83,12 +84,12 @@ public class DirectoryDataSetBuilder {
 	/**
 	 * Override directory path.
 	 *
-	 * @param path New directory.
+	 * @param resource New directory.
 	 * @return Builder.
 	 */
-	public DirectoryDataSetBuilder setDirectory(File path) {
-		log.trace("Set path: {}", path);
-		this.path = path;
+	public DirectoryDataSetBuilder setDirectory(Resource resource) {
+		log.trace("Set resource: {}", resource);
+		this.resource = resource;
 		return this;
 	}
 
@@ -124,10 +125,10 @@ public class DirectoryDataSetBuilder {
 	 */
 	public DirectoryDataSet build() throws DataSetException {
 		log.trace("Build instance of {}", getClass().getSimpleName());
-		log.trace(" - path: {}", path);
+		log.trace(" - path: {}", resource);
 		log.trace(" - comparator: {}", comparator);
 		log.trace(" - caseSensitiveTableNames: {}", caseSensitiveTableNames);
-		return new DirectoryDataSet(path, caseSensitiveTableNames, comparator);
+		return new DirectoryDataSet(resource, caseSensitiveTableNames, comparator);
 	}
 
 	private static class FileComparator implements Comparator<File> {

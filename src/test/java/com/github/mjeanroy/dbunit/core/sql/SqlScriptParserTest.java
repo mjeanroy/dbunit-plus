@@ -28,18 +28,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import java.io.File;
 import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 
 public class SqlScriptParserTest {
 
@@ -188,9 +189,11 @@ public class SqlScriptParserTest {
 
 	@Test
 	public void it_should_parse_file() throws Exception {
-		File script = getTestResource("/sql/init.sql");
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/sql/init.sql")
+				.build();
 
-		List<String> queries = SqlScriptParser.parseScript(script, configuration);
+		List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -242,12 +245,15 @@ public class SqlScriptParserTest {
 
 	@Test
 	public void it_should_execute_sql_file() throws Exception {
-		File script = getTestResource("/sql/init.sql");
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/sql/init.sql")
+				.build();
+
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
-		SqlScriptParser.executeScript(connection, script, configuration);
+		SqlScriptParser.executeScript(connection, resource, configuration);
 
 		InOrder inOrder = inOrder(connection, statement);
 		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS foo;");

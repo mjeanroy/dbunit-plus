@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import com.github.mjeanroy.dbunit.core.dataset.DirectoryDataSetBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isDirectory;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isReadable;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isDirectory;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isReadable;
+import com.github.mjeanroy.dbunit.core.dataset.DirectoryDataSetBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Static Files Utilities.

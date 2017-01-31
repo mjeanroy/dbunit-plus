@@ -25,8 +25,7 @@
 package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.commons.collections.Predicate;
-
-import java.io.File;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 
 /**
  * Implementation of {@link Predicate}: return {@code true} if instance
@@ -37,19 +36,19 @@ class DataSetTypeMatcher implements Predicate<DataSetType> {
 	/**
 	 * File path.
 	 */
-	private final File file;
+	private final Resource resource;
 
 	/**
 	 * Create predicate.
 	 *
-	 * @param file File.
+	 * @param resource Resource.
 	 */
-	DataSetTypeMatcher(File file) {
-		this.file = file;
+	DataSetTypeMatcher(Resource resource) {
+		this.resource = resource;
 	}
 
 	@Override
 	public boolean apply(DataSetType input) {
-		return input.match(file);
+		return input.match(resource);
 	}
 }

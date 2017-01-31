@@ -24,14 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import java.io.File;
-
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -39,22 +31,38 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 public class DirectoryDataSetBuilderTest {
 
 	@Test
 	public void it_should_create_default_directory_dataset() throws Exception {
-		File directory = getTestResource("/dataset/xml");
-		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(directory).build();
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
-		assertThat(dataSet.getPath()).isEqualTo(directory);
+		assertThat(dataSet.getResource()).isEqualTo(resource);
 		assertThat(dataSet.getTableNames()).isSorted();
 	}
 
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
-		File directory = getTestResource("/dataset/xml");
+		Resource directory = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
 		FileComparator comparator = mock(FileComparator.class);
+
 		when(comparator.compare(any(File.class), any(File.class))).thenAnswer(new Answer<Integer>() {
 			@Override
 			public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
@@ -71,7 +79,7 @@ public class DirectoryDataSetBuilderTest {
 			.build();
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
-		assertThat(dataSet.getPath()).isEqualTo(directory);
+		assertThat(dataSet.getResource()).isEqualTo(directory);
 		verify(comparator, atLeastOnce()).compare(any(File.class), any(File.class));
 	}
 }

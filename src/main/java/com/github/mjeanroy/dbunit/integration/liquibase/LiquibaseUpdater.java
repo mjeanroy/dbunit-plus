@@ -24,7 +24,16 @@
 
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
+import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+import java.io.File;
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import liquibase.Contexts;
@@ -39,13 +48,6 @@ import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Run liquibase change sets against SQL connection.
@@ -125,7 +127,9 @@ public class LiquibaseUpdater {
 
 	private String getChangeLogFullPath() {
 		ResourceLoader loader = firstNonNull(ResourceLoader.find(changeLog), ResourceLoader.CLASSPATH);
-		return loader.load(changeLog).getAbsolutePath();
+		Resource resource = loader.load(changeLog);
+		File file = resource.toFile();
+		return file.getAbsolutePath();
 	}
 
 	private ResourceAccessor createResourceAccessor() {

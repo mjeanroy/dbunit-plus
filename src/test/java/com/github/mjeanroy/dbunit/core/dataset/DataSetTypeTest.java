@@ -24,39 +24,49 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.tests.builders.FileBuilder;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.Test;
 
-import java.io.File;
-
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DataSetTypeTest {
 
 	@Test
 	public void it_should_match_json_file() {
-		File path1 = new FileBuilder("foo.json").isDirectory(false).build();
-		File path2 = new FileBuilder("FOO.JSON").isDirectory(false).build();
+		Resource r1 = new ResourceMockBuilder()
+				.setName("foo.json")
+				.setFile()
+				.build();
 
-		assertThat(DataSetType.JSON.match(path1)).isTrue();
-		assertThat(DataSetType.XML.match(path1)).isFalse();
-		assertThat(DataSetType.CSV.match(path1)).isFalse();
-		assertThat(DataSetType.DIRECTORY.match(path1)).isFalse();
+		Resource r2 = new ResourceMockBuilder()
+				.setName("FOO.JSON")
+				.setFile()
+				.build();
 
-		assertThat(DataSetType.JSON.match(path2)).isTrue();
-		assertThat(DataSetType.XML.match(path2)).isFalse();
-		assertThat(DataSetType.CSV.match(path2)).isFalse();
-		assertThat(DataSetType.DIRECTORY.match(path2)).isFalse();
+		assertThat(DataSetType.JSON.match(r1)).isTrue();
+		assertThat(DataSetType.XML.match(r1)).isFalse();
+		assertThat(DataSetType.CSV.match(r1)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(r1)).isFalse();
+
+		assertThat(DataSetType.JSON.match(r2)).isTrue();
+		assertThat(DataSetType.XML.match(r2)).isFalse();
+		assertThat(DataSetType.CSV.match(r2)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(r2)).isFalse();
 	}
 
 	@Test
 	public void it_should_match_json_data_set() throws Exception {
-		File file = getTestResource("/dataset/json/foo.json");
-		IDataSet dataSet = DataSetType.JSON.create(file);
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/json/foo.json")
+				.build();
+
+		IDataSet dataSet = DataSetType.JSON.create(resource);
+
 		assertThat(dataSet)
 			.isNotNull()
 			.isExactlyInstanceOf(JsonDataSet.class);
@@ -64,24 +74,35 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_match_xml_file() {
-		File path1 = new FileBuilder("foo.xml").isDirectory(false).build();
-		File path2 = new FileBuilder("FOO.XML").isDirectory(false).build();
+		Resource r1 = new ResourceMockBuilder()
+				.setName("foo.xml")
+				.setFile()
+				.build();
 
-		assertThat(DataSetType.XML.match(path1)).isTrue();
-		assertThat(DataSetType.JSON.match(path1)).isFalse();
-		assertThat(DataSetType.CSV.match(path1)).isFalse();
-		assertThat(DataSetType.DIRECTORY.match(path1)).isFalse();
+		Resource r2 = new ResourceMockBuilder()
+				.setName("FOO.XML")
+				.setFile()
+				.build();
 
-		assertThat(DataSetType.XML.match(path2)).isTrue();
-		assertThat(DataSetType.JSON.match(path2)).isFalse();
-		assertThat(DataSetType.CSV.match(path2)).isFalse();
-		assertThat(DataSetType.DIRECTORY.match(path2)).isFalse();
+		assertThat(DataSetType.XML.match(r1)).isTrue();
+		assertThat(DataSetType.JSON.match(r1)).isFalse();
+		assertThat(DataSetType.CSV.match(r1)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(r1)).isFalse();
+
+		assertThat(DataSetType.XML.match(r2)).isTrue();
+		assertThat(DataSetType.JSON.match(r2)).isFalse();
+		assertThat(DataSetType.CSV.match(r2)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(r2)).isFalse();
 	}
 
 	@Test
 	public void it_should_match_xml_data_set() throws Exception {
-		File file = getTestResource("/dataset/xml/foo.xml");
-		IDataSet dataSet = DataSetType.XML.create(file);
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.build();
+
+		IDataSet dataSet = DataSetType.XML.create(resource);
+
 		assertThat(dataSet)
 			.isNotNull()
 			.isExactlyInstanceOf(FlatXmlDataSet.class);
@@ -89,24 +110,35 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_match_csv_file() {
-		File path1 = new FileBuilder("foo.csv").isDirectory(false).build();
-		File path2 = new FileBuilder("FOO.CSV").isDirectory(false).build();
+		Resource r1 = new ResourceMockBuilder()
+				.setName("foo.csv")
+				.setFile()
+				.build();
 
-		assertThat(DataSetType.CSV.match(path1)).isTrue();
-		assertThat(DataSetType.XML.match(path1)).isFalse();
-		assertThat(DataSetType.JSON.match(path1)).isFalse();
-		assertThat(DataSetType.DIRECTORY.match(path1)).isFalse();
+		Resource r2 = new ResourceMockBuilder()
+				.setName("FOO.CSV")
+				.setFile()
+				.build();
 
-		assertThat(DataSetType.CSV.match(path2)).isTrue();
-		assertThat(DataSetType.XML.match(path2)).isFalse();
-		assertThat(DataSetType.JSON.match(path2)).isFalse();
-		assertThat(DataSetType.DIRECTORY.match(path2)).isFalse();
+		assertThat(DataSetType.CSV.match(r1)).isTrue();
+		assertThat(DataSetType.XML.match(r1)).isFalse();
+		assertThat(DataSetType.JSON.match(r1)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(r1)).isFalse();
+
+		assertThat(DataSetType.CSV.match(r2)).isTrue();
+		assertThat(DataSetType.XML.match(r2)).isFalse();
+		assertThat(DataSetType.JSON.match(r2)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(r2)).isFalse();
 	}
 
 	@Test
 	public void it_should_match_csv_data_set() throws Exception {
-		File file = getTestResource("/dataset/csv/foo.csv");
-		IDataSet dataSet = DataSetType.CSV.create(file);
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/csv/foo.csv")
+				.build();
+
+		IDataSet dataSet = DataSetType.CSV.create(resource);
+
 		assertThat(dataSet)
 			.isNotNull()
 			.isExactlyInstanceOf(CsvDataSet.class);
@@ -114,18 +146,25 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_match_directory_file() {
-		File dir = new FileBuilder("foo").isDirectory(true).build();
+		Resource resource = new ResourceMockBuilder()
+				.setName("foo")
+				.setDirectory()
+				.build();
 
-		assertThat(DataSetType.DIRECTORY.match(dir)).isTrue();
-		assertThat(DataSetType.CSV.match(dir)).isFalse();
-		assertThat(DataSetType.XML.match(dir)).isFalse();
-		assertThat(DataSetType.JSON.match(dir)).isFalse();
+		assertThat(DataSetType.DIRECTORY.match(resource)).isTrue();
+		assertThat(DataSetType.CSV.match(resource)).isFalse();
+		assertThat(DataSetType.XML.match(resource)).isFalse();
+		assertThat(DataSetType.JSON.match(resource)).isFalse();
 	}
 
 	@Test
 	public void it_should_match_directory_data_set() throws Exception {
-		File file = getTestResource("/dataset/xml");
-		IDataSet dataSet = DataSetType.DIRECTORY.create(file);
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.build();
+
+		IDataSet dataSet = DataSetType.DIRECTORY.create(resource);
+
 		assertThat(dataSet)
 			.isNotNull()
 			.isExactlyInstanceOf(DirectoryDataSet.class);

@@ -22,27 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.tests.builders;
 
-import java.util.List;
-import java.util.Map;
-
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import java.io.Reader;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * Factory used to created instance of {@link Reader}.
  */
-public interface JsonParser {
+interface ReaderFactory {
 
 	/**
-	 * Read JSON File and return representation.
+	 * Create reader.
 	 *
-	 * @param resource Input resource.
-	 * @return DataSet representation.
-	 * @throws JsonException If parse/read operation fail (invalid schema, unreadable file).
+	 * @return New reader.
 	 */
-	Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException;
+	Reader create();
 }

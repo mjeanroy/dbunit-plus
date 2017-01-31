@@ -24,6 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static java.util.Arrays.asList;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
@@ -31,12 +36,6 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.File;
-
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static java.util.Arrays.asList;
 
 /**
  * Factory to create instance of {@link IDataSet}.
@@ -54,7 +53,7 @@ public final class DataSetFactory {
 
 	/**
 	 * Create data set from file path.
-	 * See also {@link #createDataSet(java.io.File)}.
+	 * See also {@link #createDataSet(Resource)}.
 	 *
 	 * @param path File path.
 	 * @return Instance of {@link IDataSet}.
@@ -67,7 +66,8 @@ public final class DataSetFactory {
 			loader = ResourceLoader.CLASSPATH;
 		}
 
-		return createDataSet(loader.load(path));
+		Resource resource = loader.load(path);
+		return createDataSet(resource);
 	}
 
 	/**
@@ -108,35 +108,35 @@ public final class DataSetFactory {
 	 *   </li>
 	 * </ul>
 	 *
-	 * @param file File path.
+	 * @param resource Resource.
 	 * @return Instance of {@link IDataSet}.
 	 * @throws DataSetException If data set cannot be created.
 	 */
-	public static IDataSet createDataSet(File file) throws DataSetException {
-		notNull(file, "File must not be null to create data set");
+	public static IDataSet createDataSet(Resource resource) throws DataSetException {
+		notNull(resource, "Resource must not be null to create data set");
 
-		log.debug("Create data set from file: {}", file);
-		DataSetType type = extractFileType(file);
+		log.debug("Create data set from file: {}", resource);
+		DataSetType type = extractFileType(resource);
 
 		log.trace(" - Found type: {}", type);
 		log.trace(" -> Create associated DataSet implementation");
 
-		return type.create(file);
+		return type.create(resource);
 	}
 
 	/**
 	 * Extract type from given file.
 	 *
-	 * @param file File.
+	 * @param resource Resource.
 	 * @return Type.
 	 * @throws DataSetException If file type cannot be extracted.
 	 */
-	private static DataSetType extractFileType(File file) throws DataSetException {
-		DataSetType type = find(asList(DataSetType.values()), new DataSetTypeMatcher(file));
+	private static DataSetType extractFileType(Resource resource) throws DataSetException {
+		DataSetType type = find(asList(DataSetType.values()), new DataSetTypeMatcher(resource));
 
 		// Cannot extract type of file.
 		if (type == null) {
-			throw new DataSetException("Cannot extract type of file '" + file + "'");
+			throw new DataSetException("Cannot extract type of resource '" + resource + "'");
 		}
 
 		return type;

@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-
-import java.io.IOException;
 
 /**
  * Wrap external JSON parsing exception.

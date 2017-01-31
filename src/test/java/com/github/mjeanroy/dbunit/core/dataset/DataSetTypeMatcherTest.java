@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import org.junit.Test;
-
-import java.io.File;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.Test;
 
 public class DataSetTypeMatcherTest {
 
@@ -40,7 +40,7 @@ public class DataSetTypeMatcherTest {
 		DataSetType type1 = mock(DataSetType.class);
 		DataSetType type2 = mock(DataSetType.class);
 
-		File path = mock(File.class);
+		Resource path = new ResourceMockBuilder().build();
 		when(type1.match(path)).thenReturn(false);
 		when(type2.match(path)).thenReturn(true);
 

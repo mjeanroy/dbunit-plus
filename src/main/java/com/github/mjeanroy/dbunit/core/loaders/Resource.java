@@ -22,27 +22,56 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.core.loaders;
 
-import java.util.List;
-import java.util.Map;
-
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * Resource item that abstracts from the actual type of underlying resource, such as:
+ * <ul>
+ *   <li>A {@link File}.</li>
+ *   <li>A classpath resource.</li>
+ * </ul>
  */
-public interface JsonParser {
+public interface Resource {
 
 	/**
-	 * Read JSON File and return representation.
+	 * Check if this resource actually exists in physical form.
 	 *
-	 * @param resource Input resource.
-	 * @return DataSet representation.
-	 * @throws JsonException If parse/read operation fail (invalid schema, unreadable file).
+	 * @return {@code true} if the resource exists, {@code false} otherwise.
 	 */
-	Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException;
+	boolean exists();
+
+	/**
+	 * Return a File handle for this resource.
+	 *
+	 * @return The file associated to this resource.
+	 */
+	File toFile();
+
+	/**
+	 * Open a {@link Reader}.
+	 * It is expected that each call of this method returns a new fresh
+	 * instance of {@link Reader}.
+	 *
+	 * @return New {@link Reader}.
+	 * @throws IOException If the {@link Reader} cannot be opened.
+	 */
+	Reader openReader() throws IOException;
+
+	/**
+	 * Returns the filename of the resource.
+	 *
+	 * @return The filename.
+	 */
+	String getFilename();
+
+	/**
+	 * Check if this resource is a directory.
+	 *
+	 * @return {@code true} if the resource is a directory, {@code false} otherwise.
+	 */
+	boolean isDirectory();
 }

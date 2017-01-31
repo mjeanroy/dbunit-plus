@@ -24,19 +24,19 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.exception.JsonException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Json Parser using Jackson2 as internal implementation.
@@ -72,9 +72,9 @@ public class Jackson2Parser implements JsonParser {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, List<Map<String, Object>>> parse(File input) throws JsonException {
+	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
 		try {
-			return (Map<String, List<Map<String, Object>>>) mapper.readValue(input, Map.class);
+			return (Map<String, List<Map<String, Object>>>) mapper.readValue(resource.openReader(), Map.class);
 		}
 		catch (JsonParseException ex) {
 			log.error(ex.getMessage(), ex);

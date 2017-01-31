@@ -24,17 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.loaders;
 
-import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
+import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.Collection;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-import static java.util.Arrays.asList;
+import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementations of strategies to load resources.
@@ -46,7 +46,7 @@ public enum ResourceLoader {
 	 */
 	CLASSPATH("classpath:") {
 		@Override
-		protected File doLoad(String name) throws Exception {
+		protected Resource doLoad(String name) throws Exception {
 			String prefix = this.findPrefix(name.toLowerCase());
 			if (prefix != null) {
 				name = name.substring(prefix.length());
@@ -57,7 +57,8 @@ public enum ResourceLoader {
 				throw new FileNotFoundException("File <" + name + "> does not exist in classpath");
 			}
 
-			return new File(url.toURI());
+			File file = new File(url.toURI());
+			return new FileResource(file);
 		}
 	},
 
@@ -66,13 +67,14 @@ public enum ResourceLoader {
 	 */
 	FILE_SYSTEM("file:") {
 		@Override
-		protected File doLoad(String name) throws Exception {
+		protected Resource doLoad(String name) throws Exception {
 			String prefix = this.findPrefix(name.toLowerCase());
 			if (prefix != null) {
 				name = name.substring(prefix.length());
 			}
 
-			return new File(name);
+			File file = new File(name);
+			return new FileResource(file);
 		}
 	},
 
@@ -81,14 +83,11 @@ public enum ResourceLoader {
 	 */
 	URL("http:", "https:") {
 		@Override
-		protected File doLoad(String name) throws Exception {
+		protected Resource doLoad(String name) throws Exception {
 			java.net.URL url = new java.net.URL(name);
 			URI uri = url.toURI();
-			if (uri == null) {
-				throw new FileNotFoundException("URI <" + name + "> does not exist");
-			}
-
-			return new File(uri);
+			File file = new File(uri);
+			return new FileResource(file);
 		}
 	};
 
@@ -135,15 +134,15 @@ public enum ResourceLoader {
 	 * @return Loaded file.
 	 * @throws DataSetLoaderException If path cannot be loaded.
 	 */
-	public File load(String name) {
+	public Resource load(String name) {
 		notBlank(name, "File name should be defined");
 		try {
-			File file = doLoad(name);
-			if (file == null || !file.exists()) {
+			Resource resource = doLoad(name);
+			if (resource == null || !resource.exists()) {
 				throw new FileNotFoundException("File <" + name + "> does not exist");
 			}
 
-			return file;
+			return resource;
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
@@ -159,7 +158,7 @@ public enum ResourceLoader {
 	 * @return Loaded file.
 	 * @throws Exception If an error occurred.
 	 */
-	protected abstract File doLoad(String name) throws Exception;
+	protected abstract Resource doLoad(String name) throws Exception;
 
 	/**
 	 * Find matching prefix.
