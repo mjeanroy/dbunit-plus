@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
-
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
+
+import com.github.mjeanroy.dbunit.commons.lang.Objects;
 
 /**
  * Configuration for SQL script parser.

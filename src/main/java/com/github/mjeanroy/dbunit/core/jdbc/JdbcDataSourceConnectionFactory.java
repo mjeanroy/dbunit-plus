@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.sql.DataSource;
 import java.sql.Connection;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance

@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import com.github.mjeanroy.dbunit.commons.collections.Predicate;
+import static java.lang.reflect.Modifier.isStatic;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import static java.lang.reflect.Modifier.isStatic;
+import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 
 /**
  * Filter to check if a given field is static.

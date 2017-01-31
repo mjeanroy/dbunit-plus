@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import org.junit.Test;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import org.junit.Test;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 public class EmbeddedDatabaseRuleTest {
 

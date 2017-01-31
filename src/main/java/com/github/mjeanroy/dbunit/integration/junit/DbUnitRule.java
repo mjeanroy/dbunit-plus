@@ -24,6 +24,9 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
+import java.lang.reflect.Method;
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
@@ -31,9 +34,6 @@ import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-
-import java.lang.reflect.Method;
-import java.sql.Connection;
 
 /**
  * JUnit Rule to setup DbUnit database for each tests.

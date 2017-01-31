@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance

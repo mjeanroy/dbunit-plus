@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import com.github.mjeanroy.dbunit.commons.collections.Predicate;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+
+import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 
 /**
  * Check that a field/method is annotated with given annotation.

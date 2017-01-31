@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+
+import java.lang.reflect.Method;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import org.dbunit.IDatabaseTester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Method;
-
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
 /**
  * Apply setup operations to the test database.

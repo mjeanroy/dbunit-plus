@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import static java.util.Arrays.asList;
+
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
-
-import static java.util.Arrays.asList;
 
 /**
  * Provide integration between spring {@link TransactionalTestExecutionListener} and

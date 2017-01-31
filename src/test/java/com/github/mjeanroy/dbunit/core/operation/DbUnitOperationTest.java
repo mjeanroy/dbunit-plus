@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.operation;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbUnitOperationTest {
 

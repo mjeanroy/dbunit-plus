@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
 /**
  * Database operation to execute before test is executed.

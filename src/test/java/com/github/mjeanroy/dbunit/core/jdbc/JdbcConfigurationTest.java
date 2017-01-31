@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import org.junit.Test;
-
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
 
 public class JdbcConfigurationTest {
 

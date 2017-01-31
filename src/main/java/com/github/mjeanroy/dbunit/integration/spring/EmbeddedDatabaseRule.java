@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
 import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Rule used to start/stop embedded database.

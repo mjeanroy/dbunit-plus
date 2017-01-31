@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import com.github.mjeanroy.dbunit.exception.SqlParserException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.util.Collections.unmodifiableList;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Collections.unmodifiableList;
+import com.github.mjeanroy.dbunit.exception.SqlParserException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Current parsing context.

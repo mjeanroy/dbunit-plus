@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
 import org.junit.rules.TestRule;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbUnitRunnerTest {
 

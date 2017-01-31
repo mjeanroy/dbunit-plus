@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static java.util.Collections.unmodifiableMap;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Replacement Objects.

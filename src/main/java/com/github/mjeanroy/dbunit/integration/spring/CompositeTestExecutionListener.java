@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Allow execution of several {@link TestExecutionListener} in the right order.

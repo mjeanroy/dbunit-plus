@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
 import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.integration.liquibase.LiquibaseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Function to execute liquibase update script against SQL connection.

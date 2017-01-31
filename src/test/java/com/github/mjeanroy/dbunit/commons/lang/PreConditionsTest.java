@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.rules.ExpectedException.none;
+
+import java.io.File;
+
 import com.github.mjeanroy.dbunit.tests.builders.FileBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.io.File;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
 
 public class PreConditionsTest {
 

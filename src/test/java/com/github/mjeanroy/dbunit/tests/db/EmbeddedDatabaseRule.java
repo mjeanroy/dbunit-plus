@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.tests.db;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 
 /**
  * Start and Stop embedded database.

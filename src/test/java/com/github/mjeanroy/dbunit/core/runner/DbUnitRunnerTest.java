@@ -24,6 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
@@ -32,15 +40,6 @@ import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.junit.ClassRule;
 import org.junit.Test;
-
-import javax.sql.DataSource;
-
-import java.lang.reflect.Method;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 public class DbUnitRunnerTest {
 

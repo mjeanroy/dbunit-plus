@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import java.io.File;
-
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.io.File;
 
 /**
  * Builder to create mock {@link File} instances.

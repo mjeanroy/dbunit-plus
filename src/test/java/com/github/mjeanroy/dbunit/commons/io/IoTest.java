@@ -24,18 +24,18 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import org.junit.Test;
-import org.mockito.InOrder;
-
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.StringReader;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.StringReader;
+
+import org.junit.Test;
+import org.mockito.InOrder;
 
 public class IoTest {
 

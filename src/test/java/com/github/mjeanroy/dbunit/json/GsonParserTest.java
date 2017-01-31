@@ -24,24 +24,23 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.json.GsonParser;
-import com.google.gson.Gson;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
-import java.io.File;
-import java.io.FileReader;
-import java.util.List;
-import java.util.Map;
-
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.FileReader;
+import java.util.List;
+import java.util.Map;
+
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.google.gson.Gson;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class GsonParserTest {
 

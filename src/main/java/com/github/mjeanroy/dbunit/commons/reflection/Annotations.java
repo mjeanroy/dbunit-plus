@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
-
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
-import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
-import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
 
 /**
  * Static Annotation Utilities.

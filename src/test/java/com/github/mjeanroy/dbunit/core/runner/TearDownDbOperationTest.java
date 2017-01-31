@@ -24,19 +24,19 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
-import org.dbunit.IDatabaseTester;
-import org.dbunit.operation.DatabaseOperation;
-import org.junit.Test;
-
-import java.lang.reflect.Method;
-
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+
+import java.lang.reflect.Method;
+
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
+import org.dbunit.IDatabaseTester;
+import org.dbunit.operation.DatabaseOperation;
+import org.junit.Test;
 
 public class TearDownDbOperationTest {
 

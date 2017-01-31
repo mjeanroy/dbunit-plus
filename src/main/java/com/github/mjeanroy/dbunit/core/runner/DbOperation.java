@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import org.dbunit.IDatabaseTester;
-
 import java.lang.reflect.Method;
+
+import org.dbunit.IDatabaseTester;
 
 /**
  * Apply DbUnit database operation (setup or tear down).

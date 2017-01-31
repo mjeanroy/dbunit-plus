@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import javax.sql.DataSource;
+
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
-
-import javax.sql.DataSource;
 
 /**
  * Spring test execution listener running DbUnit data set before and after test methods:

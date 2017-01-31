@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.junit.Test;
+import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.fieldStaticPredicate;
+import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.methodStaticPredicate;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.fieldStaticPredicate;
-import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.methodStaticPredicate;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 public class MemberStaticPredicateTest {
 

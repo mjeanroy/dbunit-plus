@@ -24,15 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.InOrder;
-import org.springframework.test.context.TestContext;
-import org.springframework.test.context.TestExecutionListener;
-
-import java.util.List;
-
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +31,15 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+
+import java.util.List;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InOrder;
+import org.springframework.test.context.TestContext;
+import org.springframework.test.context.TestExecutionListener;
 
 public class CompositeTestExecutionListenerTest {
 

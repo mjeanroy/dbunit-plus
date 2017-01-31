@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
-
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.startsWith;
+
+import com.github.mjeanroy.dbunit.commons.lang.Objects;
 
 /**
  * JDBC Configuration, defined by:

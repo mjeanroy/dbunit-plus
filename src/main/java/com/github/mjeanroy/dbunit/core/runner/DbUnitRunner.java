@@ -24,6 +24,23 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
+import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
+import static java.util.Arrays.asList;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
@@ -42,23 +59,6 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.sql.DataSource;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
-import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
-import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
-import static java.util.Arrays.asList;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.

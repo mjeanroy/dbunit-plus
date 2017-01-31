@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithReplacementsDataSet;
-import org.junit.ClassRule;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithReplacementsDataSet;
+import org.junit.ClassRule;
+import org.junit.Test;
 
 public class DbUnitRunnerWithReplacementsTest {
 

@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
+import java.sql.SQLException;
+
 import liquibase.exception.LiquibaseException;
 import org.dbunit.dataset.DataSetException;
-
-import java.sql.SQLException;
 
 /**
  * DbUnit exception.

@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
 
 /**
  * Abstract connection factory that can be used to automatically wrap exception.

@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
 import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.fieldStaticPredicate;
 import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.methodStaticPredicate;
 import static java.util.Arrays.asList;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Static Reflections Utilities.

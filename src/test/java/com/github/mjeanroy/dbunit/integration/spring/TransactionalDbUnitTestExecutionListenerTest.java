@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import org.junit.Test;
-import org.springframework.test.context.TestExecutionListener;
-import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
+import org.springframework.test.context.TestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 public class TransactionalDbUnitTestExecutionListenerTest {
 
