@@ -3,9 +3,9 @@ package com.github.mjeanroy.dbunit.core.loaders;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 
 /**
  * Implementation of {@link Resource} backed by a given {@link File} handler.
@@ -38,8 +38,8 @@ public class FileResource implements Resource {
 	}
 
 	@Override
-	public Reader openReader() throws IOException {
-		return new FileReader(file);
+	public InputStream openStream() throws IOException {
+		return new FileInputStream(file);
 	}
 
 	@Override

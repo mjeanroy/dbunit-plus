@@ -24,13 +24,14 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import static com.github.mjeanroy.dbunit.tests.builders.ReaderAnswer.readerAnswer;
+import static com.github.mjeanroy.dbunit.tests.builders.InputStreamAnswer.streamAnswer;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
@@ -43,7 +44,7 @@ public class ResourceMockBuilder {
 	/**
 	 * Factory that will create instance of {@link Reader}.
 	 */
-	private ReaderFactory readerFactory;
+	private InputStreamFactory readerFactory;
 
 	/**
 	 * Resource name.
@@ -68,7 +69,7 @@ public class ResourceMockBuilder {
 	 * @return The builder.
 	 */
 	public ResourceMockBuilder fromClasspath(String path) {
-		this.readerFactory = new ClasspathReader(path);
+		this.readerFactory = new ClasspathInputStream(path);
 		this.file = getTestResource(path);
 		return this;
 	}
@@ -76,11 +77,11 @@ public class ResourceMockBuilder {
 	/**
 	 * Initialize {@link Resource} reader.
 	 *
-	 * @param reader Reader.
+	 * @param stream Reader.
 	 * @return The builder.
 	 */
-	public ResourceMockBuilder withReader(Reader reader) {
-		this.readerFactory = new IdentityReader(reader);
+	public ResourceMockBuilder withReader(InputStream stream) {
+		this.readerFactory = new IdentityInputStream(stream);
 		this.file = null;
 		return this;
 	}
@@ -124,7 +125,7 @@ public class ResourceMockBuilder {
 	public Resource build() {
 		try {
 			Resource resource = mock(Resource.class);
-			when(resource.openReader()).thenAnswer(readerAnswer(readerFactory));
+			when(resource.openStream()).thenAnswer(streamAnswer(readerFactory));
 			when(resource.getFilename()).thenReturn(name);
 			when(resource.isDirectory()).thenReturn(directory);
 			when(resource.toFile()).thenReturn(file);

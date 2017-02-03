@@ -22,19 +22,36 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.core.loaders;
 
-import java.io.Reader;
+import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 
 /**
- * Factory used to created instance of {@link Reader}.
+ * Load {@link Resource}.
+ *
+ * Resource location is implementation specific, for example:
+ * <ul>
+ *   <li>From classpath ({@link ClasspathResourceLoader})</li>
+ *   <li>From file system ({@link FileSystemResourceLoader})</li>
+ *   <li>From URL ({@link UrlResourceLoader})</li>
+ * </ul>
  */
-interface ReaderFactory {
+public interface ResourceLoaderStrategy {
 
 	/**
-	 * Create reader.
+	 * Check if the path of the resource may be handled by this strategy.
 	 *
-	 * @return New reader.
+	 * @param path Resource path.
+	 * @return {@code true} if resource may be loaded by this strategy, {@code false} otherwise.
 	 */
-	Reader create();
+	boolean match(String path);
+
+	/**
+	 * Load resource.
+	 *
+	 * @param name Resource path.
+	 * @return The resource.
+	 * @throws ResourceNotFoundException If resource does not exist.
+	 */
+	Resource load(String name);
 }

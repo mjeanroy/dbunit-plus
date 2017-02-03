@@ -30,9 +30,11 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -64,7 +66,7 @@ public class IoTest {
 			"foo" + System.getProperty("line.separator") +
 			"bar" + System.getProperty("line.separator");
 
-		StringReader reader = new StringReader(text);
+		InputStream reader = new ByteArrayInputStream(text.getBytes(Charset.defaultCharset()));
 		ReaderVisitor visitor = mock(ReaderVisitor.class);
 
 		Io.readLines(reader, visitor);

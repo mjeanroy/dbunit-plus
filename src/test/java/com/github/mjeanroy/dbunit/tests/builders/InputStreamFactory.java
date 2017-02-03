@@ -22,58 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.tests.builders;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 /**
- * Resource item that abstracts from the actual type of underlying resource, such as:
- * <ul>
- *   <li>A {@link File}.</li>
- *   <li>A classpath resource.</li>
- *   <li>An {@link URL}.</li>
- * </ul>
+ * Factory used to created instance of {@link InputStream}.
  */
-public interface Resource {
+interface InputStreamFactory {
 
 	/**
-	 * Check if this resource actually exists in physical form.
-	 *
-	 * @return {@code true} if the resource exists, {@code false} otherwise.
-	 */
-	boolean exists();
-
-	/**
-	 * Return a File handle for this resource.
-	 *
-	 * @return The file associated to this resource.
-	 */
-	File toFile();
-
-	/**
-	 * Open an {@link InputStream}.
-	 * It is expected that each call of this method returns a new fresh
-	 * instance of {@link InputStream}.
+	 * Create {@link InputStream}.
 	 *
 	 * @return New {@link InputStream}.
-	 * @throws IOException If the {@link InputStream} cannot be opened.
 	 */
-	InputStream openStream() throws IOException;
-
-	/**
-	 * Returns the filename of the resource.
-	 *
-	 * @return The filename.
-	 */
-	String getFilename();
-
-	/**
-	 * Check if this resource is a directory.
-	 *
-	 * @return {@code true} if the resource is a directory, {@code false} otherwise.
-	 */
-	boolean isDirectory();
+	InputStream create();
 }

@@ -27,7 +27,8 @@ package com.github.mjeanroy.dbunit.commons.io;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -52,11 +53,12 @@ public final class Io {
 	 * Read {@code reader} instance line by line and execute {@code visitor} for
 	 * each line.
 	 *
-	 * @param reader Reader instance.
+	 * @param stream Reader instance.
 	 * @param visitor Visitor, used to handle line.
 	 * @throws IOException If an error occurred while reading a line.
 	 */
-	public static void readLines(Reader reader, ReaderVisitor visitor) throws IOException {
+	public static void readLines(InputStream stream, ReaderVisitor visitor) throws IOException {
+		InputStreamReader reader = new InputStreamReader(stream);
 		BufferedReader buf = new BufferedReader(reader);
 		try {
 			String line;

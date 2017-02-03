@@ -62,7 +62,7 @@ enum DataSetType {
 		IDataSet doCreate(Resource resource) throws Exception {
 			return new FlatXmlDataSetBuilder()
 				.setColumnSensing(true)
-				.build(resource.openReader());
+				.build(resource.openStream());
 		}
 	},
 

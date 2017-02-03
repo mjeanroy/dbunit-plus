@@ -24,56 +24,58 @@
 
 package com.github.mjeanroy.dbunit.core.loaders;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 /**
- * Resource item that abstracts from the actual type of underlying resource, such as:
- * <ul>
- *   <li>A {@link File}.</li>
- *   <li>A classpath resource.</li>
- *   <li>An {@link URL}.</li>
- * </ul>
+ * Load {@link Resource} from URL.
  */
-public interface Resource {
+class UrlResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
 
 	/**
-	 * Check if this resource actually exists in physical form.
-	 *
-	 * @return {@code true} if the resource exists, {@code false} otherwise.
+	 * Each resource may match this prefix, for example:
+	 * <ul>
+	 *   <li>{@code http://path/foo.txt} should match</li>
+	 *   <li>{@code http/foo.txt} should not match</li>
+	 *   <li>{@code foo.txt} should not match</li>
+	 * </ul>
 	 */
-	boolean exists();
+	private static final String PREFIX_1 = "http:";
 
 	/**
-	 * Return a File handle for this resource.
-	 *
-	 * @return The file associated to this resource.
+	 * Each resource may match this prefix, for example:
+	 * <ul>
+	 *   <li>{@code https://path/foo.txt} should match</li>
+	 *   <li>{@code https/foo.txt} should not match</li>
+	 *   <li>{@code foo.txt} should not match</li>
+	 * </ul>
 	 */
-	File toFile();
+	private static final String PREFIX_2 = "https:";
 
 	/**
-	 * Open an {@link InputStream}.
-	 * It is expected that each call of this method returns a new fresh
-	 * instance of {@link InputStream}.
-	 *
-	 * @return New {@link InputStream}.
-	 * @throws IOException If the {@link InputStream} cannot be opened.
+	 * The singleton instance.
 	 */
-	InputStream openStream() throws IOException;
+	private static final UrlResourceLoader INSTANCE = new UrlResourceLoader();
 
 	/**
-	 * Returns the filename of the resource.
+	 * Get the loader instance.
 	 *
-	 * @return The filename.
+	 * @return Loader instance.
 	 */
-	String getFilename();
+	static UrlResourceLoader getInstance() {
+		return INSTANCE;
+	}
 
 	/**
-	 * Check if this resource is a directory.
-	 *
-	 * @return {@code true} if the resource is a directory, {@code false} otherwise.
+	 * Create the loader.
+	 * This constructor should not be called directly, use {@link #getInstance()} instead.
 	 */
-	boolean isDirectory();
+	private UrlResourceLoader() {
+		super(PREFIX_1, PREFIX_2);
+	}
+
+	@Override
+	Resource doLoad(String path) throws Exception {
+		URL url = new URL(path);
+		return new UrlResource(url);
+	}
 }

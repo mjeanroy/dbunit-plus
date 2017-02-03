@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.json;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -74,7 +75,8 @@ public class Jackson2Parser implements JsonParser {
 	@SuppressWarnings("unchecked")
 	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
 		try {
-			return (Map<String, List<Map<String, Object>>>) mapper.readValue(resource.openReader(), Map.class);
+			InputStream stream = resource.openStream();
+			return (Map<String, List<Map<String, Object>>>) mapper.readValue(stream, Map.class);
 		}
 		catch (JsonParseException ex) {
 			log.error(ex.getMessage(), ex);

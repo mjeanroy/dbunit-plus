@@ -32,7 +32,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -53,9 +54,10 @@ public class GsonParserTest {
 		Gson gson = new Gson();
 		GsonParser parser = new GsonParser(gson);
 		File file = getTestResource("/dataset/json/foo.json");
+		InputStream inputStream = new FileInputStream(file);
 
 		Resource resource = mock(Resource.class);
-		when(resource.openReader()).thenReturn(new FileReader(file));
+		when(resource.openStream()).thenReturn(inputStream);
 
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 

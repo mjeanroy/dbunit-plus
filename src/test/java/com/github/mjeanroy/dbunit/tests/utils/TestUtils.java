@@ -24,7 +24,11 @@
 
 package com.github.mjeanroy.dbunit.tests.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URL;
@@ -37,11 +41,64 @@ public final class TestUtils {
 	private TestUtils() {
 	}
 
+	/**
+	 * Get test resource file (related to the classpath).
+	 *
+	 * @param path File path.
+	 * @return The file handler.
+	 */
 	public static File getTestResource(String path) {
 		try {
 			URL url = TestUtils.class.getResource(path);
 			URI uri = url.toURI();
 			return new File(uri);
+		} catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
+	}
+
+	/**
+	 * Read test resource file (related to the classpath).
+	 *
+	 * @param path File path.
+	 * @return File content.
+	 */
+	public static String readTestResource(String path) {
+		try {
+			File file = getTestResource(path);
+			FileReader reader = new FileReader(file);
+			BufferedReader buf = new BufferedReader(reader);
+
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = buf.readLine()) != null) {
+				sb.append(line);
+			}
+
+			return sb.toString();
+		} catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
+	}
+
+	/**
+	 * Read {@link InputStream} until its end and returns the result as a {@link String}.
+	 *
+	 * @param stream Stream to read.
+	 * @return Stream content.
+	 */
+	public static String readStream(InputStream stream) {
+		try {
+			InputStreamReader reader = new InputStreamReader(stream);
+			BufferedReader buf = new BufferedReader(reader);
+
+			StringBuilder sb = new StringBuilder();
+			String line;
+			while ((line = buf.readLine()) != null) {
+				sb.append(line);
+			}
+
+			return sb.toString();
 		} catch (Exception ex) {
 			throw new AssertionError(ex);
 		}

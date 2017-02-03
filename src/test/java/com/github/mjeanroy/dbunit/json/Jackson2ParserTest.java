@@ -32,7 +32,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -98,14 +98,14 @@ public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_wrap_json_parse_exception() throws Exception {
-		Reader reader = mock(Reader.class);
+		InputStream stream = mock(InputStream.class);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(reader)
+				.withReader(stream)
 				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
 		JsonParseException ex = mock(JsonParseException.class);
-		when(mapper.readValue(reader, Map.class)).thenThrow(ex);
+		when(mapper.readValue(stream, Map.class)).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
@@ -116,14 +116,14 @@ public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_wrap_json_mapping_exception() throws Exception {
-		Reader reader = mock(Reader.class);
+		InputStream stream = mock(InputStream.class);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(reader)
+				.withReader(stream)
 				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
 		JsonMappingException ex = mock(JsonMappingException.class);
-		when(mapper.readValue(reader, Map.class)).thenThrow(ex);
+		when(mapper.readValue(stream, Map.class)).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
@@ -134,14 +134,14 @@ public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_wrap_io_exception() throws Exception {
-		Reader reader = mock(Reader.class);
+		InputStream stream = mock(InputStream.class);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(reader)
+				.withReader(stream)
 				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
 		IOException ex = mock(IOException.class);
-		when(mapper.readValue(reader, Map.class)).thenThrow(ex);
+		when(mapper.readValue(stream, Map.class)).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));

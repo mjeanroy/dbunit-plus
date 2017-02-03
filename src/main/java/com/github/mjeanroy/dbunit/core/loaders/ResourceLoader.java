@@ -24,17 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.loaders;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-import static java.util.Arrays.asList;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.URI;
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Implementations of strategies to load resources.
@@ -44,87 +34,30 @@ public enum ResourceLoader {
 	/**
 	 * Load file from classpath.
 	 */
-	CLASSPATH("classpath:") {
-		@Override
-		protected Resource doLoad(String name) throws Exception {
-			String prefix = this.findPrefix(name.toLowerCase());
-			if (prefix != null) {
-				name = name.substring(prefix.length());
-			}
-
-			java.net.URL url = getClass().getResource(name);
-			if (url == null) {
-				throw new FileNotFoundException("File <" + name + "> does not exist in classpath");
-			}
-
-			File file = new File(url.toURI());
-			return new FileResource(file);
-		}
-	},
+	CLASSPATH(ClasspathResourceLoader.getInstance()),
 
 	/**
 	 * Load file from file system.
 	 */
-	FILE_SYSTEM("file:") {
-		@Override
-		protected Resource doLoad(String name) throws Exception {
-			String prefix = this.findPrefix(name.toLowerCase());
-			if (prefix != null) {
-				name = name.substring(prefix.length());
-			}
-
-			File file = new File(name);
-			return new FileResource(file);
-		}
-	},
+	FILE_SYSTEM(FileSystemResourceLoader.getInstance()),
 
 	/**
 	 * Load file from HTTP url.
 	 */
-	URL("http:", "https:") {
-		@Override
-		protected Resource doLoad(String name) throws Exception {
-			java.net.URL url = new java.net.URL(name);
-			URI uri = url.toURI();
-			File file = new File(uri);
-			return new FileResource(file);
-		}
-	};
+	URL(UrlResourceLoader.getInstance());
 
 	/**
-	 * Class Logger.
+	 * The loader strategy.
 	 */
-	private static final Logger log = Loggers.getLogger(ResourceLoader.class);
-
-	/**
-	 * Prefix of file name.
-	 * For instance:
-	 * <ul>
-	 * <li>{@code classpath:} for classpath loading.</li>
-	 * <li>{@code file:} for file system loading</li>
-	 * <li>{@code http:} for http loading</li>
-	 * </ul>
-	 */
-	private final Collection<String> prefixes;
+	private final ResourceLoaderStrategy strategy;
 
 	/**
 	 * Create loader.
 	 *
-	 * @param prefix Pattern prefix.
+	 * @param strategy The loader strategy.
 	 */
-	ResourceLoader(String... prefix) {
-		this.prefixes = asList(prefix);
-	}
-
-	/**
-	 * Check if given file name match resource loader protocol.
-	 *
-	 * @param name File name.
-	 * @return {@code true} if protocol match resource loader, {@code false} otherwise.
-	 */
-	private boolean match(String name) {
-		notBlank(name, "File name should be defined");
-		return findPrefix(name.toLowerCase()) != null;
+	ResourceLoader(ResourceLoaderStrategy strategy) {
+		this.strategy = strategy;
 	}
 
 	/**
@@ -135,45 +68,7 @@ public enum ResourceLoader {
 	 * @throws DataSetLoaderException If path cannot be loaded.
 	 */
 	public Resource load(String name) {
-		notBlank(name, "File name should be defined");
-		try {
-			Resource resource = doLoad(name);
-			if (resource == null || !resource.exists()) {
-				throw new FileNotFoundException("File <" + name + "> does not exist");
-			}
-
-			return resource;
-		}
-		catch (Exception ex) {
-			log.error(ex.getMessage(), ex);
-			throw new DataSetLoaderException(ex);
-		}
-	}
-
-	/**
-	 * Load file.
-	 * Thrown exception will be wrapped into an instance of {@link DataSetLoaderException}.
-	 *
-	 * @param name File path.
-	 * @return Loaded file.
-	 * @throws Exception If an error occurred.
-	 */
-	protected abstract Resource doLoad(String name) throws Exception;
-
-	/**
-	 * Find matching prefix.
-	 *
-	 * @param name File path.
-	 * @return Matching prefix.
-	 */
-	String findPrefix(String name) {
-		for (String prefix : prefixes) {
-			if (name.startsWith(prefix)) {
-				return prefix;
-			}
-		}
-
-		return null;
+		return strategy.load(name);
 	}
 
 	/**
@@ -184,7 +79,7 @@ public enum ResourceLoader {
 	 */
 	public static ResourceLoader find(String value) {
 		for (ResourceLoader loader : ResourceLoader.values()) {
-			if (loader.match(value)) {
+			if (loader.strategy.match(value)) {
 				return loader;
 			}
 		}

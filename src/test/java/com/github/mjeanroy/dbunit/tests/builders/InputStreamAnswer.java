@@ -24,29 +24,42 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import java.io.Reader;
+import java.io.InputStream;
+
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 /**
- * Factory that returns pre-exsiting reader.
+ * Mockito {@link Answer} that can be used to return instances
+ * of {@link InputStream} returned by a {@link InputStreamFactory}.
  */
-class IdentityReader implements ReaderFactory {
+class InputStreamAnswer implements Answer<InputStream> {
 
 	/**
-	 * Reader to return.
+	 * Create answer.
+	 * @param factory The {@link InputStream} factory.
+	 * @return The mockito answer.
 	 */
-	private final Reader reader;
+	static InputStreamAnswer streamAnswer(InputStreamFactory factory) {
+		return new InputStreamAnswer(factory);
+	}
 
 	/**
-	 * Create factory with pre-existing reader.
+	 * The {@link InputStream} factory.
+	 */
+	private final InputStreamFactory factory;
+
+	/**
+	 * Create mockito {@link Answer} with factory.
 	 *
-	 * @param reader The reader.
+	 * @param factory The {@link InputStream} factory.
 	 */
-	IdentityReader(Reader reader) {
-		this.reader = reader;
+	private InputStreamAnswer(InputStreamFactory factory) {
+		this.factory = factory;
 	}
 
 	@Override
-	public Reader create() {
-		return reader;
+	public InputStream answer(InvocationOnMock invocation) throws Throwable {
+		return factory.create();
 	}
 }

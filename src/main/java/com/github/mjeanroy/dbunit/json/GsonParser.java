@@ -27,7 +27,8 @@ package com.github.mjeanroy.dbunit.json;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -75,7 +76,8 @@ public class GsonParser implements JsonParser {
 	@SuppressWarnings("unchecked")
 	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
 		try {
-			Reader reader = resource.openReader();
+			InputStream stream = resource.openStream();
+			InputStreamReader reader = new InputStreamReader(stream);
 			return (Map<String, List<Map<String, Object>>>) gson.fromJson(reader, Map.class);
 		}
 		catch (IOException ex) {

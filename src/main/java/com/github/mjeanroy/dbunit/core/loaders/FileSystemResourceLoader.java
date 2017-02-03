@@ -22,44 +22,55 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.core.loaders;
 
-import java.io.Reader;
-
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import java.io.File;
 
 /**
- * Mockito {@link Answer} that can be used to return instances
- * of {@link Reader} returned by a {@link ReaderFactory}.
+ * Load {@link Resource} from the file system.
  */
-class ReaderAnswer implements Answer<Reader> {
+class FileSystemResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
 
 	/**
-	 * Create answer.
-	 * @param factory The {@link Reader} factory.
-	 * @return The mockito answer.
+	 * Each resource must match this prefix, for example:
+	 * <ul>
+	 *   <li>{@code file:/foo.txt} must match</li>
+	 *   <li>{@code file/foo.txt} must not match</li>
+	 *   <li>{@code foo.txt} must not match</li>
+	 * </ul>
 	 */
-	static ReaderAnswer readerAnswer(ReaderFactory factory) {
-		return new ReaderAnswer(factory);
+	private static final String PREFIX = "file:";
+
+	/**
+	 * The singleton instance.
+	 */
+	private static final FileSystemResourceLoader INSTANCE = new FileSystemResourceLoader();
+
+	/**
+	 * Get the loader instance.
+	 *
+	 * @return Loader instance.
+	 */
+	static FileSystemResourceLoader getInstance() {
+		return INSTANCE;
 	}
 
 	/**
-	 * The {@link Reader} factory.
+	 * Create the loader.
+	 * This constructor should not be called directly, use {@link #getInstance()} instead.
 	 */
-	private final ReaderFactory factory;
-
-	/**
-	 * Create mockito {@link Answer} with factory.
-	 *
-	 * @param factory The {@link Reader} factory.
-	 */
-	private ReaderAnswer(ReaderFactory factory) {
-		this.factory = factory;
+	private FileSystemResourceLoader() {
+		super(PREFIX);
 	}
 
 	@Override
-	public Reader answer(InvocationOnMock invocation) throws Throwable {
-		return factory.create();
+	Resource doLoad(String path) throws Exception {
+		final String prefix = extractPrefix(path);
+		final String filePath = prefix != null && !prefix.isEmpty() ?
+				path.substring(prefix.length()) :
+				path;
+
+		final File file = new File(filePath);
+		return new FileResource(file);
 	}
 }

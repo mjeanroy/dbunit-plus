@@ -28,7 +28,7 @@ import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
 import java.io.IOException;
-import java.io.Reader;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -53,16 +53,16 @@ public final class SqlScriptParser {
 	/**
 	 * Parse SQL script and return list of SQL query.
 	 *
-	 * @param reader Reader input.
+	 * @param stream Stream input.
 	 * @param configuration Parsing configuration.
 	 * @return List of query parsed in given input.
 	 * @throws SqlParserException If an error occurred during parsing.
 	 */
-	public static List<String> parseScript(Reader reader, SqlScriptParserConfiguration configuration) {
+	public static List<String> parseScript(InputStream stream, SqlScriptParserConfiguration configuration) {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		try {
-			readLines(reader, new SqlLineVisitor(ctx, configuration));
+			readLines(stream, new SqlLineVisitor(ctx, configuration));
 		}
 		catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
@@ -98,7 +98,7 @@ public final class SqlScriptParser {
 	 */
 	public static List<String> parseScript(Resource sqlFile, SqlScriptParserConfiguration configuration) {
 		try {
-			return parseScript(sqlFile.openReader(), configuration);
+			return parseScript(sqlFile.openStream(), configuration);
 		} catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new SqlParserException(ex);
@@ -109,12 +109,12 @@ public final class SqlScriptParser {
 	 * Parse SQL script and execute queries one by one (if a query failed, next queries are not executed).
 	 *
 	 * @param connection SQL Connection.
-	 * @param reader SQL Script.
+	 * @param stream Stream of SQL Script.
 	 * @param configuration SQL parser configuration.
 	 * @throws SQLException If a query failed.
 	 */
-	public static void executeScript(Connection connection, Reader reader, SqlScriptParserConfiguration configuration) throws SQLException {
-		List<String> queries = parseScript(reader, configuration);
+	public static void executeScript(Connection connection, InputStream stream, SqlScriptParserConfiguration configuration) throws SQLException {
+		List<String> queries = parseScript(stream, configuration);
 		executeQueries(connection, queries);
 	}
 

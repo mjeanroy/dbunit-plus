@@ -30,7 +30,9 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.StringReader;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -55,8 +57,9 @@ public class SqlScriptParserTest {
 	@Test
 	public void it_should_parse_simple_query() {
 		String query = "DROP TABLE foo;";
+		InputStream reader = createStream(query);
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		List<String> queries = SqlScriptParser.parseScript(reader, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -68,8 +71,9 @@ public class SqlScriptParserTest {
 	@Test
 	public void it_should_parse_simple_query_without_end_delimiter() {
 		String query = "DROP TABLE foo";
+		InputStream stringReader = createStream(query);
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -86,7 +90,9 @@ public class SqlScriptParserTest {
 			q1 + BR +
 			q2 + BR;
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		InputStream stringReader = createStream(query);
+
+		List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -98,8 +104,9 @@ public class SqlScriptParserTest {
 	@Test
 	public void it_should_add_escaping_character() {
 		String query = "SELECT * FROM foo WHERE title = 'John\\'s file';";
+		InputStream stream = createStream(query);
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -118,7 +125,9 @@ public class SqlScriptParserTest {
 			"-- Drop Table bar" + BR +
 			q2 + BR;
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		InputStream stream = createStream(query);
+
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -141,7 +150,9 @@ public class SqlScriptParserTest {
 			"/* Drop Table bar */" + BR +
 			q2 + BR;
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		InputStream stream = createStream(query);
+
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -164,7 +175,9 @@ public class SqlScriptParserTest {
 			"/* Drop Table bar */" + BR +
 			q2 + BR;
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		InputStream stream = createStream(query);
+
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -176,8 +189,9 @@ public class SqlScriptParserTest {
 	@Test
 	public void it_should_parse_query_with_quote_escaping() {
 		String query = "UPDATE foo SET name = 'John''s Name';";
+		InputStream stream = createStream(query);
 
-		List<String> queries = SqlScriptParser.parseScript(new StringReader(query), configuration);
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 
 		assertThat(queries)
 			.isNotNull()
@@ -323,12 +337,18 @@ public class SqlScriptParserTest {
 		PreparedStatement statement = mock(PreparedStatement.class);
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
-		SqlScriptParser.executeScript(connection, new StringReader(query), configuration);
+		InputStream stream = createStream(query);
+
+		SqlScriptParser.executeScript(connection, stream, configuration);
 
 		InOrder inOrder = inOrder(connection, statement);
 		inOrder.verify(connection).prepareStatement(q1);
 		inOrder.verify(statement).execute();
 		inOrder.verify(connection).prepareStatement(q2);
 		inOrder.verify(statement).execute();
+	}
+
+	private InputStream createStream(String query) {
+		return new ByteArrayInputStream(query.getBytes(Charset.defaultCharset()));
 	}
 }

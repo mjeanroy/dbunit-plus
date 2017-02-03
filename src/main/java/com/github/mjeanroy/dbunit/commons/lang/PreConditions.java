@@ -64,10 +64,14 @@ public final class PreConditions {
 	 */
 	public static String notBlank(String value, String message, Object... params) {
 		notNull(value, message, params);
-		if (value.trim().length() == 0) {
-			throw new IllegalArgumentException(format(message, params));
+
+		for (Character c : value.toCharArray()) {
+			if (!Character.isWhitespace(c)) {
+				return value;
+			}
 		}
-		return value;
+
+		throw new IllegalArgumentException(format(message, params));
 	}
 
 	/**

@@ -29,7 +29,7 @@ import static org.junit.rules.ExpectedException.none;
 
 import java.io.File;
 
-import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
+import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,9 +59,10 @@ public class ResourceLoaderTest {
 
 	@Test
 	public void it_should_fail_if_file_does_not_exist_in_classpath() {
-		thrown.expect(DataSetLoaderException.class);
-		thrown.expectMessage("File </dataset/xml/unknown.xml> does not exist in classpath");
-		ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/unknown.xml");
+		String resource = "classpath:/dataset/xml/unknown.xml";
+		thrown.expect(ResourceNotFoundException.class);
+		thrown.expectMessage(String.format("Resource <%s> does not exist", resource));
+		ResourceLoader.CLASSPATH.load(resource);
 	}
 
 	@Test
@@ -82,9 +83,10 @@ public class ResourceLoaderTest {
 
 	@Test
 	public void it_should_fail_if_file_does_not_exist_in_file_system() {
-		thrown.expect(DataSetLoaderException.class);
-		thrown.expectMessage("File <file:/dataset/xml/unknown.xml> does not exist");
-		ResourceLoader.FILE_SYSTEM.load("file:/dataset/xml/unknown.xml");
+		String resource = "file:/dataset/xml/unknown.xml";
+		thrown.expect(ResourceNotFoundException.class);
+		thrown.expectMessage(String.format("Resource <%s> does not exist", resource));
+		ResourceLoader.FILE_SYSTEM.load(resource);
 	}
 
 	@Test

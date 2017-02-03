@@ -24,38 +24,29 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.io.InputStream;
 
 /**
- * Factory that will return instance of {@link FileReader} using a reference
- * to a file in the classpath.
+ * Factory that returns pre-exsiting {@link InputStream}.
  */
-class ClasspathReader implements ReaderFactory {
+class IdentityInputStream implements InputStreamFactory {
 
 	/**
-	 * File path.
+	 * Reader to return.
 	 */
-	private final String path;
+	private final InputStream inputStream;
 
 	/**
-	 * Create the reader with the path.
+	 * Create factory with pre-existing {@link InputStream}.
 	 *
-	 * @param path Path.
+	 * @param stream The {@link InputStream}.
 	 */
-	ClasspathReader(String path) {
-		this.path = path;
+	IdentityInputStream(InputStream stream) {
+		this.inputStream = stream;
 	}
 
 	@Override
-	public Reader create() {
-		try {
-			return new FileReader(getTestResource(path));
-		} catch (FileNotFoundException ex) {
-			throw new AssertionError(ex);
-		}
+	public InputStream create() {
+		return inputStream;
 	}
 }
