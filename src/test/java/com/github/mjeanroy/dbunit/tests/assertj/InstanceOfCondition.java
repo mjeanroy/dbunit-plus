@@ -22,49 +22,45 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.commons.io;
+package com.github.mjeanroy.dbunit.tests.assertj;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Condition;
 
-import org.junit.Test;
+/**
+ * AssertJ {@link Condition} checking that a given value is an instance of
+ * given class.
+ *
+ * @param <T> Type of value.
+ */
+public class InstanceOfCondition<T> extends Condition<T> {
 
-public class FilesTest {
-
-	@Test
-	public void it_should_extract_filename_from_path() {
-		String path = "/dataset/foo.json";
-		String fileName = Files.extractFilename(path);
-		assertThat(fileName).isEqualTo("foo.json");
+	/**
+	 * Create condition.
+	 *
+	 * @param klass Expected class.
+	 * @param <T> Type of value to check.
+	 * @return The condition.
+	 */
+	public static <T> InstanceOfCondition<T> isInstanceOf(Class<?> klass) {
+		return new InstanceOfCondition<T>(klass);
 	}
 
-	@Test
-	public void it_should_extract_filename_from_file() {
-		String path = "foo.json";
-		String fileName = Files.extractFilename(path);
-		assertThat(fileName).isEqualTo("foo.json");
+	/**
+	 * Expected class.
+	 */
+	private final Class<?> klass;
+
+	/**
+	 * Create condition.
+	 *
+	 * @param klass The class.
+	 */
+	private InstanceOfCondition(Class<?> klass) {
+		this.klass = klass;
 	}
 
-	@Test
-	public void it_should_extract_filename_from_null_with_null() {
-		assertThat(Files.extractFilename(null)).isNull();
-	}
-
-	@Test
-	public void it_should_get_file_extension() {
-		String path = "foo.json";
-		String ext = Files.extractExtension(path);
-		assertThat(ext).isEqualTo("json");
-	}
-
-	@Test
-	public void it_should_get_empty_file_extension() {
-		String path = "foo";
-		String ext = Files.extractExtension(path);
-		assertThat(ext).isNotNull().isEmpty();
-	}
-
-	@Test
-	public void it_should_get_null_extension_with_null() {
-		assertThat(Files.extractExtension(null)).isNull();
+	@Override
+	public boolean matches(T value) {
+		return value != null && value.getClass().isAssignableFrom(klass);
 	}
 }

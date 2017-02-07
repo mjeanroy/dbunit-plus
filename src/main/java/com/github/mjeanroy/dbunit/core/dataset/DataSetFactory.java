@@ -63,6 +63,7 @@ public final class DataSetFactory {
 		notNull(path, "Path must not be null to create data set");
 		ResourceLoader loader = ResourceLoader.find(path);
 		if (loader == null) {
+			log.debug("Cannot find resource loader with path: {}, use default (CLASSPATH)", path);
 			loader = ResourceLoader.CLASSPATH;
 		}
 

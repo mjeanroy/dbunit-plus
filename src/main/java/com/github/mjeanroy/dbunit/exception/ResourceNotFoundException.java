@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Error thrown when resource is not found.
  */
-public class ResourceNotFoundException extends AbstractDbUnitException {
+public class ResourceNotFoundException extends ResourceException {
 
 	/**
 	 * Resource path used when exception is thrown.

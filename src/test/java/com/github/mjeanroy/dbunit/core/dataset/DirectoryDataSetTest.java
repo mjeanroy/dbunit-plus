@@ -31,7 +31,7 @@ import java.util.List;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
+import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
@@ -43,9 +43,10 @@ public class DirectoryDataSetTest {
 	public void it_should_create_directory_dataset() throws Exception {
 		Resource resource = new ResourceMockBuilder()
 				.fromClasspath("/dataset/xml")
+				.setDirectory()
 				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
 		assertThat(dataSet.getResource())
 			.isNotNull()
@@ -54,11 +55,23 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_return_table_names() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
+		Resource r1 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.setFilename("foo.xml")
 				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
+		Resource r2 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/bar.xml")
+				.setFilename("bar.xml")
+				.build();
+
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.setDirectory()
+				.addSubResources(r1, r2)
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
 		String[] tableNames = dataSet.getTableNames();
 		assertThat(tableNames)
@@ -69,11 +82,25 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_get_table() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
+		Resource r1 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.setFile()
+				.setFilename("foo.xml")
 				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
+		Resource r2 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/bar.xml")
+				.setFile()
+				.setFilename("bar.xml")
+				.build();
+
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.setDirectory()
+				.addSubResources(r1, r2)
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
 		ITable t1 = dataSet.getTable("foo");
 		ITable t2 = dataSet.getTable("bar");
@@ -86,11 +113,25 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_get_table_metadata() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
+		Resource r1 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.setFile()
+				.setFilename("foo.xml")
 				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
+		Resource r2 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/bar.xml")
+				.setFile()
+				.setFilename("bar.xml")
+				.build();
+
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.setDirectory()
+				.addSubResources(r1, r2)
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
 		ITableMetaData meta1 = dataSet.getTableMetaData("foo");
 
@@ -115,11 +156,25 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_iterate_over_tables() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
+		Resource r1 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.setFile()
+				.setFilename("foo.xml")
 				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
+		Resource r2 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/bar.xml")
+				.setFile()
+				.setFilename("bar.xml")
+				.build();
+
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.setDirectory()
+				.addSubResources(r1, r2)
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
 		ITableIterator it = dataSet.iterator();
 
@@ -137,11 +192,25 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
+		Resource r1 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.setFile()
+				.setFilename("foo.xml")
 				.build();
 
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new FileComparator());
+		Resource r2 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/bar.xml")
+				.setFile()
+				.setFilename("bar.xml")
+				.build();
+
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.setDirectory()
+				.addSubResources(r1, r2)
+				.build();
+
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
 		ITableIterator it = dataSet.reverseIterator();
 
@@ -161,10 +230,11 @@ public class DirectoryDataSetTest {
 	public void it_should_check_for_case_insensitive_names() throws Exception {
 		Resource resource = new ResourceMockBuilder()
 				.fromClasspath("/dataset/xml")
+				.setDirectory()
 				.build();
 
-		DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new FileComparator());
-		DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new FileComparator());
+		DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
+		DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();

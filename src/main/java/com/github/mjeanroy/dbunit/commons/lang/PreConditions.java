@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import java.io.File;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isBlank;
 
 /**
  * Static PreConditions Utilities.
@@ -65,13 +65,11 @@ public final class PreConditions {
 	public static String notBlank(String value, String message, Object... params) {
 		notNull(value, message, params);
 
-		for (Character c : value.toCharArray()) {
-			if (!Character.isWhitespace(c)) {
-				return value;
-			}
+		if (isBlank(value)) {
+			throw new IllegalArgumentException(format(message, params));
 		}
 
-		throw new IllegalArgumentException(format(message, params));
+		return value;
 	}
 
 	/**
@@ -85,7 +83,7 @@ public final class PreConditions {
 	 * @throws IllegalArgumentException If {@code value} is empty or blank.
 	 */
 	public static char notBlank(char value, String message, Object... params) {
-		if (value == ' ') {
+		if (Character.isWhitespace(value)) {
 			throw new IllegalArgumentException(format(message, params));
 		}
 
@@ -114,60 +112,16 @@ public final class PreConditions {
 	}
 
 	/**
-	 * Ensure that given {@code file} is a directory.
+	 * Check argument condition and throw {@link IllegalArgumentException} if {@code condition} is {@code false}.
 	 *
-	 * @param file File to check.
+	 * @param condition The result of the condition to verify.
 	 * @param message Error message.
 	 * @param params Optional error message parameters.
-	 * @return File if it is not null and a directory.
-	 * @throws NullPointerException If {@code file} is null.
-	 * @throws IllegalArgumentException If {@code file} is not a directory.
 	 */
-	public static File isDirectory(File file, String message, Object... params) {
-		notNull(file, message);
-		if (!file.isDirectory()) {
+	public static void checkArgument(boolean condition, String message, Object... params) {
+		if (!condition) {
 			throw new IllegalArgumentException(format(message, params));
 		}
-
-		return file;
-	}
-
-	/**
-	 * Ensure that given {@code file} is a file (not a directory).
-	 *
-	 * @param file File to check.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @return File if it is not null and a file.
-	 * @throws NullPointerException If {@code file} is null.
-	 * @throws IllegalArgumentException If {@code file} is not a file.
-	 */
-	public static File isFile(File file, String message, Object... params) {
-		notNull(file, message);
-		if (!file.isFile()) {
-			throw new IllegalArgumentException(format(message, params));
-		}
-
-		return file;
-	}
-
-	/**
-	 * Ensure that given {@code file} can be read.
-	 *
-	 * @param file File to check.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @return File if it is not null and a directory.
-	 * @throws NullPointerException If {@code file} is null.
-	 * @throws IllegalStateException If {@code file} is cannot be read.
-	 */
-	public static File isReadable(File file, String message, Object... params) {
-		notNull(file, message);
-		if (!file.canRead()) {
-			throw new IllegalStateException(format(message, params));
-		}
-
-		return file;
 	}
 
 	private static String format(String message, Object... params) {

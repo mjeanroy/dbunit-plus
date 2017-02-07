@@ -31,11 +31,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
-
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.utils.FileComparator;
+import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -46,6 +44,7 @@ public class DirectoryDataSetBuilderTest {
 	public void it_should_create_default_directory_dataset() throws Exception {
 		Resource resource = new ResourceMockBuilder()
 				.fromClasspath("/dataset/xml")
+				.setDirectory()
 				.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
@@ -57,18 +56,31 @@ public class DirectoryDataSetBuilderTest {
 
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
-		Resource directory = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
+		Resource r1 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/foo.xml")
+				.setFile()
+				.setFilename("foo.xml")
 				.build();
 
-		FileComparator comparator = mock(FileComparator.class);
+		Resource r2 = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml/bar.xml")
+				.setFile()
+				.setFilename("bar.xml")
+				.build();
 
-		when(comparator.compare(any(File.class), any(File.class))).thenAnswer(new Answer<Integer>() {
+		Resource directory = new ResourceMockBuilder()
+				.fromClasspath("/dataset/xml")
+				.addSubResources(r1, r2)
+				.setDirectory()
+				.build();
+
+		ResourceComparator comparator = mock(ResourceComparator.class);
+		when(comparator.compare(any(Resource.class), any(Resource.class))).thenAnswer(new Answer<Integer>() {
 			@Override
 			public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
-				File f1 = (File) invocationOnMock.getArguments()[0];
-				File f2 = (File) invocationOnMock.getArguments()[1];
-				return f2.compareTo(f1);
+				Resource f1 = (Resource) invocationOnMock.getArguments()[0];
+				Resource f2 = (Resource) invocationOnMock.getArguments()[1];
+				return f2.getPath().compareTo(f1.getPath());
 			}
 		});
 
@@ -80,6 +92,6 @@ public class DirectoryDataSetBuilderTest {
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
 		assertThat(dataSet.getResource()).isEqualTo(directory);
-		verify(comparator, atLeastOnce()).compare(any(File.class), any(File.class));
+		verify(comparator, atLeastOnce()).compare(any(Resource.class), any(Resource.class));
 	}
 }

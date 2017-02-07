@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collection;
 
 /**
  * Resource item that abstracts from the actual type of underlying resource, such as:
@@ -71,9 +72,24 @@ public interface Resource {
 	String getFilename();
 
 	/**
+	 * Get full path of resource.
+	 *
+	 * @return Full path.
+	 */
+	String getPath();
+
+	/**
 	 * Check if this resource is a directory.
 	 *
 	 * @return {@code true} if the resource is a directory, {@code false} otherwise.
 	 */
 	boolean isDirectory();
+
+	/**
+	 * Get all sub-resources: if the resource is not a directory, then this method should
+	 * returns an empty list.
+	 *
+	 * @return Sub-resources.
+	 */
+	Collection<Resource> listResources();
 }

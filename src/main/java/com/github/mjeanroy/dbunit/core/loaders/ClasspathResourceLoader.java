@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.loaders;
 
-import java.io.File;
-import java.net.URI;
+import static com.github.mjeanroy.dbunit.core.loaders.Resources.toFile;
+
 import java.net.URL;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
@@ -79,8 +79,8 @@ class ClasspathResourceLoader extends AbstractResourceLoaderStrategy implements 
 			throw new ResourceNotFoundException(path);
 		}
 
-		final URI uri = url.toURI();
-		final File file = new File(uri);
-		return new FileResource(file);
+		return Resources.isFileURL(url) ?
+				new FileResource(toFile(url)) :
+				new ClasspathResource(url);
 	}
 }

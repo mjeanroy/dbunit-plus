@@ -27,9 +27,6 @@ package com.github.mjeanroy.dbunit.commons.lang;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
 
-import java.io.File;
-
-import com.github.mjeanroy.dbunit.tests.builders.FileBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -178,83 +175,18 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_throw_illegal_argument_exception_if_file_is_not_directory() {
-		String message = "should be a directory";
-		File directory = new FileBuilder("foo.txt")
-			.isDirectory(false)
-			.build();
+	public void checkArgument_should_not_throw_exception_with_true() {
+		String message = "should not be null";
+		PreConditions.checkArgument(true, message);
+	}
+
+	@Test
+	public void checkArgument_should_throw_exception_with_false() {
+		String message = "should be thrown";
 
 		thrown.expect(IllegalArgumentException.class);
 		thrown.expectMessage(message);
 
-		PreConditions.isDirectory(directory, message);
-	}
-
-	@Test
-	public void it_should_return_file_if_file_is_a_directory() {
-		String message = "should be a directory";
-		File directory = new FileBuilder("foo.txt")
-			.isDirectory(true)
-			.build();
-
-		File result = PreConditions.isDirectory(directory, message);
-
-		assertThat(result)
-			.isNotNull()
-			.isSameAs(directory);
-	}
-
-	@Test
-	public void it_should_throw_illegal_argument_exception_if_file_is_not_a_file() {
-		String message = "should be a file";
-		File directory = new FileBuilder("foo.txt")
-			.isFile(false)
-			.build();
-
-		thrown.expect(IllegalArgumentException.class);
-		thrown.expectMessage(message);
-
-		PreConditions.isFile(directory, message);
-	}
-
-	@Test
-	public void it_should_return_file_if_file_is_a_file() {
-		String message = "should be a file";
-		File directory = new FileBuilder("foo.txt")
-			.isFile(true)
-			.build();
-
-		File result = PreConditions.isFile(directory, message);
-
-		assertThat(result)
-			.isNotNull()
-			.isSameAs(directory);
-	}
-
-	@Test
-	public void it_should_throw_illegal_state_exception_if_file_is_not_readable() {
-		String message = "should be readable";
-		File directory = new FileBuilder("foo.txt")
-			.canRead(false)
-			.build();
-
-		thrown.expect(IllegalStateException.class);
-		thrown.expectMessage(message);
-
-		PreConditions.isReadable(directory, message);
-	}
-
-	@Test
-	public void it_should_return_file_if_file_is_readable() {
-		String message = "should be readable";
-		File directory = new FileBuilder("foo.txt")
-			.canRead(true)
-			.build();
-
-		File result = PreConditions.isReadable(directory, message);
-
-		assertThat(result)
-			.isNotNull()
-			.isSameAs(directory);
+		PreConditions.checkArgument(false, message);
 	}
 }

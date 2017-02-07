@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import java.io.File;
 import java.util.Comparator;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
@@ -45,7 +44,7 @@ public class DirectoryDataSetBuilder {
 	/**
 	 * Default Comparator.
 	 */
-	private static final FileComparator COMPARATOR = new FileComparator();
+	private static final ResourceComparator COMPARATOR = new ResourceComparator();
 
 	/**
 	 * Directory resource.
@@ -55,7 +54,7 @@ public class DirectoryDataSetBuilder {
 	/**
 	 * File comparator.
 	 */
-	private Comparator<File> comparator;
+	private Comparator<Resource> comparator;
 
 	/**
 	 * Check if table names is case insensitive (default is {@code false}.
@@ -99,7 +98,7 @@ public class DirectoryDataSetBuilder {
 	 * @param comparator New comparator.
 	 * @return Builder.
 	 */
-	public DirectoryDataSetBuilder setComparator(Comparator<File> comparator) {
+	public DirectoryDataSetBuilder setComparator(Comparator<Resource> comparator) {
 		log.trace("Set comparator: {}", comparator);
 		this.comparator = comparator;
 		return this;
@@ -131,10 +130,10 @@ public class DirectoryDataSetBuilder {
 		return new DirectoryDataSet(resource, caseSensitiveTableNames, comparator);
 	}
 
-	private static class FileComparator implements Comparator<File> {
+	private static class ResourceComparator implements Comparator<Resource> {
 		@Override
-		public int compare(File f1, File f2) {
-			return f1.getAbsolutePath().compareTo(f2.getAbsolutePath());
+		public int compare(Resource f1, Resource f2) {
+			return f1.getPath().compareTo(f2.getPath());
 		}
 	}
 }

@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.tests.utils;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
@@ -65,8 +64,9 @@ public final class TestUtils {
 	 */
 	public static String readTestResource(String path) {
 		try {
-			File file = getTestResource(path);
-			FileReader reader = new FileReader(file);
+			URL url = TestUtils.class.getResource(path);
+			InputStream stream = url.openStream();
+			InputStreamReader reader = new InputStreamReader(stream);
 			BufferedReader buf = new BufferedReader(reader);
 
 			StringBuilder sb = new StringBuilder();

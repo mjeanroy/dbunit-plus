@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 Mickael Jeanroy
+ * Copyright (c) 2015-2016 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,28 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.utils;
+package com.github.mjeanroy.dbunit.exception;
 
-import java.io.File;
-import java.util.Comparator;
+/**
+ * Error thrown when an error occurred when dealing with resources.
+ */
+public class ResourceException extends AbstractDbUnitException {
 
-public class FileComparator implements Comparator<File> {
+	/**
+	 * Create exception with error message.
+	 *
+	 * @param message The path of the resource that cannot be loaded.
+	 */
+	public ResourceException(String message) {
+		super(message);
+	}
 
-	@Override
-	public int compare(File f1, File f2) {
-		return f1.getAbsolutePath().compareTo(f2.getAbsolutePath());
+	/**
+	 * Create exception with original cause.
+	 *
+	 * @param cause The original cause.
+	 */
+	public ResourceException(Exception cause) {
+		super(cause);
 	}
 }

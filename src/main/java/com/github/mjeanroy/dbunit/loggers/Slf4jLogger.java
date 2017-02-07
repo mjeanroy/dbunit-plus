@@ -142,4 +142,9 @@ class Slf4jLogger implements Logger {
 	public void error(String message, Object... args) {
 		log.error(message, args);
 	}
+
+	@Override
+	public void error(String message, Throwable t) {
+		log.error(message, t);
+	}
 }

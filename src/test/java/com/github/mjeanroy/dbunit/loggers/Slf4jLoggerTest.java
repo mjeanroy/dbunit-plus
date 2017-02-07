@@ -210,4 +210,12 @@ public class Slf4jLoggerTest {
 		log.error(message, arg1, arg2, arg3);
 		verify(slf4j).error(message, arg1, arg2, arg3);
 	}
+
+	@Test
+	public void it_should_log_throwable() {
+		Exception ex = new RuntimeException();
+		String message = "error message";
+		log.error(message, ex);
+		verify(slf4j).error(message, ex);
+	}
 }

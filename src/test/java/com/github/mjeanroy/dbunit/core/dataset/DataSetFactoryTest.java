@@ -47,7 +47,7 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setName("foo.xml")
+				.setFilename("foo.xml")
 				.fromClasspath("/dataset/xml/foo.xml")
 				.build();
 
@@ -139,7 +139,7 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_directory_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setName("xml")
+				.setFilename("xml")
 				.setDirectory()
 				.fromClasspath("/dataset/xml")
 				.build();
@@ -154,7 +154,7 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_json_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setName("foo.json")
+				.setFilename("foo.json")
 				.fromClasspath("/dataset/json/foo.json")
 				.build();
 
@@ -168,7 +168,7 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_csv_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setName("foo.csv")
+				.setFilename("foo.csv")
 				.fromClasspath("/dataset/csv/foo.csv")
 				.build();
 

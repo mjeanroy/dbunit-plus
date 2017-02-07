@@ -24,7 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.loaders;
 
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +34,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collection;
 
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -103,13 +106,45 @@ class UrlResource implements Resource {
 
 	@Override
 	public String getFilename() {
-		String path = url.getPath();
-		String[] parts = path.split("/");
-		return parts[parts.length - 1];
+		return extractFilename(getPath());
+	}
+
+	@Override
+	public String getPath() {
+		return url.getPath();
 	}
 
 	@Override
 	public boolean isDirectory() {
 		return false;
+	}
+
+	@Override
+	public Collection<Resource> listResources() {
+		return emptyList();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (o instanceof UrlResource) {
+			UrlResource r = (UrlResource) o;
+			return url.equals(r.url);
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return url.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return String.format("UrlResource{url: %s}", url);
 	}
 }

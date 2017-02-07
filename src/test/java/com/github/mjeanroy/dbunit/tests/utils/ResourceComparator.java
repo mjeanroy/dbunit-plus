@@ -22,55 +22,16 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.builders;
+package com.github.mjeanroy.dbunit.tests.utils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import java.util.Comparator;
 
-import java.io.File;
+import com.github.mjeanroy.dbunit.core.loaders.Resource;
 
-/**
- * Builder to create mock {@link File} instances.
- */
-public class FileBuilder {
+public class ResourceComparator implements Comparator<Resource> {
 
-	private final String path;
-
-	private boolean directory;
-
-	private boolean file;
-
-	private boolean canRead;
-
-	public FileBuilder(String path) {
-		this.path = path;
-		this.canRead = true;
-	}
-
-	public FileBuilder isDirectory(boolean directory) {
-		this.directory = directory;
-		return this;
-	}
-
-	public FileBuilder isFile(boolean file) {
-		this.file = file;
-		return this;
-	}
-
-	public FileBuilder canRead(boolean canRead) {
-		this.canRead = canRead;
-		return this;
-	}
-
-	public File build() {
-		File f = mock(File.class);
-		when(f.isDirectory()).thenReturn(directory);
-		when(f.isFile()).thenReturn(file);
-		when(f.canRead()).thenReturn(canRead);
-		when(f.getPath()).thenReturn(path);
-		when(f.getName()).thenReturn(path);
-		when(f.getAbsolutePath()).thenReturn(path);
-		when(f.toString()).thenCallRealMethod();
-		return f;
+	@Override
+	public int compare(Resource r1, Resource r2) {
+		return r1.getPath().compareTo(r2.getPath());
 	}
 }

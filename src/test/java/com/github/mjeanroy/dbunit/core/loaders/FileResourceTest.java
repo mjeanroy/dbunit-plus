@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.loaders;
 
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
@@ -32,10 +33,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Collection;
 
+import org.assertj.core.api.Condition;
+import org.assertj.core.api.iterable.Extractor;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class FileResourceTest {
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Test
 	public void it_should_return_true_if_file_exists() {
@@ -93,5 +102,62 @@ public class FileResourceTest {
 		String expected = readTestResource(path).trim();
 		String output = readStream(stream);
 		assertThat(output).isEqualTo(expected);
+	}
+
+	@Test
+	public void it_should_scan_for_sub_resources() throws Exception {
+		File folder = getTestResource("/dataset/xml");
+		FileResource resource = new FileResource(folder);
+
+		Collection<Resource> subResources = resource.listResources();
+
+		assertThat(subResources)
+				.isNotNull()
+				.isNotEmpty()
+				.hasSize(2)
+				.are(new Condition<Resource>() {
+					@Override
+					public boolean matches(Resource value) {
+						return value instanceof FileResource;
+					}
+				})
+				.extracting(new Extractor<Resource, String>() {
+					@Override
+					public String extract(Resource resource) {
+						return resource.getFilename();
+					}
+				})
+				.containsOnly("foo.xml", "bar.xml");
+	}
+
+	@Test
+	public void it_should_scan_for_sub_resources_and_return_empty_list_without_directory() throws Exception {
+		File folder = getTestResource("/dataset/xml/foo.xml");
+		FileResource resource = new FileResource(folder);
+
+		Collection<Resource> subResources = resource.listResources();
+
+		assertThat(subResources)
+				.isNotNull()
+				.isEmpty();
+	}
+
+	@Test
+	public void it_should_scan_for_sub_resources_and_return_list_of_sub_directory() throws Exception {
+		File folder = getTestResource("/dataset");
+		FileResource resource = new FileResource(folder);
+
+		Collection<Resource> subResources = resource.listResources();
+
+		assertThat(subResources)
+				.isNotNull()
+				.isNotEmpty()
+				.are(isInstanceOf(FileResource.class))
+				.are(new Condition<Resource>() {
+					@Override
+					public boolean matches(Resource value) {
+						return value.isDirectory();
+					}
+				});
 	}
 }

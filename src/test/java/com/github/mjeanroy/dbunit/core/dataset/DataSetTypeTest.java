@@ -38,12 +38,12 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_json_file() {
 		Resource r1 = new ResourceMockBuilder()
-				.setName("foo.json")
+				.setFilename("foo.json")
 				.setFile()
 				.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.setName("FOO.JSON")
+				.setFilename("FOO.JSON")
 				.setFile()
 				.build();
 
@@ -74,12 +74,12 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_xml_file() {
 		Resource r1 = new ResourceMockBuilder()
-				.setName("foo.xml")
+				.setFilename("foo.xml")
 				.setFile()
 				.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.setName("FOO.XML")
+				.setFilename("FOO.XML")
 				.setFile()
 				.build();
 
@@ -110,12 +110,12 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_csv_file() {
 		Resource r1 = new ResourceMockBuilder()
-				.setName("foo.csv")
+				.setFilename("foo.csv")
 				.setFile()
 				.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.setName("FOO.CSV")
+				.setFilename("FOO.CSV")
 				.setFile()
 				.build();
 
@@ -146,7 +146,7 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_directory_file() {
 		Resource resource = new ResourceMockBuilder()
-				.setName("foo")
+				.setFilename("foo")
 				.setDirectory()
 				.build();
 
@@ -160,6 +160,7 @@ public class DataSetTypeTest {
 	public void it_should_match_directory_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
 				.fromClasspath("/dataset/xml")
+				.setDirectory()
 				.build();
 
 		IDataSet dataSet = DataSetType.DIRECTORY.create(resource);

@@ -58,6 +58,14 @@ public class ResourceLoaderTest {
 	}
 
 	@Test
+	public void it_should_load_file_from_a_jar() {
+		Resource resource = ResourceLoader.CLASSPATH.load("classpath:/jar/dataset/xml/foo.xml");
+		assertThat(resource).isNotNull();
+		assertThat(resource).isExactlyInstanceOf(ClasspathResource.class);
+		assertThat(resource.exists()).isTrue();
+	}
+
+	@Test
 	public void it_should_fail_if_file_does_not_exist_in_classpath() {
 		String resource = "classpath:/dataset/xml/unknown.xml";
 		thrown.expect(ResourceNotFoundException.class);

@@ -24,15 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isDirectory;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isReadable;
-
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import java.nio.charset.Charset;
 
 /**
  * Static Files Utilities.
@@ -40,47 +32,59 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 public final class Files {
 
 	/**
-	 * Class Logger.
+	 * Folder separator.
 	 */
-	private static final Logger log = Loggers.getLogger(Files.class);
+	public static final String FOLDER_SEPARATOR = "/";
+
+	/**
+	 * The default {@link Charset} name.
+	 */
+	public static final String DEFAULT_CHARSET = Charset.defaultCharset().displayName();
+
+	/**
+	 * The extension separator.
+	 */
+	private static final char EXTENSION_SEPARATOR = '.';
 
 	// Ensure non instantiation.
 	private Files() {
 	}
 
 	/**
-	 * List all files in {@code directory} recursively (search into
-	 * sub directories).
+	 * Get the filename of a full path.
 	 *
-	 * @param directory Directory.
-	 * @return List of files.
+	 * @param path The full path.
+	 * @return The filename.
 	 */
-	public static List<File> listFiles(File directory) {
-		isDirectory(directory, "File should be a directory");
-		isReadable(directory, "Directory should be readable");
-
-		log.trace("Scan directory: {}", directory);
-
-		List<File> results = new LinkedList<File>();
-
-		File[] files = directory.listFiles();
-		if (files == null || files.length == 0) {
-			return results;
+	public static String extractFilename(String path) {
+		if (path == null) {
+			return null;
 		}
 
-		for (File file : files) {
-			if (file.isFile()) {
-				// Just add this file.
-				log.trace("Add file: {}", file);
-				results.add(file);
-			}
-			else {
-				// Recursive call
-				log.trace("Add directory: {}", file);
-				results.addAll(listFiles(file));
-			}
+		int lastSeparatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
+		if (lastSeparatorIndex < 0) {
+			return path;
 		}
 
-		return results;
+		return path.substring(lastSeparatorIndex + 1);
+	}
+
+	/**
+	 * Get file extension.
+	 *
+	 * @param fileName File name.
+	 * @return The extension, returns an empty string without extension.
+	 */
+	public static String extractExtension(String fileName) {
+		if (fileName == null) {
+			return null;
+		}
+
+		int indexOfExt = fileName.lastIndexOf(EXTENSION_SEPARATOR);
+		if (indexOfExt < 0) {
+			return "";
+		}
+
+		return fileName.substring(indexOfExt + 1);
 	}
 }

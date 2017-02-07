@@ -24,18 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.io.Files.listFiles;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isDirectory;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.isReadable;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 import static java.util.Collections.sort;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.loaders.FileResource;
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
@@ -69,21 +67,21 @@ public class DirectoryDataSet implements IDataSet {
 	 * @param comparator File comparator, used to sort files in given order.
 	 * @throws DataSetException If an error occurred during dataset creation.
 	 */
-	DirectoryDataSet(Resource resource, boolean caseSensitiveTableNames, Comparator<File> comparator) throws DataSetException {
-		File directory = resource.toFile();
-
-		isDirectory(directory, "Path should be a valid directory");
-		isReadable(directory, "Path should be readable");
+	DirectoryDataSet(Resource resource, boolean caseSensitiveTableNames, Comparator<Resource> comparator) throws DataSetException {
 		notNull(comparator, "Comparator should not be null");
+		checkArgument(resource.isDirectory(), "Resource should be a directory");
 
 		// List all files and create composite data set.
-		List<File> files = listFiles(directory);
-		sort(files, comparator);
+		Collection<Resource> subResources = resource.listResources();
 
-		IDataSet[] dataSets = new IDataSet[files.size()];
+		// Sort alphabetically
+		List<Resource> resources = new ArrayList<Resource>(subResources);
+		sort(resources, comparator);
+
+		IDataSet[] dataSets = new IDataSet[resources.size()];
 		int i = 0;
-		for (File file : files) {
-			dataSets[i++] = createDataSet(new FileResource(file));
+		for (Resource subResource : resources) {
+			dataSets[i++] = createDataSet(subResource);
 		}
 
 		this.resource = resource;

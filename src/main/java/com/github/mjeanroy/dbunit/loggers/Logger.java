@@ -218,4 +218,13 @@ public interface Logger {
 	 * @param args Message replacements.
 	 */
 	void error(String message, Object... args);
+
+	/**
+	 * Log an exception (throwable) at the ERROR level with an
+	 * accompanying message.
+	 *
+	 * @param message The message accompanying the exception
+	 * @param t The exception (throwable) to log
+	 */
+	void error(String message, Throwable t);
 }

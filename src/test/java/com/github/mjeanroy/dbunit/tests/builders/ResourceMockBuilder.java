@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.tests.builders;
 
 import static com.github.mjeanroy.dbunit.tests.builders.InputStreamAnswer.streamAnswer;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static java.util.Collections.addAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +34,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.github.mjeanroy.dbunit.core.loaders.Resource;
 
@@ -49,7 +53,12 @@ public class ResourceMockBuilder {
 	/**
 	 * Resource name.
 	 */
-	private String name;
+	private String filename;
+
+	/**
+	 * Resource path.
+	 */
+	private String path;
 
 	/**
 	 * Resource file.
@@ -62,6 +71,18 @@ public class ResourceMockBuilder {
 	private boolean directory;
 
 	/**
+	 * List of sub-resources.
+	 */
+	private final List<Resource> subResources;
+
+	/**
+	 * Create resource.
+	 */
+	public ResourceMockBuilder() {
+		this.subResources = new LinkedList<Resource>();
+	}
+
+	/**
 	 * Initialize {@link Resource} reader and file from a resource in the
 	 * classpath.
 	 *
@@ -71,7 +92,8 @@ public class ResourceMockBuilder {
 	public ResourceMockBuilder fromClasspath(String path) {
 		this.readerFactory = new ClasspathInputStream(path);
 		this.file = getTestResource(path);
-		return this;
+		this.path = path;
+		return setPath(path);
 	}
 
 	/**
@@ -89,11 +111,22 @@ public class ResourceMockBuilder {
 	/**
 	 * Set name.
 	 *
-	 * @param name Resource name.
+	 * @param filename Resource name.
 	 * @return The builder.
 	 */
-	public ResourceMockBuilder setName(String name) {
-		this.name = name;
+	public ResourceMockBuilder setFilename(String filename) {
+		this.filename = filename;
+		return this;
+	}
+
+	/**
+	 * Set path.
+	 *
+	 * @param path Resource path.
+	 * @return The builder.
+	 */
+	public ResourceMockBuilder setPath(String path) {
+		this.path = path;
 		return this;
 	}
 
@@ -118,6 +151,18 @@ public class ResourceMockBuilder {
 	}
 
 	/**
+	 * Add new sub-resources.
+	 * @param resource First resource.
+	 * @param others Other resources.
+	 * @return The builder.
+	 */
+	public ResourceMockBuilder addSubResources(Resource resource, Resource... others) {
+		this.subResources.add(resource);
+		addAll(subResources, others);
+		return this;
+	}
+
+	/**
 	 * Create resource.
 	 *
 	 * @return The resource.
@@ -126,9 +171,11 @@ public class ResourceMockBuilder {
 		try {
 			Resource resource = mock(Resource.class);
 			when(resource.openStream()).thenAnswer(streamAnswer(readerFactory));
-			when(resource.getFilename()).thenReturn(name);
+			when(resource.getFilename()).thenReturn(filename);
+			when(resource.getPath()).thenReturn(path);
 			when(resource.isDirectory()).thenReturn(directory);
 			when(resource.toFile()).thenReturn(file);
+			when(resource.listResources()).thenReturn(new ArrayList<Resource>(subResources));
 			return resource;
 		} catch (IOException ex) {
 			throw new AssertionError(ex);

@@ -81,6 +81,13 @@
 		</profile>
 	</profiles>
 
+	<repositories>
+		<repository>
+			<id>test-repo</id>
+			<url>file://${project.basedir}/test-repo</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.dbunit</groupId>
@@ -179,6 +186,12 @@
 			<groupId>com.github.tomakehurst</groupId>
 			<artifactId>wiremock</artifactId>
 			<version>${wiremock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.mjeanroy</groupId>
+			<artifactId>dbunit-dataset</artifactId>
+			<version>0.1.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
