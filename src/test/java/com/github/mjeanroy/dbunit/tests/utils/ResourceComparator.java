@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.tests.utils;
 
 import java.util.Comparator;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 
 public class ResourceComparator implements Comparator<Resource> {
 

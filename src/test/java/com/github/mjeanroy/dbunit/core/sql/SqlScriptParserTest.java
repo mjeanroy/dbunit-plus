@@ -37,7 +37,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.Before;
 import org.junit.Test;

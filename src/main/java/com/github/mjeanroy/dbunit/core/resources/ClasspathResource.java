@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import static com.github.mjeanroy.dbunit.commons.io.Files.DEFAULT_CHARSET;
 import static com.github.mjeanroy.dbunit.commons.io.Files.FOLDER_SEPARATOR;
@@ -31,7 +31,7 @@ import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
-import static com.github.mjeanroy.dbunit.core.loaders.Resources.isJarURL;
+import static com.github.mjeanroy.dbunit.core.resources.Resources.isJarURL;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableCollection;
 

@@ -22,45 +22,54 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 
-public class ClasspathResourceLoaderTest {
+public class FileSystemResourceLoaderTest {
+
+	@Rule
+	public TemporaryFolder tmp = new TemporaryFolder();
 
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
-	private ClasspathResourceLoader loader;
+	private FileSystemResourceLoader loader;
 
 	@Before
 	public void setUp() {
-		loader = ClasspathResourceLoader.getInstance();
+		loader = FileSystemResourceLoader.getInstance();
 	}
 
 	@Test
 	public void it_should_match_these_prefixes() {
-		assertThat(loader.match("classpath:/foo.txt")).isTrue();
-		assertThat(loader.match("CLASSPATH:/foo.txt")).isTrue();
+		assertThat(loader.match("file:/foo.txt")).isTrue();
+		assertThat(loader.match("FILE:/foo.txt")).isTrue();
 	}
 
 	@Test
 	public void it_should_not_match_these_prefixes() {
-		assertThat(loader.match("classpath/foo.txt")).isFalse();
-		assertThat(loader.match("CLASSPATH/foo.txt")).isFalse();
+		assertThat(loader.match("file/foo.txt")).isFalse();
+		assertThat(loader.match("file/foo.txt")).isFalse();
 		assertThat(loader.match("/foo.txt")).isFalse();
 	}
 
 	@Test
-	public void it_should_load_resource() {
-		String path = "classpath:/dataset/json/foo.json";
+	public void it_should_load_resource() throws Exception {
+		File tmpFile = tmp.newFile("foo.json");
+		String path = "file:" + tmpFile.getAbsolutePath();
+
 		Resource resource = loader.load(path);
+
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
 		assertThat(resource.getFilename()).isEqualTo("foo.json");
@@ -68,7 +77,7 @@ public class ClasspathResourceLoaderTest {
 
 	@Test
 	public void it_should_not_load_unknown_resource() {
-		String path = "classpath:/fake/unknown.json";
+		String path = "file:/fake/unknown.json";
 		thrown.expect(ResourceNotFoundException.class);
 		thrown.expectMessage(String.format("Resource <%s> does not exist", path));
 		loader.load(path);

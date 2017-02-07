@@ -36,7 +36,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.codehaus.jackson.JsonParseException;

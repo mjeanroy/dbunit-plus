@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.loggers.Logger;

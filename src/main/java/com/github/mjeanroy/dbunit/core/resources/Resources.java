@@ -1,4 +1,4 @@
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import static java.util.Collections.unmodifiableList;
 

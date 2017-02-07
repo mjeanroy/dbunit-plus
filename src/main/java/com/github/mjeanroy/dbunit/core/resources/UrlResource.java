@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;

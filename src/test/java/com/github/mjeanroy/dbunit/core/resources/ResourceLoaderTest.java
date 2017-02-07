@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;

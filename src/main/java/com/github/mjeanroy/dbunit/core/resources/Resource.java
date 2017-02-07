@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import java.io.File;
 import java.io.IOException;

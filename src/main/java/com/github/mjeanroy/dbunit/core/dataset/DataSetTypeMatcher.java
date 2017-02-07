@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.commons.collections.Predicate;
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 
 /**
  * Implementation of {@link Predicate}: return {@code true} if instance

@@ -33,8 +33,8 @@ import java.io.File;
 import java.sql.Connection;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;

@@ -28,8 +28,8 @@ import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static java.util.Arrays.asList;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.CompositeDataSet;

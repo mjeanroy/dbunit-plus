@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.json.JsonParserFactory;
 import com.github.mjeanroy.dbunit.loggers.Logger;

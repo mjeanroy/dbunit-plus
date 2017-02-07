@@ -22,68 +22,55 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
-import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
+import java.io.File;
 
 /**
- * Implementations of strategies to load resources.
+ * Load {@link Resource} from the file system.
  */
-public enum ResourceLoader {
+class FileSystemResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
 
 	/**
-	 * Load file from classpath.
+	 * Each resource must match this prefix, for example:
+	 * <ul>
+	 *   <li>{@code file:/foo.txt} must match</li>
+	 *   <li>{@code file/foo.txt} must not match</li>
+	 *   <li>{@code foo.txt} must not match</li>
+	 * </ul>
 	 */
-	CLASSPATH(ClasspathResourceLoader.getInstance()),
+	private static final String PREFIX = "file:";
 
 	/**
-	 * Load file from file system.
+	 * The singleton instance.
 	 */
-	FILE_SYSTEM(FileSystemResourceLoader.getInstance()),
+	private static final FileSystemResourceLoader INSTANCE = new FileSystemResourceLoader();
 
 	/**
-	 * Load file from HTTP url.
-	 */
-	URL(UrlResourceLoader.getInstance());
-
-	/**
-	 * The loader strategy.
-	 */
-	private final ResourceLoaderStrategy strategy;
-
-	/**
-	 * Create loader.
+	 * Get the loader instance.
 	 *
-	 * @param strategy The loader strategy.
+	 * @return Loader instance.
 	 */
-	ResourceLoader(ResourceLoaderStrategy strategy) {
-		this.strategy = strategy;
+	static FileSystemResourceLoader getInstance() {
+		return INSTANCE;
 	}
 
 	/**
-	 * Load given file path.
-	 *
-	 * @param name File path.
-	 * @return Loaded file.
-	 * @throws DataSetLoaderException If path cannot be loaded.
+	 * Create the loader.
+	 * This constructor should not be called directly, use {@link #getInstance()} instead.
 	 */
-	public Resource load(String name) {
-		return strategy.load(name);
+	private FileSystemResourceLoader() {
+		super(PREFIX);
 	}
 
-	/**
-	 * Find loader according to given file pattern.
-	 *
-	 * @param value File pattern.
-	 * @return Matched loader.
-	 */
-	public static ResourceLoader find(String value) {
-		for (ResourceLoader loader : ResourceLoader.values()) {
-			if (loader.strategy.match(value)) {
-				return loader;
-			}
-		}
+	@Override
+	Resource doLoad(String path) throws Exception {
+		final String prefix = extractPrefix(path);
+		final String filePath = prefix != null && !prefix.isEmpty() ?
+				path.substring(prefix.length()) :
+				path;
 
-		return null;
+		final File file = new File(filePath);
+		return new FileResource(file);
 	}
 }

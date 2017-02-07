@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
 import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;

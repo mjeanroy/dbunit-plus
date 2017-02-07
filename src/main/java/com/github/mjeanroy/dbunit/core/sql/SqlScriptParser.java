@@ -33,8 +33,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
-import com.github.mjeanroy.dbunit.core.loaders.ResourceLoader;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
 import com.github.mjeanroy.dbunit.exception.SqlParserException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;

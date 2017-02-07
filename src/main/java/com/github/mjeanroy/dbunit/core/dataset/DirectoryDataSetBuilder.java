@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import java.util.Comparator;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;

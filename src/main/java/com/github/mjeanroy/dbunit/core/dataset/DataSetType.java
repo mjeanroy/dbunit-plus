@@ -28,7 +28,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 import java.io.File;
 
-import com.github.mjeanroy.dbunit.core.loaders.Resource;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;

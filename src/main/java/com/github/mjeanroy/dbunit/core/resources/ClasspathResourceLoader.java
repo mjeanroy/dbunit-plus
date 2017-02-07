@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.loaders;
+package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.core.loaders.Resources.toFile;
+import static com.github.mjeanroy.dbunit.core.resources.Resources.toFile;
 
 import java.net.URL;
 
