@@ -36,7 +36,7 @@ import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
  *   <li>From URL ({@link UrlResourceLoader})</li>
  * </ul>
  */
-public interface ResourceLoaderStrategy {
+interface ResourceLoaderStrategy {
 
 	/**
 	 * Check if the path of the resource may be handled by this strategy.

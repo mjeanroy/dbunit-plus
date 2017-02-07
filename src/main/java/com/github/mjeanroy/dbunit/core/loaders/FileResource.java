@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * Implementation of {@link Resource} backed by a given {@link File} handler.
  */
-public class FileResource implements Resource {
+class FileResource implements Resource {
 
 	/**
 	 * The file.

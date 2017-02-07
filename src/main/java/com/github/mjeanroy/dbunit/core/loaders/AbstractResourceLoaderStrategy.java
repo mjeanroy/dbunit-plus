@@ -38,7 +38,7 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 /**
  * Abstract implementation of {@link ResourceLoaderStrategy}.
  */
-public abstract class AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
+abstract class AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
 
 	/**
 	 * Class logger.
