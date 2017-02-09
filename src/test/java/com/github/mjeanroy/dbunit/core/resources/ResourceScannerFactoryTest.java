@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,32 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.resources;
 
-/**
- * Error thrown when resource is not found.
- */
-public class ResourceNotFoundException extends ResourceException {
+import static org.assertj.core.api.Assertions.assertThat;
 
-	/**
-	 * Create exception with {@code path}.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
-	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
+import org.junit.Test;
+
+public class ResourceScannerFactoryTest {
+
+	@Test
+	public void it_should_get_file_scanner() {
+		assertThat(ResourceScannerFactory.fileScanner())
+				.isNotNull()
+				.isExactlyInstanceOf(FileResourceScanner.class);
 	}
 
-	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
-	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
+	@Test
+	public void it_should_get_jar_scanner() {
+		assertThat(ResourceScannerFactory.jarScanner())
+				.isNotNull()
+				.isExactlyInstanceOf(JarResourceScanner.class);
+	}
+
+	@Test
+	public void it_should_get_no_op_scanner() {
+		assertThat(ResourceScannerFactory.noOpScanner())
+				.isNotNull()
+				.isExactlyInstanceOf(NoOpResourceScanner.class);
 	}
 }

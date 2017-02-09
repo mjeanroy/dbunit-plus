@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-public class FileSystemResourceLoaderTest {
+public class FileResourceLoaderTest {
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
@@ -43,11 +43,11 @@ public class FileSystemResourceLoaderTest {
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
-	private FileSystemResourceLoader loader;
+	private FileResourceLoader loader;
 
 	@Before
 	public void setUp() {
-		loader = FileSystemResourceLoader.getInstance();
+		loader = FileResourceLoader.getInstance();
 	}
 
 	@Test

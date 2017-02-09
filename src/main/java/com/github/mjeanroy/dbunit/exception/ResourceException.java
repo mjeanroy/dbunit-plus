@@ -30,12 +30,18 @@ package com.github.mjeanroy.dbunit.exception;
 public class ResourceException extends AbstractDbUnitException {
 
 	/**
+	 * Resource path.
+	 */
+	private final String path;
+
+	/**
 	 * Create exception with error message.
 	 *
 	 * @param message The path of the resource that cannot be loaded.
 	 */
-	public ResourceException(String message) {
+	ResourceException(String path, String message) {
 		super(message);
+		this.path = path;
 	}
 
 	/**
@@ -43,7 +49,17 @@ public class ResourceException extends AbstractDbUnitException {
 	 *
 	 * @param cause The original cause.
 	 */
-	public ResourceException(Exception cause) {
+	public ResourceException(String path, Exception cause) {
 		super(cause);
+		this.path = path;
+	}
+
+	/**
+	 * The resource path causing exception.
+	 *
+	 * @return Resource path.
+	 */
+	public String getPath() {
+		return path;
 	}
 }

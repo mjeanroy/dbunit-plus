@@ -39,7 +39,7 @@ public enum ResourceLoader {
 	/**
 	 * Load file from file system.
 	 */
-	FILE_SYSTEM(FileSystemResourceLoader.getInstance()),
+	FILE_SYSTEM(FileResourceLoader.getInstance()),
 
 	/**
 	 * Load file from HTTP url.

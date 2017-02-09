@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,39 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.resources;
+
+import static java.util.Collections.emptyList;
+
+import java.util.Collection;
 
 /**
- * Error thrown when resource is not found.
+ * Implementation of {@link ResourceScanner} that <strong>always</strong> returns an empty list.
  */
-public class ResourceNotFoundException extends ResourceException {
+class NoOpResourceScanner extends AbstractResourceScanner implements ResourceScanner {
 
 	/**
-	 * Create exception with {@code path}.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
+	 * Singleton instance.
 	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
+	private static final NoOpResourceScanner INSTANCE = new NoOpResourceScanner();
+
+	/**
+	 * Get the singleton instance.
+	 *
+	 * @return The instance.
+	 */
+	static NoOpResourceScanner getInstance() {
+		return INSTANCE;
 	}
 
 	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
+	 * Private constructor, use {@link #getInstance()} instead.
 	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
+	private NoOpResourceScanner() {
+	}
+
+	@Override
+	Collection<Resource> doScan(Resource resource) {
+		return emptyList();
 	}
 }

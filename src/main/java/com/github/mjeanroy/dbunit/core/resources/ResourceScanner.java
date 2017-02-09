@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,31 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.resources;
+
+import java.util.Collection;
+
+import com.github.mjeanroy.dbunit.exception.ResourceException;
+import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import com.github.mjeanroy.dbunit.exception.ResourceNotValidException;
 
 /**
- * Error thrown when resource is not found.
+ * Scanner that can be used to get the list of sub-resources
+ * of a given {@link Resource}.
+ *
+ * A scanner must always returns a non {@code null} list and the type of {@link Resource} is
+ * implementation dependent (may be a {@link FileResource}, a {@link ClasspathResource}, etc.).
  */
-public class ResourceNotFoundException extends ResourceException {
+interface ResourceScanner {
 
 	/**
-	 * Create exception with {@code path}.
+	 * Scan {@code resource} and returns the list of sub-resources.
 	 *
-	 * @param path The path of the resource that cannot be loaded.
+	 * @param resource Resource to scan.
+	 * @return List of sub-resources.
+	 * @throws ResourceNotFoundException If {@code resource} does not exist.
+	 * @throws ResourceNotValidException If {@code resource} cannot be scanned.
+	 * @throws ResourceException If an unknown error is thrown.
 	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
-	}
-
-	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
-	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
-	}
+	Collection<Resource> scan(Resource resource);
 }

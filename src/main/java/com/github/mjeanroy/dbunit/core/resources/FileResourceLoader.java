@@ -29,7 +29,7 @@ import java.io.File;
 /**
  * Load {@link Resource} from the file system.
  */
-class FileSystemResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
+class FileResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
 
 	/**
 	 * Each resource must match this prefix, for example:
@@ -44,14 +44,14 @@ class FileSystemResourceLoader extends AbstractResourceLoaderStrategy implements
 	/**
 	 * The singleton instance.
 	 */
-	private static final FileSystemResourceLoader INSTANCE = new FileSystemResourceLoader();
+	private static final FileResourceLoader INSTANCE = new FileResourceLoader();
 
 	/**
 	 * Get the loader instance.
 	 *
 	 * @return Loader instance.
 	 */
-	static FileSystemResourceLoader getInstance() {
+	static FileResourceLoader getInstance() {
 		return INSTANCE;
 	}
 
@@ -59,7 +59,7 @@ class FileSystemResourceLoader extends AbstractResourceLoaderStrategy implements
 	 * Create the loader.
 	 * This constructor should not be called directly, use {@link #getInstance()} instead.
 	 */
-	private FileSystemResourceLoader() {
+	private FileResourceLoader() {
 		super(PREFIX);
 	}
 

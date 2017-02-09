@@ -131,6 +131,13 @@ public class UrlResourceTest {
 	@Test
 	public void it_should_return_empty_sub_resources() {
 		String path = "/dataset/json/foo.json";
+		String dataset = readTestResource(path).trim();
+		stubFor(WireMock.get(urlEqualTo(path))
+				.willReturn(aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "text/xml")
+						.withBody(dataset)));
+
 		URL url = url(path);
 		UrlResource resource = new UrlResource(url);
 

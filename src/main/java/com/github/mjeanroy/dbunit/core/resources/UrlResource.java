@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static java.util.Collections.emptyList;
+import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.noOpScanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collection;
 
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -42,7 +41,7 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 /**
  * Implementation of {@link Resource} backed by {@link URL} instance.
  */
-class UrlResource implements Resource {
+class UrlResource extends AbstractResource implements Resource {
 
 	/**
 	 * Class logger.
@@ -61,6 +60,7 @@ class UrlResource implements Resource {
 	 * @throws NullPointerException If {@code url} is {@code null}.
 	 */
 	UrlResource(URL url) {
+		super(noOpScanner());
 		this.url = notNull(url, "Resource URL must not be null");
 	}
 
@@ -117,11 +117,6 @@ class UrlResource implements Resource {
 	@Override
 	public boolean isDirectory() {
 		return false;
-	}
-
-	@Override
-	public Collection<Resource> listResources() {
-		return emptyList();
 	}
 
 	@Override

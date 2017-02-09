@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,34 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.resources;
+
+import java.util.Collection;
 
 /**
- * Error thrown when resource is not found.
+ * Abstract implementation of {@link Resource}.
+ * The method {@link #listResources()} is already implemented and just delegate to
+ * the {@link #scanner}.
  */
-public class ResourceNotFoundException extends ResourceException {
+abstract class AbstractResource implements Resource {
 
 	/**
-	 * Create exception with {@code path}.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
+	 * The scanner used to list of sub-resources.
+	 * This scanner is used in {@link #listResources()} method.
 	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
+	private final ResourceScanner scanner;
+
+	/**
+	 * Create resource.
+	 *
+	 * @param scanner The scanner.
+	 */
+	AbstractResource(ResourceScanner scanner) {
+		this.scanner = scanner;
 	}
 
-	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
-	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
+	@Override
+	public Collection<Resource> listResources() {
+		return scanner.scan(this);
 	}
 }

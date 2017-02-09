@@ -24,34 +24,51 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+
+import java.util.Collection;
+
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-/**
- * Load {@link Resource}.
- *
- * Resource location is implementation specific, for example:
- * <ul>
- *   <li>From classpath ({@link ClasspathResourceLoader})</li>
- *   <li>From file system ({@link FileResourceLoader})</li>
- *   <li>From URL ({@link UrlResourceLoader})</li>
- * </ul>
- */
-interface ResourceLoaderStrategy {
+public abstract class AbstractResourceScannerTest {
 
-	/**
-	 * Check if the path of the resource may be handled by this strategy.
-	 *
-	 * @param path Resource path.
-	 * @return {@code true} if resource may be loaded by this strategy, {@code false} otherwise.
-	 */
-	boolean match(String path);
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
-	/**
-	 * Load resource.
-	 *
-	 * @param name Resource path.
-	 * @return The resource.
-	 * @throws ResourceNotFoundException If resource does not exist.
-	 */
-	Resource load(String name);
+	@Test
+	public void it_should_fail_if_resource_does_not_exist() {
+		String path = "/dataset/fake.xml";
+		Resource resource = new ResourceMockBuilder()
+				.setPath(path)
+				.setExists(false)
+				.build();
+
+		thrown.expect(ResourceNotFoundException.class);
+		thrown.expectMessage(String.format("Resource <%s> does not exist", path));
+
+		getScanner().scan(resource);
+	}
+
+	@Test
+	public void it_should_returns_empty_list_without_directory() {
+		String path = "/dataset/xml/foo.xml";
+		Resource resource = new ResourceMockBuilder()
+				.setPath(path)
+				.setFile()
+				.build();
+
+		Collection<Resource> resources = getScanner().scan(resource);
+
+		verify(resource).isDirectory();
+		assertThat(resources)
+				.isNotNull()
+				.isEmpty();
+	}
+
+	abstract ResourceScanner getScanner();
 }

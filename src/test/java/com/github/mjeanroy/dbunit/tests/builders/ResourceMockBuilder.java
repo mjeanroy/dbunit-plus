@@ -71,6 +71,11 @@ public class ResourceMockBuilder {
 	private boolean directory;
 
 	/**
+	 * Exist flag.
+	 */
+	private boolean exists;
+
+	/**
 	 * List of sub-resources.
 	 */
 	private final List<Resource> subResources;
@@ -79,6 +84,7 @@ public class ResourceMockBuilder {
 	 * Create resource.
 	 */
 	public ResourceMockBuilder() {
+		this.exists = true;
 		this.subResources = new LinkedList<Resource>();
 	}
 
@@ -93,7 +99,22 @@ public class ResourceMockBuilder {
 		this.readerFactory = new ClasspathInputStream(path);
 		this.file = getTestResource(path);
 		this.path = path;
-		return setPath(path);
+		this.directory = file.isDirectory();
+		this.exists = file.exists();
+		return this;
+	}
+
+	/**
+	 * Initialize {@link Resource} reader from a resource in an
+	 * external JAR.
+	 *
+	 * @param path Path.
+	 * @return The builder.
+	 */
+	public ResourceMockBuilder fromJar(String path) {
+		this.readerFactory = new ClasspathInputStream(path);
+		this.path = getClass().getResource(path).getPath();
+		return this;
 	}
 
 	/**
@@ -151,6 +172,17 @@ public class ResourceMockBuilder {
 	}
 
 	/**
+	 * Set exists flag.
+	 *
+	 * @param exists Exist flag value.
+	 * @return The builder.
+	 */
+	public ResourceMockBuilder setExists(boolean exists) {
+		this.exists = exists;
+		return this;
+	}
+
+	/**
 	 * Add new sub-resources.
 	 * @param resource First resource.
 	 * @param others Other resources.
@@ -175,6 +207,7 @@ public class ResourceMockBuilder {
 			when(resource.getPath()).thenReturn(path);
 			when(resource.isDirectory()).thenReturn(directory);
 			when(resource.toFile()).thenReturn(file);
+			when(resource.exists()).thenReturn(exists);
 			when(resource.listResources()).thenReturn(new ArrayList<Resource>(subResources));
 			return resource;
 		} catch (IOException ex) {

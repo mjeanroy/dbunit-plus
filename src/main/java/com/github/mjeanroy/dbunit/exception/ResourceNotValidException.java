@@ -25,26 +25,21 @@
 package com.github.mjeanroy.dbunit.exception;
 
 /**
- * Error thrown when resource is not found.
+ * Error thrown when resource is not a valid resource.
  */
-public class ResourceNotFoundException extends ResourceException {
+public class ResourceNotValidException extends ResourceException {
 
 	/**
-	 * Create exception with {@code path}.
+	 * Create exception with error message.
 	 *
-	 * @param path The path of the resource that cannot be loaded.
+	 * @param path The resource path causing exception.
+	 * @param message The path of the resource that cannot be loaded.
 	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
+	private ResourceNotValidException(String path, String message) {
+		super(path, message);
 	}
 
-	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
-	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
+	public static ResourceNotValidException invalidJarException(String path) {
+		return new ResourceNotValidException(path, String.format("Resource <%s> does not seems to resides in an external JAR file", path));
 	}
 }

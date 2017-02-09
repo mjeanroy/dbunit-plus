@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,41 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.resources;
 
 /**
- * Error thrown when resource is not found.
+ * Static factories for {@link ResourceScanner}.
  */
-public class ResourceNotFoundException extends ResourceException {
+final class ResourceScannerFactory {
 
-	/**
-	 * Create exception with {@code path}.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
-	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
+	// Ensure non instantiation.
+	private ResourceScannerFactory() {
 	}
 
 	/**
-	 * Create error message.
+	 * Get file-system scanner.
 	 *
-	 * @param path The path.
-	 * @return The error message.
+	 * @return File Scanner.
 	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
+	static ResourceScanner fileScanner() {
+		return FileResourceScanner.getInstance();
+	}
+
+	/**
+	 * Get JAR scanner.
+	 *
+	 * @return JAR Scanner.
+	 */
+	static ResourceScanner jarScanner() {
+		return JarResourceScanner.getInstance();
+	}
+
+	/**
+	 * Get NO-OP Scanner.
+	 *
+	 * @return No-Op scanner.
+	 */
+	static ResourceScanner noOpScanner() {
+		return NoOpResourceScanner.getInstance();
 	}
 }

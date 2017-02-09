@@ -24,30 +24,20 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.commons.io.Files.DEFAULT_CHARSET;
-import static com.github.mjeanroy.dbunit.commons.io.Files.FOLDER_SEPARATOR;
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractExtension;
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
+import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.jarScanner;
 import static com.github.mjeanroy.dbunit.core.resources.Resources.isJarURL;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableCollection;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.net.URLConnection;
 
-import com.github.mjeanroy.dbunit.exception.ResourceException;
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -55,7 +45,7 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 /**
  * Implementation of {@link Resource} backed by a resource available in the classpath.
  */
-class ClasspathResource implements Resource {
+class ClasspathResource extends AbstractResource implements Resource {
 
 	/**
 	 * Class logger.
@@ -74,6 +64,8 @@ class ClasspathResource implements Resource {
 	 * @throws IllegalArgumentException If {@code url} does not resides in a JAR.
 	 */
 	ClasspathResource(URL url) {
+		super(jarScanner());
+
 		notNull(url, "Resource URL must not be null");
 		checkArgument(isJarURL(url), "Resource must resides in a jar");
 		this.url = url;
@@ -95,7 +87,8 @@ class ClasspathResource implements Resource {
 
 	@Override
 	public InputStream openStream() throws IOException {
-		return url.openConnection().getInputStream();
+		URLConnection connection = url.openConnection();
+		return connection.getInputStream();
 	}
 
 	@Override
@@ -118,63 +111,6 @@ class ClasspathResource implements Resource {
 		log.debug("  -> File extension is: {}", extension);
 
 		return isEmpty(extension);
-	}
-
-	@Override
-	public Collection<Resource> listResources() {
-		if (!isDirectory()) {
-			return emptyList();
-		}
-
-		try {
-			String path = getPath();
-			String[] parts = path.split("!", 2);
-			String jarPath = parts[0].substring(5, path.indexOf("!"));
-
-			// Add trailing slash.
-			String dirPath = parts[1];
-			if (!dirPath.startsWith(FOLDER_SEPARATOR)) {
-				dirPath += FOLDER_SEPARATOR;
-			}
-
-			String jarUrl = URLDecoder.decode(jarPath, DEFAULT_CHARSET);
-			JarFile jar = new JarFile(jarUrl);
-			Enumeration<JarEntry> entries = jar.entries();
-			Set<String> result = new HashSet<String>();
-
-			while (entries.hasMoreElements()) {
-				String name = entries.nextElement().getName();
-				if (!name.startsWith(FOLDER_SEPARATOR)) {
-					name = FOLDER_SEPARATOR + name;
-				}
-
-				if (name.startsWith(dirPath)) {
-					String entry = name.substring(dirPath.length());
-					if (!entry.isEmpty() && !entry.equals(FOLDER_SEPARATOR)) {
-						int checkSubdir = entry.indexOf(FOLDER_SEPARATOR, 1);
-						if (checkSubdir >= 0) {
-							// if it is a subdirectory, we just return the directory name
-							entry = entry.substring(0, checkSubdir);
-						}
-
-						result.add(entry);
-					}
-				}
-			}
-
-			Set<Resource> resources = new HashSet<Resource>(result.size());
-			for (String entry : result) {
-				String fullEntry = dirPath + entry;
-				URL url = Resources.class.getResource(fullEntry);
-				ClasspathResource resource = new ClasspathResource(url);
-				resources.add(resource);
-			}
-
-			return unmodifiableCollection(resources);
-		} catch (IOException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new ResourceException(ex);
-		}
 	}
 
 	@Override

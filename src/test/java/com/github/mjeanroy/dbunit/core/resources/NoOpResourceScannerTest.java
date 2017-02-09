@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,29 +22,39 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.resources;
 
-/**
- * Error thrown when resource is not found.
- */
-public class ResourceNotFoundException extends ResourceException {
+import static org.assertj.core.api.Assertions.assertThat;
 
-	/**
-	 * Create exception with {@code path}.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
-	 */
-	public ResourceNotFoundException(String path) {
-		super(path, createMessage(path));
+import java.util.Collection;
+
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.Before;
+import org.junit.Test;
+
+public class NoOpResourceScannerTest extends AbstractResourceScannerTest {
+
+	private NoOpResourceScanner scanner;
+
+	@Before
+	public void setUp() {
+		scanner = NoOpResourceScanner.getInstance();
 	}
 
-	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
-	 */
-	private static String createMessage(String path) {
-		return String.format("Resource <%s> does not exist", path);
+	@Test
+	public void it_should_return_empty_collection() {
+		Resource resource = new ResourceMockBuilder()
+				.setDirectory()
+				.build();
+
+		Collection<Resource> resources = scanner.scan(resource);
+		assertThat(resources)
+				.isNotNull()
+				.isEmpty();
+	}
+
+	@Override
+	ResourceScanner getScanner() {
+		return scanner;
 	}
 }
