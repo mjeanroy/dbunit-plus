@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-import com.github.mjeanroy.dbunit.commons.lang.Classes;
+import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
 /**
  * Factory for {@link Cache} instances.
@@ -35,7 +35,7 @@ public final class CacheFactory {
 	 * Flag to know if Guava is available in the classpath.
 	 */
 	// Package visible for tests.
-	private static final boolean GUAVA_AVAILABLE =  Classes.isAvailable("com.google.common.cache.Cache");
+	private static final boolean GUAVA_AVAILABLE =  ClassUtils.isPresent("com.google.common.cache.Cache");
 
 	// Ensure non instantiation.
 	private CacheFactory() {
