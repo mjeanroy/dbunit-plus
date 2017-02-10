@@ -60,6 +60,7 @@
 		<junit.version>4.12</junit.version>
 		<spring.version>4.3.4.RELEASE</spring.version>
 		<liquibase.version>3.5.3</liquibase.version>
+		<guava.version>20.0</guava.version>
 
 		<!-- Test Dependencies -->
 		<assertj.version>1.7.1</assertj.version>
@@ -111,6 +112,12 @@
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson1.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 			<optional>true</optional>
 		</dependency>
 

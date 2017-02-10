@@ -24,6 +24,10 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
+import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
+import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
+import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
@@ -35,6 +39,13 @@ public class FilesTest {
 		String path = "/dataset/foo.json";
 		String fileName = Files.extractFilename(path);
 		assertThat(fileName).isEqualTo("foo.json");
+	}
+
+	@Test
+	public void it_should_extract_filename_from_path_with_trailing_slash() {
+		String path = "/dataset/";
+		String fileName = Files.extractFilename(path);
+		assertThat(fileName).isEqualTo("dataset");
 	}
 
 	@Test
@@ -66,5 +77,39 @@ public class FilesTest {
 	@Test
 	public void it_should_get_null_extension_with_null() {
 		assertThat(Files.extractExtension(null)).isNull();
+	}
+
+	@Test
+	public void it_should_add_trailing_separator() {
+		assertThat(ensureTrailingSeparator(null)).isNull();
+		assertThat(ensureTrailingSeparator("")).isEqualTo("");
+		assertThat(ensureTrailingSeparator("/tmp")).isEqualTo("/tmp/");
+		assertThat(ensureTrailingSeparator("/tmp/")).isEqualTo("/tmp/");
+	}
+
+	@Test
+	public void it_should_add_root_separator() {
+		assertThat(ensureRootSeparator(null)).isNull();
+		assertThat(ensureRootSeparator("")).isEqualTo("");
+		assertThat(ensureRootSeparator("/tmp")).isEqualTo("/tmp");
+		assertThat(ensureRootSeparator("tmp")).isEqualTo("/tmp");
+	}
+
+	@Test
+	public void it_should_check_if_path_is_the_root() {
+		assertThat(isRootPath(null)).isFalse();
+		assertThat(isRootPath("")).isFalse();
+		assertThat(isRootPath("/")).isTrue();
+		assertThat(isRootPath("/tmp")).isFalse();
+	}
+
+	@Test
+	public void it_should_extract_paths() {
+		assertThat(extractPaths("/tmp/foo")).containsExactly("tmp", "foo");
+		assertThat(extractPaths("/tmp")).containsExactly("tmp");
+		assertThat(extractPaths("/tmp/")).containsExactly("tmp");
+		assertThat(extractPaths("/")).isEmpty();
+		assertThat(extractPaths("")).isEmpty();
+		assertThat(extractPaths(null)).isEmpty();
 	}
 }

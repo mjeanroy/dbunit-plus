@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
 
@@ -126,5 +127,27 @@ public final class TestUtils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Write Static Field in class.
+	 *
+	 * @param klass The class.
+	 * @param fieldName Field name.
+	 * @param value The new value.
+	 */
+	public static void writeStaticField(Class<?> klass, String fieldName, Object value) {
+		try {
+			Field field = klass.getDeclaredField(fieldName);
+			field.setAccessible(true);
+
+			Field modifiersField = Field.class.getDeclaredField("modifiers");
+			modifiersField.setAccessible(true);
+			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+			field.set(null, value);
+		} catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
 	}
 }

@@ -24,7 +24,10 @@
 
 package com.github.mjeanroy.dbunit.commons.collections;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.first;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
@@ -169,5 +172,12 @@ public class CollectionsTest {
 			.isNotNull()
 			.hasSize(5)
 			.containsExactly("one", "two", "three", "four", "five");
+	}
+
+	@Test
+	public void it_should_get_first_element_of_collection() {
+		assertThat(first(null)).isNull();
+		assertThat(first(emptyList())).isNull();
+		assertThat(first(singleton("foo"))).isEqualTo("foo");
 	}
 }

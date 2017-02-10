@@ -24,17 +24,18 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Static Files Utilities.
  */
 public final class Files {
-
-	/**
-	 * Folder separator.
-	 */
-	public static final String FOLDER_SEPARATOR = "/";
 
 	/**
 	 * The default {@link Charset} name.
@@ -45,6 +46,11 @@ public final class Files {
 	 * The extension separator.
 	 */
 	private static final char EXTENSION_SEPARATOR = '.';
+
+	/**
+	 * Folder separator.
+	 */
+	private static final char FOLDER_SEPARATOR = '/';
 
 	// Ensure non instantiation.
 	private Files() {
@@ -57,16 +63,12 @@ public final class Files {
 	 * @return The filename.
 	 */
 	public static String extractFilename(String path) {
-		if (path == null) {
+		if (isEmpty(path)) {
 			return null;
 		}
 
-		int lastSeparatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
-		if (lastSeparatorIndex < 0) {
-			return path;
-		}
-
-		return path.substring(lastSeparatorIndex + 1);
+		List<String> parts = extractPaths(path);
+		return parts.get(parts.size() - 1);
 	}
 
 	/**
@@ -86,5 +88,98 @@ public final class Files {
 		}
 
 		return fileName.substring(indexOfExt + 1);
+	}
+
+	/**
+	 * Ensure that a {@code path} ends with folder separator and returns
+	 * updated path.
+	 *
+	 * For example:
+	 * <ul>
+	 *   <li>{@code ensureTrailingSeparator("/tmp")} returns {@code /tmp/}</li>
+	 *   <li>{@code ensureTrailingSeparator("/tmp/")} returns {@code /tmp/}</li>
+	 * </ul>
+	 *
+	 * @param path The path.
+	 * @return The path, ending with folder separator.
+	 */
+	public static String ensureTrailingSeparator(String path) {
+		if (isEmpty(path)) {
+			return path;
+		}
+
+		char lastChar = path.charAt(path.length() - 1);
+		return lastChar == FOLDER_SEPARATOR ? path : path + FOLDER_SEPARATOR;
+	}
+
+	/**
+	 * Ensure that a {@code path} starts with folder separator and returns
+	 * updated path.
+	 *
+	 * For example:
+	 * <ul>
+	 *   <li>{@code ensureRootSeparator("/tmp")} returns {@code "/tmp"}</li>
+	 *   <li>{@code ensureRootSeparator("tmp")} returns {@code "/tmp"}</li>
+	 * </ul>
+	 *
+	 * @param path The path.
+	 * @return The path, starting with folder separator.
+	 */
+	public static String ensureRootSeparator(String path) {
+		if (isEmpty(path)) {
+			return path;
+		}
+
+		return path.charAt(0) == FOLDER_SEPARATOR ? path : FOLDER_SEPARATOR + path;
+	}
+
+	/**
+	 * Check if a {@code path} is exactly the root path.
+	 *
+	 * @param path The path.
+	 * @return {@code true} if {@code path} is the root path, {@code false} otherwise.
+	 */
+	public static boolean isRootPath(String path) {
+		return path != null && path.length() == 1 && path.charAt(0) == FOLDER_SEPARATOR;
+	}
+
+	/**
+	 * Extract all parts of a given path.
+	 *
+	 * For example:
+	 * <ul>
+	 *   <li>{@code extractPaths("/tmp/foo"} returns a list containing {@code "tmp"} and {@code "foo"}.</li>
+	 *   <li>{@code extractPaths("/"} returns an empty list.</li>
+	 * </ul>
+	 * @param path The path.
+	 * @return A list containing all parts.
+	 */
+	public static List<String> extractPaths(String path) {
+		if (isEmpty(path)) {
+			return emptyList();
+		}
+
+		List<String> parts = new ArrayList<String>(path.length());
+		String current = "";
+
+		for (char c : path.toCharArray()) {
+			if (c == FOLDER_SEPARATOR) {
+				// We found a path.
+				if (!current.isEmpty()) {
+					parts.add(current);
+				}
+
+				current = "";
+			} else {
+				current += c;
+			}
+		}
+
+		// Add last part.
+		if (!current.isEmpty()) {
+			parts.add(current);
+		}
+
+		return unmodifiableList(parts);
 	}
 }

@@ -113,4 +113,20 @@ public final class Collections {
 		}
 		return set;
 	}
+
+	/**
+	 * Get the first element of a {@code collection}.
+	 * If the {@code collection} is {@code null} or empty, {@code null} is returned.
+	 *
+	 * @param collection The collection.
+	 * @param <T> Type of elements in the collection.
+	 * @return The first element of the {@code collection}.
+	 */
+	public static <T> T first(Collection<T> collection) {
+		if (collection == null || collection.isEmpty()) {
+			return null;
+		}
+
+		return collection.iterator().next();
+	}
 }

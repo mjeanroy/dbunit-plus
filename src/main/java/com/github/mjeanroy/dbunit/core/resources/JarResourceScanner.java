@@ -24,21 +24,31 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.first;
 import static com.github.mjeanroy.dbunit.commons.io.Files.DEFAULT_CHARSET;
-import static com.github.mjeanroy.dbunit.commons.io.Files.FOLDER_SEPARATOR;
+import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
+import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
+import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 import static com.github.mjeanroy.dbunit.exception.ResourceNotValidException.invalidJarException;
+import static java.util.Collections.unmodifiableSet;
 
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.github.mjeanroy.dbunit.cache.Cache;
+import com.github.mjeanroy.dbunit.cache.CacheFactory;
+import com.github.mjeanroy.dbunit.cache.CacheLoader;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 
@@ -81,9 +91,15 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 	}
 
 	/**
+	 * Cache for JAR entries.
+	 */
+	private final Cache<String, Set<String>> cache;
+
+	/**
 	 * Private constructor, use {@link #getInstance()} instead.
 	 */
 	private JarResourceScanner() {
+		this.cache = CacheFactory.newCache(JarScanTask.INSTANCE);
 	}
 
 	@Override
@@ -101,57 +117,74 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 			throw invalidJarException(path);
 		}
 
-		log.debug("Jar path: {}", jarPath);
+		// Extract directory path.
+		String dirPath = ensureTrailingSeparator(parts[1]);
 
-		// Add trailing slash.
-		String dirPath = parts[1];
-		if (!dirPath.startsWith(FOLDER_SEPARATOR)) {
-			dirPath += FOLDER_SEPARATOR;
-		}
+		log.debug("  -> Jar path: {}", jarPath);
+		log.debug("  -> Directory path: {}", dirPath);
 
-		log.debug("Directory path: {}", dirPath);
-
+		log.debug("Loading JAR entries from: {}", jarPath);
 		String jarUrl = URLDecoder.decode(jarPath, DEFAULT_CHARSET);
-		JarFile jar = new JarFile(jarUrl);
-		Enumeration<JarEntry> entries = jar.entries();
-		Set<String> result = new LinkedHashSet<String>();
+		Set<String> entries = cache.load(jarUrl);
+		int maxSize = entries.size();
 
-		while (entries.hasMoreElements()) {
-			String name = entries.nextElement().getName();
-			if (!name.startsWith(FOLDER_SEPARATOR)) {
-				name = FOLDER_SEPARATOR + name;
-			}
+		log.debug("Filtering JAR entries");
+		Set<String> foundEntries = new HashSet<String>(maxSize);
+		List<Resource> resources = new ArrayList<Resource>(maxSize);
 
-			log.trace("Checking: {}", name);
-
+		for (String name : entries) {
 			if (name.startsWith(dirPath)) {
-				log.debug("Entry matching for: {}", name);
-
 				String entry = name.substring(dirPath.length());
-				if (!entry.isEmpty() && !entry.equals(FOLDER_SEPARATOR)) {
-					int checkSubdir = entry.indexOf(FOLDER_SEPARATOR, 1);
-					if (checkSubdir >= 0) {
-						log.debug("Entry is a directory, extract the directory name");
-						entry = entry.substring(0, checkSubdir);
-					}
+				log.debug("  -> Entry matching for: {}", name);
+				log.debug("  -> Entry: {}", entry);
 
-					log.debug("Adding entry: {}", entry);
-					result.add(entry);
+				if (!isEmpty(entry) && !isRootPath(entry)) {
+					List<String> paths = extractPaths(entry);
+					String subEntry = paths.size() > 1 ? first(paths) : entry;
+					String fullEntry = dirPath + subEntry;
+					String key = ensureTrailingSeparator(fullEntry);
+
+					if (!foundEntries.contains(key)) {
+						URL url = getClass().getResource(fullEntry);
+						resources.add(new ClasspathResource(url));
+						foundEntries.add(key);
+						log.debug("  -> Adding entry: {}", fullEntry);
+					}
 				}
 			}
 		}
 
-		log.debug("Creating resource list from: {}", result);
-		List<Resource> resources = new ArrayList<Resource>(result.size());
-
-		for (String entry : result) {
-			String fullEntry = dirPath + entry;
-
-			log.debug("Adding entry with path: {}", fullEntry);
-			URL url = getClass().getResource(fullEntry);
-			resources.add(new ClasspathResource(url));
-		}
-
 		return resources;
+	}
+
+	/**
+	 * The goal of this task is to scan all JAR entries and returns
+	 * a {@link Set} of all entries.
+	 */
+	private static class JarScanTask implements CacheLoader<String, Set<String>> {
+
+		/**
+		 * Singleton Instance.
+		 */
+		private static final JarScanTask INSTANCE = new JarScanTask();
+
+		@Override
+		public Set<String> load(String jarPath) throws Exception {
+			log.debug("Scanning: {}", jarPath);
+
+			JarFile jar = new JarFile(jarPath);
+			Enumeration<JarEntry> jarEntries = jar.entries();
+			Set<String> results = new LinkedHashSet<String>();
+
+			while (jarEntries.hasMoreElements()) {
+				JarEntry jarEntry = jarEntries.nextElement();
+				String entryName = jarEntry.getName();
+				String path = ensureRootSeparator(entryName);
+				results.add(path);
+				log.trace("  -> Entry added: {}", path);
+			}
+
+			return unmodifiableSet(results);
+		}
 	}
 }
