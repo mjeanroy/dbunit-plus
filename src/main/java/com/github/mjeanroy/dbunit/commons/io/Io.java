@@ -112,4 +112,8 @@ public final class Io {
 			return false;
 		}
 	}
+
+	public static boolean closeSafely(Closeable closeable) {
+		return closeable == null || closeQuietly(closeable);
+	}
 }

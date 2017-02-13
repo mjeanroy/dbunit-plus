@@ -26,28 +26,19 @@ package com.github.mjeanroy.dbunit.json;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-public class Jackson1Parser implements JsonParser {
+/**
+ * Json Parser using Jackson (V2) {@link com.fasterxml.jackson.databind.ObjectMapper} as internal implementation.
+ */
+public class Jackson1Parser extends AbstractJsonParser implements JsonParser {
 
 	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(Jackson2Parser.class);
-
-	/**
-	 * Internal Jackson2 Mapper.
+	 * Internal Jackson 1 Mapper.
 	 */
 	private final ObjectMapper mapper;
 
@@ -68,24 +59,9 @@ public class Jackson1Parser implements JsonParser {
 		this.mapper = notNull(mapper, "Jackson1 Object Mapper should not be null");
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
-		try {
-			InputStream stream = resource.openStream();
-			return (Map<String, List<Map<String, Object>>>) mapper.readValue(stream, Map.class);
-		}
-		catch (JsonParseException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
-		catch (JsonMappingException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
-		catch (IOException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
+	@Override
+	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
+		return (Map<String, List<Map<String, Object>>>) mapper.readValue(reader, Map.class);
 	}
 }

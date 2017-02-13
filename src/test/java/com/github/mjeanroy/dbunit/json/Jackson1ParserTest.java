@@ -28,11 +28,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.hamcrest.core.Is.is;
 import static org.junit.rules.ExpectedException.none;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
@@ -98,14 +101,13 @@ public class Jackson1ParserTest {
 
 	@Test
 	public void it_should_wrap_json_parse_exception() throws Exception {
-		InputStream stream = mock(InputStream.class);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(stream)
+				.withReader(mock(InputStream.class))
 				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
 		JsonParseException ex = mock(JsonParseException.class);
-		when(mapper.readValue(stream, Map.class)).thenThrow(ex);
+		when(mapper.readValue(any(Reader.class), eq(Map.class))).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
@@ -116,14 +118,13 @@ public class Jackson1ParserTest {
 
 	@Test
 	public void it_should_wrap_json_mapping_exception() throws Exception {
-		InputStream stream = mock(InputStream.class);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(stream)
+				.withReader(mock(InputStream.class))
 				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
-		JsonMappingException ex = mock(JsonMappingException.class);
-		when(mapper.readValue(stream, Map.class)).thenThrow(ex);
+		JsonMappingException ex = new JsonMappingException("fake error");
+		when(mapper.readValue(any(Reader.class), eq(Map.class))).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));
@@ -134,14 +135,13 @@ public class Jackson1ParserTest {
 
 	@Test
 	public void it_should_wrap_io_exception() throws Exception {
-		InputStream stream = mock(InputStream.class);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(stream)
+				.withReader(mock(InputStream.class))
 				.build();
 
 		ObjectMapper mapper = mock(ObjectMapper.class);
-		IOException ex = mock(IOException.class);
-		when(mapper.readValue(stream, Map.class)).thenThrow(ex);
+		IOException ex = new IOException();
+		when(mapper.readValue(any(Reader.class), eq(Map.class))).thenThrow(ex);
 
 		thrown.expect(JsonException.class);
 		thrown.expectCause(is(ex));

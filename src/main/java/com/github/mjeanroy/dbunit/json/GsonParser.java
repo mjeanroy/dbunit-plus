@@ -26,29 +26,16 @@ package com.github.mjeanroy.dbunit.json;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
 
 /**
- * Json Parser using Google Gson as internal implementation.
+ * Json Parser using Google {@link Gson} as internal implementation.
  */
-public class GsonParser implements JsonParser {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(GsonParser.class);
+public class GsonParser extends AbstractJsonParser implements JsonParser {
 
 	/**
 	 * Internal parser.
@@ -72,25 +59,9 @@ public class GsonParser implements JsonParser {
 		this.gson = notNull(gson, "Gson Parser should not be null");
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
-		try {
-			InputStream stream = resource.openStream();
-			InputStreamReader reader = new InputStreamReader(stream);
-			return (Map<String, List<Map<String, Object>>>) gson.fromJson(reader, Map.class);
-		}
-		catch (IOException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
-		catch (JsonSyntaxException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
-		catch (JsonIOException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
+	@Override
+	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
+		return (Map<String, List<Map<String, Object>>>) gson.fromJson(reader, Map.class);
 	}
 }

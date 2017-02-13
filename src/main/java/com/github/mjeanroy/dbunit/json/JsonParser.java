@@ -32,6 +32,7 @@ import com.github.mjeanroy.dbunit.exception.JsonException;
 
 /**
  * Parse JSON file and return DBUnit dataSet as {@link Map}.
+ *
  * Each implementation should wrap specific exception to an internal {@link JsonException} (library
  * will catch instance of this exception and re-throw appropriate exception).
  */
@@ -44,5 +45,5 @@ public interface JsonParser {
 	 * @return DataSet representation.
 	 * @throws JsonException If parse/read operation fail (invalid schema, unreadable file).
 	 */
-	Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException;
+	Map<String, List<Map<String, Object>>> parse(Resource resource);
 }

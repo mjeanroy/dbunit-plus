@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
 import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
@@ -97,11 +98,15 @@ public final class SqlScriptParser {
 	 * @throws SqlParserException If an error occurred during parsing.
 	 */
 	public static List<String> parseScript(Resource sqlFile, SqlScriptParserConfiguration configuration) {
+		InputStream stream = null;
 		try {
-			return parseScript(sqlFile.openStream(), configuration);
+			stream = sqlFile.openStream();
+			return parseScript(stream, configuration);
 		} catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new SqlParserException(ex);
+		} finally {
+			closeSafely(stream);
 		}
 	}
 

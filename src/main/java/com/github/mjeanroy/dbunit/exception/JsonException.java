@@ -24,13 +24,6 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
-
 /**
  * Wrap external JSON parsing exception.
  * This exception should provide a unique way to handler JSON exception,
@@ -40,52 +33,11 @@ import com.google.gson.JsonSyntaxException;
 public class JsonException extends AbstractDbUnitException {
 
 	/**
-	 * Wrap {@link JsonParseException} from Jackson2.
-	 * This exception will probably indicate malformed JSON.
+	 * Wrap {@link Exception}.
 	 *
 	 * @param e Original Exception.
 	 */
-	public JsonException(JsonParseException e) {
-		super(e);
-	}
-
-	/**
-	 * Wrap {@link JsonMappingException} from Jackson2.
-	 * This exception will probably indicate errors with JSON object mapping.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JsonException(JsonMappingException e) {
-		super(e);
-	}
-
-	/**
-	 * Wrap {@link IOException}.
-	 * This exception will probably indicate errors while reading JSON file.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JsonException(IOException e) {
-		super(e);
-	}
-
-	/**
-	 * Wrap {@link JsonIOException} from Gson.
-	 * This exception will probably indicate errors while reading JSON file.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JsonException(JsonIOException e) {
-		super(e);
-	}
-
-	/**
-	 * Wrap {@link JsonSyntaxException} from Gson.
-	 * This exception will probably indicate malformed JSON.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JsonException(JsonSyntaxException e) {
+	public JsonException(Exception e) {
 		super(e);
 	}
 }

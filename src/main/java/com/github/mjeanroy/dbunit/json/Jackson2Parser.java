@@ -26,28 +26,16 @@ package com.github.mjeanroy.dbunit.json;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
- * Json Parser using Jackson2 as internal implementation.
+ * Json Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
  */
-public class Jackson2Parser implements JsonParser {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(Jackson2Parser.class);
+public class Jackson2Parser extends AbstractJsonParser implements JsonParser {
 
 	/**
 	 * Internal Jackson2 Mapper.
@@ -71,24 +59,9 @@ public class Jackson2Parser implements JsonParser {
 		this.mapper = notNull(mapper, "Jackson2 Object Mapper should not be null");
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, List<Map<String, Object>>> parse(Resource resource) throws JsonException {
-		try {
-			InputStream stream = resource.openStream();
-			return (Map<String, List<Map<String, Object>>>) mapper.readValue(stream, Map.class);
-		}
-		catch (JsonParseException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
-		catch (JsonMappingException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
-		catch (IOException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JsonException(ex);
-		}
+	@Override
+	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
+		return (Map<String, List<Map<String, Object>>>) mapper.readValue(reader, Map.class);
 	}
 }
