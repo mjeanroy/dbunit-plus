@@ -28,7 +28,7 @@ import static com.github.mjeanroy.dbunit.commons.collections.Collections.keys;
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,9 +145,10 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 	 * @throws DataSetException If an error occurred during extraction.
 	 */
 	private List<ITable> readTables(Map<String, List<Map<String, Object>>> tables) throws DataSetException {
-		List<ITable> results = new LinkedList<ITable>();
+		Set<Map.Entry<String, List<Map<String, Object>>>> entries = tables.entrySet();
+		List<ITable> results = new ArrayList<ITable>(entries.size());
 
-		for (Map.Entry<String, List<Map<String, Object>>> entry : tables.entrySet()) {
+		for (Map.Entry<String, List<Map<String, Object>>> entry : entries) {
 			String tableName = entry.getKey();
 			List<Map<String, Object>> rows = entry.getValue();
 			log.debug("Extract table '{}'", tableName);
