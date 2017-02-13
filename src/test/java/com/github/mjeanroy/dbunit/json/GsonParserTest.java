@@ -24,20 +24,15 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.google.gson.Gson;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,11 +48,10 @@ public class GsonParserTest {
 	public void it_should_parse_file() throws Exception {
 		Gson gson = new Gson();
 		GsonParser parser = new GsonParser(gson);
-		File file = getTestResource("/dataset/json/foo.json");
-		InputStream inputStream = new FileInputStream(file);
 
-		Resource resource = mock(Resource.class);
-		when(resource.openStream()).thenReturn(inputStream);
+		Resource resource = new ResourceMockBuilder()
+				.fromClasspath("/dataset/json/foo.json")
+				.build();
 
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 

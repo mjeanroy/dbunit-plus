@@ -26,16 +26,13 @@ package com.github.mjeanroy.dbunit.json;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.Is.isA;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
@@ -100,34 +97,36 @@ public class Jackson2ParserTest {
 	}
 
 	@Test
-	public void it_should_wrap_json_parse_exception() throws Exception {
+	public void it_should_wrap_json_parse_exception() {
+		String malformedJson = "{test: test}";
+		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(mock(InputStream.class))
+				.withReader(stream)
 				.build();
 
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		JsonParseException ex = mock(JsonParseException.class);
-		when(mapper.readValue(any(Reader.class), eq(Map.class))).thenThrow(ex);
+		ObjectMapper mapper = new ObjectMapper();
 
 		thrown.expect(JsonException.class);
-		thrown.expectCause(is(ex));
+		thrown.expectCause(isA(JsonParseException.class));
 
 		Jackson2Parser parser = new Jackson2Parser(mapper);
 		parser.parse(resource);
 	}
 
 	@Test
-	public void it_should_wrap_json_mapping_exception() throws Exception {
+	public void it_should_wrap_json_mapping_exception() {
+		String json = "[\"test\"]";
+		byte[] bytes = json.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(mock(InputStream.class))
+				.withReader(stream)
 				.build();
 
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		JsonMappingException ex = mock(JsonMappingException.class);
-		when(mapper.readValue(any(Reader.class), eq(Map.class))).thenThrow(ex);
+		ObjectMapper mapper = new ObjectMapper();
 
 		thrown.expect(JsonException.class);
-		thrown.expectCause(is(ex));
+		thrown.expectCause(isA(JsonMappingException.class));
 
 		Jackson2Parser parser = new Jackson2Parser(mapper);
 		parser.parse(resource);
@@ -135,16 +134,18 @@ public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_wrap_io_exception() throws Exception {
+		String json = "";
+		byte[] bytes = json.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
+
 		Resource resource = new ResourceMockBuilder()
-				.withReader(mock(InputStream.class))
+				.withReader(stream)
 				.build();
 
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		IOException ex = mock(IOException.class);
-		when(mapper.readValue(any(Reader.class), eq(Map.class))).thenThrow(ex);
+		ObjectMapper mapper = new ObjectMapper();
 
 		thrown.expect(JsonException.class);
-		thrown.expectCause(is(ex));
+		thrown.expectCause(isA(IOException.class));
 
 		Jackson2Parser parser = new Jackson2Parser(mapper);
 		parser.parse(resource);
