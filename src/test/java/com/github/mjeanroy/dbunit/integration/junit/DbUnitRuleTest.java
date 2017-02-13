@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.runner.Description.createSuiteDescription;
@@ -36,6 +37,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
@@ -53,88 +55,50 @@ public class DbUnitRuleTest {
 	@ClassRule
 	public static EmbeddedDatabaseRule db = new EmbeddedDatabaseRule();
 
-	private DbUnitRule rule;
-
 	@Before
 	public void setup() throws Exception {
 		assertThat(countFrom(db.getConnection(), "foo")).isZero();
 		assertThat(countFrom(db.getConnection(), "bar")).isZero();
-		rule = new DbUnitRule(new EmbeddedDatabaseConnectionFactory(db.getDb()));
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
-	public void it_should_load_database_for_class_test() throws Throwable {
+	public void it_should_load_rule_with_configuration() throws Throwable {
+		JdbcConfiguration config = newJdbcConfiguration(db.getUrl(), db.getUser(), db.getPassword());
+		DbUnitRule rule = new DbUnitRule(config);
+
 		Statement statement = mock(Statement.class);
 		Description description = createTestDescription(TestClassWithDataSet.class, "method1");
-
-		Statement result = rule.apply(statement, description);
-
-		assertThat(result).isNotNull();
-		verify(statement, never()).evaluate();
-
-		doAnswer(new Answer() {
-			@Override
-			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
-				return null;
-			}
-		}).when(statement).evaluate();
-
-		result.evaluate();
-
-		verify(statement).evaluate();
+		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@Test
+	public void it_should_load_database_for_class_test() throws Throwable {
+		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		DbUnitRule rule = new DbUnitRule(factory);
+
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(TestClassWithDataSet.class, "method1");
+		applyAndVerifyRule(rule, statement, description, 2, 3);
+	}
+
 	@Test
 	public void it_should_load_database_for_class_rule() throws Throwable {
+		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		DbUnitRule rule = new DbUnitRule(factory);
+
 		Statement statement = mock(Statement.class);
 		Description description = createSuiteDescription(TestClassWithDataSet.class);
-
-		Statement result = rule.apply(statement, description);
-
-		assertThat(result).isNotNull();
-		verify(statement, never()).evaluate();
-
-		doAnswer(new Answer() {
-			@Override
-			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
-				return null;
-			}
-		}).when(statement).evaluate();
-
-		result.evaluate();
-
-		verify(statement).evaluate();
+		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {
+		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		DbUnitRule rule = new DbUnitRule(factory);
+
 		Statement statement = mock(Statement.class);
 		Description description = createTestDescription(TestClassWithDataSet.class, "method2");
-
-		Statement result = rule.apply(statement, description);
-
-		assertThat(result).isNotNull();
-		verify(statement, never()).evaluate();
-
-		doAnswer(new Answer() {
-			@Override
-			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-				assertThat(countFrom(db.getConnection(), "bar")).isZero();
-				return null;
-			}
-		}).when(statement).evaluate();
-
-		result.evaluate();
-
-		verify(statement).evaluate();
+		applyAndVerifyRule(rule, statement, description, 2, 0);
 	}
 
 	@Test
@@ -150,5 +114,25 @@ public class DbUnitRuleTest {
 			.isSameAs(connection);
 
 		verify(factory).getConnection();
+	}
+
+	private void applyAndVerifyRule(DbUnitRule rule, Statement statement, Description description, final int expectedFoo, final int expectedBar) throws Throwable {
+		Statement result = rule.apply(statement, description);
+
+		assertThat(result).isNotNull();
+		verify(statement, never()).evaluate();
+
+		doAnswer(new Answer() {
+			@Override
+			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(expectedFoo);
+				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(expectedBar);
+				return null;
+			}
+		}).when(statement).evaluate();
+
+		result.evaluate();
+
+		verify(statement).evaluate();
 	}
 }

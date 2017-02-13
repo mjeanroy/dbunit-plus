@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.integration.liquibase;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -36,14 +37,20 @@ import java.io.File;
 import java.sql.Connection;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import liquibase.exception.LiquibaseException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 public class LiquibaseUpdateTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Rule
 	public EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
@@ -78,6 +85,17 @@ public class LiquibaseUpdateTest {
 		File changeLogFile = getTestResource("/liquibase/changelog.xml");
 		String changeLog = "file:" + changeLogFile.getAbsolutePath();
 		assertLiquibaseUpdate(changeLog);
+	}
+
+	@Test
+	public void it_should_wrap_liquibase_exception() throws Exception {
+		String changeLog = "/liquibase/changelog.txt";
+		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
+
+		thrown.expect(DbUnitException.class);
+		thrown.expectCause(isA(LiquibaseException.class));
+
+		liquibaseUpdater.update();
 	}
 
 	private void assertLiquibaseUpdate(String changeLog) throws Exception {

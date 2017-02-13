@@ -183,4 +183,54 @@ public class ClasspathResourceTest {
 				})
 				.containsOnly("xml");
 	}
+
+	@Test
+	public void it_should_implement_equals() {
+		String p1 = "/jar/dataset/xml/foo.xml";
+		String p2 = "/jar/dataset/xml/bar.xml";
+
+		ClasspathResource r1 = new ClasspathResource(url(p1));
+		ClasspathResource r2 = new ClasspathResource(url(p1));
+		ClasspathResource r3 = new ClasspathResource(url(p1));
+		ClasspathResource r4 = new ClasspathResource(url(p2));
+
+		// Basic comparison
+		assertThat(r1).isEqualTo(r2);
+		assertThat(r1).isNotEqualTo(r4);
+		assertThat(r1).isNotEqualTo(null);
+
+		// Reflective
+		assertThat(r1).isEqualTo(r1);
+
+		// Symmetric
+		assertThat(r1).isEqualTo(r2);
+		assertThat(r2).isEqualTo(r2);
+
+		// Transitive
+		assertThat(r1).isEqualTo(r2);
+		assertThat(r2).isEqualTo(r3);
+		assertThat(r1).isEqualTo(r3);
+	}
+
+	@Test
+	public void it_should_implement_hash_code() {
+		String path = "/jar/dataset/xml/foo.xml";
+		ClasspathResource r1 = new ClasspathResource(url(path));
+		ClasspathResource r2 = new ClasspathResource(url(path));
+
+		assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		String path = "/jar/dataset/xml/foo.xml";
+		URL url = url(path);
+		ClasspathResource r1 = new ClasspathResource(url);
+
+		assertThat(r1.toString()).isEqualTo(String.format("ClasspathResource{url: %s}", url));
+	}
+
+	private URL url(String path) {
+		return getClass().getResource(path);
+	}
 }

@@ -30,16 +30,24 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.SQLException;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
 public class IoTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void it_should_close_input() throws Exception {
@@ -74,5 +82,39 @@ public class IoTest {
 		InOrder inOrder = inOrder(visitor);
 		inOrder.verify(visitor).visit(line1);
 		inOrder.verify(visitor).visit(line2);
+	}
+
+	@Test
+	public void it_should_read_reader_and_rethrown_io_exception() throws Exception {
+		String text = "test foo bar";
+		byte[] bytes = text.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
+		InputStream buf = new BufferedInputStream(stream);
+		ReaderVisitor visitor = mock(ReaderVisitor.class);
+
+		buf.close();
+
+		thrown.expect(IOException.class);
+
+		Io.readLines(buf, visitor);
+	}
+
+	@Test
+	public void it_should_close_connection() throws Exception {
+		Connection connection = mock(Connection.class);
+		boolean closed = Io.closeQuietly(connection);
+		assertThat(closed).isTrue();
+		verify(connection).close();
+	}
+
+	@Test
+	public void it_should_return_false_if_close_connection_fails() throws Exception {
+		Connection connection = mock(Connection.class);
+		doThrow(SQLException.class).when(connection).close();
+
+		boolean closed = Io.closeQuietly(connection);
+
+		assertThat(closed).isFalse();
+		verify(connection).close();
 	}
 }

@@ -37,6 +37,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
  */
 public class EmbeddedDatabaseRule extends ExternalResource {
 
+	private final String dbName;
 	private final boolean loadScript;
 
 	/**
@@ -49,6 +50,7 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	}
 
 	public EmbeddedDatabaseRule(boolean loadScript) {
+		this.dbName = "testdb";
 		this.loadScript = loadScript;
 	}
 
@@ -57,7 +59,7 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.generateUniqueName(false)
-			.setName("testdb");
+			.setName(dbName);
 
 		if (loadScript) {
 			builder.addScript("classpath:/sql/init.sql");
@@ -70,8 +72,7 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	protected void after() {
 		try {
 			db.shutdown();
-		}
-		finally {
+		} finally {
 			db = null;
 		}
 	}
@@ -83,9 +84,20 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	public Connection getConnection() {
 		try {
 			return db.getConnection();
+		} catch (SQLException ex) {
+			throw new AssertionError(ex);
 		}
-		catch (SQLException ex) {
-			throw new RuntimeException(ex);
-		}
+	}
+
+	public String getUrl() {
+		return "jdbc:hsqldb:mem:" + dbName;
+	}
+
+	public String getUser() {
+		return "SA";
+	}
+
+	public String getPassword() {
+		return "";
 	}
 }

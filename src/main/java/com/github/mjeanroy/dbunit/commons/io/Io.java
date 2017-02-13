@@ -67,7 +67,7 @@ public final class Io {
 			}
 		}
 		catch (IOException ex) {
-			log.error(ex.getMessage(), ex);
+			log.error(ex.getMessage());
 			throw ex;
 		}
 		finally {

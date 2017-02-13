@@ -148,6 +148,52 @@ public class UrlResourceTest {
 				.isEmpty();
 	}
 
+	@Test
+	public void it_should_implement_equals() {
+		String p1 = "/dataset/json/foo.json";
+		String p2 = "/dataset/json/bar.json";
+
+		UrlResource r1 = new UrlResource(url(p1));
+		UrlResource r2 = new UrlResource(url(p1));
+		UrlResource r3 = new UrlResource(url(p1));
+		UrlResource r4 = new UrlResource(url(p2));
+
+		// Basic comparison
+		assertThat(r1).isEqualTo(r2);
+		assertThat(r1).isNotEqualTo(r4);
+		assertThat(r1).isNotEqualTo(null);
+
+		// Reflective
+		assertThat(r1).isEqualTo(r1);
+
+		// Symmetric
+		assertThat(r1).isEqualTo(r2);
+		assertThat(r2).isEqualTo(r2);
+
+		// Transitive
+		assertThat(r1).isEqualTo(r2);
+		assertThat(r2).isEqualTo(r3);
+		assertThat(r1).isEqualTo(r3);
+	}
+
+	@Test
+	public void it_should_implement_hash_code() {
+		String path = "/dataset/json/foo.json";
+		UrlResource r1 = new UrlResource(url(path));
+		UrlResource r2 = new UrlResource(url(path));
+
+		assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		String path = "/dataset/json/foo.json";
+		URL url = url(path);
+		UrlResource r1 = new UrlResource(url);
+
+		assertThat(r1.toString()).isEqualTo(String.format("UrlResource{url: %s}", url));
+	}
+
 	private URL url(String path) {
 		return new UrlBuilder()
 				.setProcotol("http")

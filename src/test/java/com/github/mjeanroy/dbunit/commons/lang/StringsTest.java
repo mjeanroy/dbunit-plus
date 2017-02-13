@@ -22,28 +22,33 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.junit;
+package com.github.mjeanroy.dbunit.commons.lang;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
-import org.assertj.core.api.Condition;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 
-public class DbUnitRunnerTest {
+public class StringsTest {
 
 	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitJunitRunner runner = new DbUnitJunitRunner(TestClassWithRunner.class);
-		assertThat(runner.getTestRules(new TestClassWithRunner()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
+	public void it_should_check_if_string_is_empty() {
+		assertThat(Strings.isEmpty(null)).isTrue();
+		assertThat(Strings.isEmpty("")).isTrue();
+		assertThat(Strings.isEmpty("foo")).isFalse();
+	}
+
+	@Test
+	public void it_should_check_if_string_is_not_empty() {
+		assertThat(Strings.isNotEmpty("foo")).isTrue();
+		assertThat(Strings.isNotEmpty("")).isFalse();
+		assertThat(Strings.isNotEmpty(null)).isFalse();
+	}
+
+	@Test
+	public void it_should_check_if_string_is_blank() {
+		assertThat(Strings.isBlank(null)).isTrue();
+		assertThat(Strings.isBlank("")).isTrue();
+		assertThat(Strings.isBlank("   ")).isTrue();
+		assertThat(Strings.isBlank("  foobar  ")).isFalse();
 	}
 }

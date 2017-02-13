@@ -1,7 +1,7 @@
 /**
  * The MIT License (MIT)
  *
- * Copyright (c) 2015 - 2016 Mickael Jeanroy
+ * Copyright (c) 2015 Mickael Jeanroy
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,50 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.commons.reflection;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import static java.lang.reflect.Modifier.isStatic;
+import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
+@RunWith(DbUnitJunitRunner.class)
+@Ignore("This is a test fixtures")
+public class TestClassWithRunnerWithoutConfiguration {
 
-import com.github.mjeanroy.dbunit.commons.collections.Predicate;
-
-/**
- * Filter to check if a given field is static.
- */
-class MemberStaticPredicate<T extends Member> implements Predicate<T> {
-
-	private static final MemberStaticPredicate INSTANCE = new MemberStaticPredicate();
-
-
-	/**
-	 * Get instance.
-	 *
-	 * @return Instance.
-	 */
-	@SuppressWarnings("unchecked")
-	static MemberStaticPredicate<Field> fieldStaticPredicate() {
-		return INSTANCE;
+	@Test
+	public void test1() {
 	}
 
-	/**
-	 * Get instance.
-	 *
-	 * @return Instance.
-	 */
-	@SuppressWarnings("unchecked")
-	static MemberStaticPredicate<Method> methodStaticPredicate() {
-		return INSTANCE;
-	}
-
-	// Ensure non instantiation.
-	private MemberStaticPredicate() {
-	}
-
-	@Override
-	public boolean apply(T field) {
-		return isStatic(field.getModifiers());
-	}
 }

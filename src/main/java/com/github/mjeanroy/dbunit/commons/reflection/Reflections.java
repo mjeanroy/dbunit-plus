@@ -48,7 +48,7 @@ final class Reflections {
 	 * @param type Class to inspect.
 	 * @return Fields.
 	 */
-	public static List<Field> findStaticFields(Class type) {
+	static List<Field> findStaticFields(Class type) {
 		return filter(asList(type.getDeclaredFields()), fieldStaticPredicate());
 	}
 
@@ -58,7 +58,7 @@ final class Reflections {
 	 * @param type Class to inspect.
 	 * @return Fields.
 	 */
-	public static List<Method> findStaticMethods(Class type) {
+	static List<Method> findStaticMethods(Class type) {
 		return filter(asList(type.getDeclaredMethods()), methodStaticPredicate());
 	}
 }
