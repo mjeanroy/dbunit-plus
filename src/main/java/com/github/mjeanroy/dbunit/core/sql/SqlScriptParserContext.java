@@ -84,35 +84,35 @@ class SqlScriptParserContext {
 	/**
 	 * Start escaping, state is updated to {@link SqlQueryState#ESCAPE}.
 	 */
-	public void startEscaping() {
+	void startEscaping() {
 		this.state = SqlQueryState.ESCAPE;
 	}
 
 	/**
 	 * Stop escaping, state is updated to {@link SqlQueryState#DEFAULT}.
 	 */
-	public void stopEscaping() {
+	void stopEscaping() {
 		this.state = SqlQueryState.VARCHAR;
 	}
 
 	/**
 	 * Start a block comment, state is updated to {@link SqlQueryState#DEFAULT}.
 	 */
-	public void startBlockComment() {
+	void startBlockComment() {
 		this.state = SqlQueryState.BLOCK_COMMENT;
 	}
 
 	/**
 	 * Stop a block comment, state is updated to {@link SqlQueryState#DEFAULT}.
 	 */
-	public void stopBlockComment() {
+	void stopBlockComment() {
 		this.state = SqlQueryState.DEFAULT;
 	}
 
 	/**
 	 * Start a varchar, state is updated to {@link SqlQueryState#VARCHAR}.
 	 */
-	public void startVarchar(char quote) {
+	void startVarchar(char quote) {
 		this.openQuote = quote;
 		this.state = SqlQueryState.VARCHAR;
 	}
@@ -120,7 +120,7 @@ class SqlScriptParserContext {
 	/**
 	 * Stop a varchar, state is updated to {@link SqlQueryState#DEFAULT}.
 	 */
-	public void stopVarchar() {
+	void stopVarchar() {
 		this.openQuote = null;
 		this.state = SqlQueryState.DEFAULT;
 	}
@@ -131,7 +131,7 @@ class SqlScriptParserContext {
 	 *
 	 * @return Value of last open quote.
 	 */
-	public Character getOpenQuote() {
+	Character getOpenQuote() {
 		return openQuote;
 	}
 
@@ -140,7 +140,7 @@ class SqlScriptParserContext {
 	 *
 	 * @param character New character.
 	 */
-	public void append(char character) {
+	void append(char character) {
 		this.query.append(character);
 	}
 
@@ -149,7 +149,7 @@ class SqlScriptParserContext {
 	 *
 	 * @return Parsed queries.
 	 */
-	public List<String> getQueries() {
+	List<String> getQueries() {
 		return unmodifiableList(queries);
 	}
 
@@ -158,7 +158,7 @@ class SqlScriptParserContext {
 	 *
 	 * @return State.
 	 */
-	public SqlQueryState getState() {
+	SqlQueryState getState() {
 		return this.state;
 	}
 
@@ -166,7 +166,7 @@ class SqlScriptParserContext {
 	 * Flush current pending query.
 	 * <strong>Important: </strong> empty (or blank) query will never be added to the list of parsed queries.
 	 */
-	public void flush() {
+	void flush() {
 		if (state != SqlQueryState.DEFAULT) {
 			throw new SqlParserException("Cannot flush query: " + query);
 		}
