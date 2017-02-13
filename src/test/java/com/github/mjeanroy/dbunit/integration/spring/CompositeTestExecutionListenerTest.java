@@ -32,6 +32,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -44,12 +45,20 @@ public class CompositeTestExecutionListenerTest {
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 
+	private TestContext ctx;
+	private TestExecutionListener listener1;
+	private TestExecutionListener listener2;
+
+	@Before
+	public void setUp() {
+		ctx = mock(TestContext.class);
+		listener1 = mock(TestExecutionListener.class);
+		listener2 = mock(TestExecutionListener.class);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_create_listener() throws Exception {
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
-
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		TestExecutionListener[] listeners = readPrivate(listener, "listeners", TestExecutionListener[].class);
@@ -69,9 +78,6 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_prepare_instances() throws Exception {
-		TestContext ctx = mock(TestContext.class);
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.prepareTestInstance(ctx);
@@ -83,9 +89,6 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_before_test_class() throws Exception {
-		TestContext ctx = mock(TestContext.class);
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestClass(ctx);
@@ -97,9 +100,6 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_before_test_method() throws Exception {
-		TestContext ctx = mock(TestContext.class);
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestMethod(ctx);
@@ -111,9 +111,6 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_after_test_class() throws Exception {
-		TestContext ctx = mock(TestContext.class);
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestClass(ctx);
@@ -125,9 +122,6 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_after_test_method() throws Exception {
-		TestContext ctx = mock(TestContext.class);
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestMethod(ctx);
@@ -139,9 +133,6 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_return_last_exception() throws Exception {
-		TestContext ctx = mock(TestContext.class);
-		TestExecutionListener listener1 = mock(TestExecutionListener.class);
-		TestExecutionListener listener2 = mock(TestExecutionListener.class);
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		Exception ex1 = mock(Exception.class);
