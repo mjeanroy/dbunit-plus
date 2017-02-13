@@ -27,8 +27,6 @@ package com.github.mjeanroy.dbunit.integration.spring;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
@@ -40,31 +38,31 @@ public class TransactionalDbUnitTestExecutionListenerTest {
 	public void it_should_create_listener() throws Exception {
 		TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
 
-		List<TestExecutionListener> listeners = (List<TestExecutionListener>) readPrivate(listener, "listeners", List.class);
+		TestExecutionListener[] listeners = readPrivate(listener, "listeners", TestExecutionListener[].class);
 		assertThat(listeners)
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2);
 
-		assertThat(listeners.get(0))
+		assertThat(listeners[0])
 			.isNotNull()
 			.isExactlyInstanceOf(TransactionalTestExecutionListener.class);
 
-		assertThat(listeners.get(1))
+		assertThat(listeners[1])
 			.isNotNull()
 			.isExactlyInstanceOf(DbUnitTestExecutionListener.class);
 
-		List<TestExecutionListener> reverseListeners = (List<TestExecutionListener>) readPrivate(listener, "reverseListeners", List.class);
+		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners", TestExecutionListener[].class);
 		assertThat(reverseListeners)
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2);
 
-		assertThat(reverseListeners.get(0))
+		assertThat(reverseListeners[0])
 			.isNotNull()
 			.isExactlyInstanceOf(DbUnitTestExecutionListener.class);
 
-		assertThat(reverseListeners.get(1))
+		assertThat(reverseListeners[1])
 			.isNotNull()
 			.isExactlyInstanceOf(TransactionalTestExecutionListener.class);
 	}

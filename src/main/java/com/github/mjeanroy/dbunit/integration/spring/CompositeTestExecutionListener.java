@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -35,7 +34,7 @@ import org.springframework.test.context.TestExecutionListener;
 /**
  * Allow execution of several {@link TestExecutionListener} in the right order.
  */
-public class CompositeTestExecutionListener implements TestExecutionListener {
+class CompositeTestExecutionListener implements TestExecutionListener {
 
 	/**
 	 * Class Logger.
@@ -45,22 +44,26 @@ public class CompositeTestExecutionListener implements TestExecutionListener {
 	/**
 	 * Set of listener to execute before test execution.
 	 */
-	private final LinkedList<TestExecutionListener> listeners;
+	private final TestExecutionListener[] listeners;
 
 	/**
 	 * Set of listeners to execute after test execution: basically only the original listeners in
 	 * reverse order.
 	 */
-	private final LinkedList<TestExecutionListener> reverseListeners;
+	private final TestExecutionListener[] reverseListeners;
 
-	public CompositeTestExecutionListener(List<TestExecutionListener> listeners) {
-		this.listeners = new LinkedList<TestExecutionListener>();
-		this.reverseListeners = new LinkedList<TestExecutionListener>();
+	CompositeTestExecutionListener(List<TestExecutionListener> listeners) {
+		int size = listeners.size();
+
+		this.listeners = new TestExecutionListener[size];
+		this.reverseListeners = new TestExecutionListener[size];
 
 		// Create both lists in one pass.
+		int i = 0;
 		for (TestExecutionListener listener : listeners) {
-			this.listeners.addLast(listener);
-			this.reverseListeners.addFirst(listener);
+			this.listeners[i] = listener;
+			this.reverseListeners[size - i - 1] = listener;
+			i++;
 		}
 	}
 
@@ -114,14 +117,13 @@ public class CompositeTestExecutionListener implements TestExecutionListener {
 		});
 	}
 
-	private void execute(List<TestExecutionListener> listeners, ListenerFunction func) throws Exception {
+	private void execute(TestExecutionListener[] listeners, ListenerFunction func) throws Exception {
 		Exception ex = null;
 
 		for (TestExecutionListener listener : listeners) {
 			try {
 				func.apply(listener);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 				ex = e;
 			}

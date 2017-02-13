@@ -32,8 +32,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
-import java.util.List;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -54,14 +52,14 @@ public class CompositeTestExecutionListenerTest {
 
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
-		List<TestExecutionListener> listeners = (List<TestExecutionListener>) readPrivate(listener, "listeners", List.class);
+		TestExecutionListener[] listeners = readPrivate(listener, "listeners", TestExecutionListener[].class);
 		assertThat(listeners)
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(listener1, listener2);
 
-		List<TestExecutionListener> reverseListeners = (List<TestExecutionListener>) readPrivate(listener, "reverseListeners", List.class);
+		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners", TestExecutionListener[].class);
 		assertThat(reverseListeners)
 			.isNotNull()
 			.isNotEmpty()
