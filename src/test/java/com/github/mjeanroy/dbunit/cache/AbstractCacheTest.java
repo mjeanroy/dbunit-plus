@@ -25,23 +25,22 @@
 package com.github.mjeanroy.dbunit.cache;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
+import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
 import org.junit.Test;
 
 public abstract class AbstractCacheTest {
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void it_should_put_value_in_cache() throws Exception {
 		String key = "foo";
 		String value = "bar";
 
-		CacheLoader<String, String> loader = mock(CacheLoader.class);
-		when(loader.load(key)).thenReturn(value);
+		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>()
+				.add(key, value)
+				.build();
 
 		Cache<String, String> cache = createCache(loader);
 		assertThat(cache.size()).isZero();
@@ -63,8 +62,9 @@ public abstract class AbstractCacheTest {
 		String key = "foo";
 		String value = "bar";
 
-		CacheLoader<String, String> loader = mock(CacheLoader.class);
-		when(loader.load(key)).thenReturn(value);
+		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>()
+				.add(key, value)
+				.build();
 
 		Cache<String, String> cache = createCache(loader);
 		assertThat(cache.size()).isZero();

@@ -22,38 +22,64 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.cache;
+package com.github.mjeanroy.dbunit.tests.builders;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.writeStaticField;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
-import org.junit.After;
-import org.junit.Test;
+import java.util.HashMap;
+import java.util.Map;
 
-public class CacheFactoryTest {
+import com.github.mjeanroy.dbunit.cache.CacheLoader;
 
-	@After
-	public void tearDown() throws Exception {
-		writeStaticField(CacheFactory.class, "GUAVA_AVAILABLE", true);
+/**
+ * Builder to create mock instances for {@link CacheLoader}.
+ *
+ * @param <T> Type of keys.
+ * @param <V> Type of values.
+ */
+public class CacheLoaderMockBuilder<T, V> {
+
+	/**
+	 * Map of loader entries.
+	 */
+	private final Map<T, V> entries;
+
+	/**
+	 * Create builder.
+	 */
+	public CacheLoaderMockBuilder() {
+		this.entries = new HashMap<T, V>();
 	}
 
-	@Test
-	@SuppressWarnings("unchecked")
-	public void it_should_return_guava_cache() {
-		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>().build();
-		Cache<String, String> cache = CacheFactory.newCache(loader);
-		assertThat(cache).isExactlyInstanceOf(GuavaCache.class);
+	/**
+	 * Add new entry to loader.
+	 *
+	 * @param key Type of keys.
+	 * @param value Type of values.
+	 * @return The builder.
+	 */
+	public CacheLoaderMockBuilder<T, V> add(T key, V value) {
+		this.entries.put(key, value);
+		return this;
 	}
 
-	@Test
+	/**
+	 * Create mock instance of {@link CacheLoader}.
+	 *
+	 * @return The mock instance.
+	 */
 	@SuppressWarnings("unchecked")
-	public void it_should_return_default_cache_if_guava_is_not_available() throws Exception {
-		writeStaticField(CacheFactory.class, "GUAVA_AVAILABLE", false);
+	public CacheLoader<T, V> build() {
+		try {
+			CacheLoader<T, V> loader = mock(CacheLoader.class);
+			for (Map.Entry<T, V> entry : entries.entrySet()) {
+				when(loader.load(entry.getKey())).thenReturn(entry.getValue());
+			}
 
-		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>().build();
-		Cache<String, String> cache = CacheFactory.newCache(loader);
-		assertThat(cache).isExactlyInstanceOf(DefaultCache.class);
+			return loader;
+		} catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
 	}
 }
