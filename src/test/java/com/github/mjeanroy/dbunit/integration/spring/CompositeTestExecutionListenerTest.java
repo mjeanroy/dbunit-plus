@@ -32,6 +32,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -135,8 +137,8 @@ public class CompositeTestExecutionListenerTest {
 	public void it_should_return_last_exception() throws Exception {
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
-		Exception ex1 = mock(Exception.class);
-		Exception ex2 = mock(Exception.class);
+		Exception ex1 = new IOException();
+		Exception ex2 = new IOException();
 		doThrow(ex1).when(listener1).prepareTestInstance(ctx);
 		doThrow(ex2).when(listener2).prepareTestInstance(ctx);
 

@@ -26,13 +26,13 @@ package com.github.mjeanroy.dbunit.integration.spring;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.runner.Description.createTestDescription;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
 import org.junit.Test;
@@ -64,10 +64,7 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 	@Test
 	public void it_should_start_database_and_load_data_set() throws Throwable {
 		final Statement statement = mock(Statement.class);
-		final Class testClass = TestClassWithDataSet.class;
-		final Description description = mock(Description.class);
-		when(description.getTestClass()).thenReturn(testClass);
-		when(description.getMethodName()).thenReturn("method1");
+		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
 
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)

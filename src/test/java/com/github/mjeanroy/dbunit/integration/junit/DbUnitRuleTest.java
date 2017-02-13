@@ -26,6 +26,8 @@ package com.github.mjeanroy.dbunit.integration.junit;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.runner.Description.createSuiteDescription;
+import static org.junit.runner.Description.createTestDescription;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -64,10 +66,7 @@ public class DbUnitRuleTest {
 	@Test
 	public void it_should_load_database_for_class_test() throws Throwable {
 		Statement statement = mock(Statement.class);
-		Description description = mock(Description.class);
-		Class testClass = TestClassWithDataSet.class;
-		when(description.getTestClass()).thenReturn(testClass);
-		when(description.getMethodName()).thenReturn("method1");
+		Description description = createTestDescription(TestClassWithDataSet.class, "method1");
 
 		Statement result = rule.apply(statement, description);
 
@@ -92,10 +91,7 @@ public class DbUnitRuleTest {
 	@Test
 	public void it_should_load_database_for_class_rule() throws Throwable {
 		Statement statement = mock(Statement.class);
-		Description description = mock(Description.class);
-		Class testClass = TestClassWithDataSet.class;
-		when(description.getTestClass()).thenReturn(testClass);
-		when(description.getMethodName()).thenReturn(null);
+		Description description = createSuiteDescription(TestClassWithDataSet.class);
 
 		Statement result = rule.apply(statement, description);
 
@@ -120,10 +116,7 @@ public class DbUnitRuleTest {
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {
 		Statement statement = mock(Statement.class);
-		Description description = mock(Description.class);
-		Class testClass = TestClassWithDataSet.class;
-		when(description.getTestClass()).thenReturn(testClass);
-		when(description.getMethodName()).thenReturn("method2");
+		Description description = createTestDescription(TestClassWithDataSet.class, "method2");
 
 		Statement result = rule.apply(statement, description);
 

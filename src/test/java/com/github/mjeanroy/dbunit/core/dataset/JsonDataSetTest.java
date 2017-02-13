@@ -31,6 +31,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +66,8 @@ public class JsonDataSetTest {
 	public void it_should_wrap_json_exception_to_data_set_exception() throws Exception {
 		parser = mock(JsonParser.class);
 
-		JsonException ex = mock(JsonException.class);
+		IOException ioEx = new IOException();
+		JsonException ex = new JsonException(ioEx);
 		when(parser.parse(any(Resource.class))).thenThrow(ex);
 
 		thrown.expect(DataSetException.class);
