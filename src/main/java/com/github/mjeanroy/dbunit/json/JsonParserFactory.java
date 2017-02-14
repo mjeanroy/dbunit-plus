@@ -26,7 +26,25 @@ package com.github.mjeanroy.dbunit.json;
 
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
+/**
+ * The goal of this factory is to create default instances of {@link JsonParser}.
+ */
 public final class JsonParserFactory {
+
+	/**
+	 * Determines whether JACKSON 2 is available in the classpath.
+	 */
+	private static final boolean JACKSON2_AVAILABLE = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper");
+
+	/**
+	 * Determines whether GSON is available in the classpath.
+	 */
+	private static final boolean GSON_AVAILABLE = ClassUtils.isPresent("com.google.gson.Gson");
+
+	/**
+	 * Determines whether JACKSON 1 is available in the classpath.
+	 */
+	private static final boolean JACKSON1_AVAILABLE = ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper");
 
 	// Ensure non instantiation.
 	private JsonParserFactory() {
@@ -45,15 +63,15 @@ public final class JsonParserFactory {
 	 * @return The created parser.
 	 */
 	public static JsonParser createDefault() {
-		if (ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")) {
+		if (JACKSON2_AVAILABLE) {
 			return new Jackson2Parser();
 		}
 
-		if (ClassUtils.isPresent("com.google.gson.Gson")) {
+		if (GSON_AVAILABLE) {
 			return new GsonParser();
 		}
 
-		if (ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper")) {
+		if (JACKSON1_AVAILABLE) {
 			return new Jackson1Parser();
 		}
 

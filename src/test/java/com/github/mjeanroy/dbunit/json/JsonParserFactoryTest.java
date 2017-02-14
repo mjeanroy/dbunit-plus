@@ -24,33 +24,25 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.writeStaticField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
 
-import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ClassUtils.class)
 public class JsonParserFactoryTest {
 
 	@Rule
 	public ExpectedException thrown = none();
 
-	@Before
-	public void setUp() {
-		mockStatic(ClassUtils.class);
-		when(ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")).thenReturn(true);
-		when(ClassUtils.isPresent("com.google.gson.Gson")).thenReturn(true);
-		when(ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper")).thenReturn(true);
+	@After
+	public void tearDown() {
+		writeStaticField(JsonParserFactory.class, "JACKSON2_AVAILABLE", true);
+		writeStaticField(JsonParserFactory.class, "GSON_AVAILABLE", true);
+		writeStaticField(JsonParserFactory.class, "JACKSON1_AVAILABLE", true);
 	}
 
 	@Test
@@ -63,7 +55,7 @@ public class JsonParserFactoryTest {
 
 	@Test
 	public void it_should_create_gson_parser_if_jackson2_is_not_available() {
-		when(ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")).thenReturn(false);
+		writeStaticField(JsonParserFactory.class, "JACKSON2_AVAILABLE", false);
 
 		JsonParser parser = JsonParserFactory.createDefault();
 		assertThat(parser)
@@ -73,8 +65,8 @@ public class JsonParserFactoryTest {
 
 	@Test
 	public void it_should_create_jackson1_parser_if_jackson2_and_gson_is_not_available() {
-		when(ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")).thenReturn(false);
-		when(ClassUtils.isPresent("com.google.gson.Gson")).thenReturn(false);
+		writeStaticField(JsonParserFactory.class, "JACKSON2_AVAILABLE", false);
+		writeStaticField(JsonParserFactory.class, "GSON_AVAILABLE", false);
 
 		JsonParser parser = JsonParserFactory.createDefault();
 		assertThat(parser)
@@ -84,9 +76,9 @@ public class JsonParserFactoryTest {
 
 	@Test
 	public void it_should_fail_if_no_implementation_is_available() {
-		when(ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper")).thenReturn(false);
-		when(ClassUtils.isPresent("com.google.gson.Gson")).thenReturn(false);
-		when(ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper")).thenReturn(false);
+		writeStaticField(JsonParserFactory.class, "JACKSON2_AVAILABLE", false);
+		writeStaticField(JsonParserFactory.class, "GSON_AVAILABLE", false);
+		writeStaticField(JsonParserFactory.class, "JACKSON1_AVAILABLE", false);
 
 		thrown.expect(UnsupportedOperationException.class);
 		thrown.expectMessage("Cannot create JSON parser, please add jackson or gson to your classpath");
