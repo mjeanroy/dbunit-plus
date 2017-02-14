@@ -49,6 +49,7 @@ public class MemberAnnotatedWithPredicateTest {
 	private @interface CustomAnnotation {
 	}
 
+	@SuppressWarnings("unused")
 	private static class TestClass {
 		@CustomAnnotation
 		public static int f1;

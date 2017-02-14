@@ -30,6 +30,7 @@ import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
 import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 import static com.github.mjeanroy.dbunit.exception.ResourceNotValidException.invalidJarException;
 import static java.util.Collections.unmodifiableSet;
@@ -172,19 +173,24 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 		public Set<String> load(String jarPath) throws Exception {
 			log.debug("Scanning: {}", jarPath);
 
-			JarFile jar = new JarFile(jarPath);
-			Enumeration<JarEntry> jarEntries = jar.entries();
-			Set<String> results = new LinkedHashSet<String>();
+			JarFile jar = null;
+			try {
+				jar = new JarFile(jarPath);
+				Enumeration<JarEntry> jarEntries = jar.entries();
+				Set<String> results = new LinkedHashSet<String>();
 
-			while (jarEntries.hasMoreElements()) {
-				JarEntry jarEntry = jarEntries.nextElement();
-				String entryName = jarEntry.getName();
-				String path = ensureRootSeparator(entryName);
-				results.add(path);
-				log.trace("  -> Entry added: {}", path);
+				while (jarEntries.hasMoreElements()) {
+					JarEntry jarEntry = jarEntries.nextElement();
+					String entryName = jarEntry.getName();
+					String path = ensureRootSeparator(entryName);
+					results.add(path);
+					log.trace("  -> Entry added: {}", path);
+				}
+
+				return unmodifiableSet(results);
+			} finally {
+				closeSafely(jar);
 			}
-
-			return unmodifiableSet(results);
 		}
 	}
 }

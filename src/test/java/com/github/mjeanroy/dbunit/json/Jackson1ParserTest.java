@@ -51,7 +51,6 @@ public class Jackson1ParserTest {
 	@Rule
 	public ExpectedException thrown = none();
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_parse_file() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();

@@ -57,7 +57,6 @@ public abstract class AbstractCacheTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void it_should_clear_cache() throws Exception {
 		String key = "foo";
 		String value = "bar";

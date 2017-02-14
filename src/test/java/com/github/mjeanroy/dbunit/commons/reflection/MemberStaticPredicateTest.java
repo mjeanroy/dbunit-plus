@@ -55,6 +55,7 @@ public class MemberStaticPredicateTest {
 		assertThat(methodStaticPredicate().apply(m2)).isFalse();
 	}
 
+	@SuppressWarnings("unused")
 	private static class Foo {
 		public static int bar;
 		public int quix;

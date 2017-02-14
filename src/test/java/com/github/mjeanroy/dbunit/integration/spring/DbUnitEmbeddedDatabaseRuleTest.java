@@ -60,7 +60,7 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 		assertThat(rule.getDb()).isNotNull();
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings("rawtypes")
 	@Test
 	public void it_should_start_database_and_load_data_set() throws Throwable {
 		final Statement statement = mock(Statement.class);

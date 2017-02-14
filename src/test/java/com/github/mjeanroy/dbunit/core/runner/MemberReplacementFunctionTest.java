@@ -52,6 +52,7 @@ public class MemberReplacementFunctionTest {
 		verify(dataSet).addReplacementObject("bar", "foo");
 	}
 
+	@SuppressWarnings("unused")
 	private static class TestClass {
 		public static Replacements replacements = Replacements.builder()
 			.addReplacement("foo", "bar")

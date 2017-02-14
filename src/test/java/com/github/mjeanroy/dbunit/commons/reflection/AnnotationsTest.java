@@ -112,6 +112,7 @@ public class AnnotationsTest {
 		String value();
 	}
 
+	@SuppressWarnings("unused")
 	@TestAnnotation("foo")
 	public static class TestClassAnnotation {
 
@@ -136,13 +137,11 @@ public class AnnotationsTest {
 	}
 
 	private class TestClassAnnotationChild extends TestClassAnnotation {
-
 	}
 
+	@SuppressWarnings("unused")
 	private static class TestClassWithoutAnnotation {
-
 		public void method1() {
-
 		}
 	}
 }

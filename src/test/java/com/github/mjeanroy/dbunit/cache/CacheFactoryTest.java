@@ -39,7 +39,6 @@ public class CacheFactoryTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void it_should_return_guava_cache() {
 		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>().build();
 		Cache<String, String> cache = CacheFactory.newCache(loader);
@@ -47,7 +46,6 @@ public class CacheFactoryTest {
 	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void it_should_return_default_cache_if_guava_is_not_available() throws Exception {
 		writeStaticField(CacheFactory.class, "GUAVA_AVAILABLE", false);
 

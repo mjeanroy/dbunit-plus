@@ -33,7 +33,6 @@ import org.springframework.test.context.transaction.TransactionalTestExecutionLi
 
 public class TransactionalDbUnitTestExecutionListenerTest {
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_create_listener() throws Exception {
 		TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();

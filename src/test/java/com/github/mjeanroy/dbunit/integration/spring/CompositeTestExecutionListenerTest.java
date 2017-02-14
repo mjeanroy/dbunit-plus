@@ -58,7 +58,6 @@ public class CompositeTestExecutionListenerTest {
 		listener2 = mock(TestExecutionListener.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_create_listener() throws Exception {
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));

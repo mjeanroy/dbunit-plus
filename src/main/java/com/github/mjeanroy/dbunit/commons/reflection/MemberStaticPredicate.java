@@ -37,7 +37,8 @@ import com.github.mjeanroy.dbunit.commons.collections.Predicate;
  */
 class MemberStaticPredicate<T extends Member> implements Predicate<T> {
 
-	private static final MemberStaticPredicate INSTANCE = new MemberStaticPredicate();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static final MemberStaticPredicate<? extends Member> INSTANCE = new MemberStaticPredicate();
 
 
 	/**
@@ -47,7 +48,7 @@ class MemberStaticPredicate<T extends Member> implements Predicate<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	static MemberStaticPredicate<Field> fieldStaticPredicate() {
-		return INSTANCE;
+		return (MemberStaticPredicate<Field>) INSTANCE;
 	}
 
 	/**
@@ -57,7 +58,7 @@ class MemberStaticPredicate<T extends Member> implements Predicate<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	static MemberStaticPredicate<Method> methodStaticPredicate() {
-		return INSTANCE;
+		return (MemberStaticPredicate<Method>) INSTANCE;
 	}
 
 	// Ensure non instantiation.

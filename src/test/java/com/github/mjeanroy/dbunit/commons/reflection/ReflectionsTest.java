@@ -56,6 +56,7 @@ public class ReflectionsTest {
 			.contains("m1");
 	}
 
+	@SuppressWarnings("unused")
 	private static class TestClass {
 		public static final int F1 = 0;
 		public static final int F2 = 1;

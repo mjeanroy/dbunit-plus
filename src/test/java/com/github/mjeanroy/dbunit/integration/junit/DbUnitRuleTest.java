@@ -122,7 +122,7 @@ public class DbUnitRuleTest {
 		assertThat(result).isNotNull();
 		verify(statement, never()).evaluate();
 
-		doAnswer(new Answer() {
+		doAnswer(new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
 				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(expectedFoo);
