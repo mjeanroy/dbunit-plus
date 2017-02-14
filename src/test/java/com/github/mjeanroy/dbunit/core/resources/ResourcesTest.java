@@ -89,7 +89,7 @@ public class ResourcesTest {
 
 	private URL url(String protocol) {
 		return new UrlBuilder()
-				.setProcotol(protocol)
+				.setProtocol(protocol)
 				.build();
 	}
 }

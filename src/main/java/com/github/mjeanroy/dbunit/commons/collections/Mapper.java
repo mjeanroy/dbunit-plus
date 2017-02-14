@@ -28,7 +28,7 @@ package com.github.mjeanroy.dbunit.commons.collections;
  * Mapper function used to produce an output value from an input value.
  *
  * @param <T> Type of input value.
- * @param <U> Type of ouput value.
+ * @param <U> Type of output value.
  */
 public interface Mapper<T, U> {
 

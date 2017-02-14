@@ -46,8 +46,7 @@ public class MemberAnnotatedWithPredicateTest {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	private static @interface CustomAnnotation {
-
+	private @interface CustomAnnotation {
 	}
 
 	private static class TestClass {

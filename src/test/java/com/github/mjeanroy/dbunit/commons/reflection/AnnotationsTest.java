@@ -108,7 +108,7 @@ public class AnnotationsTest {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	public static @interface TestAnnotation {
+	public @interface TestAnnotation {
 		String value();
 	}
 

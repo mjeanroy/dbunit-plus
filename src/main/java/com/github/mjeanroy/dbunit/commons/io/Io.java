@@ -113,6 +113,12 @@ public final class Io {
 		}
 	}
 
+	/**
+	 * Close {@link Closeable} instance, do nothing if {@code closeable} is {@code null}.
+	 *
+	 * @param closeable The {@link Closeable} instance.
+	 * @return {@code true} if {@code closeable} succeed to close, {@code false} otherwise.
+	 */
 	public static boolean closeSafely(Closeable closeable) {
 		return closeable == null || closeQuietly(closeable);
 	}

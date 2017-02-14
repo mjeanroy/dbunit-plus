@@ -55,7 +55,7 @@ public interface Logger {
 	 *
 	 * @param message Message.
 	 * @param arg1 First message replacement.
-	 * @param arg1 Second message replacement.
+	 * @param arg2 Second message replacement.
 	 */
 	void trace(String message, Object arg1, Object arg2);
 
@@ -93,7 +93,7 @@ public interface Logger {
 	 *
 	 * @param message Message.
 	 * @param arg1 First message replacement.
-	 * @param arg1 Second message replacement.
+	 * @param arg2 Second message replacement.
 	 */
 	void debug(String message, Object arg1, Object arg2);
 
@@ -131,7 +131,7 @@ public interface Logger {
 	 *
 	 * @param message Message.
 	 * @param arg1 First message replacement.
-	 * @param arg1 Second message replacement.
+	 * @param arg2 Second message replacement.
 	 */
 	void info(String message, Object arg1, Object arg2);
 
@@ -169,7 +169,7 @@ public interface Logger {
 	 *
 	 * @param message Message.
 	 * @param arg1 First message replacement.
-	 * @param arg1 Second message replacement.
+	 * @param arg2 Second message replacement.
 	 */
 	void warn(String message, Object arg1, Object arg2);
 
@@ -207,7 +207,7 @@ public interface Logger {
 	 *
 	 * @param message Message.
 	 * @param arg1 First message replacement.
-	 * @param arg1 Second message replacement.
+	 * @param arg2 Second message replacement.
 	 */
 	void error(String message, Object arg1, Object arg2);
 

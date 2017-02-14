@@ -68,7 +68,7 @@ public class UrlBuilder {
 	 * @param protocol The protocol.
 	 * @return The builder.
 	 */
-	public UrlBuilder setProcotol(String protocol) {
+	public UrlBuilder setProtocol(String protocol) {
 		this.protocol = protocol;
 		return this;
 	}

@@ -49,17 +49,17 @@ public class SqlScriptParserConfiguration {
 	/**
 	 * Default pattern to detect start of an SQL line comment ({@code --}).
 	 */
-	public static final String DEFAULT_LINE_COMMENT = "--";
+	private static final String DEFAULT_LINE_COMMENT = "--";
 
 	/**
 	 * Default pattern to detect start of an SQL block comment ({@code &#47;*}).
 	 */
-	public static final String DEFAULT_START_BLOCK_COMMENT = "/*";
+	private static final String DEFAULT_START_BLOCK_COMMENT = "/*";
 
 	/**
 	 * Default pattern to detect end of an SQL line comment ({@code *&#47;}).
 	 */
-	public static final String DEFAULT_END_BLOCK_COMMENT = "*/";
+	private static final String DEFAULT_END_BLOCK_COMMENT = "*/";
 
 	/**
 	 * Default configuration.

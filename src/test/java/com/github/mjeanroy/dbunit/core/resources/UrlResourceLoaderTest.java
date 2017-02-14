@@ -107,7 +107,7 @@ public class UrlResourceLoaderTest {
 
 	private URL url(String path) {
 		return new UrlBuilder()
-				.setProcotol("http")
+				.setProtocol("http")
 				.setHost("localhost")
 				.setPort(port)
 				.setPath(path)

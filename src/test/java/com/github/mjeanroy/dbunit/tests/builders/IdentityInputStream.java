@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.tests.builders;
 import java.io.InputStream;
 
 /**
- * Factory that returns pre-exsiting {@link InputStream}.
+ * Factory that returns pre-existing {@link InputStream}.
  */
 class IdentityInputStream implements InputStreamFactory {
 
