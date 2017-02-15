@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.jar.JarFile;
 
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -65,12 +66,10 @@ public final class Io {
 			while ((line = buf.readLine()) != null) {
 				visitor.visit(line);
 			}
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			log.error(ex.getMessage());
 			throw ex;
-		}
-		finally {
+		} finally {
 			closeQuietly(buf);
 		}
 	}
@@ -83,15 +82,7 @@ public final class Io {
 	 * @return {@code true} if close operation did not throw any exception, {@code false} otherwise.
 	 */
 	public static boolean closeQuietly(Closeable closeable) {
-		try {
-			closeable.close();
-			return true;
-		}
-		catch (IOException ex) {
-			// No Worries.
-			log.warn(ex.getMessage());
-			return false;
-		}
+		return closeQuietly(new DefaultCloseableAdapter(closeable));
 	}
 
 	/**
@@ -102,15 +93,18 @@ public final class Io {
 	 * @return {@code true} if close operation did not throw any SQL exception, {@code false} otherwise.
 	 */
 	public static boolean closeQuietly(Connection connection) {
-		try {
-			connection.close();
-			return true;
-		}
-		catch (SQLException ex) {
-			// No Worries.
-			log.warn(ex.getMessage());
-			return false;
-		}
+		return closeQuietly(new ConnectionCloseableAdapter(connection));
+	}
+
+	/**
+	 * Close {@link JarFile} instance.
+	 * With JDK6, {@link JarFile} does not implement {@link Closeable}, that's why this method exist.
+	 *
+	 * @param jarFile JAR File to close.
+	 * @return {@code true} if close operation succeed, {@code false} otherwise.
+	 */
+	public static boolean closeQuietly(JarFile jarFile) {
+		return closeQuietly(new JarFileCloseableAdapter(jarFile));
 	}
 
 	/**
@@ -120,6 +114,73 @@ public final class Io {
 	 * @return {@code true} if {@code closeable} succeed to close, {@code false} otherwise.
 	 */
 	public static boolean closeSafely(Closeable closeable) {
+		return closeSafely(new DefaultCloseableAdapter(closeable));
+	}
+
+	/**
+	 * Close {@link JarFile} instance, do nothing if {@code jarFile} is {@code null}.
+	 *
+	 * @param jarFile The {@link JarFile} instance.
+	 * @return {@code true} if {@code jarFile} succeed to close, {@code false} otherwise.
+	 */
+	public static boolean closeSafely(JarFile jarFile) {
+		return closeSafely(new JarFileCloseableAdapter(jarFile));
+	}
+
+	private static boolean closeQuietly(CloseableAdapter closeable) {
+		try {
+			closeable.close();
+			return true;
+		} catch (Exception ex) {
+			log.warn(ex.getMessage());
+			return false;
+		}
+	}
+
+	private static boolean closeSafely(CloseableAdapter closeable) {
 		return closeable == null || closeQuietly(closeable);
+	}
+
+	private interface CloseableAdapter {
+		void close() throws Exception;
+	}
+
+	private static class DefaultCloseableAdapter implements CloseableAdapter {
+		private final Closeable closeable;
+
+		private DefaultCloseableAdapter(Closeable closeable) {
+			this.closeable = closeable;
+		}
+
+		@Override
+		public void close() throws Exception {
+			closeable.close();
+		}
+	}
+
+	private static class ConnectionCloseableAdapter implements CloseableAdapter {
+		private final Connection connection;
+
+		private ConnectionCloseableAdapter(Connection connection) {
+			this.connection = connection;
+		}
+
+		@Override
+		public void close() throws Exception {
+			connection.close();
+		}
+	}
+
+	private static class JarFileCloseableAdapter implements CloseableAdapter {
+		private final JarFile jarFile;
+
+		private JarFileCloseableAdapter(JarFile jarFile) {
+			this.jarFile = jarFile;
+		}
+
+		@Override
+		public void close() throws Exception {
+			jarFile.close();
+		}
 	}
 }

@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.jar.JarFile;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -116,5 +117,24 @@ public class IoTest {
 
 		assertThat(closed).isFalse();
 		verify(connection).close();
+	}
+
+	@Test
+	public void it_should_close_jar_file() throws Exception {
+		JarFile jarFile = mock(JarFile.class);
+		boolean closed = Io.closeQuietly(jarFile);
+		assertThat(closed).isTrue();
+		verify(jarFile).close();
+	}
+
+	@Test
+	public void it_should_return_false_if_close_jar_file_fails() throws Exception {
+		JarFile jarFile = mock(JarFile.class);
+		doThrow(IOException.class).when(jarFile).close();
+
+		boolean closed = Io.closeQuietly(jarFile);
+
+		assertThat(closed).isFalse();
+		verify(jarFile).close();
 	}
 }
