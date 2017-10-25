@@ -64,7 +64,7 @@
 
 		<!-- Test Dependencies -->
 		<assertj.version>1.7.1</assertj.version>
-		<mockito.version>1.10.19</mockito.version>
+		<mockito.version>2.11.0</mockito.version>
 		<logback.version>1.2.3</logback.version>
 		<wiremock.version>1.58</wiremock.version>
 	</properties>

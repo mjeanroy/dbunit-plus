@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.sql;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -37,11 +37,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
+
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 
 public class SqlScriptParserTest {
 

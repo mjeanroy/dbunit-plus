@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.rules.ExpectedException.none;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,10 +35,6 @@ import static org.mockito.Mockito.when;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
-import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -46,6 +42,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 
 public class SqlScriptFunctionTest {
 
