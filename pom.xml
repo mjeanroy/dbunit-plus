@@ -78,6 +78,8 @@
 				<jdk>1.6</jdk>
 			</activation>
 			<properties>
+				<hsqldb.version>2.3.5</hsqldb.version>
+				<spring.version>4.3.12.RELEASE</spring.version>
 				<jackson.version>2.3.5</jackson.version>
 			</properties>
 		</profile>
