@@ -24,10 +24,25 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
+import com.github.mjeanroy.dbunit.exception.ClassInstantiationException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.instantiationException;
+import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.missingDefaultConstructor;
+
 /**
  * Static Class Utilities.
  */
 public final class ClassUtils {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger log = Loggers.getLogger(ClassUtils.class);
 
 	// Ensure non instantiation.
 	private ClassUtils() {
@@ -47,5 +62,63 @@ public final class ClassUtils {
 		catch (ClassNotFoundException ex) {
 			return false;
 		}
+	}
+
+	/**
+	 * Create new instance of given class using default empty constructor.
+	 *
+	 * @param klass The class.
+	 * @param <T> Instance type.
+	 * @return The new instance.
+	 * @throws ClassInstantiationException If an error occurred while instantiating class.
+	 */
+	public static <T> T instantiate(Class<T> klass) {
+		Constructor<T> ctor = findConstructor(klass);
+
+		boolean wasAccessible = true;
+		if (!ctor.isAccessible()) {
+			log.warn("Empty constructor of class {} should be public", klass);
+			ctor.setAccessible(true);
+			wasAccessible = false;
+		}
+
+		try {
+			return ctor.newInstance();
+		}
+		catch (InstantiationException ex) {
+			throw instantiationException(klass, ex);
+		}
+		catch (IllegalAccessException ex) {
+			throw instantiationException(klass, ex);
+		}
+		catch (InvocationTargetException ex) {
+			throw instantiationException(klass, ex);
+		}
+		finally {
+			if (!wasAccessible) {
+				ctor.setAccessible(false);
+			}
+		}
+	}
+
+	/**
+	 * Find empty public constructor of given class.
+	 *
+	 * @param klass The class.
+	 * @param <T> Class type.
+	 * @return The constructor method.
+	 * @throws ClassInstantiationException If the empty constructor does not exist.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T> Constructor<T> findConstructor(Class<T> klass) {
+		Constructor<T>[] ctors = (Constructor<T>[]) klass.getDeclaredConstructors();
+
+		for (Constructor<T> ctor : ctors) {
+			if (ctor.getParameterTypes().length == 0) {
+				return ctor;
+			}
+		}
+
+		throw missingDefaultConstructor(klass);
 	}
 }

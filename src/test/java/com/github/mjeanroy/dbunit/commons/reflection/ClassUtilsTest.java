@@ -24,15 +24,50 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
+import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass0;
+import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass1;
+import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass2;
+import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass3;
+import com.github.mjeanroy.dbunit.exception.ClassInstantiationException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
-
 public class ClassUtilsTest {
+
+	@Rule
+	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void it_should_check_if_class_is_available() {
 		assertThat(ClassUtils.isPresent("com.github.mjeanroy.dbunit.commons.reflection.ClassUtilsTest")).isTrue();
 		assertThat(ClassUtils.isPresent("com.foo.Bar")).isFalse();
+	}
+
+	@Test
+	public void it_should_instantiate_class() {
+		Klass1 o = ClassUtils.instantiate(Klass1.class);
+		assertThat(o).isNotNull();
+	}
+
+	@Test
+	public void it_should_instantiate_class_with_default_constructor() {
+		Klass0 o = ClassUtils.instantiate(Klass0.class);
+		assertThat(o).isNotNull();
+	}
+
+	@Test
+	public void it_should_instantiate_class_with_private_default_constructor() {
+		Klass3 o = ClassUtils.instantiate(Klass3.class);
+		assertThat(o).isNotNull();
+	}
+
+	@Test
+	public void it_should_fail_to_instantiate_class_without_empty_constructor() {
+		thrown.expect(ClassInstantiationException.class);
+		thrown.expectMessage("Cannot instantiate class com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass2 because it does not have empty public constructor");
+		ClassUtils.instantiate(Klass2.class);
 	}
 }
