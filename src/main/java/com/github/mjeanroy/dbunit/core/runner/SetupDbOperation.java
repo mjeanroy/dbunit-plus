@@ -28,10 +28,11 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnno
 
 import java.lang.reflect.Method;
 
+import org.dbunit.IDatabaseTester;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
-import org.dbunit.IDatabaseTester;
 
 /**
  * Apply setup operations to the test database.
@@ -67,14 +68,14 @@ class SetupDbOperation implements DbOperation {
 		DbUnitSetup annotation = findAnnotation(testClass, method, DbUnitSetup.class);
 
 		if (annotation != null) {
-			log.debug(" 3- Initialize setup operation");
+			log.debug("    - Initialize setup operation");
 			dbTester.setSetUpOperation(annotation.value().getOperation());
 		}
 		else {
-			log.trace(" 3- No setup operation defined, use default");
+			log.trace("    - No setup operation defined, use default");
 		}
 
-		log.trace(" 4- Trigger setup operations");
+		log.trace("    - Trigger setup operations");
 		dbTester.onSetup();
 	}
 }

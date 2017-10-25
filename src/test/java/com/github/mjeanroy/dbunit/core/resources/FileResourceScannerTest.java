@@ -29,11 +29,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Collection;
 
-import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 
 public class FileResourceScannerTest extends AbstractResourceScannerTest {
 
@@ -97,7 +98,13 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 						return resource.getFilename();
 					}
 				})
-				.containsOnly("xml", "json", "csv", "replacements");
+				.containsOnly(
+						"xml",
+						"json",
+						"csv",
+						"replacements",
+						"qualified-table-names"
+				);
 	}
 
 	@Override

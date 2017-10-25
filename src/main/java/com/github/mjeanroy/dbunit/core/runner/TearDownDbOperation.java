@@ -28,10 +28,11 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnno
 
 import java.lang.reflect.Method;
 
+import org.dbunit.IDatabaseTester;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
-import org.dbunit.IDatabaseTester;
 
 /**
  * Apply tear down operations to the test database.
@@ -66,14 +67,14 @@ class TearDownDbOperation implements DbOperation {
 	public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
 		DbUnitTearDown op = findAnnotation(testClass, method, DbUnitTearDown.class);
 		if (op != null) {
-			log.trace(" 3- Initialize tear down operation");
+			log.trace("    - Initialize tear down operation");
 			dbTester.setTearDownOperation(op.value().getOperation());
 		}
 		else {
-			log.trace(" 3- No tear down operation defined, use default");
+			log.trace("    - No tear down operation defined, use default");
 		}
 
-		log.trace(" 4- Trigger tearDown operation");
+		log.trace("    - Trigger tearDown operation");
 		dbTester.onTearDown();
 	}
 }

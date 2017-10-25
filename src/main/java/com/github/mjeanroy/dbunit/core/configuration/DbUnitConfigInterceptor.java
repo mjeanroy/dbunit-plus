@@ -22,34 +22,23 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.configuration;
+
+import org.dbunit.database.DatabaseConfig;
 
 /**
- * DbUnit exception.
+ * An interceptor that can be used to apply some custom DbUnit configuration on a {@link DatabaseConfig} instance.
+ * This can be used, for instance, to enable {@link DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES}.
  *
- * <br>
- *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
+ * Note that the instance will be created using reflection, therefore implementations must define a public
+ * empty constructor.
  */
-@SuppressWarnings("serial")
-public class DbUnitException extends AbstractDbUnitException {
+public interface DbUnitConfigInterceptor {
 
 	/**
-	 * Create exception.
+	 * Apply customization on the database configuration instance.
 	 *
-	 * @param message Error message.
+	 * @param config The database configuration instance.
 	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link Exception}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(Exception ex) {
-		super(ex);
-	}
+	void applyConfiguration(DatabaseConfig config);
 }

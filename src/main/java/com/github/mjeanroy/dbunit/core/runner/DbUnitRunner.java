@@ -34,13 +34,24 @@ import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataS
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
 import static java.util.Arrays.asList;
 
-import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.sql.DataSource;
+
+import org.dbunit.DefaultDatabaseTester;
+import org.dbunit.IDatabaseTester;
+import org.dbunit.database.DatabaseConnection;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.ReplacementDataSet;
+
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
@@ -52,13 +63,6 @@ import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
-import org.dbunit.DefaultDatabaseTester;
-import org.dbunit.IDatabaseTester;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.ReplacementDataSet;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.
@@ -164,12 +168,20 @@ public class DbUnitRunner {
 		try {
 			log.trace(" 1- Get SQL connection");
 			dbConnection = new DatabaseConnection(connection);
+
+			log.trace(" 2- Try to apply DbUnit connection configuration");
+			DbUnitConfigInterceptor interceptor = readConfig(testMethod);
+			if (interceptor != null) {
+				interceptor.applyConfiguration(dbConnection.getConfig());
+			}
+
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
-			log.trace(" 2- Load data set");
+			log.trace(" 3- Load data set");
 			dbTester.setDataSet(runReplacements(testClass, dataSet));
 
 			// Apply operation (setup or tear down).
+			log.trace(" 4- Apply database operation");
 			op.apply(testClass, testMethod, dbTester);
 
 			log.trace(" 5- Closing SQL connection");
@@ -208,6 +220,31 @@ public class DbUnitRunner {
 
 		log.warn("Cannot find @DbUnitDataSet annotation, skip.");
 		return null;
+	}
+
+	/**
+	 * Read DbUnit configuration interceptor, returns {@code null} if no configuration is set.
+	 *
+	 * @return The interceptor, {@code null} if it is not configured.
+	 * @throws DbUnitException If instantiating the interceptor failed.
+	 */
+	private DbUnitConfigInterceptor readConfig(Method method) {
+		DbUnitConfig annotation = findAnnotation(testClass, method, DbUnitConfig.class);
+		if (annotation == null) {
+			return null;
+		}
+
+		Class<? extends DbUnitConfigInterceptor> interceptor = annotation.value();
+
+		try {
+			return interceptor.newInstance();
+		} catch (IllegalAccessException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		} catch (InstantiationException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
 	}
 
 	/**

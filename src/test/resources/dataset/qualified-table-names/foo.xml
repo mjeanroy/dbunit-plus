@@ -1,0 +1,4 @@
+<dataset>
+	<PUBLIC.foo id="1" name="John Doe" />
+	<PUBLIC.foo id="2" name="Jane Doe" />
+</dataset>

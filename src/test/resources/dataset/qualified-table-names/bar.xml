@@ -1,0 +1,5 @@
+<dataset>
+	<PUBLIC.bar id="1" title="Lord Of The Rings" />
+	<PUBLIC.bar id="2" title="Star Wars" />
+	<PUBLIC.bar id="3" title="Back To The Future" />
+</dataset>

@@ -29,17 +29,20 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-import javax.sql.DataSource;
 import java.lang.reflect.Method;
+
+import javax.sql.DataSource;
+
+import org.dbunit.dataset.IDataSet;
+import org.junit.ClassRule;
+import org.junit.Test;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithCustomConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
-import org.dbunit.dataset.IDataSet;
-import org.junit.ClassRule;
-import org.junit.Test;
 
 public class DbUnitRunnerTest {
 
@@ -171,5 +174,41 @@ public class DbUnitRunnerTest {
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+	}
+
+	@Test
+	public void it_should_load_dataset_with_custom_config() throws Exception {
+		Class<TestClassWithCustomConfiguration> klass = TestClassWithCustomConfiguration.class;
+		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+
+		Method testMethod = klass.getMethod("method1");
+
+		// Setup Operation
+		runner.beforeTest(testMethod);
+
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+
+		// Tear Down Operation
+		runner.afterTest(testMethod);
+
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+	}
+
+	@Test
+	public void it_should_load_dataset_with_custom_config_per_method() throws Exception {
+		Class<TestClassWithCustomConfiguration> klass = TestClassWithCustomConfiguration.class;
+		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+
+		Method testMethod = klass.getMethod("method2");
+
+		// Setup Operation
+		runner.beforeTest(testMethod);
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+
+		// Tear Down Operation
+		runner.afterTest(testMethod);
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 	}
 }

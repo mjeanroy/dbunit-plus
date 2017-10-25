@@ -22,34 +22,16 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.it.configuration;
 
-/**
- * DbUnit exception.
- *
- * <br>
- *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
- */
-@SuppressWarnings("serial")
-public class DbUnitException extends AbstractDbUnitException {
+import org.dbunit.database.DatabaseConfig;
 
-	/**
-	 * Create exception.
-	 *
-	 * @param message Error message.
-	 */
-	public DbUnitException(String message) {
-		super(message);
-	}
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 
-	/**
-	 * Wrap {@link Exception}.
-	 *
-	 * @param ex Original Exception.
-	 */
-	public DbUnitException(Exception ex) {
-		super(ex);
+public class QualifiedTableNameConfiguration implements DbUnitConfigInterceptor {
+
+	@Override
+	public void applyConfiguration(DatabaseConfig config) {
+		config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
 	}
 }
