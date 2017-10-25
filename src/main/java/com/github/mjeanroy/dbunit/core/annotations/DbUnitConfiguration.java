@@ -30,6 +30,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Set the DBUnit connection configuration.
+ *
+ * This annotation is deprecated, use {@link DbUnitConnection} instead.
+ */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Target({

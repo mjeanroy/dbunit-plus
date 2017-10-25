@@ -28,13 +28,13 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
 
 @RunWith(DbUnitJunitRunner.class)
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 @Ignore("This is a test fixtures")
-public class TestClassWithRunner {
+public class TestClassWithDeprecatedDbUnitConfiguration {
 
 	@Test
 	public void test1() {

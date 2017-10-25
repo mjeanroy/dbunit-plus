@@ -22,22 +22,43 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.fixtures;
+package com.github.mjeanroy.dbunit.core.annotations;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+/**
+ * Set the DBUnit connection configuration.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target({
+	ElementType.TYPE,
+	ElementType.PACKAGE
+})
+public @interface DbUnitConnection {
 
-@RunWith(DbUnitJunitRunner.class)
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-@Ignore("This is a test fixtures")
-public class TestClassWithRunner {
+	/**
+	 * Get JDBC Connection URL.
+	 *
+	 * @return Connection URL.
+	 */
+	String url();
 
-	@Test
-	public void test1() {
-	}
+	/**
+	 * Get JDBC user name.
+	 *
+	 * @return User.
+	 */
+	String user();
 
+	/**
+	 * Get JDBC password.
+	 *
+	 * @return Password.
+	 */
+	String password();
 }

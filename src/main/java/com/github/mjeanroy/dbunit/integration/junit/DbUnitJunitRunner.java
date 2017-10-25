@@ -29,13 +29,18 @@ import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConf
 
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
-import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import org.junit.rules.TestRule;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
+
+import com.github.mjeanroy.dbunit.commons.io.Io;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Implementation of JUnit {@link org.junit.runner.Runner} to fill and clear
@@ -48,12 +53,12 @@ import org.junit.runners.model.InitializationError;
  *
  * <br>
  *
- * DbUnit configuration should be set using {@link DbUnitConfiguration} configuration:
+ * DbUnit configuration should be set using {@link DbUnitConnection} configuration:
  *
  * <pre><code>
  *
  *   &#64;RunWith(DbUnitJunitRunner.class)
- *   &#64;DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+ *   &#64;DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
  *   &#64;bUnitDataSet("classpath:/dataset/xml")
  *   public MyDaoTest {
  *     &#64;Test
@@ -65,6 +70,11 @@ import org.junit.runners.model.InitializationError;
  * </code></pre>
  */
 public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
+
+	/**
+	 * Class Logger.
+	 */
+	private static final Logger log = Loggers.getLogger(Io.class);
 
 	/**
 	 * DbUnit connection factory.
@@ -88,12 +98,31 @@ public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
 	 * @return JDBC Connection Factory.
 	 */
 	private JdbcConnectionFactory findConnectionFactory() {
-		DbUnitConfiguration annotation = findAnnotation(getTestClass().getJavaClass(), null, DbUnitConfiguration.class);
-		if (annotation == null) {
-			throw new DbUnitException("Cannot find database configuration, please annotate your class with @DbUnitConfiguration");
+		DbUnitConfiguration a1 = findAnnotation(getTestClass().getJavaClass(), null, DbUnitConfiguration.class);
+		DbUnitConnection a2 = findAnnotation(getTestClass().getJavaClass(), null, DbUnitConnection.class);
+		if (a2 == null && a1 == null) {
+			throw new DbUnitException("Cannot find database configuration, please annotate your class with @DbUnitConnection");
 		}
 
-		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(annotation.url(), annotation.user(), annotation.password()));
+		if (a1 != null) {
+			log.warn("@DbUnitConfiguration annotation is deprecated and will be removed in a next release, please use @DbUnitConnection instead");
+		}
+
+		final String url;
+		final String user;
+		final String password;
+
+		if (a2 != null) {
+			url = a2.url();
+			user = a2.user();
+			password = a2.password();
+		} else {
+			url = a1.url();
+			user = a1.user();
+			password = a1.password();
+		}
+
+		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
 	}
 
 	@Override
