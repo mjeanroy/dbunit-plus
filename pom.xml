@@ -55,6 +55,7 @@
 		<maven.compiler.testSource>${java.test.version}</maven.compiler.testSource>
 
 		<!-- Plugins -->
+		<maven-clean-plugin.version>3.0.0</maven-clean-plugin.version>
 		<maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
 		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
 		<maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
@@ -270,6 +271,12 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>${maven-clean-plugin.version}</version>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
