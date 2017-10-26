@@ -38,7 +38,8 @@ public class ResourceException extends AbstractDbUnitException {
 	/**
 	 * Create exception with error message.
 	 *
-	 * @param message The path of the resource that cannot be loaded.
+	 * @param path The path of the resource that cannot be loaded.
+	 * @param message Error message.
 	 */
 	ResourceException(String path, String message) {
 		super(message);
@@ -48,6 +49,7 @@ public class ResourceException extends AbstractDbUnitException {
 	/**
 	 * Create exception with original cause.
 	 *
+	 * @param path The path of the resource that cannot be loaded.
 	 * @param cause The original cause.
 	 */
 	public ResourceException(String path, Exception cause) {

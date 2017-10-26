@@ -34,9 +34,12 @@ public final class Exceptions {
 	}
 
 	/**
-	 * Coerce an unchecked Throwable to a RuntimeException
-	 * If the Throwable is an Error, throw it; if it is a
-	 * RuntimeException return it, otherwise throw IllegalStateException
+	 * Coerce an unchecked Throwable to a {@link RuntimeException}
+	 * If the Throwable is an {@link Error}, throw it; if it is a
+	 * {@link RuntimeException} return it, otherwise throw {@link IllegalStateException}.
+	 *
+	 * @param t THe original exception.
+	 * @return The wrapped exception.
 	 */
 	public static RuntimeException launderThrowable(Throwable t) {
 		if (t instanceof RuntimeException) {

@@ -42,6 +42,8 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
  * Abstract implementation of {@link JsonParser} that create {@link Reader} from
  * given {@link Resource} and execute {@link #doParse(Reader)}.
  *
+ * <p>
+ *
  * Note that exceptions thrown from {@link #doParse(Reader)} method will automatically
  * be wrapped into {@link JsonException}.
  */
@@ -75,10 +77,11 @@ public abstract class AbstractJsonParser implements JsonParser {
 
 	/**
 	 * Parse given {@link Reader}:
-	 * <ul>
-	 *   <ol>Read JSON input.</ol>
-	 *   <ol>Create dataset model from it.</ol>
-	 * </ul>
+	 *
+	 * <ol>
+	 *   <li>Read JSON input.</li>
+	 *   <li>Create dataset model from it.</li>
+	 * </ol>
 	 *
 	 * @param reader The reader.
 	 * @return The dataset input.
