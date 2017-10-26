@@ -24,11 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
@@ -36,6 +31,11 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DirectoryDataSetTest {
 
@@ -238,5 +238,17 @@ public class DirectoryDataSetTest {
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();
+	}
+
+	@Test
+	public void it_should_implement_to_string() throws Exception {
+		Resource resource = new ResourceMockBuilder()
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.build();
+
+		DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
+
+		assertThat(ds.toString()).isEqualTo(String.format("DirectoryDataSet{resource: %s}", resource.toString()));
 	}
 }

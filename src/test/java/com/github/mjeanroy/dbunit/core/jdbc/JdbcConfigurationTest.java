@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import org.junit.Test;
+
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.Test;
 
 public class JdbcConfigurationTest {
 
@@ -54,7 +54,13 @@ public class JdbcConfigurationTest {
 		JdbcConfiguration configuration = newJdbcConfiguration(url, user, password);
 
 		assertThat(configuration.toString())
-			.isEqualTo("JDBC{url=jdbc:hsqldb:mem:database/testdb, user=SA, password=}");
+			.isEqualTo(
+				"JdbcConfiguration{" +
+					"url: \"jdbc:hsqldb:mem:database/testdb\", " +
+					"user: \"SA\", " +
+					"password: \"\"" +
+				"}"
+			);
 	}
 
 	@Test

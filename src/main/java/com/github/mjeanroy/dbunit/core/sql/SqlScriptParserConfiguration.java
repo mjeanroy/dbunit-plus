@@ -24,9 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-
 import com.github.mjeanroy.dbunit.commons.lang.Objects;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 
 /**
  * Configuration for SQL script parser.
@@ -181,16 +182,12 @@ public class SqlScriptParserConfiguration {
 
 	@Override
 	public String toString() {
-		return String.format(
-			"SqlScriptParserConfiguration{" +
-				"delimiter=%s, " +
-				"lineComment=%s, " +
-				"startBlockComment=%s, " +
-				"endBlockComment=%s" +
-				"}",
-
-			delimiter, lineComment, startBlockComment, endBlockComment
-		);
+		return ToStringBuilder.create(getClass())
+			.append("delimiter", delimiter)
+			.append("lineComment", lineComment)
+			.append("startBlockComment", startBlockComment)
+			.append("endBlockComment", endBlockComment)
+			.build();
 	}
 
 	/**

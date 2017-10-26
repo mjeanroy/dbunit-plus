@@ -24,13 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.commons.io.Files.extractExtension;
-import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
-import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.jarScanner;
-import static com.github.mjeanroy.dbunit.core.resources.Resources.isJarURL;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,9 +35,13 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractExtension;
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
+import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.jarScanner;
+import static com.github.mjeanroy.dbunit.core.resources.Resources.isJarURL;
 
 /**
  * Implementation of {@link Resource} backed by a resource available in the classpath.
@@ -134,6 +135,8 @@ class ClasspathResource extends AbstractResource implements Resource {
 
 	@Override
 	public String toString() {
-		return String.format("ClasspathResource{url: %s}", url);
+		return ToStringBuilder.create(getClass())
+			.append("url", url)
+			.build();
 	}
 }

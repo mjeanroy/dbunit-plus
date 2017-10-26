@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SqlScriptParserConfigurationTest {
 
@@ -99,6 +99,13 @@ public class SqlScriptParserConfigurationTest {
 	@Test
 	public void it_should_implement_to_string() {
 		SqlScriptParserConfiguration c1 = SqlScriptParserConfiguration.builder().build();
-		assertThat(c1.toString()).isEqualTo("SqlScriptParserConfiguration{delimiter=;, lineComment=--, startBlockComment=/*, endBlockComment=*/}");
+		assertThat(c1.toString()).isEqualTo(
+			"SqlScriptParserConfiguration{" +
+				"delimiter: ';', " +
+				"lineComment: \"--\", " +
+				"startBlockComment: \"/*\", " +
+				"endBlockComment: \"*/\"" +
+			"}"
+		);
 	}
 }

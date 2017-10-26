@@ -24,11 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.commons.lang.Objects;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.startsWith;
-
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 
 /**
  * JDBC Configuration, defined by:
@@ -135,6 +136,10 @@ public class JdbcConfiguration {
 
 	@Override
 	public String toString() {
-		return String.format("JDBC{url=%s, user=%s, password=%s}", url, user, password);
+		return ToStringBuilder.create(getClass())
+			.append("url", url)
+			.append("user", user)
+			.append("password", password)
+			.build();
 	}
 }

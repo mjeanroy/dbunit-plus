@@ -24,22 +24,22 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Condition;
+import org.assertj.core.api.iterable.Extractor;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Collection;
 
-import org.assertj.core.api.Condition;
-import org.assertj.core.api.iterable.Extractor;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileResourceTest {
 
@@ -207,6 +207,6 @@ public class FileResourceTest {
 		File f1 = getTestResource("/dataset/xml/foo.xml");
 		FileResource r1 = new FileResource(f1);
 
-		assertThat(r1.toString()).isEqualTo(String.format("FileResource{file: %s}", f1));
+		assertThat(r1.toString()).isEqualTo(String.format("FileResource{file: %s}", f1.toString()));
 	}
 }

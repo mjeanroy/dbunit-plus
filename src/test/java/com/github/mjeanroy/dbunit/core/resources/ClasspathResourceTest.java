@@ -24,20 +24,20 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
+
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClasspathResourceTest {
 
@@ -227,7 +227,7 @@ public class ClasspathResourceTest {
 		URL url = url(path);
 		ClasspathResource r1 = new ClasspathResource(url);
 
-		assertThat(r1.toString()).isEqualTo(String.format("ClasspathResource{url: %s}", url));
+		assertThat(r1.toString()).isEqualTo(String.format("ClasspathResource{url: %s}", url.toString()));
 	}
 
 	private URL url(String path) {

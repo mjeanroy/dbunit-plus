@@ -24,13 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.fileScanner;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.fileScanner;
 
 /**
  * Implementation of {@link Resource} backed by a given {@link File} handler.
@@ -104,6 +106,8 @@ class FileResource extends AbstractResource implements Resource {
 
 	@Override
 	public String toString() {
-		return String.format("FileResource{file: %s}", file);
+		return ToStringBuilder.create(getClass())
+			.append("file", file)
+			.build();
 	}
 }

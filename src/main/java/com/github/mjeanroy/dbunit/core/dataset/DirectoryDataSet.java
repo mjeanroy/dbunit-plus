@@ -24,16 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
-import static java.util.Collections.sort;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
@@ -41,6 +32,16 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
+import static java.util.Collections.sort;
 
 /**
  * Directory dataSet.
@@ -134,6 +135,8 @@ public class DirectoryDataSet implements IDataSet {
 
 	@Override
 	public String toString() {
-		return String.format("%s{resource=%s}", getClass().getSimpleName(), resource);
+		return ToStringBuilder.create(getClass())
+			.append("resource", resource)
+			.build();
 	}
 }

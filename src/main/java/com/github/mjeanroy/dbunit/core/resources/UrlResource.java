@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.noOpScanner;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +35,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.noOpScanner;
 
 /**
  * Implementation of {@link Resource} backed by {@link URL} instance.
@@ -140,6 +141,8 @@ class UrlResource extends AbstractResource implements Resource {
 
 	@Override
 	public String toString() {
-		return String.format("UrlResource{url: %s}", url);
+		return ToStringBuilder.create(getClass())
+			.append("url", url)
+			.build();
 	}
 }
