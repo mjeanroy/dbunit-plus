@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,37 +65,9 @@ public class SqlScriptParserConfigurationTest {
 
 	@Test
 	public void it_should_implement_equals() {
-		SqlScriptParserConfiguration c1 = SqlScriptParserConfiguration.builder().build();
-		SqlScriptParserConfiguration c2 = SqlScriptParserConfiguration.builder().build();
-		SqlScriptParserConfiguration c3 = SqlScriptParserConfiguration.builder().build();
-		SqlScriptParserConfiguration c4 = SqlScriptParserConfiguration.builder()
-			.setLineComment("//")
-			.build();
-
-		assertThat(c1.equals(c2)).isTrue();
-		assertThat(c1.equals(c4)).isFalse();
-		assertThat(c4.equals(c1)).isFalse();
-
-		// Reflective
-		assertThat(c1).isEqualTo(c1);
-
-		// Symmetric
-		assertThat(c1.equals(c2)).isTrue();
-		assertThat(c2.equals(c1)).isTrue();
-
-		// Transitive
-		assertThat(c1.equals(c2)).isTrue();
-		assertThat(c2.equals(c3)).isTrue();
-		assertThat(c1.equals(c3)).isTrue();
-	}
-
-	@Test
-	public void it_should_implement_hash_code() {
-		SqlScriptParserConfiguration c1 = SqlScriptParserConfiguration.builder().build();
-		SqlScriptParserConfiguration c2 = SqlScriptParserConfiguration.builder().build();
-
-		assertThat(c1.equals(c2)).isTrue();
-		assertThat(c1.hashCode()).isEqualTo(c2.hashCode());
+		EqualsVerifier.forClass(SqlScriptParserConfiguration.class)
+			.suppress(Warning.STRICT_INHERITANCE)
+			.verify();
 	}
 
 	@Test

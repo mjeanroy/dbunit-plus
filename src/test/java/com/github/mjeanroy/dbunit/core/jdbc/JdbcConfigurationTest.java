@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
@@ -65,31 +67,8 @@ public class JdbcConfigurationTest {
 
 	@Test
 	public void it_should_implement_equals() {
-		JdbcConfiguration c1 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
-		JdbcConfiguration c2 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
-		JdbcConfiguration c3 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
-		JdbcConfiguration c4 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "root", "");
-
-		assertThat(c1.equals(c4)).isFalse();
-		assertThat(c1.equals(c2)).isTrue();
-
-		// Reflective
-		assertThat(c1).isEqualTo(c1);
-
-		// Symmetric
-		assertThat(c1.equals(c2)).isTrue();
-		assertThat(c2.equals(c1)).isTrue();
-
-		// Transitive
-		assertThat(c1.equals(c2)).isTrue();
-		assertThat(c2.equals(c3)).isTrue();
-		assertThat(c1.equals(c3)).isTrue();
-	}
-
-	@Test
-	public void it_should_implement_hash_code() {
-		JdbcConfiguration c1 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
-		JdbcConfiguration c2 = newJdbcConfiguration("jdbc:hsqldb:mem:database/testdb", "SA", "");
-		assertThat(c1.hashCode()).isEqualTo(c2.hashCode());
+		EqualsVerifier.forClass(JdbcConfiguration.class)
+			.suppress(Warning.STRICT_INHERITANCE)
+			.verify();
 	}
 }

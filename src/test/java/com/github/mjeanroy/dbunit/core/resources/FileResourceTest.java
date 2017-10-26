@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.assertj.core.api.Condition;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Rule;
@@ -163,43 +165,11 @@ public class FileResourceTest {
 
 	@Test
 	public void it_should_implement_equals() {
-		File f1 = getTestResource("/dataset/xml/foo.xml");
-		File f2 = getTestResource("/dataset/xml/foo.xml");
-		File f3 = getTestResource("/dataset/xml/foo.xml");
-		File f4 = getTestResource("/dataset/xml/bar.xml");
-
-		FileResource r1 = new FileResource(f1);
-		FileResource r2 = new FileResource(f2);
-		FileResource r3 = new FileResource(f3);
-		FileResource r4 = new FileResource(f4);
-
-		// Basic comparison
-		assertThat(r1).isEqualTo(r2);
-		assertThat(r1).isNotEqualTo(r4);
-		assertThat(r1).isNotEqualTo(null);
-
-		// Reflective
-		assertThat(r1).isEqualTo(r1);
-
-		// Symmetric
-		assertThat(r1).isEqualTo(r2);
-		assertThat(r2).isEqualTo(r2);
-
-		// Transitive
-		assertThat(r1).isEqualTo(r2);
-		assertThat(r2).isEqualTo(r3);
-		assertThat(r1).isEqualTo(r3);
-	}
-
-	@Test
-	public void it_should_implement_hash_code() {
-		File f1 = getTestResource("/dataset/xml/foo.xml");
-		File f2 = getTestResource("/dataset/xml/foo.xml");
-
-		FileResource r1 = new FileResource(f1);
-		FileResource r2 = new FileResource(f2);
-
-		assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+		EqualsVerifier.forClass(FileResource.class)
+			.withNonnullFields("file")
+			.withIgnoredFields("scanner")
+			.suppress(Warning.STRICT_INHERITANCE)
+			.verify();
 	}
 
 	@Test

@@ -86,6 +86,7 @@
 		<mockito.version>2.11.0</mockito.version>
 		<logback.version>1.2.3</logback.version>
 		<wiremock.version>1.58</wiremock.version>
+		<equalsverifier.version>2.3.3</equalsverifier.version>
 	</properties>
 
 	<profiles>
@@ -270,6 +271,12 @@
 			<groupId>com.github.mjeanroy</groupId>
 			<artifactId>dbunit-dataset</artifactId>
 			<version>0.1.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>nl.jqno.equalsverifier</groupId>
+			<artifactId>equalsverifier</artifactId>
+			<version>${equalsverifier.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
