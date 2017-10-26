@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>5</version>
-	</parent>
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.mjeanroy</groupId>
 	<artifactId>dbunit-plus</artifactId>
 	<version>0.1.4-SNAPSHOT</version>
+	<description>DbUnit extension (provide simple integration with JUnit, Spring and Liquibase).</description>
 	<packaging>jar</packaging>
 	<url>https://github.com/mjeanroy/dbunit-plus</url>
 
@@ -36,6 +31,19 @@
 		<url>https://github.com/mjeanroy/dbunit-plus</url>
 	</scm>
 
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</distributionManagement>
+
 	<properties>
 		<!-- Settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -49,6 +57,10 @@
 		<!-- Plugins -->
 		<maven-surefire-plugin.version>2.19</maven-surefire-plugin.version>
 		<maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
 		<versions-maven-plugin.version>2.3</versions-maven-plugin.version>
 
 		<!-- Runtime Dependencies -->
@@ -69,9 +81,9 @@
 		<wiremock.version>1.58</wiremock.version>
 	</properties>
 
-	<!-- Use some old version for dependencies to ensure jdk7 compatibility on travis -->
-	<!-- This is not perfect, but it allows tests with latest dependency versions (as long as the public API does not change) -->
 	<profiles>
+		<!-- Use some old version for dependencies to ensure jdk7 compatibility on travis -->
+		<!-- This is not perfect, but it allows tests with latest dependency versions (as long as the public API does not change) -->
 		<profile>
 			<id>jdk6</id>
 			<activation>
@@ -92,6 +104,57 @@
 				<hsqldb.version>2.3.5</hsqldb.version>
 				<spring.version>4.3.12.RELEASE</spring.version>
 			</properties>
+		</profile>
+
+		<!-- Profile activated with mvn release tasks -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven-gpg-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>${maven-source-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>${maven-javadoc-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 	</profiles>
 
@@ -222,6 +285,33 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>versions-maven-plugin</artifactId>
 				<version>${versions-maven-plugin.version}</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>${maven-gpg-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>${maven-release-plugin.version}</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<mavenExecutorId>forked-path</mavenExecutorId>
+					<useReleaseProfile>false</useReleaseProfile>
+					<arguments>-Prelease</arguments>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
