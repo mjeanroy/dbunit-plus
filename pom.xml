@@ -66,6 +66,7 @@
 		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
 		<maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
 		<versions-maven-plugin.version>2.4</versions-maven-plugin.version>
 
 		<!-- Runtime Dependencies -->
@@ -298,6 +299,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>${maven-resources-plugin.version}</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>${maven-deploy-plugin.version}</version>
 			</plugin>
 
 			<plugin>
