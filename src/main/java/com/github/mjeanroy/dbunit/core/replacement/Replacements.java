@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-import static java.util.Collections.unmodifiableMap;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * Replacement Objects.
@@ -79,7 +79,7 @@ public class Replacements {
 
 		// Ensure non public instantiation.
 		private Builder() {
-			this.replacements = new LinkedHashMap<String, Object>();
+			this.replacements = new LinkedHashMap<>();
 		}
 
 		/**
@@ -102,7 +102,7 @@ public class Replacements {
 		 * @return Replacements.
 		 */
 		public Replacements build() {
-			return new Replacements(new LinkedHashMap<String, Object>(replacements));
+			return new Replacements(new LinkedHashMap<>(replacements));
 		}
 	}
 }

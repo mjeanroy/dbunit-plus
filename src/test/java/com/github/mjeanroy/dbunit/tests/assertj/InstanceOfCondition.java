@@ -42,7 +42,7 @@ public class InstanceOfCondition<T> extends Condition<T> {
 	 * @return The condition.
 	 */
 	public static <T> InstanceOfCondition<T> isInstanceOf(Class<?> klass) {
-		return new InstanceOfCondition<T>(klass);
+		return new InstanceOfCondition<>(klass);
 	}
 
 	/**

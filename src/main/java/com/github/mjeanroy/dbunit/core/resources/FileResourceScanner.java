@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static java.util.Collections.emptyList;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static java.util.Collections.emptyList;
 
 /**
  * Implementation of {@link ResourceScanner} scanning a file directory to get the list
@@ -83,7 +83,7 @@ class FileResourceScanner extends AbstractResourceScanner implements ResourceSca
 			return emptyList();
 		}
 
-		List<Resource> resources = new ArrayList<Resource>(nbChild);
+		List<Resource> resources = new ArrayList<>(nbChild);
 		for (File subFile : subFiles) {
 			log.debug("  --> Adding: {}", subFile);
 			resources.add(new FileResource(subFile));

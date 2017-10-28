@@ -24,22 +24,22 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+import org.dbunit.dataset.ReplacementDataSet;
+import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.github.mjeanroy.dbunit.core.replacement.Replacements;
-import org.dbunit.dataset.ReplacementDataSet;
-import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class MemberReplacementFunctionTest {
 
 	@Test
 	public void it_should_add_replacement_from_field() throws Exception {
 		ReplacementDataSet dataSet = mock(ReplacementDataSet.class);
-		MemberReplacementFunction<Field> function = new MemberReplacementFunction<Field>(dataSet);
+		MemberReplacementFunction<Field> function = new MemberReplacementFunction<>(dataSet);
 		function.apply(TestClass.class.getField("replacements"));
 		verify(dataSet).addReplacementObject("foo", "bar");
 	}
@@ -47,7 +47,7 @@ public class MemberReplacementFunctionTest {
 	@Test
 	public void it_should_add_replacement_from_method() throws Exception {
 		ReplacementDataSet dataSet = mock(ReplacementDataSet.class);
-		MemberReplacementFunction<Method> function = new MemberReplacementFunction<Method>(dataSet);
+		MemberReplacementFunction<Method> function = new MemberReplacementFunction<>(dataSet);
 		function.apply(TestClass.class.getMethod("replacementsFunction"));
 		verify(dataSet).addReplacementObject("bar", "foo");
 	}

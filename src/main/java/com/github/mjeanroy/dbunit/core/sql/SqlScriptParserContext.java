@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static java.util.Collections.unmodifiableList;
+import com.github.mjeanroy.dbunit.exception.SqlParserException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.exception.SqlParserException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Current parsing context.
@@ -68,7 +68,7 @@ class SqlScriptParserContext {
 	 * Create new context.
 	 */
 	SqlScriptParserContext() {
-		this.queries = new LinkedList<String>();
+		this.queries = new LinkedList<>();
 		initialize();
 	}
 

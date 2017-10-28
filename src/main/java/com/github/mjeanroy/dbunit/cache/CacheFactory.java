@@ -55,6 +55,6 @@ public final class CacheFactory {
 	 * @return The new cache instance.
 	 */
 	public static <K, V> Cache<K, V> newCache(CacheLoader<K, V> loader) {
-		return GUAVA_AVAILABLE ? new GuavaCache<K, V>(loader) : new DefaultCache<K, V>(loader);
+		return GUAVA_AVAILABLE ? new GuavaCache<>(loader) : new DefaultCache<>(loader);
 	}
 }

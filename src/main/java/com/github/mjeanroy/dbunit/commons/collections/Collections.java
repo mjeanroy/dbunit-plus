@@ -50,7 +50,7 @@ public final class Collections {
 	 * @return Set of outputs.
 	 */
 	public static <T, U> Set<U> map(Set<T> inputs, Mapper<T, U> mapper) {
-		Set<U> outputs = new LinkedHashSet<U>();
+		Set<U> outputs = new LinkedHashSet<>();
 		for (T input : inputs) {
 			outputs.add(mapper.apply(input));
 		}
@@ -88,7 +88,7 @@ public final class Collections {
 	}
 
 	public static <T> List<T> filter(List<T> inputs, Predicate<T> predicate) {
-		List<T> outputs = new ArrayList<T>(inputs.size());
+		List<T> outputs = new ArrayList<>(inputs.size());
 		for (T input : inputs) {
 			if (predicate.apply(input)) {
 				outputs.add(input);
@@ -107,7 +107,7 @@ public final class Collections {
 	 * @return Set of all keys.
 	 */
 	public static <T, U> Set<T> keys(Collection<Map<T, U>> maps) {
-		Set<T> set = new LinkedHashSet<T>();
+		Set<T> set = new LinkedHashSet<>();
 		for (Map<T, U> map : maps) {
 			set.addAll(map.keySet());
 		}

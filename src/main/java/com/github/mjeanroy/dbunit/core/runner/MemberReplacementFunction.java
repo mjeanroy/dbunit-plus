@@ -24,17 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.ReplacementDataSet;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * Apply replacements to given {@link ReplacementDataSet}.
@@ -77,11 +77,7 @@ class MemberReplacementFunction<T extends Member> implements Function<T> {
 				dataSet.addReplacementObject(entry.getKey(), entry.getValue());
 			}
 		}
-		catch (InvocationTargetException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new RuntimeException(ex);
-		}
-		catch (IllegalAccessException ex) {
+		catch (InvocationTargetException | IllegalAccessException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new RuntimeException(ex);
 		}

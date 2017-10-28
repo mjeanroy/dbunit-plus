@@ -24,11 +24,7 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import static com.github.mjeanroy.dbunit.tests.builders.InputStreamAnswer.streamAnswer;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static java.util.Collections.addAll;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +34,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
+import static com.github.mjeanroy.dbunit.tests.builders.InputStreamAnswer.streamAnswer;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static java.util.Collections.addAll;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Builder used to created mock instance of {@link Resource}.
@@ -85,7 +85,7 @@ public class ResourceMockBuilder {
 	 */
 	public ResourceMockBuilder() {
 		this.exists = true;
-		this.subResources = new LinkedList<Resource>();
+		this.subResources = new LinkedList<>();
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class ResourceMockBuilder {
 			when(resource.isDirectory()).thenReturn(directory);
 			when(resource.toFile()).thenReturn(file);
 			when(resource.exists()).thenReturn(exists);
-			when(resource.listResources()).thenReturn(new ArrayList<Resource>(subResources));
+			when(resource.listResources()).thenReturn(new ArrayList<>(subResources));
 			return resource;
 		} catch (IOException ex) {
 			throw new AssertionError(ex);

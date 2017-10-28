@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
-
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Static Files Utilities.
@@ -159,7 +159,7 @@ public final class Files {
 			return emptyList();
 		}
 
-		List<String> parts = new ArrayList<String>(path.length());
+		List<String> parts = new ArrayList<>(path.length());
 		String current = "";
 
 		for (char c : path.toCharArray()) {

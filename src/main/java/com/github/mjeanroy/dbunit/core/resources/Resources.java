@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static java.util.Collections.unmodifiableList;
-
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Static {@link Resource} Utilities.
@@ -77,7 +77,7 @@ final class Resources {
 	 * @return The list of sub-resources.
 	 */
 	static List<Resource> scanRecursively(Resource resource) {
-		List<Resource> resources = new LinkedList<Resource>();
+		List<Resource> resources = new LinkedList<>();
 
 		for (Resource subResource : resource.listResources()) {
 			if (subResource.isDirectory()) {

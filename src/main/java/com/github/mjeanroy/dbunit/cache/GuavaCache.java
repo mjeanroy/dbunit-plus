@@ -46,7 +46,7 @@ class GuavaCache<K, V> implements  Cache<K, V> {
 	 * @param loader Loader used to compute values in the cache.
 	 */
 	GuavaCache(CacheLoader<K, V> loader) {
-		this.cache = CacheBuilder.newBuilder().build(new GuavaCacheLoaderAdapter<K, V>(loader));
+		this.cache = CacheBuilder.newBuilder().build(new GuavaCacheLoaderAdapter<>(loader));
 	}
 
 	@Override

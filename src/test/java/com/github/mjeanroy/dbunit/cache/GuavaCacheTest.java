@@ -28,6 +28,6 @@ public class GuavaCacheTest extends AbstractCacheTest {
 
 	@Override
 	Cache<String, String> createCache(CacheLoader<String, String> loader) {
-		return new GuavaCache<String, String>(loader);
+		return new GuavaCache<>(loader);
 	}
 }

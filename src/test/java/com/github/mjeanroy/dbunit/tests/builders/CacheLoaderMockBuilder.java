@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.mjeanroy.dbunit.cache.CacheLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.cache.CacheLoader;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Builder to create mock instances for {@link CacheLoader}.
@@ -49,7 +49,7 @@ public class CacheLoaderMockBuilder<T, V> {
 	 * Create builder.
 	 */
 	public CacheLoaderMockBuilder() {
-		this.entries = new HashMap<T, V>();
+		this.entries = new HashMap<>();
 	}
 
 	/**

@@ -76,7 +76,7 @@ public class DirectoryDataSet implements IDataSet {
 		Collection<Resource> subResources = resource.listResources();
 
 		// Sort alphabetically
-		List<Resource> resources = new ArrayList<Resource>(subResources);
+		List<Resource> resources = new ArrayList<>(subResources);
 		sort(resources, comparator);
 
 		IDataSet[] dataSets = new IDataSet[resources.size()];

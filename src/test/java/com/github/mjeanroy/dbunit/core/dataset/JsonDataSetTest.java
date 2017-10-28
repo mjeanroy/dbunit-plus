@@ -24,17 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.junit.rules.ExpectedException.none;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.json.Jackson2Parser;
+import com.github.mjeanroy.dbunit.json.JsonParser;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
@@ -44,12 +39,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.json.Jackson2Parser;
-import com.github.mjeanroy.dbunit.json.JsonParser;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.rules.ExpectedException.none;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class JsonDataSetTest {
 
@@ -153,7 +152,7 @@ public class JsonDataSetTest {
 
 		ITableIterator it = dataSet.iterator();
 
-		List<ITable> tables = new ArrayList<ITable>();
+		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
 			tables.add(it.getTable());
 		}
@@ -175,7 +174,7 @@ public class JsonDataSetTest {
 
 		ITableIterator it = dataSet.reverseIterator();
 
-		List<ITable> tables = new ArrayList<ITable>();
+		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
 			tables.add(it.getTable());
 		}

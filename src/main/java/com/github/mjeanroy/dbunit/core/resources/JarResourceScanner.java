@@ -24,16 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.first;
-import static com.github.mjeanroy.dbunit.commons.io.Files.DEFAULT_CHARSET;
-import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
-import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
-import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
-import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
-import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
-import static com.github.mjeanroy.dbunit.exception.ResourceNotValidException.invalidJarException;
-import static java.util.Collections.unmodifiableSet;
+import com.github.mjeanroy.dbunit.cache.Cache;
+import com.github.mjeanroy.dbunit.cache.CacheFactory;
+import com.github.mjeanroy.dbunit.cache.CacheLoader;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.net.URL;
 import java.net.URLDecoder;
@@ -47,11 +42,16 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import com.github.mjeanroy.dbunit.cache.Cache;
-import com.github.mjeanroy.dbunit.cache.CacheFactory;
-import com.github.mjeanroy.dbunit.cache.CacheLoader;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.first;
+import static com.github.mjeanroy.dbunit.commons.io.Files.DEFAULT_CHARSET;
+import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
+import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
+import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
+import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
+import static com.github.mjeanroy.dbunit.exception.ResourceNotValidException.invalidJarException;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Implementation of {@link ResourceScanner} scanning JAR entry to get the list
@@ -130,8 +130,8 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 		int maxSize = entries.size();
 
 		log.debug("Filtering JAR entries");
-		Set<String> foundEntries = new HashSet<String>(maxSize);
-		List<Resource> resources = new ArrayList<Resource>(maxSize);
+		Set<String> foundEntries = new HashSet<>(maxSize);
+		List<Resource> resources = new ArrayList<>(maxSize);
 
 		for (String name : entries) {
 			if (name.startsWith(dirPath)) {
@@ -177,7 +177,7 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 			try {
 				jar = new JarFile(jarPath);
 				Enumeration<JarEntry> jarEntries = jar.entries();
-				Set<String> results = new LinkedHashSet<String>();
+				Set<String> results = new LinkedHashSet<>();
 
 				while (jarEntries.hasMoreElements()) {
 					JarEntry jarEntry = jarEntries.nextElement();

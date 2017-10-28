@@ -24,8 +24,6 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-import static com.github.mjeanroy.dbunit.commons.lang.Exceptions.launderThrowable;
-
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +31,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
+
+import static com.github.mjeanroy.dbunit.commons.lang.Exceptions.launderThrowable;
 
 /**
  * Dependency free {@link Cache} implementation.
@@ -58,7 +58,7 @@ class DefaultCache<K, V> implements Cache<K, V> {
 	 * @param loader The cache loader.
 	 */
 	DefaultCache(CacheLoader<K, V> loader) {
-		this.map = new ConcurrentHashMap<K, Future<V>>();
+		this.map = new ConcurrentHashMap<>();
 		this.loader = loader;
 	}
 
@@ -71,8 +71,8 @@ class DefaultCache<K, V> implements Cache<K, V> {
 		while (value == null) {
 			Future<V> task = map.get(key);
 			if (task == null) {
-				Callable<V> callable = new CallableLoaderAdapter<K, V>(key, loader);
-				FutureTask<V> newTask = new FutureTask<V>(callable);
+				Callable<V> callable = new CallableLoaderAdapter<>(key, loader);
+				FutureTask<V> newTask = new FutureTask<>(callable);
 				task = map.putIfAbsent(key, newTask);
 				if (task == null) {
 					task = newTask;

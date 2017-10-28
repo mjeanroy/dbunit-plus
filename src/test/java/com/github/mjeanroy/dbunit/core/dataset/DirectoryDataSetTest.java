@@ -178,7 +178,7 @@ public class DirectoryDataSetTest {
 
 		ITableIterator it = dataSet.iterator();
 
-		List<ITable> tables = new ArrayList<ITable>();
+		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
 			tables.add(it.getTable());
 		}
@@ -214,7 +214,7 @@ public class DirectoryDataSetTest {
 
 		ITableIterator it = dataSet.reverseIterator();
 
-		List<ITable> tables = new ArrayList<ITable>();
+		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
 			tables.add(it.getTable());
 		}

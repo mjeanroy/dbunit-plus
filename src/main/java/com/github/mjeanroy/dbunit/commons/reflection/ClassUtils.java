@@ -85,13 +85,7 @@ public final class ClassUtils {
 		try {
 			return ctor.newInstance();
 		}
-		catch (InstantiationException ex) {
-			throw instantiationException(klass, ex);
-		}
-		catch (IllegalAccessException ex) {
-			throw instantiationException(klass, ex);
-		}
-		catch (InvocationTargetException ex) {
+		catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
 			throw instantiationException(klass, ex);
 		}
 		finally {

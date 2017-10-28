@@ -28,6 +28,6 @@ public class DefaultCacheTest extends AbstractCacheTest {
 
 	@Override
 	Cache<String, String> createCache(CacheLoader<String, String> loader) {
-		return new DefaultCache<String, String>(loader);
+		return new DefaultCache<>(loader);
 	}
 }

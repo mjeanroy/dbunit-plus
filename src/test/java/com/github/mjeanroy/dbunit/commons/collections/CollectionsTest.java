@@ -24,6 +24,16 @@
 
 package com.github.mjeanroy.dbunit.commons.collections;
 
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.first;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -34,16 +44,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 public class CollectionsTest {
 
@@ -63,7 +63,7 @@ public class CollectionsTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_map_collection() {
-		Set<Integer> set = new LinkedHashSet<Integer>();
+		Set<Integer> set = new LinkedHashSet<>();
 		set.add(1);
 		set.add(2);
 		set.add(3);
@@ -156,12 +156,12 @@ public class CollectionsTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_get_keys_of_all_map() {
-		Map<String, Integer> map1 = new LinkedHashMap<String, Integer>();
+		Map<String, Integer> map1 = new LinkedHashMap<>();
 		map1.put("one", 1);
 		map1.put("two", 2);
 		map1.put("three", 3);
 
-		Map<String, Integer> map2 = new LinkedHashMap<String, Integer>();
+		Map<String, Integer> map2 = new LinkedHashMap<>();
 		map2.put("three", 3);
 		map2.put("four", 4);
 		map2.put("five", 5);

@@ -24,15 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.keys;
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.json.JsonParser;
@@ -46,6 +37,15 @@ import org.dbunit.dataset.DefaultTableIterator;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.keys;
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Implementation of {@link IDataSet} with JSON file as input.
@@ -146,7 +146,7 @@ public class JsonDataSet extends AbstractDataSet implements IDataSet {
 	 */
 	private List<ITable> readTables(Map<String, List<Map<String, Object>>> tables) throws DataSetException {
 		Set<Map.Entry<String, List<Map<String, Object>>>> entries = tables.entrySet();
-		List<ITable> results = new ArrayList<ITable>(entries.size());
+		List<ITable> results = new ArrayList<>(entries.size());
 
 		for (Map.Entry<String, List<Map<String, Object>>> entry : entries) {
 			String tableName = entry.getKey();

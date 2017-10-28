@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-import static java.util.Collections.singleton;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
+import static java.util.Collections.singleton;
 
 /**
  * Abstract implementation of {@link ResourceLoaderStrategy}.
@@ -66,7 +66,7 @@ abstract class AbstractResourceLoaderStrategy implements ResourceLoaderStrategy 
 	 * @param p2 Second prefix.
 	 */
 	AbstractResourceLoaderStrategy(String p1, String p2) {
-		this.prefixes = new HashSet<String>();
+		this.prefixes = new HashSet<>();
 		this.prefixes.add(p1);
 		this.prefixes.add(p2);
 	}
