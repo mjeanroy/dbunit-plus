@@ -93,7 +93,7 @@ public class ClassInstantiationException extends AbstractReflectionException {
 	}
 
 	/**
-	 * Create message for {@link #missingDefaultConstructor(Class, Exception)} method.
+	 * Create message for {@link #missingDefaultConstructor(Class)} method.
 	 *
 	 * @param klass The class.
 	 * @return The error message.
