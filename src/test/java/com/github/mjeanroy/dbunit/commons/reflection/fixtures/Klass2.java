@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.commons.reflection.fixtures;
 
 public class Klass2 {
-	private int id;
+	private final int id;
 
 	public Klass2(int id) {
 		this.id = id;
