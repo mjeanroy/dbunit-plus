@@ -160,24 +160,24 @@ public final class Files {
 		}
 
 		List<String> parts = new ArrayList<>(path.length());
-		String current = "";
+		StringBuilder current = new StringBuilder();
 
 		for (char c : path.toCharArray()) {
 			if (c == FOLDER_SEPARATOR) {
 				// We found a path.
-				if (!current.isEmpty()) {
-					parts.add(current);
+				if (current.length() > 0) {
+					parts.add(current.toString());
 				}
 
-				current = "";
+				current = new StringBuilder();
 			} else {
-				current += c;
+				current.append(c);
 			}
 		}
 
 		// Add last part.
-		if (!current.isEmpty()) {
-			parts.add(current);
+		if (current.length() > 0) {
+			parts.add(current.toString());
 		}
 
 		return unmodifiableList(parts);
