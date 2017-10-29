@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
+import org.junit.Test;
+
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.Test;
 
 public class LoggersTest {
 
@@ -39,6 +39,7 @@ public class LoggersTest {
 				.isExactlyInstanceOf(Slf4jLogger.class);
 
 		org.slf4j.Logger slf4j = readPrivate(log, "log", org.slf4j.Logger.class);
+		assertThat(slf4j).isNotNull();
 		assertThat(slf4j.getName()).isEqualTo(LoggersTest.class.getName());
 	}
 }
