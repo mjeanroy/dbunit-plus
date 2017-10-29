@@ -24,12 +24,13 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import javax.sql.DataSource;
-
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
+
+import javax.sql.DataSource;
 
 /**
  * Spring test execution listener running DbUnit data set before and after test methods:
@@ -58,14 +59,24 @@ public class DbUnitTestExecutionListener extends AbstractTestExecutionListener {
 	@Override
 	public void beforeTestMethod(TestContext ctx) throws Exception {
 		super.beforeTestMethod(ctx);
-		DbUnitRunner runner = (DbUnitRunner) ctx.getAttribute(DBUNIT_RUNNER);
+		DbUnitRunner runner = getRunner(ctx);
 		runner.beforeTest(ctx.getTestMethod());
 	}
 
 	@Override
 	public void afterTestMethod(TestContext ctx) throws Exception {
 		super.afterTestMethod(ctx);
-		DbUnitRunner runner = (DbUnitRunner) ctx.getAttribute(DBUNIT_RUNNER);
+		DbUnitRunner runner = getRunner(ctx);
 		runner.afterTest(ctx.getTestMethod());
+	}
+
+	private static DbUnitRunner getRunner(TestContext ctx) {
+		DbUnitRunner runner = (DbUnitRunner) ctx.getAttribute(DBUNIT_RUNNER);
+		if (runner == null) {
+			String msg = String.format("DbUnit runner is missing, attribute %s may have been removed from TestContext instance", DBUNIT_RUNNER);
+			throw new DbUnitException(msg);
+		}
+
+		return runner;
 	}
 }
