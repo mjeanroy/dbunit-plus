@@ -24,25 +24,23 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-
-import java.lang.reflect.Method;
-
-import javax.sql.DataSource;
-
-import org.dbunit.dataset.IDataSet;
-import org.junit.ClassRule;
-import org.junit.Test;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithCustomConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
+import org.dbunit.dataset.IDataSet;
+import org.junit.ClassRule;
+import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class DbUnitRunnerTest {
 
@@ -56,15 +54,15 @@ public class DbUnitRunnerTest {
 
 		DbUnitRunner runner = new DbUnitRunner(klass, factory);
 
-		assertThat(readPrivate(runner, "testClass", Class.class))
+		assertThat(readPrivate(runner, "testClass"))
 			.isNotNull()
 			.isSameAs(klass);
 
-		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+		assertThat(readPrivate(runner, "factory"))
 			.isNotNull()
 			.isSameAs(factory);
 
-		IDataSet dataSet = readPrivate(runner, "dataSet", IDataSet.class);
+		IDataSet dataSet = readPrivate(runner, "dataSet");
 		assertThat(dataSet).isNotNull();
 		assertThat(dataSet.getTableNames())
 			.isNotNull()
@@ -79,15 +77,15 @@ public class DbUnitRunnerTest {
 
 		DbUnitRunner runner = new DbUnitRunner(klass, factory);
 
-		assertThat(readPrivate(runner, "testClass", Class.class))
+		assertThat(readPrivate(runner, "testClass"))
 			.isNotNull()
 			.isSameAs(klass);
 
-		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+		assertThat(readPrivate(runner, "factory"))
 			.isNotNull()
 			.isSameAs(factory);
 
-		IDataSet dataSet = readPrivate(runner, "dataSet", IDataSet.class);
+		IDataSet dataSet = readPrivate(runner, "dataSet");
 		assertThat(dataSet).isNull();
 	}
 
@@ -98,7 +96,7 @@ public class DbUnitRunnerTest {
 
 		DbUnitRunner runner = new DbUnitRunner(klass, dataSource);
 
-		assertThat(readPrivate(runner, "factory", JdbcConnectionFactory.class))
+		assertThat(readPrivate(runner, "factory"))
 			.isNotNull()
 			.isExactlyInstanceOf(JdbcDataSourceConnectionFactory.class);
 	}

@@ -24,16 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-
-import java.io.IOException;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,6 +31,16 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
+
+import java.io.IOException;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 
 public class CompositeTestExecutionListenerTest {
 
@@ -62,14 +62,14 @@ public class CompositeTestExecutionListenerTest {
 	public void it_should_create_listener() throws Exception {
 		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
-		TestExecutionListener[] listeners = readPrivate(listener, "listeners", TestExecutionListener[].class);
+		TestExecutionListener[] listeners = readPrivate(listener, "listeners");
 		assertThat(listeners)
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(listener1, listener2);
 
-		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners", TestExecutionListener[].class);
+		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
 		assertThat(reverseListeners)
 			.isNotNull()
 			.isNotEmpty()

@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TransactionalDbUnitTestExecutionListenerTest {
 
@@ -37,7 +37,7 @@ public class TransactionalDbUnitTestExecutionListenerTest {
 	public void it_should_create_listener() throws Exception {
 		TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
 
-		TestExecutionListener[] listeners = readPrivate(listener, "listeners", TestExecutionListener[].class);
+		TestExecutionListener[] listeners = readPrivate(listener, "listeners");
 		assertThat(listeners)
 			.isNotNull()
 			.isNotEmpty()
@@ -51,7 +51,7 @@ public class TransactionalDbUnitTestExecutionListenerTest {
 			.isNotNull()
 			.isExactlyInstanceOf(DbUnitTestExecutionListener.class);
 
-		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners", TestExecutionListener[].class);
+		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
 		assertThat(reverseListeners)
 			.isNotNull()
 			.isNotEmpty()

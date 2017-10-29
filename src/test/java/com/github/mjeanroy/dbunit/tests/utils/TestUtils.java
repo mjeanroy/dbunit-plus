@@ -106,7 +106,7 @@ public final class TestUtils {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> T readPrivate(Object o, String field, Class<T> klass) throws Exception {
+	public static <T> T readPrivate(Object o, String field) throws Exception {
 		Class c = o.getClass();
 		NoSuchFieldException ex = null;
 

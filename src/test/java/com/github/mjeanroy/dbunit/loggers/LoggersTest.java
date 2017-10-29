@@ -38,7 +38,7 @@ public class LoggersTest {
 				.isNotNull()
 				.isExactlyInstanceOf(Slf4jLogger.class);
 
-		org.slf4j.Logger slf4j = readPrivate(log, "log", org.slf4j.Logger.class);
+		org.slf4j.Logger slf4j = readPrivate(log, "log");
 		assertThat(slf4j).isNotNull();
 		assertThat(slf4j.getName()).isEqualTo(LoggersTest.class.getName());
 	}
