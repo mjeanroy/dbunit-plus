@@ -24,7 +24,8 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Condition;
+import org.junit.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -33,8 +34,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import org.assertj.core.api.Condition;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnnotationsTest {
 
@@ -108,7 +108,7 @@ public class AnnotationsTest {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	public @interface TestAnnotation {
+	@interface TestAnnotation {
 		String value();
 	}
 
