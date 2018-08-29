@@ -52,7 +52,8 @@ public final class TestUtils {
 			URL url = TestUtils.class.getResource(path);
 			URI uri = url.toURI();
 			return new File(uri);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new AssertionError(ex);
 		}
 	}
@@ -77,7 +78,8 @@ public final class TestUtils {
 			}
 
 			return sb.toString();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new AssertionError(ex);
 		}
 	}
@@ -100,7 +102,8 @@ public final class TestUtils {
 			}
 
 			return sb.toString();
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new AssertionError(ex);
 		}
 	}
@@ -146,7 +149,8 @@ public final class TestUtils {
 			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
 			field.set(null, value);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new AssertionError(ex);
 		}
 	}

@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
+import org.junit.Test;
 
 import java.net.URL;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResourcesTest {
 
@@ -54,16 +54,16 @@ public class ResourcesTest {
 		Resource r1 = new ResourceMockBuilder().setFile().build();
 		Resource r2 = new ResourceMockBuilder().setFile().build();
 		Resource resource = new ResourceMockBuilder()
-				.addSubResources(r1, r2)
-				.build();
+			.addSubResources(r1, r2)
+			.build();
 
 		List<Resource> subResources = Resources.scanRecursively(resource);
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.containsOnly(r1, r2);
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.containsOnly(r1, r2);
 	}
 
 	@Test
@@ -75,21 +75,21 @@ public class ResourcesTest {
 		Resource r3 = new ResourceMockBuilder().setFile().build();
 		Resource dir2 = new ResourceMockBuilder().setDirectory().addSubResources(r3).build();
 		Resource resource = new ResourceMockBuilder()
-				.addSubResources(dir1, dir2)
-				.build();
+			.addSubResources(dir1, dir2)
+			.build();
 
 		List<Resource> subResources = Resources.scanRecursively(resource);
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(3)
-				.containsOnly(r1, r2, r3);
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(3)
+			.containsOnly(r1, r2, r3);
 	}
 
 	private URL url(String protocol) {
 		return new UrlBuilder()
-				.setProtocol(protocol)
-				.build();
+			.setProtocol(protocol)
+			.build();
 	}
 }

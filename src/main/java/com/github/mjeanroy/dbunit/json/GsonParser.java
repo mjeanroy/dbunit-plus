@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import com.google.gson.Gson;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Json Parser using Google {@link Gson} as internal implementation.

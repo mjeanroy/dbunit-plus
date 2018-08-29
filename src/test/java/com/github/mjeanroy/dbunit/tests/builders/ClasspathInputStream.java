@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 
 /**
  * Factory that will return instance of {@link InputStream} using a reference
@@ -54,7 +54,8 @@ class ClasspathInputStream implements InputStreamFactory {
 	public InputStream create() {
 		try {
 			return new FileInputStream(getTestResource(path));
-		} catch (FileNotFoundException ex) {
+		}
+		catch (FileNotFoundException ex) {
 			throw new AssertionError(ex);
 		}
 	}

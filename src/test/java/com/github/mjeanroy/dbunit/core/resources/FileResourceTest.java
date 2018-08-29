@@ -98,8 +98,8 @@ public class FileResourceTest {
 		InputStream stream = resource.openStream();
 
 		assertThat(stream)
-				.isNotNull()
-				.isExactlyInstanceOf(FileInputStream.class);
+			.isNotNull()
+			.isExactlyInstanceOf(FileInputStream.class);
 
 		String expected = readTestResource(path).trim();
 		String output = readStream(stream);
@@ -114,22 +114,22 @@ public class FileResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.are(new Condition<Resource>() {
-					@Override
-					public boolean matches(Resource value) {
-						return value instanceof FileResource;
-					}
-				})
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("foo.xml", "bar.xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.are(new Condition<Resource>() {
+				@Override
+				public boolean matches(Resource value) {
+					return value instanceof FileResource;
+				}
+			})
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("foo.xml", "bar.xml");
 	}
 
 	@Test
@@ -140,8 +140,8 @@ public class FileResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	@Test
@@ -152,15 +152,15 @@ public class FileResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.are(isInstanceOf(FileResource.class))
-				.are(new Condition<Resource>() {
-					@Override
-					public boolean matches(Resource value) {
-						return value.isDirectory();
-					}
-				});
+			.isNotNull()
+			.isNotEmpty()
+			.are(isInstanceOf(FileResource.class))
+			.are(new Condition<Resource>() {
+				@Override
+				public boolean matches(Resource value) {
+					return value.isDirectory();
+				}
+			});
 	}
 
 	@Test

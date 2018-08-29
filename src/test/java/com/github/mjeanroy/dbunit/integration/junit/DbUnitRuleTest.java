@@ -24,19 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.runner.Description.createSuiteDescription;
-import static org.junit.runner.Description.createTestDescription;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
@@ -49,6 +36,19 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.runner.Description.createSuiteDescription;
+import static org.junit.runner.Description.createTestDescription;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DbUnitRuleTest {
 

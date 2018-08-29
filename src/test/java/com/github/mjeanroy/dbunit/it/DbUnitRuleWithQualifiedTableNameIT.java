@@ -24,15 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.Connection;
-
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
@@ -43,6 +34,14 @@ import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit.DbUnitRule;
 import com.github.mjeanroy.dbunit.it.configuration.QualifiedTableNameConfiguration;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import org.junit.ClassRule;
+import org.junit.Rule;
+import org.junit.Test;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitConfig(QualifiedTableNameConfiguration.class)
 @DbUnitDataSet("/dataset/qualified-table-names")

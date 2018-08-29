@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.exception.JdbcException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
-
-import com.github.mjeanroy.dbunit.exception.JdbcException;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance

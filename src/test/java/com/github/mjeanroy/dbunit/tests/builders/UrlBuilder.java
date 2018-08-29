@@ -114,7 +114,8 @@ public class UrlBuilder {
 	public URL build() {
 		try {
 			return new URL(protocol, host, port, path);
-		} catch (MalformedURLException ex) {
+		}
+		catch (MalformedURLException ex) {
 			throw new AssertionError(ex);
 		}
 	}

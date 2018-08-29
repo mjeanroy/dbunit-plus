@@ -24,19 +24,19 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
-import static org.junit.rules.ExpectedException.none;
-
-import java.util.List;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.google.gson.Gson;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
+import static org.junit.rules.ExpectedException.none;
 
 public class GsonParserTest {
 
@@ -49,8 +49,8 @@ public class GsonParserTest {
 		GsonParser parser = new GsonParser(gson);
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/json/foo.json")
-				.build();
+			.fromClasspath("/dataset/json/foo.json")
+			.build();
 
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 

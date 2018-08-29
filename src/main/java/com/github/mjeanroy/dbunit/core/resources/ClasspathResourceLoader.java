@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.core.resources.Resources.toFile;
+import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 
 import java.net.URL;
 
-import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import static com.github.mjeanroy.dbunit.core.resources.Resources.toFile;
 
 /**
  * Load {@link Resource} from the classpath.
@@ -71,8 +71,8 @@ class ClasspathResourceLoader extends AbstractResourceLoaderStrategy implements 
 	Resource doLoad(String path) throws Exception {
 		final String prefix = extractPrefix(path);
 		final String resourcePath = prefix != null && !prefix.isEmpty() ?
-				path.substring(prefix.length()) :
-				path;
+			path.substring(prefix.length()) :
+			path;
 
 		final URL url = getClass().getResource(resourcePath);
 		if (url == null) {
@@ -80,7 +80,7 @@ class ClasspathResourceLoader extends AbstractResourceLoaderStrategy implements 
 		}
 
 		return Resources.isFileURL(url) ?
-				new FileResource(toFile(url)) :
-				new ClasspathResource(url);
+			new FileResource(toFile(url)) :
+			new ClasspathResource(url);
 	}
 }

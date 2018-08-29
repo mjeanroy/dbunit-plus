@@ -24,11 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.CompositeDataSet;
@@ -39,6 +34,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class DataSetFactoryTest {
 
 	@Rule
@@ -47,9 +47,9 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setFilename("foo.xml")
-				.fromClasspath("/dataset/xml/foo.xml")
-				.build();
+			.setFilename("foo.xml")
+			.fromClasspath("/dataset/xml/foo.xml")
+			.build();
 
 		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
@@ -139,10 +139,10 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_directory_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setFilename("xml")
-				.setDirectory()
-				.fromClasspath("/dataset/xml")
-				.build();
+			.setFilename("xml")
+			.setDirectory()
+			.fromClasspath("/dataset/xml")
+			.build();
 
 		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
@@ -154,9 +154,9 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_json_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setFilename("foo.json")
-				.fromClasspath("/dataset/json/foo.json")
-				.build();
+			.setFilename("foo.json")
+			.fromClasspath("/dataset/json/foo.json")
+			.build();
 
 		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
@@ -168,9 +168,9 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_csv_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.setFilename("foo.csv")
-				.fromClasspath("/dataset/csv/foo.csv")
-				.build();
+			.setFilename("foo.csv")
+			.fromClasspath("/dataset/csv/foo.csv")
+			.build();
 
 		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 

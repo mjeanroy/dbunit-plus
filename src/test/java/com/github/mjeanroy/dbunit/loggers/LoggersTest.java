@@ -35,8 +35,8 @@ public class LoggersTest {
 	public void it_should_create_logger() throws Exception {
 		Logger log = Loggers.getLogger(LoggersTest.class);
 		assertThat(log)
-				.isNotNull()
-				.isExactlyInstanceOf(Slf4jLogger.class);
+			.isNotNull()
+			.isExactlyInstanceOf(Slf4jLogger.class);
 
 		org.slf4j.Logger slf4j = readPrivate(log, "log");
 		assertThat(slf4j).isNotNull();

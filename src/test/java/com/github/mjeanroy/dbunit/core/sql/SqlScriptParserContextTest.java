@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SqlScriptParserContextTest {
 

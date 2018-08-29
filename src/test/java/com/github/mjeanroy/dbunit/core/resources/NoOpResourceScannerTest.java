@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class NoOpResourceScannerTest extends AbstractResourceScannerTest {
 
@@ -44,13 +44,13 @@ public class NoOpResourceScannerTest extends AbstractResourceScannerTest {
 	@Test
 	public void it_should_return_empty_collection() {
 		Resource resource = new ResourceMockBuilder()
-				.setDirectory()
-				.build();
+			.setDirectory()
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 		assertThat(resources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	@Override

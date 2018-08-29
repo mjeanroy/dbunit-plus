@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableCollection;
-
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.exception.ResourceException;
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.util.Collection;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableCollection;
 
 /**
  * Abstract implementation of {@link ResourceScanner}.
@@ -69,10 +69,12 @@ abstract class AbstractResourceScanner implements ResourceScanner {
 
 		try {
 			return unmodifiableCollection(doScan(resource));
-		} catch (ResourceException ex) {
+		}
+		catch (ResourceException ex) {
 			// Just rethrow it.
 			throw ex;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			// Wrap exception.
 			log.error(ex.getMessage(), ex);
 			throw new ResourceException(resource.getPath(), ex);

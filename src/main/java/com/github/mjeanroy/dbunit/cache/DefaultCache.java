@@ -82,14 +82,17 @@ class DefaultCache<K, V> implements Cache<K, V> {
 
 			try {
 				value = task.get();
-			} catch (CancellationException e) {
+			}
+			catch (CancellationException e) {
 				map.remove(key, task);
 				// Do not return anything and retry
-			} catch (InterruptedException ex) {
+			}
+			catch (InterruptedException ex) {
 				map.remove(key, task);
 				interrupted = true;
 				// Do not return anything and retry
-			} catch (ExecutionException ex) {
+			}
+			catch (ExecutionException ex) {
 				throw launderThrowable(ex.getCause());
 			}
 		}

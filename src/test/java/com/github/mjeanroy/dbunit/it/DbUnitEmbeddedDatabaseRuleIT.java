@@ -24,9 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
@@ -35,6 +32,9 @@ import com.github.mjeanroy.dbunit.integration.spring.DbUnitEmbeddedDatabaseRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitDataSet("/dataset/xml")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)

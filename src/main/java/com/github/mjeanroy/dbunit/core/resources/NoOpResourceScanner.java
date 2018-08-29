@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static java.util.Collections.emptyList;
-
 import java.util.Collection;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Implementation of {@link ResourceScanner} that <strong>always</strong> returns an empty list.

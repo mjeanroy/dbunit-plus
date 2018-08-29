@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.tests.db;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * Start and Stop embedded database.
@@ -72,7 +72,8 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	protected void after() {
 		try {
 			db.shutdown();
-		} finally {
+		}
+		finally {
 			db = null;
 		}
 	}
@@ -84,7 +85,8 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	public Connection getConnection() {
 		try {
 			return db.getConnection();
-		} catch (SQLException ex) {
+		}
+		catch (SQLException ex) {
 			throw new AssertionError(ex);
 		}
 	}

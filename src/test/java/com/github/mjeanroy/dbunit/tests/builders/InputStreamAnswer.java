@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.tests.builders;
 
-import java.io.InputStream;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.io.InputStream;
 
 /**
  * Mockito {@link Answer} that can be used to return instances

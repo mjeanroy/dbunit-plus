@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 
 /**
  * Annotation that can be used to customize DBUnit configuration
@@ -71,9 +71,9 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Target({
-		ElementType.METHOD,
-		ElementType.TYPE,
-		ElementType.PACKAGE
+	ElementType.METHOD,
+	ElementType.TYPE,
+	ElementType.PACKAGE
 })
 public @interface DbUnitConfig {
 

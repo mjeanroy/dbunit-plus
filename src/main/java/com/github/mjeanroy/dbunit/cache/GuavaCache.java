@@ -33,7 +33,7 @@ import com.google.common.cache.LoadingCache;
  * @param <K> Type of keys in the cache.
  * @param <V> Type of values.
  */
-class GuavaCache<K, V> implements  Cache<K, V> {
+class GuavaCache<K, V> implements Cache<K, V> {
 
 	/**
 	 * Internal Guava cache.
@@ -77,7 +77,7 @@ class GuavaCache<K, V> implements  Cache<K, V> {
 			this.loader = loader;
 		}
 
- 		@Override
+		@Override
 		public V load(K key) throws Exception {
 			return loader.load(key);
 		}

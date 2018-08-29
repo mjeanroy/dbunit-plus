@@ -82,7 +82,8 @@ final class Resources {
 		for (Resource subResource : resource.listResources()) {
 			if (subResource.isDirectory()) {
 				resources.addAll(scanRecursively(subResource));
-			} else {
+			}
+			else {
 				resources.add(subResource);
 			}
 		}
@@ -99,7 +100,8 @@ final class Resources {
 	static File toFile(URL url) {
 		try {
 			return new File(url.toURI());
-		} catch (URISyntaxException ex) {
+		}
+		catch (URISyntaxException ex) {
 			return new File(url.getFile());
 		}
 	}
@@ -114,9 +116,9 @@ final class Resources {
 	static boolean isJarURL(URL url) {
 		String protocol = url.getProtocol();
 		return URL_PROTOCOL_JAR.equals(protocol) ||
-				URL_PROTOCOL_ZIP.equals(protocol) ||
-				URL_PROTOCOL_VFSZIP.equals(protocol) ||
-				URL_PROTOCOL_WSJAR.equals(protocol);
+			URL_PROTOCOL_ZIP.equals(protocol) ||
+			URL_PROTOCOL_VFSZIP.equals(protocol) ||
+			URL_PROTOCOL_WSJAR.equals(protocol);
 	}
 
 	/**

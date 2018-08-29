@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotValidException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Collection;
+
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JarResourceScannerTest extends AbstractResourceScannerTest {
 
@@ -47,92 +47,92 @@ public class JarResourceScannerTest extends AbstractResourceScannerTest {
 	@Test
 	public void it_should_scan_sub_resources() {
 		Resource resource = new ResourceMockBuilder()
-				.fromJar("/jar/dataset/xml")
-				.setDirectory()
-				.build();
+			.fromJar("/jar/dataset/xml")
+			.setDirectory()
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.are(isInstanceOf(ClasspathResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("foo.xml", "bar.xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.are(isInstanceOf(ClasspathResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("foo.xml", "bar.xml");
 	}
 
 	@Test
 	public void it_should_scan_sub_resources_with_trailing_slashes() {
 		Resource resource = new ResourceMockBuilder()
-				.fromJar("/jar/dataset/xml/")
-				.setDirectory()
-				.build();
+			.fromJar("/jar/dataset/xml/")
+			.setDirectory()
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.are(isInstanceOf(ClasspathResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("foo.xml", "bar.xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.are(isInstanceOf(ClasspathResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("foo.xml", "bar.xml");
 	}
 
 	@Test
 	public void it_should_not_scan_recursively() {
 		Resource resource = new ResourceMockBuilder()
-				.fromJar("/jar/dataset")
-				.setDirectory()
-				.build();
+			.fromJar("/jar/dataset")
+			.setDirectory()
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1)
-				.are(isInstanceOf(ClasspathResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(1)
+			.are(isInstanceOf(ClasspathResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("xml");
 	}
 
 	@Test
 	public void it_should_returns_empty_list_without_directory() {
 		Resource resource = new ResourceMockBuilder()
-				.fromJar("/jar/dataset/xml/foo.xml")
-				.setFile()
-				.build();
+			.fromJar("/jar/dataset/xml/foo.xml")
+			.setFile()
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	@Test
 	public void it_should_fail_if_resource_does_not_resides_in_an_external_file() {
 		String path = "/dataset/xml";
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath(path)
-				.build();
+			.fromClasspath(path)
+			.build();
 
 		thrown.expect(ResourceNotValidException.class);
 		thrown.expectMessage(String.format("Resource <%s> does not seems to resides in an external JAR file", path));
@@ -144,10 +144,10 @@ public class JarResourceScannerTest extends AbstractResourceScannerTest {
 	public void it_should_fail_if_resource_does_not_resides_in_a_jar() {
 		String path = "file:/tmp/dataset.zip!/dataset/foo.xml";
 		Resource resource = new ResourceMockBuilder()
-				.setPath(path)
-				.setDirectory()
-				.setExists(true)
-				.build();
+			.setPath(path)
+			.setDirectory()
+			.setExists(true)
+			.build();
 
 		thrown.expect(ResourceNotValidException.class);
 		thrown.expectMessage(String.format("Resource <%s> does not seems to resides in an external JAR file", path));

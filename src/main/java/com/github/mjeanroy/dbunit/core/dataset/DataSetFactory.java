@@ -24,10 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static java.util.Arrays.asList;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -36,6 +32,10 @@ import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
+
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static java.util.Arrays.asList;
 
 /**
  * Factory to create instance of {@link IDataSet}.

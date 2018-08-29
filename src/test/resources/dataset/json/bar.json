@@ -1,7 +1,16 @@
 {
   "bar": [
-    { "id": 1, "title": "Lord Of The Rings" },
-    { "id": 2, "title": "Star Wars" },
-    { "id": 3, "title": "Back To The Future" }
+    {
+      "id": 1,
+      "title": "Lord Of The Rings"
+    },
+    {
+      "id": 2,
+      "title": "Star Wars"
+    },
+    {
+      "id": 3,
+      "title": "Back To The Future"
+    }
   ]
 }

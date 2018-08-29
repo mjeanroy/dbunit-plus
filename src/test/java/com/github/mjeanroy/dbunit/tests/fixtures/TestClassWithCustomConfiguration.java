@@ -24,14 +24,13 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import org.dbunit.database.DatabaseConfig;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
-import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import org.dbunit.database.DatabaseConfig;
 
 @DbUnitDataSet("/dataset/qualified-table-names")
 @DbUnitConfig(TestClassWithCustomConfiguration.QualifiedTableNameConfiguration.class)

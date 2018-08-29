@@ -210,7 +210,8 @@ public class ResourceMockBuilder {
 			when(resource.exists()).thenReturn(exists);
 			when(resource.listResources()).thenReturn(new ArrayList<>(subResources));
 			return resource;
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			throw new AssertionError(ex);
 		}
 	}

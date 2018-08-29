@@ -24,6 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -31,22 +38,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
-
 public class DirectoryDataSetBuilderTest {
 
 	@Test
 	public void it_should_create_default_directory_dataset() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
 
@@ -58,22 +57,22 @@ public class DirectoryDataSetBuilderTest {
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
 		Resource r1 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.setFile()
-				.setFilename("foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.setFile()
+			.setFilename("foo.xml")
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/bar.xml")
-				.setFile()
-				.setFilename("bar.xml")
-				.build();
+			.fromClasspath("/dataset/xml/bar.xml")
+			.setFile()
+			.setFilename("bar.xml")
+			.build();
 
 		Resource directory = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.addSubResources(r1, r2)
-				.setDirectory()
-				.build();
+			.fromClasspath("/dataset/xml")
+			.addSubResources(r1, r2)
+			.setDirectory()
+			.build();
 
 		ResourceComparator comparator = mock(ResourceComparator.class);
 		when(comparator.compare(any(Resource.class), any(Resource.class))).thenAnswer(new Answer<Integer>() {

@@ -24,6 +24,9 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
@@ -32,9 +35,6 @@ import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.jar.JarFile;
-
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Static IO Utilities.
@@ -66,10 +66,12 @@ public final class Io {
 			while ((line = buf.readLine()) != null) {
 				visitor.visit(line);
 			}
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			log.error(ex.getMessage());
 			throw ex;
-		} finally {
+		}
+		finally {
 			closeQuietly(buf);
 		}
 	}
@@ -131,7 +133,8 @@ public final class Io {
 		try {
 			closeable.close();
 			return true;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			log.warn(ex.getMessage());
 			return false;
 		}

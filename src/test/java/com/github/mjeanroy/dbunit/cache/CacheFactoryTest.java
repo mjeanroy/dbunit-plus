@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.writeStaticField;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
 import org.junit.After;
 import org.junit.Test;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.writeStaticField;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CacheFactoryTest {
 

@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
+import org.junit.Test;
+
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
 import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.Test;
 
 public class FilesTest {
 

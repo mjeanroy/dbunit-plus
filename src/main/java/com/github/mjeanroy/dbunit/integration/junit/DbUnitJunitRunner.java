@@ -24,15 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-
-import java.util.List;
-
-import org.junit.rules.TestRule;
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
-
 import com.github.mjeanroy.dbunit.commons.io.Io;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -41,6 +32,14 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
+import org.junit.rules.TestRule;
+import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.InitializationError;
+
+import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 
 /**
  * Implementation of JUnit {@link org.junit.runner.Runner} to fill and clear
@@ -116,7 +115,8 @@ public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
 			url = a2.url();
 			user = a2.user();
 			password = a2.password();
-		} else {
+		}
+		else {
 			url = a1.url();
 			user = a1.user();
 			password = a1.password();

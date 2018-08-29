@@ -42,9 +42,9 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
@@ -56,20 +56,20 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_return_table_names() throws Exception {
 		Resource r1 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.setFilename("foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.setFilename("foo.xml")
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/bar.xml")
-				.setFilename("bar.xml")
-				.build();
+			.fromClasspath("/dataset/xml/bar.xml")
+			.setFilename("bar.xml")
+			.build();
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.addSubResources(r1, r2)
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.addSubResources(r1, r2)
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
@@ -83,22 +83,22 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_get_table() throws Exception {
 		Resource r1 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.setFile()
-				.setFilename("foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.setFile()
+			.setFilename("foo.xml")
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/bar.xml")
-				.setFile()
-				.setFilename("bar.xml")
-				.build();
+			.fromClasspath("/dataset/xml/bar.xml")
+			.setFile()
+			.setFilename("bar.xml")
+			.build();
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.addSubResources(r1, r2)
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.addSubResources(r1, r2)
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
@@ -114,22 +114,22 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_get_table_metadata() throws Exception {
 		Resource r1 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.setFile()
-				.setFilename("foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.setFile()
+			.setFilename("foo.xml")
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/bar.xml")
-				.setFile()
-				.setFilename("bar.xml")
-				.build();
+			.fromClasspath("/dataset/xml/bar.xml")
+			.setFile()
+			.setFilename("bar.xml")
+			.build();
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.addSubResources(r1, r2)
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.addSubResources(r1, r2)
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
@@ -157,22 +157,22 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_iterate_over_tables() throws Exception {
 		Resource r1 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.setFile()
-				.setFilename("foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.setFile()
+			.setFilename("foo.xml")
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/bar.xml")
-				.setFile()
-				.setFilename("bar.xml")
-				.build();
+			.fromClasspath("/dataset/xml/bar.xml")
+			.setFile()
+			.setFilename("bar.xml")
+			.build();
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.addSubResources(r1, r2)
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.addSubResources(r1, r2)
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
@@ -193,22 +193,22 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
 		Resource r1 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.setFile()
-				.setFilename("foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.setFile()
+			.setFilename("foo.xml")
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/bar.xml")
-				.setFile()
-				.setFilename("bar.xml")
-				.build();
+			.fromClasspath("/dataset/xml/bar.xml")
+			.setFile()
+			.setFilename("bar.xml")
+			.build();
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.addSubResources(r1, r2)
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.addSubResources(r1, r2)
+			.build();
 
 		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
@@ -229,9 +229,9 @@ public class DirectoryDataSetTest {
 	@Test
 	public void it_should_check_for_case_insensitive_names() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.build();
 
 		DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
 		DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());

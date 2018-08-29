@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
+import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
+import org.junit.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
-import org.junit.Test;
 
 public abstract class AbstractCacheTest {
 
@@ -39,8 +39,8 @@ public abstract class AbstractCacheTest {
 		String value = "bar";
 
 		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>()
-				.add(key, value)
-				.build();
+			.add(key, value)
+			.build();
 
 		Cache<String, String> cache = createCache(loader);
 		assertThat(cache.size()).isZero();
@@ -62,8 +62,8 @@ public abstract class AbstractCacheTest {
 		String value = "bar";
 
 		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>()
-				.add(key, value)
-				.build();
+			.add(key, value)
+			.build();
 
 		Cache<String, String> cache = createCache(loader);
 		assertThat(cache.size()).isZero();

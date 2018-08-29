@@ -24,20 +24,20 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import static java.lang.reflect.Modifier.isStatic;
+import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
-import com.github.mjeanroy.dbunit.commons.collections.Predicate;
+import static java.lang.reflect.Modifier.isStatic;
 
 /**
  * Filter to check if a given field is static.
  */
 class MemberStaticPredicate<T extends Member> implements Predicate<T> {
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private static final MemberStaticPredicate<? extends Member> INSTANCE = new MemberStaticPredicate();
 
 

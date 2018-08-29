@@ -24,14 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-
-import java.io.File;
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
@@ -48,6 +40,14 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
+
+import java.io.File;
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
+import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Run liquibase change sets against SQL connection.

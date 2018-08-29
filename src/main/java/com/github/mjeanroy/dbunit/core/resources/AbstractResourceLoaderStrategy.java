@@ -85,10 +85,12 @@ abstract class AbstractResourceLoaderStrategy implements ResourceLoaderStrategy 
 
 		try {
 			resource = doLoad(path);
-		} catch (ResourceNotFoundException ex) {
+		}
+		catch (ResourceNotFoundException ex) {
 			// Just rethrow it.
 			throw ex;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			throw new DataSetLoaderException(ex);
 		}

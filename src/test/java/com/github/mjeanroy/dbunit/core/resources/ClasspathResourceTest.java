@@ -72,10 +72,10 @@ public class ClasspathResourceTest {
 		String expected = readTestResource(path).trim();
 		String output = readStream(stream).trim();
 		assertThat(expected)
-				.isNotEmpty()
-				.startsWith("<dataset>")
-				.endsWith("</dataset>")
-				.isEqualTo(output);
+			.isNotEmpty()
+			.startsWith("<dataset>")
+			.endsWith("</dataset>")
+			.isEqualTo(output);
 	}
 
 	@Test
@@ -116,8 +116,8 @@ public class ClasspathResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	@Test
@@ -129,17 +129,17 @@ public class ClasspathResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.are(isInstanceOf(ClasspathResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("foo.xml", "bar.xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.are(isInstanceOf(ClasspathResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("foo.xml", "bar.xml");
 	}
 
 	@Test
@@ -151,17 +151,17 @@ public class ClasspathResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.are(isInstanceOf(ClasspathResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("foo.xml", "bar.xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.are(isInstanceOf(ClasspathResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("foo.xml", "bar.xml");
 	}
 
 	@Test
@@ -173,17 +173,17 @@ public class ClasspathResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(1)
-				.are(isInstanceOf(ClasspathResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(1)
+			.are(isInstanceOf(ClasspathResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("xml");
 	}
 
 	@Test

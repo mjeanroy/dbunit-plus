@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import java.util.List;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Parse JSON file and return DBUnit dataSet as {@link Map}.

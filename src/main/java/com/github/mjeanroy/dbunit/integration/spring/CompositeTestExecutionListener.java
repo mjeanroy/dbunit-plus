@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import java.util.List;
-
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
+
+import java.util.List;
 
 /**
  * Allow execution of several {@link TestExecutionListener} in the right order.
@@ -123,7 +123,8 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 		for (TestExecutionListener listener : listeners) {
 			try {
 				func.apply(listener);
-			} catch (Exception e) {
+			}
+			catch (Exception e) {
 				log.error(e.getMessage(), e);
 				ex = e;
 			}

@@ -24,17 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Collection;
-
+import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import java.util.Collection;
+
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileResourceScannerTest extends AbstractResourceScannerTest {
 
@@ -48,63 +47,63 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 	@Test
 	public void it_should_return_list_of_files() {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.build();
+			.fromClasspath("/dataset/xml")
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isNotEmpty()
-				.hasSize(2)
-				.are(InstanceOfCondition.isInstanceOf(FileResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly("foo.xml", "bar.xml");
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.are(InstanceOfCondition.isInstanceOf(FileResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly("foo.xml", "bar.xml");
 	}
 
 	@Test
 	public void it_should_return_empty_list_without_directory() {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	@Test
 	public void it_should_not_scan_recursively() {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset")
-				.build();
+			.fromClasspath("/dataset")
+			.build();
 
 		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-				.isNotNull()
-				.isNotEmpty()
-				.are(isInstanceOf(FileResource.class))
-				.extracting(new Extractor<Resource, String>() {
-					@Override
-					public String extract(Resource resource) {
-						return resource.getFilename();
-					}
-				})
-				.containsOnly(
-						"xml",
-						"json",
-						"csv",
-						"replacements",
-						"qualified-table-names"
-				);
+			.isNotNull()
+			.isNotEmpty()
+			.are(isInstanceOf(FileResource.class))
+			.extracting(new Extractor<Resource, String>() {
+				@Override
+				public String extract(Resource resource) {
+					return resource.getFilename();
+				}
+			})
+			.containsOnly(
+				"xml",
+				"json",
+				"csv",
+				"replacements",
+				"qualified-table-names"
+			);
 	}
 
 	@Override

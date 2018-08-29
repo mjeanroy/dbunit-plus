@@ -35,7 +35,7 @@ public final class CacheFactory {
 	 * Flag to know if Guava is available in the classpath.
 	 */
 	// Package visible for tests.
-	private static final boolean GUAVA_AVAILABLE =  ClassUtils.isPresent("com.google.common.cache.Cache");
+	private static final boolean GUAVA_AVAILABLE = ClassUtils.isPresent("com.google.common.cache.Cache");
 
 	// Ensure non instantiation.
 	private CacheFactory() {

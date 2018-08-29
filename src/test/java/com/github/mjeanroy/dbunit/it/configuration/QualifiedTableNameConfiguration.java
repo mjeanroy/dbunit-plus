@@ -24,9 +24,8 @@
 
 package com.github.mjeanroy.dbunit.it.configuration;
 
-import org.dbunit.database.DatabaseConfig;
-
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import org.dbunit.database.DatabaseConfig;
 
 public class QualifiedTableNameConfiguration implements DbUnitConfigInterceptor {
 

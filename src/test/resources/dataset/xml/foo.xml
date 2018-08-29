@@ -23,6 +23,6 @@
 -->
 
 <dataset>
-	<foo id="1" name="John Doe" />
-	<foo id="2" name="Jane Doe" />
+  <foo id="1" name="John Doe"/>
+  <foo id="2" name="Jane Doe"/>
 </dataset>

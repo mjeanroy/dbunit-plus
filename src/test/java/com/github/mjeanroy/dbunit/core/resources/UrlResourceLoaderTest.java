@@ -24,15 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.net.URL;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -41,6 +32,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.net.URL;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class UrlResourceLoaderTest {
 
@@ -81,10 +81,10 @@ public class UrlResourceLoaderTest {
 		String dataset = readTestResource(path);
 
 		stubFor(WireMock.get(urlEqualTo(path))
-				.willReturn(aResponse()
-						.withStatus(200)
-						.withHeader("Content-Type", "text/xml")
-						.withBody(dataset.trim())));
+			.willReturn(aResponse()
+				.withStatus(200)
+				.withHeader("Content-Type", "text/xml")
+				.withBody(dataset.trim())));
 
 		URL url = url(path);
 
@@ -107,10 +107,10 @@ public class UrlResourceLoaderTest {
 
 	private URL url(String path) {
 		return new UrlBuilder()
-				.setProtocol("http")
-				.setHost("localhost")
-				.setPort(port)
-				.setPath(path)
-				.build();
+			.setProtocol("http")
+			.setHost("localhost")
+			.setPort(port)
+			.setPath(path)
+			.build();
 	}
 }

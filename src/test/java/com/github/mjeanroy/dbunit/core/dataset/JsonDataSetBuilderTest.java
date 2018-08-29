@@ -24,22 +24,22 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class JsonDataSetBuilderTest {
 
 	@Test
 	public void it_should_create_default_data_set_with_file() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/json/foo.json")
-				.build();
+			.fromClasspath("/dataset/json/foo.json")
+			.build();
 
 		JsonDataSet dataSet = new JsonDataSetBuilder(resource).build();
 
@@ -51,8 +51,8 @@ public class JsonDataSetBuilderTest {
 	@Test
 	public void it_should_create_custom_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/json/foo.json")
-				.build();
+			.fromClasspath("/dataset/json/foo.json")
+			.build();
 
 		JsonParser parser = mock(JsonParser.class);
 

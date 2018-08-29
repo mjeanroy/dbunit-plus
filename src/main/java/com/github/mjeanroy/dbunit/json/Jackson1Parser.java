@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Json Parser using Jackson (V2) {@link com.fasterxml.jackson.databind.ObjectMapper} as internal implementation.

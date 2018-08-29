@@ -24,18 +24,18 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeScript;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
+import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeScript;
 
 /**
  * Function to execute SQL script against SQL connection.

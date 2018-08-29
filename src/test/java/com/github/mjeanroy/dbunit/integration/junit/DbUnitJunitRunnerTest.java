@@ -24,18 +24,17 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDeprecatedDbUnitConfiguration;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
 import org.assertj.core.api.Condition;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TestRule;
 
-import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDeprecatedDbUnitConfiguration;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbUnitJunitRunnerTest {
 
@@ -60,14 +59,14 @@ public class DbUnitJunitRunnerTest {
 	public void it_should_create_runner_with_deprecated_dbunit_configuration() throws Exception {
 		DbUnitJunitRunner runner = new DbUnitJunitRunner(TestClassWithDeprecatedDbUnitConfiguration.class);
 		assertThat(runner.getTestRules(new TestClassWithDeprecatedDbUnitConfiguration()))
-				.isNotNull()
-				.isNotEmpty()
-				.areAtLeastOne(new Condition<TestRule>() {
-					@Override
-					public boolean matches(TestRule testRule) {
-						return testRule instanceof DbUnitRule;
-					}
-				});
+			.isNotNull()
+			.isNotEmpty()
+			.areAtLeastOne(new Condition<TestRule>() {
+				@Override
+				public boolean matches(TestRule testRule) {
+					return testRule instanceof DbUnitRule;
+				}
+			});
 	}
 
 	@Test

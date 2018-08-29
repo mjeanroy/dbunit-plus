@@ -72,10 +72,12 @@ class UrlResource extends AbstractResource implements Resource {
 		try {
 			connection = (HttpURLConnection) url.openConnection();
 			return connection.getResponseCode() != 404;
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			log.warn(ex.getMessage());
 			return false;
-		} finally {
+		}
+		finally {
 			// Do not forget to disconnect
 			if (connection != null) {
 				connection.disconnect();
@@ -95,7 +97,8 @@ class UrlResource extends AbstractResource implements Resource {
 		URLConnection connection = url.openConnection();
 		try {
 			return connection.getInputStream();
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			// Try to disconnect.
 			if (connection instanceof HttpURLConnection) {
 				((HttpURLConnection) connection).disconnect();

@@ -24,9 +24,9 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExceptionsTest {
 
@@ -35,7 +35,8 @@ public class ExceptionsTest {
 		RuntimeException ex = new RuntimeException();
 		try {
 			Exceptions.launderThrowable(ex);
-		} catch (Throwable thrown) {
+		}
+		catch (Throwable thrown) {
 			assertThat(thrown).isSameAs(ex);
 		}
 	}
@@ -45,7 +46,8 @@ public class ExceptionsTest {
 		Error ex = new Error();
 		try {
 			Exceptions.launderThrowable(ex);
-		} catch (Throwable thrown) {
+		}
+		catch (Throwable thrown) {
 			assertThat(thrown).isSameAs(ex);
 		}
 	}
@@ -55,7 +57,8 @@ public class ExceptionsTest {
 		Exception ex = new Exception();
 		try {
 			Exceptions.launderThrowable(ex);
-		} catch (Throwable thrown) {
+		}
+		catch (Throwable thrown) {
 			assertThat(thrown).isNotSameAs(ex).hasMessage("Not unchecked");
 			assertThat(thrown.getCause()).isSameAs(ex);
 		}

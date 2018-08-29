@@ -24,7 +24,10 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -33,10 +36,7 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
 
 /**
  * Abstract implementation of {@link JsonParser} that create {@link Reader} from
@@ -65,10 +65,12 @@ public abstract class AbstractJsonParser implements JsonParser {
 			reader = new InputStreamReader(stream);
 			buf = new BufferedReader(reader);
 			return doParse(buf);
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			throw new JsonException(ex);
-		} finally {
+		}
+		finally {
 			closeSafely(stream);
 			closeSafely(reader);
 			closeSafely(buf);

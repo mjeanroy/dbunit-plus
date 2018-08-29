@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -37,12 +37,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InOrder;
-
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SqlScriptParserTest {
 
@@ -204,8 +203,8 @@ public class SqlScriptParserTest {
 	@Test
 	public void it_should_parse_file() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/sql/init.sql")
-				.build();
+			.fromClasspath("/sql/init.sql")
+			.build();
 
 		List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
@@ -260,8 +259,8 @@ public class SqlScriptParserTest {
 	@Test
 	public void it_should_execute_sql_file() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/sql/init.sql")
-				.build();
+			.fromClasspath("/sql/init.sql")
+			.build();
 
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);

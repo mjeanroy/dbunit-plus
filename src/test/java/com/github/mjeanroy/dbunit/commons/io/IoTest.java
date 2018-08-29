@@ -24,11 +24,10 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InOrder;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -40,10 +39,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.jar.JarFile;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.InOrder;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 public class IoTest {
 

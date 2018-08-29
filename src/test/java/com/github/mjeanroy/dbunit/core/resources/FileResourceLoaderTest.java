@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+
+import java.io.File;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileResourceLoaderTest {
 

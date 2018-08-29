@@ -188,7 +188,8 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 				}
 
 				return unmodifiableSet(results);
-			} finally {
+			}
+			finally {
 				closeSafely(jar);
 			}
 		}

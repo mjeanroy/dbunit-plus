@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.exception.ResourceException;
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.exception.ResourceNotValidException;
+
+import java.util.Collection;
 
 /**
  * Scanner that can be used to get the list of sub-resources

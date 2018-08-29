@@ -170,7 +170,8 @@ public final class Files {
 				}
 
 				current = new StringBuilder();
-			} else {
+			}
+			else {
 				current.append(c);
 			}
 		}

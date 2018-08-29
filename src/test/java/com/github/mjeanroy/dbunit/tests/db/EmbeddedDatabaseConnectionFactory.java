@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.tests.db;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class EmbeddedDatabaseConnectionFactory implements JdbcConnectionFactory {
 

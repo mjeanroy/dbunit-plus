@@ -78,7 +78,8 @@ public class CacheLoaderMockBuilder<T, V> {
 			}
 
 			return loader;
-		} catch (Exception ex) {
+		}
+		catch (Exception ex) {
 			throw new AssertionError(ex);
 		}
 	}

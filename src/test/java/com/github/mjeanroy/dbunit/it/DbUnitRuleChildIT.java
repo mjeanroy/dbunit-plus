@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.it;
 
+import org.junit.Test;
+
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.Test;
 
 public class DbUnitRuleChildIT extends DbUnitRuleIT {
 

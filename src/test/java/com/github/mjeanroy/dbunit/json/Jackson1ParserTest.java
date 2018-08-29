@@ -24,18 +24,6 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
-import static org.hamcrest.core.Is.isA;
-import static org.junit.rules.ExpectedException.none;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
@@ -45,6 +33,18 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
+import static org.hamcrest.core.Is.isA;
+import static org.junit.rules.ExpectedException.none;
 
 public class Jackson1ParserTest {
 
@@ -57,8 +57,8 @@ public class Jackson1ParserTest {
 		Jackson1Parser parser = new Jackson1Parser(mapper);
 
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/json/foo.json")
-				.build();
+			.fromClasspath("/dataset/json/foo.json")
+			.build();
 
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
@@ -101,8 +101,8 @@ public class Jackson1ParserTest {
 		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(stream)
-				.build();
+			.withReader(stream)
+			.build();
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -119,8 +119,8 @@ public class Jackson1ParserTest {
 		byte[] bytes = json.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder()
-				.withReader(stream)
-				.build();
+			.withReader(stream)
+			.build();
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -138,8 +138,8 @@ public class Jackson1ParserTest {
 		InputStream stream = new ByteArrayInputStream(bytes);
 
 		Resource resource = new ResourceMockBuilder()
-				.withReader(stream)
-				.build();
+			.withReader(stream)
+			.build();
 
 		ObjectMapper mapper = new ObjectMapper();
 

@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.lang.reflect.Method;
-
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSetAndLiquibase;
 import org.junit.ClassRule;
 import org.junit.Test;
+
+import java.lang.reflect.Method;
+
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbUnitRunnerWithLiquibaseTest {
 

@@ -24,9 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
-import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
-import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
+import com.github.mjeanroy.dbunit.exception.SqlParserException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,11 +36,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
-import com.github.mjeanroy.dbunit.exception.SqlParserException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
+import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
+import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
 /**
  * Run SQL script against SQL {@link java.sql.Connection}.
@@ -102,10 +102,12 @@ public final class SqlScriptParser {
 		try {
 			stream = sqlFile.openStream();
 			return parseScript(stream, configuration);
-		} catch (IOException ex) {
+		}
+		catch (IOException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new SqlParserException(ex);
-		} finally {
+		}
+		finally {
 			closeSafely(stream);
 		}
 	}

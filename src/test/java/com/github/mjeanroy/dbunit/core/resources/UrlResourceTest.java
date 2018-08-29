@@ -66,10 +66,10 @@ public class UrlResourceTest {
 		String path = "/dataset/json/foo.json";
 		String dataset = readTestResource(path);
 		stubFor(WireMock.get(urlEqualTo(path))
-				.willReturn(aResponse()
-						.withStatus(200)
-						.withHeader("Content-Type", "text/xml")
-						.withBody(dataset.trim())));
+			.willReturn(aResponse()
+				.withStatus(200)
+				.withHeader("Content-Type", "text/xml")
+				.withBody(dataset.trim())));
 
 		URL url = url(path);
 		UrlResource resource = new UrlResource(url);
@@ -117,10 +117,10 @@ public class UrlResourceTest {
 		String path = "/dataset/json/foo.json";
 		String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
-				.willReturn(aResponse()
-						.withStatus(200)
-						.withHeader("Content-Type", "text/xml")
-						.withBody(dataset)));
+			.willReturn(aResponse()
+				.withStatus(200)
+				.withHeader("Content-Type", "text/xml")
+				.withBody(dataset)));
 
 		URL url = url(path);
 		UrlResource resource = new UrlResource(url);
@@ -135,10 +135,10 @@ public class UrlResourceTest {
 		String path = "/dataset/json/foo.json";
 		String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
-				.willReturn(aResponse()
-						.withStatus(200)
-						.withHeader("Content-Type", "text/xml")
-						.withBody(dataset)));
+			.willReturn(aResponse()
+				.withStatus(200)
+				.withHeader("Content-Type", "text/xml")
+				.withBody(dataset)));
 
 		URL url = url(path);
 		UrlResource resource = new UrlResource(url);
@@ -146,8 +146,8 @@ public class UrlResourceTest {
 		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	@Test
@@ -170,10 +170,10 @@ public class UrlResourceTest {
 
 	private URL url(String path) {
 		return new UrlBuilder()
-				.setProtocol("http")
-				.setHost("localhost")
-				.setPort(port)
-				.setPath(path)
-				.build();
+			.setProtocol("http")
+			.setHost("localhost")
+			.setPort(port)
+			.setPath(path)
+			.build();
 	}
 }

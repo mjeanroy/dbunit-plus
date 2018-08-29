@@ -24,8 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.IDataSet;
@@ -33,19 +31,21 @@ import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 public class DataSetTypeTest {
 
 	@Test
 	public void it_should_match_json_file() {
 		Resource r1 = new ResourceMockBuilder()
-				.setFilename("foo.json")
-				.setFile()
-				.build();
+			.setFilename("foo.json")
+			.setFile()
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.setFilename("FOO.JSON")
-				.setFile()
-				.build();
+			.setFilename("FOO.JSON")
+			.setFile()
+			.build();
 
 		assertThat(DataSetType.JSON.match(r1)).isTrue();
 		assertThat(DataSetType.XML.match(r1)).isFalse();
@@ -61,8 +61,8 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_json_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/json/foo.json")
-				.build();
+			.fromClasspath("/dataset/json/foo.json")
+			.build();
 
 		IDataSet dataSet = DataSetType.JSON.create(resource);
 
@@ -74,14 +74,14 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_xml_file() {
 		Resource r1 = new ResourceMockBuilder()
-				.setFilename("foo.xml")
-				.setFile()
-				.build();
+			.setFilename("foo.xml")
+			.setFile()
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.setFilename("FOO.XML")
-				.setFile()
-				.build();
+			.setFilename("FOO.XML")
+			.setFile()
+			.build();
 
 		assertThat(DataSetType.XML.match(r1)).isTrue();
 		assertThat(DataSetType.JSON.match(r1)).isFalse();
@@ -97,8 +97,8 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_xml_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml/foo.xml")
-				.build();
+			.fromClasspath("/dataset/xml/foo.xml")
+			.build();
 
 		IDataSet dataSet = DataSetType.XML.create(resource);
 
@@ -110,14 +110,14 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_csv_file() {
 		Resource r1 = new ResourceMockBuilder()
-				.setFilename("foo.csv")
-				.setFile()
-				.build();
+			.setFilename("foo.csv")
+			.setFile()
+			.build();
 
 		Resource r2 = new ResourceMockBuilder()
-				.setFilename("FOO.CSV")
-				.setFile()
-				.build();
+			.setFilename("FOO.CSV")
+			.setFile()
+			.build();
 
 		assertThat(DataSetType.CSV.match(r1)).isTrue();
 		assertThat(DataSetType.XML.match(r1)).isFalse();
@@ -133,8 +133,8 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_csv_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/csv/foo.csv")
-				.build();
+			.fromClasspath("/dataset/csv/foo.csv")
+			.build();
 
 		IDataSet dataSet = DataSetType.CSV.create(resource);
 
@@ -146,9 +146,9 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_directory_file() {
 		Resource resource = new ResourceMockBuilder()
-				.setFilename("foo")
-				.setDirectory()
-				.build();
+			.setFilename("foo")
+			.setDirectory()
+			.build();
 
 		assertThat(DataSetType.DIRECTORY.match(resource)).isTrue();
 		assertThat(DataSetType.CSV.match(resource)).isFalse();
@@ -159,9 +159,9 @@ public class DataSetTypeTest {
 	@Test
 	public void it_should_match_directory_data_set() throws Exception {
 		Resource resource = new ResourceMockBuilder()
-				.fromClasspath("/dataset/xml")
-				.setDirectory()
-				.build();
+			.fromClasspath("/dataset/xml")
+			.setDirectory()
+			.build();
 
 		IDataSet dataSet = DataSetType.DIRECTORY.create(resource);
 

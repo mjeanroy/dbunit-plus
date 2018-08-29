@@ -67,8 +67,8 @@ class FileResourceLoader extends AbstractResourceLoaderStrategy implements Resou
 	Resource doLoad(String path) throws Exception {
 		final String prefix = extractPrefix(path);
 		final String filePath = prefix != null && !prefix.isEmpty() ?
-				path.substring(prefix.length()) :
-				path;
+			path.substring(prefix.length()) :
+			path;
 
 		final File file = new File(filePath);
 		return new FileResource(file);

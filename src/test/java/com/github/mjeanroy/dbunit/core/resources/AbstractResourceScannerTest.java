@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Collection;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 
 public abstract class AbstractResourceScannerTest {
 
@@ -44,9 +44,9 @@ public abstract class AbstractResourceScannerTest {
 	public void it_should_fail_if_resource_does_not_exist() {
 		String path = "/dataset/fake.xml";
 		Resource resource = new ResourceMockBuilder()
-				.setPath(path)
-				.setExists(false)
-				.build();
+			.setPath(path)
+			.setExists(false)
+			.build();
 
 		thrown.expect(ResourceNotFoundException.class);
 		thrown.expectMessage(String.format("Resource <%s> does not exist", path));
@@ -58,16 +58,16 @@ public abstract class AbstractResourceScannerTest {
 	public void it_should_returns_empty_list_without_directory() {
 		String path = "/dataset/xml/foo.xml";
 		Resource resource = new ResourceMockBuilder()
-				.setPath(path)
-				.setFile()
-				.build();
+			.setPath(path)
+			.setFile()
+			.build();
 
 		Collection<Resource> resources = getScanner().scan(resource);
 
 		verify(resource).isDirectory();
 		assertThat(resources)
-				.isNotNull()
-				.isEmpty();
+			.isNotNull()
+			.isEmpty();
 	}
 
 	abstract ResourceScanner getScanner();
