@@ -48,7 +48,7 @@ public class UrlResourceLoaderTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort(), false);
 
 	private int port;
 

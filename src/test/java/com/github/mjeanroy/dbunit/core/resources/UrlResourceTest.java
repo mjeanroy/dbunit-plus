@@ -41,6 +41,7 @@ import java.util.Collection;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.resetAllRequests;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
@@ -52,7 +53,7 @@ public class UrlResourceTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort());
+	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort(), false);
 
 	private int port;
 
