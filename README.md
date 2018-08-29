@@ -30,7 +30,7 @@ import org.junit.Rule;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitRule;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
 
 @DbUnitDataSet("/dbunit")
 @DbUnitInit(sql = "/sql/schema.sql")
@@ -71,7 +71,7 @@ import org.junit.runner.RunWith;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitDataSet("/dbunit")
@@ -131,7 +131,7 @@ package com.github.mjeanroy.repository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -178,8 +178,8 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitRule;
-import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRule;
 
 @DbUnitDataSet("/dbunit")
 public class MyRepositoryTest {
@@ -188,7 +188,7 @@ public class MyRepositoryTest {
     public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
 
     @Rule
-    public DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory {
+    public DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
         @Override
         protected Connection createConnection() throws Exception {
             return dbRule.getDb().getConnection();
@@ -219,7 +219,7 @@ import org.junit.Rule;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.integration.spring.DbUnitEmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.integration.spring.junit4.DbUnitEmbeddedDatabaseRule;
 
 @DbUnitDataSet("/dbunit")
 public class MyRepositoryTest {
@@ -255,7 +255,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 
 @DbUnitDataSet("/dbunit/xml")
 @DbUnitLiquibase("/liquibase/changelog.xml")

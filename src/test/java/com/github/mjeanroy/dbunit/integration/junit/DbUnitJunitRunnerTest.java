@@ -24,56 +24,11 @@
 
 package com.github.mjeanroy.dbunit.integration.junit;
 
-import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDeprecatedDbUnitConfiguration;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
-import org.assertj.core.api.Condition;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.junit.rules.TestRule;
+public class DbUnitJunitRunnerTest extends com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunnerTest {
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-public class DbUnitJunitRunnerTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
-	@Test
-	public void it_should_create_runner() throws Exception {
-		DbUnitJunitRunner runner = new DbUnitJunitRunner(TestClassWithRunner.class);
-		assertThat(runner.getTestRules(new TestClassWithRunner()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
-
-	@Test
-	public void it_should_create_runner_with_deprecated_dbunit_configuration() throws Exception {
-		DbUnitJunitRunner runner = new DbUnitJunitRunner(TestClassWithDeprecatedDbUnitConfiguration.class);
-		assertThat(runner.getTestRules(new TestClassWithDeprecatedDbUnitConfiguration()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
-
-	@Test
-	public void it_should_fail_if_runner_does_not_have_annotation() throws Exception {
-		thrown.expect(DbUnitException.class);
-		thrown.expectMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");
-
-		new DbUnitJunitRunner(TestClassWithRunnerWithoutConfiguration.class);
+	@Override
+	@SuppressWarnings("deprecation")
+	protected DbUnitJunitRunner createRunner(Class<?> klass) throws Exception {
+		return new DbUnitJunitRunner(klass);
 	}
 }

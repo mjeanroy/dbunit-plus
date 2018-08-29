@@ -30,7 +30,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitRule;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.ClassRule;
 import org.junit.Rule;

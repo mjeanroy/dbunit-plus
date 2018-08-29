@@ -30,7 +30,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import com.github.mjeanroy.dbunit.it.configuration.QualifiedTableNameConfiguration;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.BeforeClass;

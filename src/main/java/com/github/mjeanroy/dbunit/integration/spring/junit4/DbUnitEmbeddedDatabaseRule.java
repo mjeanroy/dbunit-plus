@@ -22,9 +22,15 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.spring;
+package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 /**
  * This rule provide a fine integration between spring embedded database
@@ -33,17 +39,24 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
  *   <li>Ensure that embedded database is started and available before dbUnit load dataSet.</li>
  *   <li>Shutdown database after test.</li>
  * </ul>
- *
- * @deprecated Use {@link com.github.mjeanroy.dbunit.integration.spring.DbUnitEmbeddedDatabaseRule} instead.
  */
-@Deprecated
-public class DbUnitEmbeddedDatabaseRule extends com.github.mjeanroy.dbunit.integration.spring.junit4.DbUnitEmbeddedDatabaseRule {
+public class DbUnitEmbeddedDatabaseRule implements TestRule {
+
+	/**
+	 * Rule used to start/shutdown embedded database before/after test execution.
+	 */
+	private final EmbeddedDatabaseRule dbRule;
+
+	/**
+	 * Rule used to load/unload dataSet before/after test execution.
+	 */
+	private final DbUnitRule dbUnitRule;
 
 	/**
 	 * Create rule with default database.
 	 */
 	public DbUnitEmbeddedDatabaseRule() {
-		super();
+		this(new EmbeddedDatabaseBuilder().build());
 	}
 
 	/**
@@ -52,6 +65,32 @@ public class DbUnitEmbeddedDatabaseRule extends com.github.mjeanroy.dbunit.integ
 	 * @param db Embedded database.
 	 */
 	public DbUnitEmbeddedDatabaseRule(EmbeddedDatabase db) {
-		super(db);
+		dbRule = new EmbeddedDatabaseRule(db);
+		dbUnitRule = new DbUnitRule(new JdbcDataSourceConnectionFactory(db));
+	}
+
+	@Override
+	public Statement apply(final Statement base, final Description description) {
+		return new Statement() {
+			@Override
+			public void evaluate() throws Throwable {
+				dbRule.before();
+				try {
+					dbUnitRule.apply(base, description).evaluate();
+				}
+				finally {
+					dbRule.after();
+				}
+			}
+		};
+	}
+
+	/**
+	 * Get embedded database.
+	 *
+	 * @return Embedded database.
+	 */
+	public EmbeddedDatabase getDb() {
+		return dbRule.getDb();
 	}
 }

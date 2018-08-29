@@ -24,74 +24,19 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
-import org.junit.Test;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.runner.Description.createTestDescription;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+public class DbUnitEmbeddedDatabaseRuleTest extends com.github.mjeanroy.dbunit.integration.spring.junit4.DbUnitEmbeddedDatabaseRuleTest {
 
-public class DbUnitEmbeddedDatabaseRuleTest {
-
-	@Test
-	public void it_should_create_rule_with_database() {
-		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		DbUnitEmbeddedDatabaseRule rule = new DbUnitEmbeddedDatabaseRule(db);
-		assertThat(rule.getDb()).isSameAs(db);
+	@Override
+	@SuppressWarnings("deprecation")
+	protected DbUnitEmbeddedDatabaseRule createRule() {
+		return new DbUnitEmbeddedDatabaseRule();
 	}
 
-	@Test
-	public void it_should_create_rule_with_default_database() {
-		DbUnitEmbeddedDatabaseRule rule = new DbUnitEmbeddedDatabaseRule();
-		assertThat(rule.getDb()).isNotNull();
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Test
-	public void it_should_start_database_and_load_data_set() throws Throwable {
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
-
-		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
-			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
-			.build());
-
-		final DbUnitEmbeddedDatabaseRule rule = new DbUnitEmbeddedDatabaseRule(db);
-
-		Statement result = rule.apply(statement, description);
-
-		assertThat(result).isNotNull();
-		verify(statement, never()).evaluate();
-		verify(db, never()).shutdown();
-
-		doAnswer(new Answer() {
-			@Override
-			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
-				return null;
-			}
-		}).when(statement).evaluate();
-
-		result.evaluate();
-
-		InOrder inOrder = inOrder(db, statement);
-		inOrder.verify(statement).evaluate();
-		inOrder.verify(db).shutdown();
+	@Override
+	@SuppressWarnings("deprecation")
+	protected DbUnitEmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
+		return new DbUnitEmbeddedDatabaseRule(db);
 	}
 }

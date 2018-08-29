@@ -22,20 +22,44 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.spring;
+package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
+import org.junit.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
-public class EmbeddedDatabaseRuleTest extends com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRuleTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-	@Override
-	@SuppressWarnings("deprecation")
+public class EmbeddedDatabaseRuleTest {
+
+	@Test
+	public void it_should_create_rule() {
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseRule rule = createRule(db);
+		assertThat(rule.getDb())
+			.isNotNull()
+			.isSameAs(db);
+	}
+
+	@Test
+	public void it_should_create_default_rule() {
+		EmbeddedDatabaseRule rule = createRule();
+		assertThat(rule.getDb()).isNotNull();
+	}
+
+	@Test
+	public void it_should_shutdown_db_after_test() {
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseRule rule = createRule(db);
+		rule.after();
+		verify(db).shutdown();
+	}
+
 	protected EmbeddedDatabaseRule createRule() {
 		return new EmbeddedDatabaseRule();
 	}
 
-	@Override
-	@SuppressWarnings("deprecation")
 	protected EmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
 		return new EmbeddedDatabaseRule(db);
 	}

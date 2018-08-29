@@ -25,11 +25,12 @@
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+@SuppressWarnings("deprecation")
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 @Ignore("This is a test fixtures")

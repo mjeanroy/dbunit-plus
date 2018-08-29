@@ -54,11 +54,11 @@ public class DbUnitRunnerTest {
 
 		DbUnitRunner runner = new DbUnitRunner(klass, factory);
 
-		assertThat(readPrivate(runner, "testClass"))
+		assertThat((Class<?>) readPrivate(runner, "testClass"))
 			.isNotNull()
 			.isSameAs(klass);
 
-		assertThat(readPrivate(runner, "factory"))
+		assertThat((JdbcConnectionFactory) readPrivate(runner, "factory"))
 			.isNotNull()
 			.isSameAs(factory);
 
@@ -77,11 +77,11 @@ public class DbUnitRunnerTest {
 
 		DbUnitRunner runner = new DbUnitRunner(klass, factory);
 
-		assertThat(readPrivate(runner, "testClass"))
+		assertThat((Class<?>) readPrivate(runner, "testClass"))
 			.isNotNull()
 			.isSameAs(klass);
 
-		assertThat(readPrivate(runner, "factory"))
+		assertThat((JdbcConnectionFactory) readPrivate(runner, "factory"))
 			.isNotNull()
 			.isSameAs(factory);
 
@@ -96,7 +96,7 @@ public class DbUnitRunnerTest {
 
 		DbUnitRunner runner = new DbUnitRunner(klass, dataSource);
 
-		assertThat(readPrivate(runner, "factory"))
+		assertThat((JdbcConnectionFactory) readPrivate(runner, "factory"))
 			.isNotNull()
 			.isExactlyInstanceOf(JdbcDataSourceConnectionFactory.class);
 	}

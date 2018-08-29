@@ -22,21 +22,57 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.spring;
+package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
+import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
-public class EmbeddedDatabaseRuleTest extends com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRuleTest {
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-	@Override
-	@SuppressWarnings("deprecation")
-	protected EmbeddedDatabaseRule createRule() {
-		return new EmbeddedDatabaseRule();
+/**
+ * Rule used to start/stop embedded database.
+ */
+public class EmbeddedDatabaseRule extends ExternalResource {
+
+	/**
+	 * Instance of {@link EmbeddedDatabase}.
+	 */
+	private final EmbeddedDatabase db;
+
+	/**
+	 * Create rule.
+	 *
+	 * @param db Embedded database.
+	 */
+	public EmbeddedDatabaseRule(EmbeddedDatabase db) {
+		this.db = notNull(db, "Embedded database must not be null");
+	}
+
+	/**
+	 * Create rule with default builder.
+	 */
+	public EmbeddedDatabaseRule() {
+		this(new EmbeddedDatabaseBuilder().build());
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	protected EmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
-		return new EmbeddedDatabaseRule(db);
+	protected void before() throws Throwable {
+		super.before();
+	}
+
+	@Override
+	protected void after() {
+		super.after();
+		this.db.shutdown();
+	}
+
+	/**
+	 * Gets currently created database instance.
+	 *
+	 * @return Database instance, may be {@code null} until rule has not been started.
+	 */
+	public EmbeddedDatabase getDb() {
+		return this.db;
 	}
 }

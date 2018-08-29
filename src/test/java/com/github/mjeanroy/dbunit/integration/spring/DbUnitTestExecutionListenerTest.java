@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
@@ -78,11 +79,11 @@ public class DbUnitTestExecutionListenerTest {
 		DbUnitRunner runner = captor.getValue();
 		assertThat(runner).isNotNull();
 
-		assertThat(readPrivate(runner, "testClass"))
+		assertThat((Class<?>) readPrivate(runner, "testClass"))
 			.isNotNull()
 			.isSameAs(testClass);
 
-		assertThat(readPrivate(runner, "factory"))
+		assertThat((JdbcConnectionFactory) readPrivate(runner, "factory"))
 			.isNotNull()
 			.isExactlyInstanceOf(JdbcDataSourceConnectionFactory.class);
 

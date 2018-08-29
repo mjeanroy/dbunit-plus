@@ -22,18 +22,28 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.junit;
+package com.github.mjeanroy.dbunit.integration.junit4;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
 
 /**
  * JUnit Rule to setup DbUnit database for each tests.
- *
- * @deprecated Use {@link com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule} instead.
  */
-@Deprecated
-public class DbUnitRule extends com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule {
+public class DbUnitRule implements TestRule {
+
+	/**
+	 * Factory to create instance of {@link Connection} for each test.
+	 */
+	private final JdbcConnectionFactory connectionFactory;
 
 	/**
 	 * Create rule using {@link JdbcConfiguration} instance.
@@ -41,7 +51,7 @@ public class DbUnitRule extends com.github.mjeanroy.dbunit.integration.junit4.Db
 	 * @param configuration JDBC Configuration.
 	 */
 	public DbUnitRule(JdbcConfiguration configuration) {
-		super(configuration);
+		this(new JdbcDefaultConnectionFactory(configuration));
 	}
 
 	/**
@@ -50,6 +60,37 @@ public class DbUnitRule extends com.github.mjeanroy.dbunit.integration.junit4.Db
 	 * @param factory JDBC Configuration.
 	 */
 	public DbUnitRule(JdbcConnectionFactory factory) {
-		super(factory);
+		this.connectionFactory = factory;
+	}
+
+	@Override
+	public Statement apply(final Statement statement, final Description description) {
+		return new Statement() {
+			@Override
+			public void evaluate() throws Throwable {
+				final Class<?> testClass = description.getTestClass();
+				final String methodName = description.getMethodName();
+				final Method method = methodName == null ? null : testClass.getMethod(methodName);
+				final DbUnitRunner runner = new DbUnitRunner(testClass, connectionFactory);
+
+				runner.beforeTest(method);
+
+				try {
+					statement.evaluate();
+				}
+				finally {
+					runner.afterTest(method);
+				}
+			}
+		};
+	}
+
+	/**
+	 * Get new SQL connection.
+	 *
+	 * @return SQL Connection.
+	 */
+	public Connection getConnection() {
+		return connectionFactory.getConnection();
 	}
 }

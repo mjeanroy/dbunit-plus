@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.integration.junit.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;

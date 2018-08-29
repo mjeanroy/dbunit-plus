@@ -176,8 +176,8 @@ public class CollectionsTest {
 
 	@Test
 	public void it_should_get_first_element_of_collection() {
-		assertThat(first(null)).isNull();
-		assertThat(first(emptyList())).isNull();
+		assertThat((Object) first(null)).isNull();
+		assertThat((Object) first(emptyList())).isNull();
 		assertThat(first(singleton("foo"))).isEqualTo("foo");
 	}
 }
