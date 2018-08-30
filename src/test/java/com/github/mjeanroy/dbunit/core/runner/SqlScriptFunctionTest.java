@@ -28,11 +28,10 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -41,19 +40,17 @@ import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+@SuppressWarnings("SameParameterValue")
 public class SqlScriptFunctionTest {
 
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(true);
-
-	@Rule
-	public ExpectedException thrown = none();
 
 	private SqlScriptParserConfiguration configuration;
 
@@ -72,9 +69,11 @@ public class SqlScriptFunctionTest {
 
 	@Test
 	public void it_should_load_script() throws Exception {
+		final SqlScriptFunction func = new SqlScriptFunction(factory, configuration);
+
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
-			public Connection answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Connection answer(InvocationOnMock invocationOnMock) {
 				return dbRule.getConnection();
 			}
 		});
@@ -82,7 +81,6 @@ public class SqlScriptFunctionTest {
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
 
-		SqlScriptFunction func = new SqlScriptFunction(factory, configuration);
 		func.apply("/sql/data.sql");
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
@@ -93,13 +91,22 @@ public class SqlScriptFunctionTest {
 
 	@Test
 	public void it_should_wrap_sql_exception() throws Exception {
-		Connection connection = mock(Connection.class);
+		final Connection connection = mock(Connection.class);
+		final SqlScriptFunction func = new SqlScriptFunction(factory, configuration);
+
 		when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Fail Test"));
 		when(factory.getConnection()).thenReturn(connection);
 
-		thrown.expect(DbUnitException.class);
+		assertThatThrownBy(applyFunction(func, "/sql/data.sql"))
+			.isExactlyInstanceOf(DbUnitException.class);
+	}
 
-		SqlScriptFunction func = new SqlScriptFunction(factory, configuration);
-		func.apply("/sql/data.sql");
+	private static ThrowingCallable applyFunction(final SqlScriptFunction func, final String script) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				func.apply(script);
+			}
+		};
 	}
 }

@@ -25,33 +25,30 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class ResourceLoaderTest {
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
 
-	@Rule
-	public ExpectedException thrown = none();
-
 	@Test
 	public void it_should_find_classpath_loader() {
-		String path = "classpath:/dataset/xml/foo.xml";
+		final String path = "classpath:/dataset/xml/foo.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.CLASSPATH);
 	}
 
 	@Test
 	public void it_should_load_file_from_classpath() {
-		Resource resource = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/foo.xml");
+		final Resource resource = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/foo.xml");
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(FileResource.class);
 		assertThat(resource.exists()).isTrue();
@@ -59,7 +56,7 @@ public class ResourceLoaderTest {
 
 	@Test
 	public void it_should_load_file_from_a_jar() {
-		Resource resource = ResourceLoader.CLASSPATH.load("classpath:/jar/dataset/xml/foo.xml");
+		final Resource resource = ResourceLoader.CLASSPATH.load("classpath:/jar/dataset/xml/foo.xml");
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(ClasspathResource.class);
 		assertThat(resource.exists()).isTrue();
@@ -67,45 +64,54 @@ public class ResourceLoaderTest {
 
 	@Test
 	public void it_should_fail_if_file_does_not_exist_in_classpath() {
-		String resource = "classpath:/dataset/xml/unknown.xml";
-		thrown.expect(ResourceNotFoundException.class);
-		thrown.expectMessage(String.format("Resource <%s> does not exist", resource));
-		ResourceLoader.CLASSPATH.load(resource);
+		final String resource = "classpath:/dataset/xml/unknown.xml";
+		assertThatThrownBy(load(ResourceLoader.CLASSPATH, resource))
+			.isExactlyInstanceOf(ResourceNotFoundException.class)
+			.hasMessage(String.format("Resource <%s> does not exist", resource));
 	}
 
 	@Test
 	public void it_should_find_file_system_loader() {
-		String path = "file:/dataset/xml/foo.xml";
+		final String path = "file:/dataset/xml/foo.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.FILE_SYSTEM);
 	}
 
 	@Test
 	public void it_should_load_file_from_file_system() throws Exception {
-		File tmpFile = tmp.newFile("foo.xml");
-		String path = tmpFile.getAbsolutePath();
+		final File tmpFile = tmp.newFile("foo.xml");
+		final String path = tmpFile.getAbsolutePath();
+		final Resource resource = ResourceLoader.FILE_SYSTEM.load("file:" + path);
 
-		Resource resource = ResourceLoader.FILE_SYSTEM.load("file:" + path);
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(FileResource.class);
 	}
 
 	@Test
 	public void it_should_fail_if_file_does_not_exist_in_file_system() {
-		String resource = "file:/dataset/xml/unknown.xml";
-		thrown.expect(ResourceNotFoundException.class);
-		thrown.expectMessage(String.format("Resource <%s> does not exist", resource));
-		ResourceLoader.FILE_SYSTEM.load(resource);
+		final String resource = "file:/dataset/xml/unknown.xml";
+		assertThatThrownBy(load(ResourceLoader.FILE_SYSTEM, resource))
+			.isExactlyInstanceOf(ResourceNotFoundException.class)
+			.hasMessage(String.format("Resource <%s> does not exist", resource));
 	}
 
 	@Test
 	public void it_should_find_url_loader() {
-		String path = "http://foo.com/dataset/xml/foo.xml";
+		final String path = "http://foo.com/dataset/xml/foo.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
 	}
 
 	@Test
 	public void it_should_find_url_loader_with_https() {
-		String path = "https://foo.com/dataset/xml/foo.xml";
+		final String path = "https://foo.com/dataset/xml/foo.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
+	}
+
+	private static ThrowingCallable load(final ResourceLoader loader, final String resource) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				loader.load(resource);
+			}
+		};
 	}
 }

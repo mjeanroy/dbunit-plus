@@ -24,10 +24,9 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
@@ -37,15 +36,12 @@ import java.io.IOException;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.Is.is;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 public class CompositeTestExecutionListenerTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private TestContext ctx;
 	private TestExecutionListener listener1;
@@ -60,16 +56,16 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_create_listener() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");
+		final TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
 
-		TestExecutionListener[] listeners = readPrivate(listener, "listeners");
 		assertThat(listeners)
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(listener1, listener2);
 
-		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
 		assertThat(reverseListeners)
 			.isNotNull()
 			.isNotEmpty()
@@ -79,7 +75,7 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_prepare_instances() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.prepareTestInstance(ctx);
 
@@ -90,7 +86,7 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_before_test_class() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestClass(ctx);
 
@@ -101,7 +97,7 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_before_test_method() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestMethod(ctx);
 
@@ -112,7 +108,7 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_after_test_class() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestClass(ctx);
 
@@ -123,7 +119,7 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_after_test_method() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestMethod(ctx);
 
@@ -134,15 +130,22 @@ public class CompositeTestExecutionListenerTest {
 
 	@Test
 	public void it_should_return_last_exception() throws Exception {
-		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		final Exception ex1 = new IOException();
+		final Exception ex2 = new IOException();
 
-		Exception ex1 = new IOException();
-		Exception ex2 = new IOException();
 		doThrow(ex1).when(listener1).prepareTestInstance(ctx);
 		doThrow(ex2).when(listener2).prepareTestInstance(ctx);
 
-		thrown.expect(is(ex2));
+		assertThatThrownBy(prepareTestInstance(listener, ctx)).isSameAs(ex2);
+	}
 
-		listener.prepareTestInstance(ctx);
+	private static ThrowingCallable prepareTestInstance(final CompositeTestExecutionListener listener, final TestContext ctx) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				listener.prepareTestInstance(ctx);
+			}
+		};
 	}
 }

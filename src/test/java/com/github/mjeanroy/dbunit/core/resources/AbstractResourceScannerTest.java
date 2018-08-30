@@ -26,43 +26,40 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.Rule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
 public abstract class AbstractResourceScannerTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void it_should_fail_if_resource_does_not_exist() {
-		String path = "/dataset/fake.xml";
-		Resource resource = new ResourceMockBuilder()
+		final ResourceScanner scanner = getScanner();
+		final String path = "/dataset/fake.xml";
+		final Resource resource = new ResourceMockBuilder()
 			.setPath(path)
 			.setExists(false)
 			.build();
 
-		thrown.expect(ResourceNotFoundException.class);
-		thrown.expectMessage(String.format("Resource <%s> does not exist", path));
-
-		getScanner().scan(resource);
+		assertThatThrownBy(scan(scanner, resource))
+			.isExactlyInstanceOf(ResourceNotFoundException.class)
+			.hasMessage(String.format("Resource <%s> does not exist", path));
 	}
 
 	@Test
 	public void it_should_returns_empty_list_without_directory() {
-		String path = "/dataset/xml/foo.xml";
-		Resource resource = new ResourceMockBuilder()
+		final String path = "/dataset/xml/foo.xml";
+		final Resource resource = new ResourceMockBuilder()
 			.setPath(path)
 			.setFile()
 			.build();
 
-		Collection<Resource> resources = getScanner().scan(resource);
+		final Collection<Resource> resources = getScanner().scan(resource);
 
 		verify(resource).isDirectory();
 		assertThat(resources)
@@ -71,4 +68,13 @@ public abstract class AbstractResourceScannerTest {
 	}
 
 	abstract ResourceScanner getScanner();
+
+	private static ThrowingCallable scan(final ResourceScanner scanner, final Resource resource) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				scanner.scan(resource);
+			}
+		};
+	}
 }

@@ -27,59 +27,44 @@ package com.github.mjeanroy.dbunit.json;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.google.gson.Gson;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
-import static org.junit.rules.ExpectedException.none;
 
 public class GsonParserTest {
 
-	@Rule
-	public ExpectedException thrown = none();
-
 	@Test
-	public void it_should_parse_file() throws Exception {
-		Gson gson = new Gson();
-		GsonParser parser = new GsonParser(gson);
+	public void it_should_parse_file() {
+		final Gson gson = new Gson();
+		final GsonParser parser = new GsonParser(gson);
 
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.fromClasspath("/dataset/json/foo.json")
 			.build();
 
-		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
+		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(1)
 			.containsKey("foo");
 
-		List<Map<String, Object>> table = tables.get("foo");
-		assertThat(table)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2);
+		final List<Map<String, Object>> table = tables.get("foo");
+		assertThat(table).hasSize(2);
 
-		Map<String, Object> row1 = table.get(0);
+		final Map<String, Object> row1 = table.get(0);
 		assertThat(row1)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(
 				entry("id", 1D),
 				entry("name", "John Doe")
 			);
 
-		Map<String, Object> row2 = table.get(1);
+		final Map<String, Object> row2 = table.get(1);
 		assertThat(row2)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(
 				entry("id", 2D),

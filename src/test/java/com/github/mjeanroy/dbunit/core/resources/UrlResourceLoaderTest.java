@@ -28,10 +28,10 @@ import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.net.URL;
 
@@ -41,11 +41,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UrlResourceLoaderTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort(), false);
@@ -77,8 +75,8 @@ public class UrlResourceLoaderTest {
 
 	@Test
 	public void it_should_load_resource() {
-		String path = "/dataset/json/foo.json";
-		String dataset = readTestResource(path);
+		final String path = "/dataset/json/foo.json";
+		final String dataset = readTestResource(path);
 
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
@@ -86,9 +84,9 @@ public class UrlResourceLoaderTest {
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset.trim())));
 
-		URL url = url(path);
+		final URL url = url(path);
+		final Resource resource = loader.load(url.toString());
 
-		Resource resource = loader.load(url.toString());
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
 		assertThat(resource.getFilename()).isEqualTo("foo.json");
@@ -96,13 +94,12 @@ public class UrlResourceLoaderTest {
 
 	@Test
 	public void it_should_not_load_unknown_resource() {
-		String path = "/dataset/json/fake.json";
-		URL url = url(path);
+		final String path = "/dataset/json/fake.json";
+		final URL url = url(path);
 
-		thrown.expect(ResourceNotFoundException.class);
-		thrown.expectMessage(String.format("Resource <%s> does not exist", url.toString()));
-
-		loader.load(url.toString());
+		assertThatThrownBy(load(loader, url.toString()))
+			.isExactlyInstanceOf(ResourceNotFoundException.class)
+			.hasMessage(String.format("Resource <%s> does not exist", url.toString()));
 	}
 
 	private URL url(String path) {
@@ -112,5 +109,14 @@ public class UrlResourceLoaderTest {
 			.setPort(port)
 			.setPath(path)
 			.build();
+	}
+
+	private static ThrowingCallable load(final UrlResourceLoader loader, final String url) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				loader.load(url);
+			}
+		};
 	}
 }

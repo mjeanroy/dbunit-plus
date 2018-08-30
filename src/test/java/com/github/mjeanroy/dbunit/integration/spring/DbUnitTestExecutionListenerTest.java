@@ -30,10 +30,9 @@ import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.ArgumentCaptor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.TestContext;
@@ -43,6 +42,7 @@ import java.lang.reflect.Method;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -55,22 +55,20 @@ public class DbUnitTestExecutionListenerTest {
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@SuppressWarnings({"unchecked"})
 	@Test
 	public void it_should_prepare_test_and_initialize_runner() throws Exception {
-		TestContext ctx = mock(TestContext.class);
+		final TestContext ctx = mock(TestContext.class);
 
-		Class testClass = TestClassWithDataSet.class;
+		final Class testClass = TestClassWithDataSet.class;
 		when(ctx.getTestClass()).thenReturn(testClass);
 
-		ApplicationContext appContext = mock(ApplicationContext.class);
+		final ApplicationContext appContext = mock(ApplicationContext.class);
 		when(appContext.getBean(DataSource.class)).thenReturn(dbRule.getDb());
 		when(ctx.getApplicationContext()).thenReturn(appContext);
 
-		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+
 		listener.prepareTestInstance(ctx);
 
 		ArgumentCaptor<DbUnitRunner> captor = ArgumentCaptor.forClass(DbUnitRunner.class);
@@ -93,11 +91,11 @@ public class DbUnitTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_before_test() throws Exception {
-		DbUnitRunner runner = mock(DbUnitRunner.class);
-		TestSetup tst = setupTest(runner);
-		TestContext ctx = tst.ctx;
+		final DbUnitRunner runner = mock(DbUnitRunner.class);
+		final TestSetup tst = setupTest(runner);
+		final TestContext ctx = tst.ctx;
+		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
-		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 		listener.beforeTestMethod(ctx);
 
 		verify(ctx).getAttribute(DBUNIT_RUNNER_KEY);
@@ -106,11 +104,11 @@ public class DbUnitTestExecutionListenerTest {
 
 	@Test
 	public void it_should_execute_after_test() throws Exception {
-		DbUnitRunner runner = mock(DbUnitRunner.class);
-		TestSetup tst = setupTest(runner);
-		TestContext ctx = tst.ctx;
+		final DbUnitRunner runner = mock(DbUnitRunner.class);
+		final TestSetup tst = setupTest(runner);
+		final TestContext ctx = tst.ctx;
+		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
-		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 		listener.afterTestMethod(ctx);
 
 		verify(ctx).getAttribute(DBUNIT_RUNNER_KEY);
@@ -119,33 +117,32 @@ public class DbUnitTestExecutionListenerTest {
 
 	@Test
 	public void it_should_fail_before_test_if_dbunit_runner_is_not_found() throws Exception {
-		TestSetup tst = setupTest(null);
-		TestContext ctx = tst.ctx;
-		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		final TestSetup tst = setupTest(null);
+		final TestContext ctx = tst.ctx;
+		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
-		thrown.expect(DbUnitException.class);
-		thrown.expectMessage("DbUnit runner is missing, attribute DBUNIT_RUNNER may have been removed from TestContext instance");
-		listener.beforeTestMethod(ctx);
+		assertThatThrownBy(beforeTestMethod(listener, ctx))
+			.isExactlyInstanceOf(DbUnitException.class)
+			.hasMessage("DbUnit runner is missing, attribute DBUNIT_RUNNER may have been removed from TestContext instance");
 	}
 
 	@Test
 	public void it_should_fail_after_test_if_dbunit_runner_is_not_found() throws Exception {
-		TestSetup tst = setupTest(null);
-		TestContext ctx = tst.ctx;
-		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		final TestSetup tst = setupTest(null);
+		final TestContext ctx = tst.ctx;
+		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
-		thrown.expect(DbUnitException.class);
-		thrown.expectMessage("DbUnit runner is missing, attribute DBUNIT_RUNNER may have been removed from TestContext instance");
-		listener.afterTestMethod(ctx);
+		assertThatThrownBy(afterTestMethod(listener, ctx))
+			.isExactlyInstanceOf(DbUnitException.class)
+			.hasMessage("DbUnit runner is missing, attribute DBUNIT_RUNNER may have been removed from TestContext instance");
 	}
 
 	@SuppressWarnings("unchecked")
 	private TestSetup setupTest(DbUnitRunner runner) throws Exception {
-		TestContext ctx = mock(TestContext.class);
+		final TestContext ctx = mock(TestContext.class);
+		final Class klass = TestClassWithDataSet.class;
+		final Method method = klass.getMethod("method1");
 
-		Class klass = TestClassWithDataSet.class;
-
-		Method method = klass.getMethod("method1");
 		when(ctx.getTestClass()).thenReturn(klass);
 		when(ctx.getTestMethod()).thenReturn(method);
 		when(ctx.getAttribute(DBUNIT_RUNNER_KEY)).thenReturn(runner);
@@ -161,5 +158,23 @@ public class DbUnitTestExecutionListenerTest {
 			this.ctx = ctx;
 			this.method = method;
 		}
+	}
+
+	private static ThrowingCallable beforeTestMethod(final DbUnitTestExecutionListener listener, final TestContext ctx) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				listener.beforeTestMethod(ctx);
+			}
+		};
+	}
+
+	private static ThrowingCallable afterTestMethod(final DbUnitTestExecutionListener listener, final TestContext ctx) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				listener.afterTestMethod(ctx);
+			}
+		};
 	}
 }

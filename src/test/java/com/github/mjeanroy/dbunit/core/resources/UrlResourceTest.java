@@ -29,10 +29,10 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -41,16 +41,14 @@ import java.util.Collection;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.resetAllRequests;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("SameParameterValue")
 public class UrlResourceTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Rule
 	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort(), false);
@@ -64,87 +62,85 @@ public class UrlResourceTest {
 
 	@Test
 	public void it_should_return_true_if_file_exists() {
-		String path = "/dataset/json/foo.json";
-		String dataset = readTestResource(path);
+		final String path = "/dataset/json/foo.json";
+		final String dataset = readTestResource(path);
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
 				.withStatus(200)
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset.trim())));
 
-		URL url = url(path);
-		UrlResource resource = new UrlResource(url);
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.exists()).isTrue();
 	}
 
 	@Test
 	public void it_should_return_false_if_file_does_not_exists() {
-		String path = "/dataset/json/foo.json";
-		URL url = url(path);
-		UrlResource resource = new UrlResource(url);
+		final String path = "/dataset/json/foo.json";
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.exists()).isFalse();
 	}
 
 	@Test
 	public void it_should_return_get_file_name() {
-		String path = "/dataset/json/foo.json";
-		URL url = url(path);
-		UrlResource resource = new UrlResource(url);
+		final String path = "/dataset/json/foo.json";
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.getFilename()).isEqualTo("foo.json");
 	}
 
 	@Test
 	public void it_should_return_false_if_not_directory() {
-		String path = "/dataset/json/foo.json";
-		URL url = url(path);
-		UrlResource resource = new UrlResource(url);
+		final String path = "/dataset/json/foo.json";
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.isDirectory()).isFalse();
 	}
 
 	@Test
 	public void it_should_return_get_file_handler() {
-		String path = "/dataset/json/foo.json";
-		URL url = url(path);
+		final String path = "/dataset/json/foo.json";
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
 
-		thrown.expect(UnsupportedOperationException.class);
-		thrown.expectMessage(String.format("Resource %s cannot be resolved to absolute file path because it does not reside in the file system", url.toString()));
-
-		UrlResource resource = new UrlResource(url);
-		resource.toFile();
+		assertThatThrownBy(toFile(resource))
+			.isExactlyInstanceOf(UnsupportedOperationException.class)
+			.hasMessage(String.format("Resource %s cannot be resolved to absolute file path because it does not reside in the file system", url.toString()));
 	}
 
 	@Test
 	public void it_should_get_input_stream() throws Exception {
-		String path = "/dataset/json/foo.json";
-		String dataset = readTestResource(path).trim();
+		final String path = "/dataset/json/foo.json";
+		final String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
 				.withStatus(200)
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset)));
 
-		URL url = url(path);
-		UrlResource resource = new UrlResource(url);
-		InputStream stream = resource.openStream();
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
+		final InputStream stream = resource.openStream();
+		final String result = readStream(stream).trim();
 
-		String result = readStream(stream).trim();
 		assertThat(result).isEqualTo(dataset);
 	}
 
 	@Test
 	public void it_should_return_empty_sub_resources() {
-		String path = "/dataset/json/foo.json";
-		String dataset = readTestResource(path).trim();
+		final String path = "/dataset/json/foo.json";
+		final String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
 				.withStatus(200)
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset)));
 
-		URL url = url(path);
-		UrlResource resource = new UrlResource(url);
-
-		Collection<Resource> subResources = resource.listResources();
+		final URL url = url(path);
+		final UrlResource resource = new UrlResource(url);
+		final Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
 			.isNotNull()
@@ -162,9 +158,9 @@ public class UrlResourceTest {
 
 	@Test
 	public void it_should_implement_to_string() {
-		String path = "/dataset/json/foo.json";
-		URL url = url(path);
-		UrlResource r1 = new UrlResource(url);
+		final String path = "/dataset/json/foo.json";
+		final URL url = url(path);
+		final UrlResource r1 = new UrlResource(url);
 
 		assertThat(r1.toString()).isEqualTo(String.format("UrlResource{url: %s}", url.toString()));
 	}
@@ -176,5 +172,14 @@ public class UrlResourceTest {
 			.setPort(port)
 			.setPath(path)
 			.build();
+	}
+
+	private static ThrowingCallable toFile(final UrlResource resource) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				resource.toFile();
+			}
+		};
 	}
 }

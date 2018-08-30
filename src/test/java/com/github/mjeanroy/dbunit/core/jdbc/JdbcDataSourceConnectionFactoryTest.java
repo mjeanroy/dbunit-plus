@@ -25,34 +25,30 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
-import org.junit.Rule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class JdbcDataSourceConnectionFactoryTest {
 
-	@Rule
-	public ExpectedException thrown = none();
-
 	@Test
 	public void it_should_create_connection() throws Exception {
-		DataSource dataSource = mock(DataSource.class);
+		final DataSource dataSource = mock(DataSource.class);
+		final Connection connection = mock(Connection.class);
 
-		Connection connection = mock(Connection.class);
 		when(dataSource.getConnection()).thenReturn(connection);
 
-		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		Connection result = factory.getConnection();
+		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
+		final Connection result = factory.getConnection();
 
 		assertThat(result)
 			.isNotNull()
@@ -63,12 +59,21 @@ public class JdbcDataSourceConnectionFactoryTest {
 
 	@Test
 	public void it_should_fail_if_connection_cannot_be_loaded() throws Exception {
-		DataSource dataSource = mock(DataSource.class);
+		final DataSource dataSource = mock(DataSource.class);
+		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
+
 		when(dataSource.getConnection()).thenThrow(new SQLException());
 
-		thrown.expect(JdbcException.class);
+		assertThatThrownBy(getConnection(factory))
+			.isExactlyInstanceOf(JdbcException.class);
+	}
 
-		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		factory.getConnection();
+	private static ThrowingCallable getConnection(final JdbcDataSourceConnectionFactory factory) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				factory.getConnection();
+			}
+		};
 	}
 }

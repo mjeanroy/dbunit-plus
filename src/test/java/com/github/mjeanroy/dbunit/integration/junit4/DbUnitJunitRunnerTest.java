@@ -29,21 +29,18 @@ import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDeprecatedDbUnitCo
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunner;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
 import org.assertj.core.api.Condition;
-import org.junit.Rule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TestRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class DbUnitJunitRunnerTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void it_should_create_runner() throws Exception {
-		DbUnitJunitRunner runner = createRunner(TestClassWithRunner.class);
+		final DbUnitJunitRunner runner = createRunner(TestClassWithRunner.class);
 		assertThat(runner.getTestRules(new TestClassWithRunner()))
 			.isNotNull()
 			.isNotEmpty()
@@ -57,7 +54,7 @@ public class DbUnitJunitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_with_deprecated_dbunit_configuration() throws Exception {
-		DbUnitJunitRunner runner = createRunner(TestClassWithDeprecatedDbUnitConfiguration.class);
+		final DbUnitJunitRunner runner = createRunner(TestClassWithDeprecatedDbUnitConfiguration.class);
 		assertThat(runner.getTestRules(new TestClassWithDeprecatedDbUnitConfiguration()))
 			.isNotNull()
 			.isNotEmpty()
@@ -70,14 +67,20 @@ public class DbUnitJunitRunnerTest {
 	}
 
 	@Test
-	public void it_should_fail_if_runner_does_not_have_annotation() throws Exception {
-		thrown.expect(DbUnitException.class);
-		thrown.expectMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");
-
-		createRunner(TestClassWithRunnerWithoutConfiguration.class);
+	public void it_should_fail_if_runner_does_not_have_annotation() {
+		assertThatThrownBy(createRunner)
+			.isExactlyInstanceOf(DbUnitException.class)
+			.hasMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");
 	}
 
 	protected DbUnitJunitRunner createRunner(Class<?> klass) throws Exception {
 		return new DbUnitJunitRunner(klass);
 	}
+
+	private ThrowingCallable createRunner = new ThrowingCallable() {
+		@Override
+		public void call() throws Throwable {
+			createRunner(TestClassWithRunnerWithoutConfiguration.class);
+		}
+	};
 }

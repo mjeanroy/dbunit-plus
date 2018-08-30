@@ -24,9 +24,8 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import org.junit.Rule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InOrder;
 
 import java.io.BufferedInputStream;
@@ -40,6 +39,7 @@ import java.sql.SQLException;
 import java.util.jar.JarFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -47,36 +47,34 @@ import static org.mockito.Mockito.verify;
 
 public class IoTest {
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void it_should_close_input() throws Exception {
-		Closeable closeable = mock(Closeable.class);
-		boolean result = Io.closeQuietly(closeable);
+		final Closeable closeable = mock(Closeable.class);
+		final boolean result = Io.closeQuietly(closeable);
 		verify(closeable).close();
 		assertThat(result).isTrue();
 	}
 
 	@Test
 	public void it_should_close_input_and_silent_error() throws Exception {
-		Closeable closeable = mock(Closeable.class);
+		final Closeable closeable = mock(Closeable.class);
 		doThrow(new IOException()).when(closeable).close();
-		boolean result = Io.closeQuietly(closeable);
+
+		final boolean result = Io.closeQuietly(closeable);
 		verify(closeable).close();
 		assertThat(result).isFalse();
 	}
 
 	@Test
 	public void it_should_read_reader_line_by_line() throws Exception {
-		String line1 = "foo";
-		String line2 = "bar";
-		String text = "" +
+		final String line1 = "foo";
+		final String line2 = "bar";
+		final String text = "" +
 			"foo" + System.getProperty("line.separator") +
 			"bar" + System.getProperty("line.separator");
 
-		InputStream reader = new ByteArrayInputStream(text.getBytes(Charset.defaultCharset()));
-		ReaderVisitor visitor = mock(ReaderVisitor.class);
+		final InputStream reader = new ByteArrayInputStream(text.getBytes(Charset.defaultCharset()));
+		final ReaderVisitor visitor = mock(ReaderVisitor.class);
 
 		Io.readLines(reader, visitor);
 
@@ -87,33 +85,32 @@ public class IoTest {
 
 	@Test
 	public void it_should_read_reader_and_rethrown_io_exception() throws Exception {
-		String text = "test foo bar";
-		byte[] bytes = text.getBytes(Charset.defaultCharset());
-		InputStream stream = new ByteArrayInputStream(bytes);
-		InputStream buf = new BufferedInputStream(stream);
-		ReaderVisitor visitor = mock(ReaderVisitor.class);
+		final String text = "test foo bar";
+		final byte[] bytes = text.getBytes(Charset.defaultCharset());
+		final InputStream stream = new ByteArrayInputStream(bytes);
+		final InputStream buf = new BufferedInputStream(stream);
+		final ReaderVisitor visitor = mock(ReaderVisitor.class);
 
 		buf.close();
 
-		thrown.expect(IOException.class);
-
-		Io.readLines(buf, visitor);
+		assertThatThrownBy(readLines(buf, visitor)).isInstanceOf(IOException.class);
 	}
 
 	@Test
 	public void it_should_close_connection() throws Exception {
-		Connection connection = mock(Connection.class);
-		boolean closed = Io.closeQuietly(connection);
+		final Connection connection = mock(Connection.class);
+		final boolean closed = Io.closeQuietly(connection);
 		assertThat(closed).isTrue();
 		verify(connection).close();
 	}
 
 	@Test
 	public void it_should_return_false_if_close_connection_fails() throws Exception {
-		Connection connection = mock(Connection.class);
+		final Connection connection = mock(Connection.class);
+
 		doThrow(SQLException.class).when(connection).close();
 
-		boolean closed = Io.closeQuietly(connection);
+		final boolean closed = Io.closeQuietly(connection);
 
 		assertThat(closed).isFalse();
 		verify(connection).close();
@@ -121,20 +118,30 @@ public class IoTest {
 
 	@Test
 	public void it_should_close_jar_file() throws Exception {
-		JarFile jarFile = mock(JarFile.class);
-		boolean closed = Io.closeQuietly(jarFile);
+		final JarFile jarFile = mock(JarFile.class);
+		final boolean closed = Io.closeQuietly(jarFile);
 		assertThat(closed).isTrue();
 		verify(jarFile).close();
 	}
 
 	@Test
 	public void it_should_return_false_if_close_jar_file_fails() throws Exception {
-		JarFile jarFile = mock(JarFile.class);
+		final JarFile jarFile = mock(JarFile.class);
+
 		doThrow(IOException.class).when(jarFile).close();
 
-		boolean closed = Io.closeQuietly(jarFile);
+		final boolean closed = Io.closeQuietly(jarFile);
 
 		assertThat(closed).isFalse();
 		verify(jarFile).close();
+	}
+
+	private static ThrowingCallable readLines(final InputStream buf, final ReaderVisitor visitor) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				Io.readLines(buf, visitor);
+			}
+		};
 	}
 }

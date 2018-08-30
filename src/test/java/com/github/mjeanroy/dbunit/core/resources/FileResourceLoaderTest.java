@@ -25,23 +25,22 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("SameParameterValue")
 public class FileResourceLoaderTest {
 
 	@Rule
 	public TemporaryFolder tmp = new TemporaryFolder();
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private FileResourceLoader loader;
 
@@ -65,10 +64,9 @@ public class FileResourceLoaderTest {
 
 	@Test
 	public void it_should_load_resource() throws Exception {
-		File tmpFile = tmp.newFile("foo.json");
-		String path = "file:" + tmpFile.getAbsolutePath();
-
-		Resource resource = loader.load(path);
+		final File tmpFile = tmp.newFile("foo.json");
+		final String path = "file:" + tmpFile.getAbsolutePath();
+		final Resource resource = loader.load(path);
 
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
@@ -77,9 +75,18 @@ public class FileResourceLoaderTest {
 
 	@Test
 	public void it_should_not_load_unknown_resource() {
-		String path = "file:/fake/unknown.json";
-		thrown.expect(ResourceNotFoundException.class);
-		thrown.expectMessage(String.format("Resource <%s> does not exist", path));
-		loader.load(path);
+		final String path = "file:/fake/unknown.json";
+		assertThatThrownBy(load(loader, path))
+			.isExactlyInstanceOf(ResourceNotFoundException.class)
+			.hasMessage(String.format("Resource <%s> does not exist", path));
+	}
+
+	private static ThrowingCallable load(final FileResourceLoader loader, final String path) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				loader.load(path);
+			}
+		};
 	}
 }

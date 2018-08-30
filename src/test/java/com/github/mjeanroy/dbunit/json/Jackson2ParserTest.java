@@ -30,9 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.Rule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -42,52 +41,39 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.MapEntry.entry;
-import static org.hamcrest.core.Is.isA;
-import static org.junit.rules.ExpectedException.none;
 
 public class Jackson2ParserTest {
 
-	@Rule
-	public ExpectedException thrown = none();
-
 	@Test
-	public void it_should_parse_file() throws Exception {
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson2Parser parser = new Jackson2Parser(mapper);
+	public void it_should_parse_file() {
+		final ObjectMapper mapper = new ObjectMapper();
+		final Jackson2Parser parser = new Jackson2Parser(mapper);
 
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.fromClasspath("/dataset/json/foo.json")
 			.build();
 
-		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
+		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(1)
 			.containsKey("foo");
 
-		List<Map<String, Object>> table = tables.get("foo");
-		assertThat(table)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2);
+		final List<Map<String, Object>> table = tables.get("foo");
+		assertThat(table).hasSize(2);
 
-		Map<String, Object> row1 = table.get(0);
+		final Map<String, Object> row1 = table.get(0);
 		assertThat(row1)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(
 				entry("id", 1),
 				entry("name", "John Doe")
 			);
 
-		Map<String, Object> row2 = table.get(1);
+		final Map<String, Object> row2 = table.get(1);
 		assertThat(row2)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.containsExactly(
 				entry("id", 2),
@@ -97,56 +83,62 @@ public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_wrap_json_parse_exception() {
-		String malformedJson = "{test: test}";
-		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
-		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder()
+		final String malformedJson = "{test: test}";
+		final byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
+		final InputStream stream = new ByteArrayInputStream(bytes);
+		final Resource resource = new ResourceMockBuilder()
 			.withReader(stream)
 			.build();
 
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();
+		final Jackson2Parser parser = new Jackson2Parser(mapper);
 
-		thrown.expect(JsonException.class);
-		thrown.expectCause(isA(JsonParseException.class));
-
-		Jackson2Parser parser = new Jackson2Parser(mapper);
-		parser.parse(resource);
+		assertThatThrownBy(parse(parser, resource))
+			.isExactlyInstanceOf(JsonException.class)
+			.hasCauseExactlyInstanceOf(JsonParseException.class);
 	}
 
 	@Test
 	public void it_should_wrap_json_mapping_exception() {
-		String json = "[\"test\"]";
-		byte[] bytes = json.getBytes(Charset.defaultCharset());
-		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder()
+		final String json = "[\"test\"]";
+		final byte[] bytes = json.getBytes(Charset.defaultCharset());
+		final InputStream stream = new ByteArrayInputStream(bytes);
+		final Resource resource = new ResourceMockBuilder()
 			.withReader(stream)
 			.build();
 
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();
+		final Jackson2Parser parser = new Jackson2Parser(mapper);
 
-		thrown.expect(JsonException.class);
-		thrown.expectCause(isA(JsonMappingException.class));
-
-		Jackson2Parser parser = new Jackson2Parser(mapper);
-		parser.parse(resource);
+		assertThatThrownBy(parse(parser, resource))
+			.isExactlyInstanceOf(JsonException.class)
+			.hasCauseInstanceOf(JsonMappingException.class);
 	}
 
 	@Test
-	public void it_should_wrap_io_exception() throws Exception {
-		String json = "";
-		byte[] bytes = json.getBytes(Charset.defaultCharset());
-		InputStream stream = new ByteArrayInputStream(bytes);
+	public void it_should_wrap_io_exception() {
+		final String json = "";
+		final byte[] bytes = json.getBytes(Charset.defaultCharset());
+		final InputStream stream = new ByteArrayInputStream(bytes);
 
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.withReader(stream)
 			.build();
 
-		ObjectMapper mapper = new ObjectMapper();
+		final ObjectMapper mapper = new ObjectMapper();
+		final Jackson2Parser parser = new Jackson2Parser(mapper);
 
-		thrown.expect(JsonException.class);
-		thrown.expectCause(isA(IOException.class));
+		assertThatThrownBy(parse(parser, resource))
+			.isExactlyInstanceOf(JsonException.class)
+			.hasCauseInstanceOf(IOException.class);
+	}
 
-		Jackson2Parser parser = new Jackson2Parser(mapper);
-		parser.parse(resource);
+	private static ThrowingCallable parse(final Jackson2Parser parser, final Resource resource) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				parser.parse(resource);
+			}
+		};
 	}
 }

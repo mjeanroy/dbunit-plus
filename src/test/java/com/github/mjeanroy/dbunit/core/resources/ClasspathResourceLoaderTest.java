@@ -25,17 +25,15 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@SuppressWarnings("SameParameterValue")
 public class ClasspathResourceLoaderTest {
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	private ClasspathResourceLoader loader;
 
@@ -59,8 +57,8 @@ public class ClasspathResourceLoaderTest {
 
 	@Test
 	public void it_should_load_resource() {
-		String path = "classpath:/dataset/json/foo.json";
-		Resource resource = loader.load(path);
+		final String path = "classpath:/dataset/json/foo.json";
+		final Resource resource = loader.load(path);
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
 		assertThat(resource.getFilename()).isEqualTo("foo.json");
@@ -68,9 +66,18 @@ public class ClasspathResourceLoaderTest {
 
 	@Test
 	public void it_should_not_load_unknown_resource() {
-		String path = "classpath:/fake/unknown.json";
-		thrown.expect(ResourceNotFoundException.class);
-		thrown.expectMessage(String.format("Resource <%s> does not exist", path));
-		loader.load(path);
+		final String path = "classpath:/fake/unknown.json";
+		assertThatThrownBy(load(loader, path))
+			.isExactlyInstanceOf(ResourceNotFoundException.class)
+			.hasMessage(String.format("Resource <%s> does not exist", path));
+	}
+
+	private static ThrowingCallable load(final ClasspathResourceLoader loader, final String path) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				loader.load(path);
+			}
+		};
 	}
 }

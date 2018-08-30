@@ -24,19 +24,15 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.writeStaticField;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.rules.ExpectedException.none;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class JsonParserFactoryTest {
-
-	@Rule
-	public ExpectedException thrown = none();
 
 	@After
 	public void tearDown() {
@@ -47,20 +43,16 @@ public class JsonParserFactoryTest {
 
 	@Test
 	public void it_should_create_jackson2_parser_by_default() {
-		JsonParser parser = JsonParserFactory.createDefault();
-		assertThat(parser)
-			.isNotNull()
-			.isExactlyInstanceOf(Jackson2Parser.class);
+		final JsonParser parser = JsonParserFactory.createDefault();
+		assertThat(parser).isExactlyInstanceOf(Jackson2Parser.class);
 	}
 
 	@Test
 	public void it_should_create_gson_parser_if_jackson2_is_not_available() {
 		writeStaticField(JsonParserFactory.class, "JACKSON2_AVAILABLE", false);
 
-		JsonParser parser = JsonParserFactory.createDefault();
-		assertThat(parser)
-			.isNotNull()
-			.isExactlyInstanceOf(GsonParser.class);
+		final JsonParser parser = JsonParserFactory.createDefault();
+		assertThat(parser).isExactlyInstanceOf(GsonParser.class);
 	}
 
 	@Test
@@ -68,10 +60,8 @@ public class JsonParserFactoryTest {
 		writeStaticField(JsonParserFactory.class, "JACKSON2_AVAILABLE", false);
 		writeStaticField(JsonParserFactory.class, "GSON_AVAILABLE", false);
 
-		JsonParser parser = JsonParserFactory.createDefault();
-		assertThat(parser)
-			.isNotNull()
-			.isExactlyInstanceOf(Jackson1Parser.class);
+		final JsonParser parser = JsonParserFactory.createDefault();
+		assertThat(parser).isExactlyInstanceOf(Jackson1Parser.class);
 	}
 
 	@Test
@@ -80,9 +70,18 @@ public class JsonParserFactoryTest {
 		writeStaticField(JsonParserFactory.class, "GSON_AVAILABLE", false);
 		writeStaticField(JsonParserFactory.class, "JACKSON1_AVAILABLE", false);
 
-		thrown.expect(UnsupportedOperationException.class);
-		thrown.expectMessage("Cannot create JSON parser, please add jackson or gson to your classpath");
+		assertThatThrownBy(createDefault())
+			.isExactlyInstanceOf(UnsupportedOperationException.class)
+			.hasMessage("Cannot create JSON parser, please add jackson or gson to your classpath");
 
-		JsonParserFactory.createDefault();
+	}
+
+	private static ThrowingCallable createDefault() {
+		return new ThrowingCallable() {
+			@Override
+			public void call() {
+				JsonParserFactory.createDefault();
+			}
+		};
 	}
 }
