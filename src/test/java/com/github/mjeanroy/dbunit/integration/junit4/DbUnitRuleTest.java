@@ -26,9 +26,13 @@ package com.github.mjeanroy.dbunit.integration.junit4;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDbUnitConnection;
+import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -37,19 +41,18 @@ import org.junit.runners.model.Statement;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.sql.Connection;
-
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.runner.Description.createSuiteDescription;
 import static org.junit.runner.Description.createTestDescription;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
+@SuppressWarnings("SameParameterValue")
 public class DbUnitRuleTest {
 
 	@ClassRule
@@ -62,78 +65,67 @@ public class DbUnitRuleTest {
 	}
 
 	@Test
-	public void it_should_load_rule_with_configuration() throws Throwable {
-		JdbcConfiguration config = newJdbcConfiguration(db.getUrl(), db.getUser(), db.getPassword());
-		DbUnitRule rule = createRule(config);
+	public void it_should_load_rule_by_scanning_test_class() throws Throwable {
+		final DbUnitRule rule = createRule();
+		final Statement statement = mock(Statement.class);
+		final Description description = createTestDescription(TestClassWithDbUnitConnection.class, "test1");
 
-		Statement statement = mock(Statement.class);
-		Description description = createTestDescription(TestClassWithDataSet.class, "method1");
+		applyAndVerifyRule(rule, statement, description, 2, 3);
+	}
+
+	@Test
+	public void it_should_load_rule_with_configuration() throws Throwable {
+		final JdbcConfiguration config = newJdbcConfiguration(db.getUrl(), db.getUser(), db.getPassword());
+		final DbUnitRule rule = createRule(config);
+		final Statement statement = mock(Statement.class);
+		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
+
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
 
 	@Test
 	public void it_should_load_database_for_class_test() throws Throwable {
-		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
-		DbUnitRule rule = createRule(factory);
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		final DbUnitRule rule = createRule(factory);
+		final Statement statement = mock(Statement.class);
+		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
 
-		Statement statement = mock(Statement.class);
-		Description description = createTestDescription(TestClassWithDataSet.class, "method1");
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
 
 	@Test
 	public void it_should_load_database_for_class_rule() throws Throwable {
-		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
-		DbUnitRule rule = createRule(factory);
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		final DbUnitRule rule = createRule(factory);
+		final Statement statement = mock(Statement.class);
+		final Description description = createSuiteDescription(TestClassWithDataSet.class);
 
-		Statement statement = mock(Statement.class);
-		Description description = createSuiteDescription(TestClassWithDataSet.class);
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
 
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {
-		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
-		DbUnitRule rule = createRule(factory);
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		final DbUnitRule rule = createRule(factory);
+		final Statement statement = mock(Statement.class);
+		final Description description = createTestDescription(TestClassWithDataSet.class, "method2");
 
-		Statement statement = mock(Statement.class);
-		Description description = createTestDescription(TestClassWithDataSet.class, "method2");
 		applyAndVerifyRule(rule, statement, description, 2, 0);
 	}
 
 	@Test
-	public void it_should_get_connection() {
-		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
+	public void it_should_fail_if_rule_is_built_without_parameter_and_without_annotation() {
+		final DbUnitRule rule = createRule();
+		final Statement statement = mock(Statement.class);
+		final Description description = createTestDescription(TestClassWithRunnerWithoutConfiguration.class, "test1");
 
-		Connection connection = mock(Connection.class);
-		when(factory.getConnection()).thenReturn(connection);
-		DbUnitRule rule = createRule(factory);
-
-		assertThat(rule.getConnection())
-			.isNotNull()
-			.isSameAs(connection);
-
-		verify(factory).getConnection();
+		assertThatThrownBy(loadRule(rule, statement, description))
+			.isExactlyInstanceOf(DbUnitException.class)
+			.hasMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");
 	}
 
-	private void applyAndVerifyRule(DbUnitRule rule, Statement statement, Description description, final int expectedFoo, final int expectedBar) throws Throwable {
-		Statement result = rule.apply(statement, description);
-
-		assertThat(result).isNotNull();
-		verify(statement, never()).evaluate();
-
-		doAnswer(new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(expectedFoo);
-				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(expectedBar);
-				return null;
-			}
-		}).when(statement).evaluate();
-
-		result.evaluate();
-
-		verify(statement).evaluate();
+	protected DbUnitRule createRule() {
+		return new DbUnitRule();
 	}
 
 	protected DbUnitRule createRule(JdbcConfiguration configuration) {
@@ -142,5 +134,37 @@ public class DbUnitRuleTest {
 
 	protected DbUnitRule createRule(JdbcConnectionFactory factory) {
 		return new DbUnitRule(factory);
+	}
+
+	private static void applyAndVerifyRule(DbUnitRule rule, Statement statement, Description description, final int expectedFoo, final int expectedBar) throws Throwable {
+		final Statement result = rule.apply(statement, description);
+
+		assertThat(result).isNotNull();
+		verifyZeroInteractions(statement);
+
+		doAnswer(statementAnswer(expectedFoo, expectedBar)).when(statement).evaluate();
+
+		result.evaluate();
+		verify(statement).evaluate();
+	}
+
+	private static Answer<Void> statementAnswer(final int expectedFoo, final int expectedBar) {
+		return new Answer<Void>() {
+			@Override
+			public Void answer(InvocationOnMock invocation) throws Throwable {
+				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(expectedFoo);
+				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(expectedBar);
+				return null;
+			}
+		};
+	}
+
+	private static ThrowingCallable loadRule(final DbUnitRule rule, final Statement statement, final Description description) {
+		return new ThrowingCallable() {
+			@Override
+			public void call() throws Throwable {
+				applyAndVerifyRule(rule, statement, description, 0, 0);
+			}
+		};
 	}
 }

@@ -36,6 +36,14 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 public class DbUnitRule extends com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule {
 
 	/**
+	 * Create rule.
+	 *
+	 */
+	public DbUnitRule() {
+		super();
+	}
+
+	/**
 	 * Create rule using {@link JdbcConfiguration} instance.
 	 *
 	 * @param configuration JDBC Configuration.

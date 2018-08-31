@@ -38,5 +38,4 @@ public class TestClassWithRunner {
 	@Test
 	public void test1() {
 	}
-
 }

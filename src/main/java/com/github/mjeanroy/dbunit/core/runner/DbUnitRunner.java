@@ -25,6 +25,8 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
@@ -32,6 +34,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
@@ -60,6 +63,7 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStat
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
 import static java.util.Arrays.asList;
 
@@ -96,8 +100,8 @@ public class DbUnitRunner {
 	 *
 	 * DbUnit DataSet will be automatically detected:
 	 * <ol>
-	 * <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 * <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
+	 *   <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
+	 *   <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
 	 * </ol>
 	 *
 	 * @param testClass Class to test.
@@ -116,14 +120,24 @@ public class DbUnitRunner {
 
 	/**
 	 * Create runner.
-	 * See also {#DbUnitRunner()}.
 	 *
 	 * @param testClass Class to test.
 	 * @param dataSource DataSource to get new SQL connection before and after test methods.
 	 * @throws DbUnitException If dataSet parsing failed.
+	 * @see #DbUnitRunner
 	 */
 	public DbUnitRunner(Class<?> testClass, DataSource dataSource) {
 		this(testClass, new JdbcDataSourceConnectionFactory(notNull(dataSource, "DataSource must not be null")));
+	}
+
+	/**
+	 * Create runner and extract the JDBC Connectiob factory from the {@code testClass} that should
+	 * be annotated with {@link DbUnitConnection} (or with deprecated {@link DbUnitConfiguration}).
+	 *
+	 * @param testClass The tested class.
+	 */
+	public DbUnitRunner(Class<?> testClass) {
+		this(testClass, extractJdbcConnectionFactory(testClass));
 	}
 
 	/**
@@ -323,5 +337,41 @@ public class DbUnitRunner {
 			List<String> changeLogs = asList(annotation.value());
 			forEach(changeLogs, new LiquibaseFunction(factory));
 		}
+	}
+
+	/**
+	 * Extract {@link JdbcConnectionFactory} configuration from test annotated with {@link DbUnitConnection}
+	 * or with deprecated {@link DbUnitConfiguration}.
+	 *
+	 * @param testClass The tested class.
+	 * @return The JDBC Connection Factory.
+	 */
+	private static JdbcConnectionFactory extractJdbcConnectionFactory(Class<?> testClass) {
+		DbUnitConfiguration a1 = findAnnotation(testClass, null, DbUnitConfiguration.class);
+		DbUnitConnection a2 = findAnnotation(testClass, null, DbUnitConnection.class);
+		if (a2 == null && a1 == null) {
+			throw new DbUnitException("Cannot find database configuration, please annotate your class with @DbUnitConnection");
+		}
+
+		if (a1 != null) {
+			log.warn("@DbUnitConfiguration annotation is deprecated and will be removed in a next release, please use @DbUnitConnection instead");
+		}
+
+		final String url;
+		final String user;
+		final String password;
+
+		if (a2 != null) {
+			url = a2.url();
+			user = a2.user();
+			password = a2.password();
+		}
+		else {
+			url = a1.url();
+			user = a1.user();
+			password = a1.password();
+		}
+
+		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
 	}
 }

@@ -63,6 +63,13 @@ public class DbUnitRule implements TestRule {
 		this.connectionFactory = factory;
 	}
 
+	/**
+	 * Create rule, extract {@link JdbcConnectionFactory} from test class annotations.
+	 */
+	public DbUnitRule() {
+		this.connectionFactory = null;
+	}
+
 	@Override
 	public Statement apply(final Statement statement, final Description description) {
 		return new Statement() {
@@ -71,7 +78,9 @@ public class DbUnitRule implements TestRule {
 				final Class<?> testClass = description.getTestClass();
 				final String methodName = description.getMethodName();
 				final Method method = methodName == null ? null : testClass.getMethod(methodName);
-				final DbUnitRunner runner = new DbUnitRunner(testClass, connectionFactory);
+				final DbUnitRunner runner = connectionFactory == null ?
+					new DbUnitRunner(testClass) :
+					new DbUnitRunner(testClass, connectionFactory);
 
 				runner.beforeTest(method);
 
@@ -83,14 +92,5 @@ public class DbUnitRule implements TestRule {
 				}
 			}
 		};
-	}
-
-	/**
-	 * Get new SQL connection.
-	 *
-	 * @return SQL Connection.
-	 */
-	public Connection getConnection() {
-		return connectionFactory.getConnection();
 	}
 }

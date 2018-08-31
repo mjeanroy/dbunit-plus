@@ -36,5 +36,4 @@ public class TestClassWithRunnerWithoutConfiguration {
 	@Test
 	public void test1() {
 	}
-
 }

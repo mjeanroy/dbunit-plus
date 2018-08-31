@@ -31,6 +31,12 @@ public class DbUnitRuleTest extends com.github.mjeanroy.dbunit.integration.junit
 
 	@Override
 	@SuppressWarnings("deprecation")
+	protected DbUnitRule createRule() {
+		return new DbUnitRule();
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
 	protected DbUnitRule createRule(JdbcConfiguration configuration) {
 		return new DbUnitRule(configuration);
 	}
