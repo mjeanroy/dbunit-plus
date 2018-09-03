@@ -24,42 +24,63 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Function;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.integration.liquibase.LiquibaseUpdater;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
+import com.github.mjeanroy.dbunit.commons.lang.Objects;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
- * Function to execute liquibase update script against SQL connection.
+ * A liquibase changelog, identified by a file path.
  */
-class LiquibaseFunction implements Function<String> {
+final class LiquibaseChangeLog {
 
 	/**
-	 * Class Logger.
+	 * The changelog file path.
 	 */
-	private static final Logger log = Loggers.getLogger(LiquibaseFunction.class);
+	private final String changeLog;
 
 	/**
-	 * Factory to get new {@link java.sql.Connection} before executing liquibase change sets.
-	 */
-	private final JdbcConnectionFactory factory;
-
-	/**
-	 * Create function.
+	 * Create the liquibase changelog.
 	 *
-	 * @param factory Connection factory.
+	 * @param changeLog The changelog.
+	 * @throws NullPointerException If {@code changeLog} is {@code null}.
 	 */
-	LiquibaseFunction(JdbcConnectionFactory factory) {
-		this.factory = notNull(factory, "JDBC Connection factory must not be null");
+	LiquibaseChangeLog(String changeLog) {
+		this.changeLog = notNull(changeLog, "Liquibase ChangeLog must not be null");
+	}
+
+	/**
+	 * Get {@link #changeLog}
+	 *
+	 * @return {@link #changeLog}
+	 */
+	String getChangeLog() {
+		return changeLog;
 	}
 
 	@Override
-	public void apply(String changeLog) {
-		log.debug("Running liquibase updater against: {}", changeLog);
-		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
-		liquibaseUpdater.update();
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (o instanceof LiquibaseChangeLog) {
+			LiquibaseChangeLog c = (LiquibaseChangeLog) o;
+			return Objects.equals(changeLog, c.changeLog);
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(changeLog);
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.create(getClass())
+			.append("changeLog", changeLog)
+			.build();
 	}
 }

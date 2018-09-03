@@ -56,6 +56,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
@@ -334,8 +335,8 @@ public class DbUnitRunner {
 	private void runLiquibase() {
 		DbUnitLiquibase annotation = findAnnotation(testClass, null, DbUnitLiquibase.class);
 		if (annotation != null) {
-			List<String> changeLogs = asList(annotation.value());
-			forEach(changeLogs, new LiquibaseFunction(factory));
+			List<LiquibaseChangeLog> changeLogs = map(annotation.value(), LiquibaseChangeLogMapper.getInstance());
+			forEach(changeLogs, new LiquibaseChangeLogUpdaterFunction(factory));
 		}
 	}
 

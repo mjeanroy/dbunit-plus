@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.runner;
+package com.github.mjeanroy.dbunit.integration.liquibase;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.integration.liquibase.LiquibaseUpdater;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.Before;
 import org.junit.Rule;

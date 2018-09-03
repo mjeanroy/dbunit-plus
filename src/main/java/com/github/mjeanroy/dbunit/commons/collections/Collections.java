@@ -58,6 +58,25 @@ public final class Collections {
 	}
 
 	/**
+	 * Map array of input to an array list of outputs.
+	 * Each results is produce in iteration order.
+	 *
+	 * @param inputs Array of inputs.
+	 * @param mapper Mapper function.
+	 * @param <T> Type of inputs.
+	 * @param <U> Type of outputs.
+	 * @return Array List of outputs.
+	 */
+	public static <T, U> List<U> map(T[] inputs, Mapper<T, U> mapper) {
+		List<U> outputs = new ArrayList<>(inputs.length);
+		for (T input : inputs) {
+			outputs.add(mapper.apply(input));
+		}
+
+		return outputs;
+	}
+
+	/**
 	 * Apply function to each element of a collection.
 	 *
 	 * @param inputs Collection of inputs.

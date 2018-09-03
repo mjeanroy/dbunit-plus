@@ -40,6 +40,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -50,8 +51,8 @@ public class CollectionsTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_iterate_over_collection() {
-		List<Integer> list = asList(1, 2, 3);
-		Function<Integer> func = mock(Function.class);
+		final List<Integer> list = asList(1, 2, 3);
+		final Function<Integer> func = mock(Function.class);
 
 		Collections.forEach(list, func);
 
@@ -62,21 +63,22 @@ public class CollectionsTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void it_should_map_collection() {
-		Set<Integer> set = new LinkedHashSet<>();
+	public void it_should_map_set_to_another_set() {
+		final Set<Integer> set = new LinkedHashSet<>();
 		set.add(1);
 		set.add(2);
 		set.add(3);
 
-		Mapper<Integer, Integer> mapper = mock(Mapper.class);
+		final Mapper<Integer, Integer> mapper = mock(Mapper.class);
+
 		when(mapper.apply(anyInt())).thenAnswer(new Answer<Integer>() {
 			@Override
-			public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Integer answer(InvocationOnMock invocationOnMock) {
 				return ((Integer) invocationOnMock.getArguments()[0]) + 1;
 			}
 		});
 
-		Set<Integer> newCollection = Collections.map(set, mapper);
+		final Set<Integer> newCollection = Collections.map(set, mapper);
 
 		assertThat(newCollection)
 			.isNotNull()
@@ -90,16 +92,42 @@ public class CollectionsTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
+	public void it_should_map_array_to_another_array_list() {
+		final Long[] inputs = new Long[]{1L, 2L, 3L};
+		final Mapper<Long, Long> mapper = mock(Mapper.class);
+
+		when(mapper.apply(anyLong())).thenAnswer(new Answer<Long>() {
+			@Override
+			public Long answer(InvocationOnMock invocationOnMock) {
+				return ((Long) invocationOnMock.getArguments()[0]) + 1;
+			}
+		});
+
+		final List<Long> outputs = Collections.map(inputs, mapper);
+
+		assertThat(outputs)
+			.isNotNull()
+			.hasSameSizeAs(inputs)
+			.containsExactly(2L, 3L, 4L);
+
+		verify(mapper).apply(1L);
+		verify(mapper).apply(2L);
+		verify(mapper).apply(3L);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
 	public void it_should_find_element_in_collection() {
-		Predicate<Integer> predicate = mock(Predicate.class);
+		final Predicate<Integer> predicate = mock(Predicate.class);
+
 		when(predicate.apply(anyInt())).thenAnswer(new Answer<Boolean>() {
 			@Override
-			public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Boolean answer(InvocationOnMock invocationOnMock) {
 				return ((Integer) invocationOnMock.getArguments()[0]) % 2 == 0;
 			}
 		});
 
-		Integer result = Collections.find(asList(1, 2, 3), predicate);
+		final Integer result = Collections.find(asList(1, 2, 3), predicate);
 
 		assertThat(result)
 			.isNotNull()
@@ -113,15 +141,16 @@ public class CollectionsTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_not_find_element_in_collection_and_return_null() {
-		Predicate<Integer> predicate = mock(Predicate.class);
+		final Predicate<Integer> predicate = mock(Predicate.class);
+
 		when(predicate.apply(anyInt())).thenAnswer(new Answer<Boolean>() {
 			@Override
-			public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Boolean answer(InvocationOnMock invocationOnMock) {
 				return ((Integer) invocationOnMock.getArguments()[0]) % 2 == 0;
 			}
 		});
 
-		Integer result = Collections.find(asList(1, 3, 5), predicate);
+		final Integer result = Collections.find(asList(1, 3, 5), predicate);
 
 		assertThat(result).isNull();
 		verify(predicate).apply(1);
@@ -132,15 +161,16 @@ public class CollectionsTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_filter_list() {
-		Predicate<Integer> predicate = mock(Predicate.class);
+		final Predicate<Integer> predicate = mock(Predicate.class);
+
 		when(predicate.apply(anyInt())).thenAnswer(new Answer<Boolean>() {
 			@Override
-			public Boolean answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Boolean answer(InvocationOnMock invocationOnMock) {
 				return ((Integer) invocationOnMock.getArguments()[0]) % 2 == 0;
 			}
 		});
 
-		List<Integer> result = Collections.filter(asList(1, 2, 3), predicate);
+		final List<Integer> result = Collections.filter(asList(1, 2, 3), predicate);
 
 		assertThat(result)
 			.isNotNull()
@@ -156,17 +186,17 @@ public class CollectionsTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void it_should_get_keys_of_all_map() {
-		Map<String, Integer> map1 = new LinkedHashMap<>();
+		final Map<String, Integer> map1 = new LinkedHashMap<>();
 		map1.put("one", 1);
 		map1.put("two", 2);
 		map1.put("three", 3);
 
-		Map<String, Integer> map2 = new LinkedHashMap<>();
+		final Map<String, Integer> map2 = new LinkedHashMap<>();
 		map2.put("three", 3);
 		map2.put("four", 4);
 		map2.put("five", 5);
 
-		Set<String> keys = Collections.keys(asList(map1, map2));
+		final Set<String> keys = Collections.keys(asList(map1, map2));
 
 		assertThat(keys)
 			.isNotNull()
@@ -176,8 +206,8 @@ public class CollectionsTest {
 
 	@Test
 	public void it_should_get_first_element_of_collection() {
-		assertThat((Object) first(null)).isNull();
-		assertThat((Object) first(emptyList())).isNull();
+		assertThat(first(null)).isNull();
+		assertThat(first(emptyList())).isNull();
 		assertThat(first(singleton("foo"))).isEqualTo("foo");
 	}
 }
