@@ -24,18 +24,8 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+public class WithoutDataSet {
 
-@RunWith(DbUnitJunitRunner.class)
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-@Ignore("This is a test fixtures")
-public class TestClassWithRunner {
-
-	@Test
-	public void test1() {
+	public void method1() {
 	}
 }

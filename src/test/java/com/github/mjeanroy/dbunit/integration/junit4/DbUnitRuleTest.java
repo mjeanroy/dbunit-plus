@@ -29,9 +29,9 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDbUnitConnection;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -68,7 +68,7 @@ public class DbUnitRuleTest {
 	public void it_should_load_rule_by_scanning_test_class() throws Throwable {
 		final DbUnitRule rule = createRule();
 		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithDbUnitConnection.class, "test1");
+		final Description description = createTestDescription(WithDbUnitConnection.class, "test1");
 
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
@@ -78,7 +78,7 @@ public class DbUnitRuleTest {
 		final JdbcConfiguration config = newJdbcConfiguration(db.getUrl(), db.getUser(), db.getPassword());
 		final DbUnitRule rule = createRule(config);
 		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
+		final Description description = createTestDescription(WithDataSet.class, "method1");
 
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
@@ -88,7 +88,7 @@ public class DbUnitRuleTest {
 		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
+		final Description description = createTestDescription(WithDataSet.class, "method1");
 
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
@@ -98,7 +98,7 @@ public class DbUnitRuleTest {
 		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
-		final Description description = createSuiteDescription(TestClassWithDataSet.class);
+		final Description description = createSuiteDescription(WithDataSet.class);
 
 		applyAndVerifyRule(rule, statement, description, 2, 3);
 	}
@@ -108,7 +108,7 @@ public class DbUnitRuleTest {
 		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithDataSet.class, "method2");
+		final Description description = createTestDescription(WithDataSet.class, "method2");
 
 		applyAndVerifyRule(rule, statement, description, 2, 0);
 	}
@@ -117,7 +117,7 @@ public class DbUnitRuleTest {
 	public void it_should_fail_if_rule_is_built_without_parameter_and_without_annotation() {
 		final DbUnitRule rule = createRule();
 		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithRunnerWithoutConfiguration.class, "test1");
+		final Description description = createTestDescription(WithRunnerWithoutConfiguration.class, "test1");
 
 		assertThatThrownBy(loadRule(rule, statement, description))
 			.isExactlyInstanceOf(DbUnitException.class)

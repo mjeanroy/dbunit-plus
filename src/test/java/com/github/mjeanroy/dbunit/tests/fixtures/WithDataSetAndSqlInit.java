@@ -24,38 +24,18 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import org.dbunit.database.DatabaseConfig;
 
-@DbUnitDataSet("/dataset/qualified-table-names")
-@DbUnitConfig(TestClassWithCustomConfiguration.QualifiedTableNameConfiguration.class)
+@DbUnitDataSet("/dataset/xml")
+@DbUnitInit(sql = "/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class TestClassWithCustomConfiguration {
+public class WithDataSetAndSqlInit {
 
 	public void method1() {
-	}
-
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	@DbUnitConfig(TestClassWithCustomConfiguration.NoOpConfiguration.class)
-	public void method2() {
-	}
-
-	public static class QualifiedTableNameConfiguration implements DbUnitConfigInterceptor {
-		@Override
-		public void applyConfiguration(DatabaseConfig config) {
-			config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
-		}
-	}
-
-	public static class NoOpConfiguration implements DbUnitConfigInterceptor {
-		@Override
-		public void applyConfiguration(DatabaseConfig config) {
-		}
 	}
 }

@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -64,7 +64,7 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 	@Test
 	public void it_should_start_database_and_load_data_set() throws Throwable {
 		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(TestClassWithDataSet.class, "method1");
+		final Description description = createTestDescription(WithDataSet.class, "method1");
 
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)

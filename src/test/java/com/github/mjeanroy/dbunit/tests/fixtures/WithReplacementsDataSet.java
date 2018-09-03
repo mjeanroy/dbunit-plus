@@ -24,22 +24,30 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import org.junit.Ignore;
-import org.junit.Test;
+import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 
-@DbUnitDataSet("/dataset/xml")
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@DbUnitDataSet("/dataset/replacements")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-@Ignore("This is a test fixtures")
-public class TestClassWithDbUnitConnection {
+public class WithReplacementsDataSet {
 
-	@Test
-	public void test1() {
+	@DbUnitReplacement
+	public static Replacements johnDoe = Replacements.builder()
+		.addReplacement("[JOHN_DOE]", "John Doe")
+		.build();
+
+	@DbUnitReplacement
+	public static Replacements janeDoe() {
+		return Replacements.builder()
+			.addReplacement("[JANE_DOE]", "Jane Doe")
+			.build();
+	}
+
+	public void method1() {
 	}
 }

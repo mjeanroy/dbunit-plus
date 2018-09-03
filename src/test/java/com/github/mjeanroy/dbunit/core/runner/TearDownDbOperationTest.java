@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithoutDataSet;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class TearDownDbOperationTest {
 	public void it_should_set_operations_and_trigger_setup() throws Exception {
 		TearDownDbOperation op = TearDownDbOperation.getInstance();
 
-		Class<TestClassWithDataSet> testClass = TestClassWithDataSet.class;
+		Class<WithDataSet> testClass = WithDataSet.class;
 		Method method = testClass.getMethod("method1");
 		IDatabaseTester dbTester = mock(IDatabaseTester.class);
 
@@ -59,7 +59,7 @@ public class TearDownDbOperationTest {
 	public void it_should_not_set_operations_but_trigger_setup() throws Exception {
 		TearDownDbOperation op = TearDownDbOperation.getInstance();
 
-		Class<TestClassWithoutDataSet> testClass = TestClassWithoutDataSet.class;
+		Class<WithoutDataSet> testClass = WithoutDataSet.class;
 		Method method = testClass.getMethod("method1");
 		IDatabaseTester dbTester = mock(IDatabaseTester.class);
 

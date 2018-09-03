@@ -24,7 +24,17 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-public class TestClassWithoutDataSet {
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+
+@DbUnitDataSet("/dataset/xml")
+@DbUnitLiquibase("/liquibase/changelog.xml")
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+public class WithDataSetAndLiquibase {
 
 	public void method1() {
 	}

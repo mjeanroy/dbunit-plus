@@ -24,16 +24,25 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-@RunWith(DbUnitJunitRunner.class)
-@Ignore("This is a test fixtures")
-public class TestClassWithRunnerWithoutConfiguration {
+@DbUnitDataSet("/dataset/xml")
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+public class WithDataSet {
 
-	@Test
-	public void test1() {
+	public void method1() {
+	}
+
+	@DbUnitDataSet("/dataset/xml/foo.xml")
+	public void method2() {
+	}
+
+	@DbUnitSetup(DbUnitOperation.NONE)
+	@DbUnitTearDown(DbUnitOperation.NONE)
+	public void method3() {
 	}
 }

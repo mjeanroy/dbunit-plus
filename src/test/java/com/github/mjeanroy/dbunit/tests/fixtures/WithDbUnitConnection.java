@@ -24,18 +24,18 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
 @DbUnitDataSet("/dataset/xml")
-@DbUnitLiquibase("/liquibase/changelog.xml")
+@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class TestClassWithDataSetAndLiquibase {
+public class WithDbUnitConnection {
 
-	public void method1() {
+	public void test1() {
 	}
 }

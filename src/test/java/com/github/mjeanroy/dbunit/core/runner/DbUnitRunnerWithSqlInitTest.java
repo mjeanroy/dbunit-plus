@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSetAndSqlInit;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class DbUnitRunnerWithSqlInitTest {
 
 	@Test
 	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
-		Class<TestClassWithDataSetAndSqlInit> klass = TestClassWithDataSetAndSqlInit.class;
+		Class<WithDataSetAndSqlInit> klass = WithDataSetAndSqlInit.class;
 		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();

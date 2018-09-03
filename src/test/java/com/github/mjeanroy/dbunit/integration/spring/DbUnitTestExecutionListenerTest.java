@@ -29,7 +29,7 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class DbUnitTestExecutionListenerTest {
 	public void it_should_prepare_test_and_initialize_runner() throws Exception {
 		final TestContext ctx = mock(TestContext.class);
 
-		final Class testClass = TestClassWithDataSet.class;
+		final Class testClass = WithDataSet.class;
 		when(ctx.getTestClass()).thenReturn(testClass);
 
 		final ApplicationContext appContext = mock(ApplicationContext.class);
@@ -140,7 +140,7 @@ public class DbUnitTestExecutionListenerTest {
 	@SuppressWarnings("unchecked")
 	private TestSetup setupTest(DbUnitRunner runner) throws Exception {
 		final TestContext ctx = mock(TestContext.class);
-		final Class klass = TestClassWithDataSet.class;
+		final Class klass = WithDataSet.class;
 		final Method method = klass.getMethod("method1");
 
 		when(ctx.getTestClass()).thenReturn(klass);

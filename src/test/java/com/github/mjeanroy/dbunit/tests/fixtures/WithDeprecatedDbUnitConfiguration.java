@@ -24,30 +24,17 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-@DbUnitDataSet("/dataset/replacements")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class TestClassWithReplacementsDataSet {
+@SuppressWarnings("deprecation")
+@RunWith(DbUnitJunitRunner.class)
+@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+public class WithDeprecatedDbUnitConfiguration {
 
-	@DbUnitReplacement
-	public static Replacements johnDoe = Replacements.builder()
-		.addReplacement("[JOHN_DOE]", "John Doe")
-		.build();
-
-	@DbUnitReplacement
-	public static Replacements janeDoe() {
-		return Replacements.builder()
-			.addReplacement("[JANE_DOE]", "Jane Doe")
-			.build();
-	}
-
-	public void method1() {
+	@Test
+	public void test1() {
 	}
 }

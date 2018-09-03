@@ -24,25 +24,16 @@
 
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-@DbUnitDataSet("/dataset/xml")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class TestClassWithDataSet {
+@RunWith(DbUnitJunitRunner.class)
+@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+public class WithRunner {
 
-	public void method1() {
-	}
-
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void method2() {
-	}
-
-	@DbUnitSetup(DbUnitOperation.NONE)
-	@DbUnitTearDown(DbUnitOperation.NONE)
-	public void method3() {
+	@Test
+	public void test1() {
 	}
 }

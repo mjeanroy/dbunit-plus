@@ -28,11 +28,11 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithCustomConfiguration;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSet;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDbUnitConnection;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithRunnerWithoutConfiguration;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithoutDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithoutDataSet;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.dbunit.dataset.IDataSet;
 import org.junit.ClassRule;
@@ -54,7 +54,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_and_read_data_set_on_class() throws Exception {
-		final Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 		final DbUnitRunner runner = new DbUnitRunner(klass, factory);
 
@@ -70,7 +70,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_and_not_fail_if_data_set_cannot_be_found() throws Exception {
-		final Class<TestClassWithoutDataSet> klass = TestClassWithoutDataSet.class;
+		final Class<WithoutDataSet> klass = WithoutDataSet.class;
 		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 		final DbUnitRunner runner = new DbUnitRunner(klass, factory);
 
@@ -83,7 +83,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_with_data_source() throws Exception {
-		final Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final DataSource dataSource = mock(DataSource.class);
 		final DbUnitRunner runner = new DbUnitRunner(klass, dataSource);
 
@@ -92,7 +92,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_and_load_connection_from_annotation() throws Exception {
-		final Class<TestClassWithDbUnitConnection> klass = TestClassWithDbUnitConnection.class;
+		final Class<WithDbUnitConnection> klass = WithDbUnitConnection.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 		final Method testMethod = klass.getMethod("test1");
 
@@ -111,7 +111,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_load_data_set() throws Exception {
-		final Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 		final Method testMethod = klass.getMethod("method1");
 
@@ -130,7 +130,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_load_data_set_without_method_invocation() throws Exception {
-		final Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 
 		// Setup Operation
@@ -148,7 +148,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_create_runner_and_read_data_set_on_method() throws Exception {
-		final Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 		final Method testMethod = klass.getMethod("method2");
 
@@ -165,7 +165,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_load_data_set_with_custom_operation() throws Exception {
-		final Class<TestClassWithDataSet> klass = TestClassWithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 		final Method testMethod = klass.getMethod("method3");
 
@@ -184,7 +184,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_load_dataset_with_custom_config() throws Exception {
-		final Class<TestClassWithCustomConfiguration> klass = TestClassWithCustomConfiguration.class;
+		final Class<WithCustomConfiguration> klass = WithCustomConfiguration.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 		final Method testMethod = klass.getMethod("method1");
 
@@ -203,7 +203,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_load_dataset_with_custom_config_per_method() throws Exception {
-		final Class<TestClassWithCustomConfiguration> klass = TestClassWithCustomConfiguration.class;
+		final Class<WithCustomConfiguration> klass = WithCustomConfiguration.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 		final Method testMethod = klass.getMethod("method2");
 
@@ -218,7 +218,7 @@ public class DbUnitRunnerTest {
 
 	@Test
 	public void it_should_fail_to_execute_runner_without_annotation() {
-		final Class<TestClassWithRunnerWithoutConfiguration> klass = TestClassWithRunnerWithoutConfiguration.class;
+		final Class<WithRunnerWithoutConfiguration> klass = WithRunnerWithoutConfiguration.class;
 		assertThatThrownBy(newDbUnitRunner(klass))
 			.isExactlyInstanceOf(DbUnitException.class)
 			.hasMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");

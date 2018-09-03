@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithDataSetAndLiquibase;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class DbUnitRunnerWithLiquibaseTest {
 
 	@Test
 	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
-		Class<TestClassWithDataSetAndLiquibase> klass = TestClassWithDataSetAndLiquibase.class;
+		Class<WithDataSetAndLiquibase> klass = WithDataSetAndLiquibase.class;
 		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();

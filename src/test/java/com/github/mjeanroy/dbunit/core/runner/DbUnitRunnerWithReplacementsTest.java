@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.TestClassWithReplacementsDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -41,7 +41,7 @@ public class DbUnitRunnerWithReplacementsTest {
 
 	@Test
 	public void it_should_replace_values() throws Exception {
-		Class<TestClassWithReplacementsDataSet> klass = TestClassWithReplacementsDataSet.class;
+		Class<WithReplacementsDataSet> klass = WithReplacementsDataSet.class;
 		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
 
 		// Setup Operation
