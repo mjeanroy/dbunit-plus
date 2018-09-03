@@ -24,10 +24,7 @@
 
 package com.github.mjeanroy.dbunit.integration.junit4;
 
-import com.github.mjeanroy.dbunit.commons.io.Io;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.junit.rules.TestRule;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
@@ -62,11 +59,6 @@ import java.util.List;
  * </code></pre>
  */
 public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(Io.class);
 
 	/**
 	 * Create runner.
