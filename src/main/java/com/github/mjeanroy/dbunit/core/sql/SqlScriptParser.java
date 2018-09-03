@@ -151,7 +151,7 @@ public final class SqlScriptParser {
 		executeQueries(connection, queries);
 	}
 
-	private static void executeQueries(Connection connection, List<String> queries) throws SQLException {
+	public static void executeQueries(Connection connection, List<String> queries) throws SQLException {
 		for (String query : queries) {
 			connection.prepareStatement(query).execute();
 		}

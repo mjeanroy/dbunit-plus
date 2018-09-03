@@ -65,8 +65,6 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStat
 import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration.builder;
-import static java.util.Arrays.asList;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.
@@ -112,11 +110,11 @@ public class DbUnitRunner {
 	public DbUnitRunner(Class<?> testClass, JdbcConnectionFactory factory) {
 		this.testClass = notNull(testClass, "Test Class must not be null");
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
-		this.dataSet = readDataSet();
+		this.dataSet = readDataSet(testClass);
 
 		// Then, run SQL and/or liquibase initialization
-		runSqlScript();
-		runLiquibase();
+		runSqlScript(testClass, factory);
+		runLiquibase(testClass, factory);
 	}
 
 	/**
@@ -171,7 +169,7 @@ public class DbUnitRunner {
 
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
 		// Read dataSet from method.
-		IDataSet dataSet = readDataSet(testMethod);
+		IDataSet dataSet = readDataSet(testMethod, this.dataSet);
 		if (dataSet == null) {
 			return;
 		}
@@ -184,7 +182,7 @@ public class DbUnitRunner {
 			dbConnection = new DatabaseConnection(connection);
 
 			log.trace(" 2- Try to apply DbUnit connection configuration");
-			DbUnitConfigInterceptor interceptor = readConfig(testMethod);
+			DbUnitConfigInterceptor interceptor = readConfig(testClass, testMethod);
 			if (interceptor != null) {
 				interceptor.applyConfiguration(dbConnection.getConfig());
 			}
@@ -226,7 +224,7 @@ public class DbUnitRunner {
 	 * @return Parsed dataSet.
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
-	private IDataSet readDataSet() {
+	private static IDataSet readDataSet(Class<?> testClass) {
 		DbUnitDataSet annotation = findAnnotation(testClass, null, DbUnitDataSet.class);
 		if (annotation != null && annotation.value().length > 0) {
 			return readAnnotationDataSet(annotation);
@@ -242,7 +240,7 @@ public class DbUnitRunner {
 	 * @return The interceptor, {@code null} if it is not configured.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private DbUnitConfigInterceptor readConfig(Method method) {
+	private static DbUnitConfigInterceptor readConfig(Class<?> testClass, Method method) {
 		DbUnitConfig annotation = findAnnotation(testClass, method, DbUnitConfig.class);
 		if (annotation == null) {
 			return null;
@@ -258,12 +256,12 @@ public class DbUnitRunner {
 	 * class annotation is returned.
 	 *
 	 * @param method Tested method.
+	 * @param defaultDataSet The default dataSet returned if method is not annotated.
 	 * @return DataSet.
 	 */
-	private IDataSet readDataSet(Method method) {
-		return method != null && method.isAnnotationPresent(DbUnitDataSet.class) ?
-			readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) :
-			dataSet;
+	private static IDataSet readDataSet(Method method, IDataSet defaultDataSet) {
+		boolean isAnnotated = method != null && method.isAnnotationPresent(DbUnitDataSet.class);
+		return isAnnotated ? readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) : defaultDataSet;
 	}
 
 	/**
@@ -273,7 +271,7 @@ public class DbUnitRunner {
 	 * @param dataSet Original data set.
 	 * @return New data set.
 	 */
-	private IDataSet runReplacements(Class<?> testClass, IDataSet dataSet) {
+	private static IDataSet runReplacements(Class<?> testClass, IDataSet dataSet) {
 		List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
 		List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
 		if (fields.isEmpty() && methods.isEmpty()) {
@@ -314,16 +312,18 @@ public class DbUnitRunner {
 	 * Run SQL initialization script when runner is initialized.
 	 * If a script failed, then entire process is stopped and an instance
 	 * of {@link DbUnitException} if thrown.
+	 *
+	 * @param testClass The tested class.
+	 * @param factory The JDBC Connection Factory.
 	 */
-	private void runSqlScript() {
+	private static void runSqlScript(Class<?> testClass, JdbcConnectionFactory factory) {
 		DbUnitInit annotation = findAnnotation(testClass, null, DbUnitInit.class);
 		if (annotation != null) {
-			List<String> scripts = asList(annotation.sql());
-			SqlScriptParserConfiguration configuration = builder()
+			List<SqlScript> scripts = map(annotation.sql(), SqlScriptMapper.getInstance(SqlScriptParserConfiguration.builder()
 				.setDelimiter(annotation.delimiter())
-				.build();
+				.build()));
 
-			forEach(scripts, new SqlScriptFunction(factory, configuration));
+			forEach(scripts, new SqlScriptRunnerFunction(factory));
 		}
 	}
 
@@ -331,8 +331,11 @@ public class DbUnitRunner {
 	 * Run SQL initialization script when runner is initialized.
 	 * If a script failed, then entire process is stopped and an instance
 	 * of {@link DbUnitException} if thrown.
+	 *
+	 * @param testClass The tested class.
+	 * @param factory The JDBC Connection Factory.
 	 */
-	private void runLiquibase() {
+	private static void runLiquibase(Class<?> testClass, JdbcConnectionFactory factory) {
 		DbUnitLiquibase annotation = findAnnotation(testClass, null, DbUnitLiquibase.class);
 		if (annotation != null) {
 			List<LiquibaseChangeLog> changeLogs = map(annotation.value(), LiquibaseChangeLogMapper.getInstance());

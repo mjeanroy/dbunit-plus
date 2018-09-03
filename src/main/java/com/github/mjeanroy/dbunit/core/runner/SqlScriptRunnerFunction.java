@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -35,7 +34,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeScript;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeQueries;
 
 /**
  * Function to execute SQL script against SQL connection.
@@ -45,12 +45,12 @@ import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeScript;
  * If an {@link SQLException} occurs, it will be wrapped into an instance
  * of {@link DbUnitException} exception.
  */
-class SqlScriptFunction implements Function<String> {
+class SqlScriptRunnerFunction implements Function<SqlScript> {
 
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = Loggers.getLogger(SqlScriptFunction.class);
+	private static final Logger log = Loggers.getLogger(SqlScriptRunnerFunction.class);
 
 	/**
 	 * Factory to get new {@link Connection} before executing SQL script.
@@ -58,26 +58,20 @@ class SqlScriptFunction implements Function<String> {
 	private final JdbcConnectionFactory factory;
 
 	/**
-	 * SQL parser configuration.
-	 */
-	private final SqlScriptParserConfiguration configuration;
-
-	/**
 	 * Create function.
 	 *
 	 * @param factory Connection factory.
-	 * @param configuration Parser configuration.
+	 * @throws NullPointerException If {@code factory} is {@code null}.
 	 */
-	SqlScriptFunction(JdbcConnectionFactory factory, SqlScriptParserConfiguration configuration) {
-		this.factory = factory;
-		this.configuration = configuration;
+	SqlScriptRunnerFunction(JdbcConnectionFactory factory) {
+		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 	}
 
 	@Override
-	public void apply(String script) {
+	public void apply(SqlScript script) {
 		Connection connection = factory.getConnection();
 		try {
-			executeScript(connection, script, configuration);
+			executeQueries(connection, script.getQueries());
 		}
 		catch (SQLException ex) {
 			log.error(ex.getMessage(), ex);

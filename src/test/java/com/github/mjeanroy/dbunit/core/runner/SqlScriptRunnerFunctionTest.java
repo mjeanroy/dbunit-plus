@@ -25,7 +25,6 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
@@ -39,6 +38,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -47,41 +47,49 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SameParameterValue")
-public class SqlScriptFunctionTest {
+public class SqlScriptRunnerFunctionTest {
 
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(true);
 
-	private SqlScriptParserConfiguration configuration;
-
+	private SqlScript sqlScript;
 	private JdbcConnectionFactory factory;
 
 	@Before
 	public void setUp() {
-		configuration = mock(SqlScriptParserConfiguration.class);
-		when(configuration.getDelimiter()).thenReturn(';');
-		when(configuration.getLineComment()).thenReturn("--");
-		when(configuration.getStartBlockComment()).thenReturn("/*");
-		when(configuration.getEndBlockComment()).thenReturn("*/");
-
-		factory = mock(JdbcConnectionFactory.class);
+		initFactory();
+		initSqlScript();
 	}
 
-	@Test
-	public void it_should_load_script() throws Exception {
-		final SqlScriptFunction func = new SqlScriptFunction(factory, configuration);
-
+	private void initFactory() {
+		factory = mock(JdbcConnectionFactory.class);
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
 			public Connection answer(InvocationOnMock invocationOnMock) {
 				return dbRule.getConnection();
 			}
 		});
+	}
+
+	private void initSqlScript() {
+		sqlScript = new SqlScript(asList(
+			"INSERT INTO foo VALUES(1, 'John Doe');",
+			"INSERT INTO foo VALUES(2, 'Jane Doe');",
+
+			"INSERT INTO bar VALUES(1, 'Back To The Future');",
+			"INSERT INTO bar VALUES(2, 'Star Wars');",
+			"INSERT INTO bar VALUES(3, 'Lord Of The Rings');"
+		));
+	}
+
+	@Test
+	public void it_should_load_script() throws Exception {
+		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
 
-		func.apply("/sql/data.sql");
+		func.apply(sqlScript);
 
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
@@ -92,16 +100,16 @@ public class SqlScriptFunctionTest {
 	@Test
 	public void it_should_wrap_sql_exception() throws Exception {
 		final Connection connection = mock(Connection.class);
-		final SqlScriptFunction func = new SqlScriptFunction(factory, configuration);
+		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
 
 		when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Fail Test"));
 		when(factory.getConnection()).thenReturn(connection);
 
-		assertThatThrownBy(applyFunction(func, "/sql/data.sql"))
-			.isExactlyInstanceOf(DbUnitException.class);
+		assertThatThrownBy(applyFunction(func, sqlScript)).isExactlyInstanceOf(DbUnitException.class);
+		verify(connection).close();
 	}
 
-	private static ThrowingCallable applyFunction(final SqlScriptFunction func, final String script) {
+	private static ThrowingCallable applyFunction(final SqlScriptRunnerFunction func, final SqlScript script) {
 		return new ThrowingCallable() {
 			@Override
 			public void call() {
