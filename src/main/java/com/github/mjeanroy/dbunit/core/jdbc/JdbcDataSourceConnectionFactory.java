@@ -24,6 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.commons.lang.Objects;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 
@@ -51,5 +54,31 @@ public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFacto
 	@Override
 	protected Connection createConnection() throws Exception {
 		return dataSource.getConnection();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (o instanceof JdbcDataSourceConnectionFactory) {
+			JdbcDataSourceConnectionFactory f = (JdbcDataSourceConnectionFactory) o;
+			return Objects.equals(dataSource, f.dataSource);
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(dataSource);
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.create(getClass())
+			.append("dataSource", dataSource)
+			.build();
 	}
 }

@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import org.dbunit.dataset.IDataSet;
 
 import java.util.ArrayList;
@@ -48,6 +49,11 @@ final class DbUnitClassContext {
 	private final IDataSet dataSet;
 
 	/**
+	 * The JDBC Connection factory.
+	 */
+	private final JdbcConnectionFactory connectionFactory;
+
+	/**
 	 * The list of initialization scripts to run.
 	 */
 	private final List<SqlScript> initScripts;
@@ -64,8 +70,14 @@ final class DbUnitClassContext {
 	 * @param initScripts The list of initialization scripts to run.
 	 * @param liquibaseChangeLogs The liquibase changelogs.
 	 */
-	DbUnitClassContext(IDataSet dataSet, List<SqlScript> initScripts, List<LiquibaseChangeLog> liquibaseChangeLogs) {
+	DbUnitClassContext(
+		IDataSet dataSet,
+		JdbcConnectionFactory connectionFactory,
+		List<SqlScript> initScripts,
+		List<LiquibaseChangeLog> liquibaseChangeLogs) {
+
 		this.dataSet = dataSet;
+		this.connectionFactory = connectionFactory;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
 	}
@@ -97,6 +109,15 @@ final class DbUnitClassContext {
 		return dataSet;
 	}
 
+	/**
+	 * Get {@link #connectionFactory}
+	 *
+	 * @return {@link #connectionFactory}
+	 */
+	JdbcConnectionFactory getConnectionFactory() {
+		return connectionFactory;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -106,6 +127,7 @@ final class DbUnitClassContext {
 		if (o instanceof DbUnitClassContext) {
 			DbUnitClassContext ctx = (DbUnitClassContext) o;
 			return Objects.equals(dataSet, ctx.dataSet)
+				&& Objects.equals(connectionFactory, ctx.connectionFactory)
 				&& Objects.equals(initScripts, ctx.initScripts)
 				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
 		}
@@ -115,13 +137,14 @@ final class DbUnitClassContext {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(dataSet, initScripts, liquibaseChangeLogs);
+		return Objects.hashCode(dataSet, connectionFactory, initScripts, liquibaseChangeLogs);
 	}
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.create(getClass())
 			.append("dataSet", dataSet)
+			.append("connectionFactory", connectionFactory)
 			.append("initScripts", initScripts)
 			.append("liquibaseChangeLogs", liquibaseChangeLogs)
 			.build();

@@ -24,12 +24,18 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
@@ -37,12 +43,18 @@ import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static java.util.Collections.emptyList;
 
 /**
  * Factory to create {@link DbUnitClassContext} from given input class.
  */
 final class DbUnitClassContextFactory {
+
+	/**
+	 * Class Logger.
+	 */
+	private static final Logger log = Loggers.getLogger(DbUnitClassContextFactory.class);
 
 	/**
 	 * A cache, using {@link ClassValue} under the hood.
@@ -70,9 +82,10 @@ final class DbUnitClassContextFactory {
 		@Override
 		protected DbUnitClassContext computeValue(Class<?> type) {
 			final IDataSet dataSet = readDataSet(type);
+			final JdbcConnectionFactory connectionFactory = extractJdbcConnectionFactory(type);
 			final List<SqlScript> initScripts = extractSqlScript(type);
 			final List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
-			return new DbUnitClassContext(dataSet, initScripts, liquibaseChangeLogs);
+			return new DbUnitClassContext(dataSet, connectionFactory, initScripts, liquibaseChangeLogs);
 		}
 	}
 
@@ -126,5 +139,42 @@ final class DbUnitClassContextFactory {
 
 		LiquibaseChangeLogMapper mapper = LiquibaseChangeLogMapper.getInstance();
 		return map(annotation.value(), mapper);
+	}
+
+	/**
+	 * Extract {@link JdbcConnectionFactory} configuration from test annotated with {@link DbUnitConnection}
+	 * or with deprecated {@link DbUnitConfiguration}.
+	 *
+	 * @param testClass The tested class.
+	 * @return The JDBC Connection Factory.
+	 */
+	@SuppressWarnings("deprecation")
+	private static JdbcConnectionFactory extractJdbcConnectionFactory(Class<?> testClass) {
+		DbUnitConfiguration a1 = findAnnotation(testClass, null, DbUnitConfiguration.class);
+		DbUnitConnection a2 = findAnnotation(testClass, null, DbUnitConnection.class);
+		if (a2 == null && a1 == null) {
+			return null;
+		}
+
+		if (a1 != null) {
+			log.warn("@DbUnitConfiguration annotation is deprecated and will be removed in a next release, please use @DbUnitConnection instead");
+		}
+
+		final String url;
+		final String user;
+		final String password;
+
+		if (a2 != null) {
+			url = a2.url();
+			user = a2.user();
+			password = a2.password();
+		}
+		else {
+			url = a1.url();
+			user = a1.user();
+			password = a1.password();
+		}
+
+		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
 	}
 }

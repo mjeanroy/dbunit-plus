@@ -24,6 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.IDataSet;
@@ -41,6 +44,10 @@ public class DbUnitClassContextTest {
 	public void it_should_create_class_context() {
 		final IDataSet dataSet = new DefaultDataSet();
 
+		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
+			JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "")
+		);
+
 		final List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
 			"INSERT INTO foo VALUES(1, 'John Doe');",
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
@@ -50,7 +57,12 @@ public class DbUnitClassContextTest {
 			"/db/changelog.xml"
 		));
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(dataSet, sqlScripts, liquibaseChangeLogs);
+		final DbUnitClassContext ctx = new DbUnitClassContext(
+			dataSet,
+			connectionFactory,
+			sqlScripts,
+			liquibaseChangeLogs
+		);
 
 		assertThat(ctx.getDataSet()).isEqualTo(dataSet);
 		assertThat(ctx.getInitScripts()).isEqualTo(sqlScripts);
@@ -66,6 +78,10 @@ public class DbUnitClassContextTest {
 	public void it_should_implement_to_string() {
 		final IDataSet dataSet = new DefaultDataSet();
 
+		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
+			JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "")
+		);
+
 		final List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
 			"INSERT INTO foo VALUES(1, 'John Doe');",
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
@@ -77,6 +93,7 @@ public class DbUnitClassContextTest {
 
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
+			connectionFactory,
 			sqlScripts,
 			liquibaseChangeLogs
 		);
@@ -84,6 +101,14 @@ public class DbUnitClassContextTest {
 		assertThat(ctx.toString()).isEqualTo(
 			"DbUnitClassContext{" +
 				"dataSet: " + dataSet.toString() + ", " +
+
+				"connectionFactory: JdbcDefaultConnectionFactory{" +
+					"configuration: JdbcConfiguration{" +
+						"url: \"jdbc:hsqldb:mem:testdb\", " +
+						"user: \"SA\", " +
+						"password: \"\"" +
+					"}" +
+				"}, " +
 
 				"initScripts: [" +
 					"SqlScript{" +

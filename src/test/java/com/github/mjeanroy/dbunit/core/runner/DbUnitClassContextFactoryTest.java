@@ -24,8 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDeprecatedDbUnitConfiguration;
 import org.dbunit.dataset.CompositeDataSet;
 import org.junit.Test;
 
@@ -40,6 +43,24 @@ public class DbUnitClassContextFactoryTest {
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getDataSet()).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+	}
+
+	@Test
+	public void it_should_read_connection_factory_from_class_context() {
+		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getConnectionFactory()).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
+	}
+
+	@Test
+	public void it_should_read_connection_factory_from_class_context_with_deprecated_annotation() {
+		final Class<WithDeprecatedDbUnitConfiguration> testClass = WithDeprecatedDbUnitConfiguration.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getConnectionFactory()).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
 	}
 
 	@Test

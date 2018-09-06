@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.commons.lang.Objects;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 
 import java.sql.Connection;
@@ -56,7 +58,7 @@ public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory 
 		return DriverManager.getConnection(configuration.getUrl(), configuration.getUser(), configuration.getPassword());
 	}
 
-	private void loadDriver(String url) {
+	private static void loadDriver(String url) {
 		for (JdbcDriver driver : JdbcDriver.values()) {
 			if (driver.match(url)) {
 				driver.loadDriver();
@@ -65,5 +67,31 @@ public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory 
 		}
 
 		throw new JdbcException("Cannot load JDBC driver for: " + url);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (o instanceof JdbcDefaultConnectionFactory) {
+			JdbcDefaultConnectionFactory f = (JdbcDefaultConnectionFactory) o;
+			return Objects.equals(configuration, f.configuration);
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(configuration);
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.create(getClass())
+			.append("configuration", configuration)
+			.build();
 	}
 }

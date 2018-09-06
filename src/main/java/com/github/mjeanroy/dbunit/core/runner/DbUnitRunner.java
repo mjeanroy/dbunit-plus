@@ -32,7 +32,6 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -60,7 +59,6 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStat
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.
@@ -104,13 +102,7 @@ public class DbUnitRunner {
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
 	public DbUnitRunner(Class<?> testClass, JdbcConnectionFactory factory) {
-		this.testClass = notNull(testClass, "Test Class must not be null");
-		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
-		this.ctx = DbUnitClassContextFactory.from(testClass);
-
-		// Then, run SQL and/or liquibase initialization
-		runSqlScript(factory);
-		runLiquibase(factory);
+		this(testClass, notNull(factory, "JDBC Connection Factory must be specified"), DbUnitClassContextFactory.from(testClass));
 	}
 
 	/**
@@ -126,13 +118,24 @@ public class DbUnitRunner {
 	}
 
 	/**
-	 * Create runner and extract the JDBC Connectiob factory from the {@code testClass} that should
+	 * Create runner and extract the JDBC Connection factory from the {@code testClass} that should
 	 * be annotated with {@link DbUnitConnection} (or with deprecated {@link DbUnitConfiguration}).
 	 *
 	 * @param testClass The tested class.
 	 */
+	@SuppressWarnings("deprecation")
 	public DbUnitRunner(Class<?> testClass) {
-		this(testClass, extractJdbcConnectionFactory(testClass));
+		this(testClass, null, DbUnitClassContextFactory.from(testClass));
+	}
+
+	private DbUnitRunner(Class<?> testClass, JdbcConnectionFactory connectionFactory, DbUnitClassContext ctx) {
+		this.testClass = notNull(testClass, "Test Class must not be null");
+		this.factory = readConnectionFactory(connectionFactory, ctx);
+		this.ctx = DbUnitClassContextFactory.from(testClass);
+
+		// Then, run SQL and/or liquibase initialization
+		runSqlScript(this.factory);
+		runLiquibase(this.factory);
 	}
 
 	/**
@@ -311,38 +314,22 @@ public class DbUnitRunner {
 	}
 
 	/**
-	 * Extract {@link JdbcConnectionFactory} configuration from test annotated with {@link DbUnitConnection}
-	 * or with deprecated {@link DbUnitConfiguration}.
+	 * Choose connection factory to use: the one given in parameter or the one from the DbUnit test context.
+	 * If no connection factory can be found, a {@link DbUnitException} will be thrown.
 	 *
-	 * @param testClass The tested class.
-	 * @return The JDBC Connection Factory.
+	 * @param connectionFactory The (explicit) connection factory.
+	 * @param ctx The DbUnit test context.
+	 * @return The connection factory.
 	 */
-	private static JdbcConnectionFactory extractJdbcConnectionFactory(Class<?> testClass) {
-		DbUnitConfiguration a1 = findAnnotation(testClass, null, DbUnitConfiguration.class);
-		DbUnitConnection a2 = findAnnotation(testClass, null, DbUnitConnection.class);
-		if (a2 == null && a1 == null) {
-			throw new DbUnitException("Cannot find database configuration, please annotate your class with @DbUnitConnection");
+	private static JdbcConnectionFactory readConnectionFactory(JdbcConnectionFactory connectionFactory, DbUnitClassContext ctx) {
+		if (connectionFactory != null) {
+			return connectionFactory;
 		}
-
-		if (a1 != null) {
-			log.warn("@DbUnitConfiguration annotation is deprecated and will be removed in a next release, please use @DbUnitConnection instead");
-		}
-
-		final String url;
-		final String user;
-		final String password;
-
-		if (a2 != null) {
-			url = a2.url();
-			user = a2.user();
-			password = a2.password();
+		else if (ctx.getConnectionFactory() != null) {
+			return ctx.getConnectionFactory();
 		}
 		else {
-			url = a1.url();
-			user = a1.user();
-			password = a1.password();
+			throw new DbUnitException("Cannot find database configuration, please annotate your class with @DbUnitConnection");
 		}
-
-		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
 	}
 }

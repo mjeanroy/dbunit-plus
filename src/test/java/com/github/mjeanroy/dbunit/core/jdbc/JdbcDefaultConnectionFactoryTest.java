@@ -25,6 +25,8 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 
@@ -71,6 +73,28 @@ public class JdbcDefaultConnectionFactoryTest {
 		assertThatThrownBy(getConnection(factory))
 			.isExactlyInstanceOf(JdbcException.class)
 			.hasMessage("com.github.mjeanroy.dbunit.exception.JdbcException: Cannot load JDBC driver for: jdbc:custom:file:database/testdb");
+	}
+
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(JdbcDefaultConnectionFactory.class)
+			.suppress(Warning.STRICT_INHERITANCE)
+			.verify();
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		final JdbcConfiguration configuration = JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "");
+		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
+		assertThat(factory.toString()).isEqualTo(
+			"JdbcDefaultConnectionFactory{" +
+				"configuration: JdbcConfiguration{" +
+					"url: \"jdbc:hsqldb:mem:testdb\", " +
+					"user: \"SA\", " +
+					"password: \"\"" +
+				"}" +
+			"}"
+		);
 	}
 
 	private static ThrowingCallable getConnection(final JdbcDefaultConnectionFactory factory) {
