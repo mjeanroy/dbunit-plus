@@ -28,7 +28,6 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
@@ -54,7 +53,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
@@ -118,7 +116,7 @@ public class DbUnitRunner {
 
 		// Then, run SQL and/or liquibase initialization
 		runSqlScript(factory);
-		runLiquibase(testClass, factory);
+		runLiquibase(factory);
 	}
 
 	/**
@@ -324,19 +322,14 @@ public class DbUnitRunner {
 	}
 
 	/**
-	 * Run SQL initialization script when runner is initialized.
+	 * Run liquibase changelogs scripts when runner is initialized.
 	 * If a script failed, then entire process is stopped and an instance
 	 * of {@link DbUnitException} if thrown.
 	 *
-	 * @param testClass The tested class.
 	 * @param factory The JDBC Connection Factory.
 	 */
-	private static void runLiquibase(Class<?> testClass, JdbcConnectionFactory factory) {
-		DbUnitLiquibase annotation = findAnnotation(testClass, null, DbUnitLiquibase.class);
-		if (annotation != null) {
-			List<LiquibaseChangeLog> changeLogs = map(annotation.value(), LiquibaseChangeLogMapper.getInstance());
-			forEach(changeLogs, new LiquibaseChangeLogUpdaterFunction(factory));
-		}
+	private void runLiquibase(JdbcConnectionFactory factory) {
+		forEach(ctx.getLiquibaseChangeLogs(), new LiquibaseChangeLogUpdaterFunction(factory));
 	}
 
 	/**

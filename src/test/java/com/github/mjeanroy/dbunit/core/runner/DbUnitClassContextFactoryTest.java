@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import org.junit.Test;
 
@@ -47,5 +48,15 @@ public class DbUnitClassContextFactoryTest {
 				"CREATE TABLE foo (id INT, name varchar(100));",
 				"CREATE TABLE bar (id INT, title varchar(100));"
 			);
+	}
+
+	@Test
+	public void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
+		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getLiquibaseChangeLogs()).isNotEmpty().hasSize(1);
+		assertThat(ctx.getLiquibaseChangeLogs().get(0).getChangeLog()).isEqualTo("/liquibase/changelog.xml");
 	}
 }

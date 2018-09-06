@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 
 import java.util.List;
@@ -63,8 +64,9 @@ final class DbUnitClassContextFactory {
 	private static class DbUnitClassContextValue extends ClassValue<DbUnitClassContext> {
 		@Override
 		protected DbUnitClassContext computeValue(Class<?> type) {
-			List<SqlScript> initScripts = runSqlScript(type);
-			return new DbUnitClassContext(initScripts);
+			List<SqlScript> initScripts = extractSqlScript(type);
+			List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
+			return new DbUnitClassContext(initScripts, liquibaseChangeLogs);
 		}
 	}
 
@@ -73,7 +75,7 @@ final class DbUnitClassContextFactory {
 	 *
 	 * @param testClass The tested class.
 	 */
-	private static List<SqlScript> runSqlScript(Class<?> testClass) {
+	private static List<SqlScript> extractSqlScript(Class<?> testClass) {
 		DbUnitInit annotation = findAnnotation(testClass, null, DbUnitInit.class);
 		if (annotation == null) {
 			return emptyList();
@@ -83,5 +85,20 @@ final class DbUnitClassContextFactory {
 		SqlScriptParserConfiguration configuration = SqlScriptParserConfiguration.builder().setDelimiter(delimiter).build();
 		SqlScriptMapper mapper = SqlScriptMapper.getInstance(configuration);
 		return map(annotation.sql(), mapper);
+	}
+
+	/**
+	 * Extract liquibase changelogs to execute when runner is initialized.
+	 *
+	 * @param testClass The tested class.
+	 */
+	private static List<LiquibaseChangeLog> extractLiquibaseChangeLogs(Class<?> testClass) {
+		DbUnitLiquibase annotation = findAnnotation(testClass, null, DbUnitLiquibase.class);
+		if (annotation == null) {
+			return emptyList();
+		}
+
+		LiquibaseChangeLogMapper mapper = LiquibaseChangeLogMapper.getInstance();
+		return map(annotation.value(), mapper);
 	}
 }

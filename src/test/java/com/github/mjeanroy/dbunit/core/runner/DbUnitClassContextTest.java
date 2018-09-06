@@ -42,9 +42,14 @@ public class DbUnitClassContextTest {
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
 		)));
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(sqlScripts);
+		final List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
+			"/db/changelog.xml"
+		));
+
+		final DbUnitClassContext ctx = new DbUnitClassContext(sqlScripts, liquibaseChangeLogs);
 
 		assertThat(ctx.getInitScripts()).isEqualTo(sqlScripts);
+		assertThat(ctx.getLiquibaseChangeLogs()).isEqualTo(liquibaseChangeLogs);
 	}
 
 	@Test
@@ -59,7 +64,11 @@ public class DbUnitClassContextTest {
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
 		)));
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(sqlScripts);
+		final List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
+			"/db/changelog.xml"
+		));
+
+		final DbUnitClassContext ctx = new DbUnitClassContext(sqlScripts, liquibaseChangeLogs);
 
 		assertThat(ctx.toString()).isEqualTo(
 			"DbUnitClassContext{" +
@@ -69,6 +78,12 @@ public class DbUnitClassContextTest {
 							"INSERT INTO foo VALUES(1, 'John Doe');, " +
 							"INSERT INTO foo VALUES(2, 'Jane Doe');" +
 						"]" +
+					"}" +
+				"], " +
+
+				"liquibaseChangeLogs: [" +
+					"LiquibaseChangeLog{" +
+						"changeLog: \"/db/changelog.xml\"" +
 					"}" +
 				"]" +
 			"}"

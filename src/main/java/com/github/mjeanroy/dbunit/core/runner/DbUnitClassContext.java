@@ -36,6 +36,7 @@ import static java.util.Collections.unmodifiableList;
  * The DbUnit class context, containing initialization context, i.e:
  * <ul>
  *   <li>SQL Initialization Scripts.</li>
+ *   <li>The liquibase changelogs.</li>
  * </ul>
  */
 final class DbUnitClassContext {
@@ -46,12 +47,18 @@ final class DbUnitClassContext {
 	private final List<SqlScript> initScripts;
 
 	/**
+	 * The list of liquibase changelogs to run.
+	 */
+	private final List<LiquibaseChangeLog> liquibaseChangeLogs;
+
+	/**
 	 * Create the class context.
 	 *
 	 * @param initScripts The list of initialization scripts to run.
 	 */
-	DbUnitClassContext(List<SqlScript> initScripts) {
+	DbUnitClassContext(List<SqlScript> initScripts, List<LiquibaseChangeLog> liquibaseChangeLogs) {
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
+		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
 	}
 
 	/**
@@ -63,6 +70,15 @@ final class DbUnitClassContext {
 		return initScripts;
 	}
 
+	/**
+	 * Get {@link #liquibaseChangeLogs}
+	 *
+	 * @return {@link #liquibaseChangeLogs}
+	 */
+	List<LiquibaseChangeLog> getLiquibaseChangeLogs() {
+		return liquibaseChangeLogs;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -71,7 +87,7 @@ final class DbUnitClassContext {
 
 		if (o instanceof DbUnitClassContext) {
 			DbUnitClassContext ctx = (DbUnitClassContext) o;
-			return Objects.equals(initScripts, ctx.initScripts);
+			return Objects.equals(initScripts, ctx.initScripts) && Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
 		}
 
 		return false;
@@ -79,13 +95,14 @@ final class DbUnitClassContext {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(initScripts);
+		return Objects.hashCode(initScripts, liquibaseChangeLogs);
 	}
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.create(getClass())
 			.append("initScripts", initScripts)
+			.append("liquibaseChangeLogs", liquibaseChangeLogs)
 			.build();
 	}
 }
