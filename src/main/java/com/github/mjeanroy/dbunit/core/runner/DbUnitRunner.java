@@ -28,14 +28,12 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -82,6 +80,11 @@ public class DbUnitRunner {
 	private final Class<?> testClass;
 
 	/**
+	 * The test class context, containing initialization context.
+	 */
+	private final DbUnitClassContext ctx;
+
+	/**
 	 * Factory used to retrieve SQL connection before and
 	 * after execution of test method.
 	 */
@@ -111,9 +114,10 @@ public class DbUnitRunner {
 		this.testClass = notNull(testClass, "Test Class must not be null");
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 		this.dataSet = readDataSet(testClass);
+		this.ctx = DbUnitClassContextFactory.from(testClass);
 
 		// Then, run SQL and/or liquibase initialization
-		runSqlScript(testClass, factory);
+		runSqlScript(factory);
 		runLiquibase(testClass, factory);
 	}
 
@@ -313,18 +317,10 @@ public class DbUnitRunner {
 	 * If a script failed, then entire process is stopped and an instance
 	 * of {@link DbUnitException} if thrown.
 	 *
-	 * @param testClass The tested class.
 	 * @param factory The JDBC Connection Factory.
 	 */
-	private static void runSqlScript(Class<?> testClass, JdbcConnectionFactory factory) {
-		DbUnitInit annotation = findAnnotation(testClass, null, DbUnitInit.class);
-		if (annotation != null) {
-			List<SqlScript> scripts = map(annotation.sql(), SqlScriptMapper.getInstance(SqlScriptParserConfiguration.builder()
-				.setDelimiter(annotation.delimiter())
-				.build()));
-
-			forEach(scripts, new SqlScriptRunnerFunction(factory));
-		}
+	private void runSqlScript(JdbcConnectionFactory factory) {
+		forEach(ctx.getInitScripts(), new SqlScriptRunnerFunction(factory));
 	}
 
 	/**
