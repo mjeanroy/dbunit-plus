@@ -24,9 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
+import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
 
 import java.util.List;
 
@@ -64,9 +69,30 @@ final class DbUnitClassContextFactory {
 	private static class DbUnitClassContextValue extends ClassValue<DbUnitClassContext> {
 		@Override
 		protected DbUnitClassContext computeValue(Class<?> type) {
-			List<SqlScript> initScripts = extractSqlScript(type);
-			List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
-			return new DbUnitClassContext(initScripts, liquibaseChangeLogs);
+			final IDataSet dataSet = readDataSet(type);
+			final List<SqlScript> initScripts = extractSqlScript(type);
+			final List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
+			return new DbUnitClassContext(dataSet, initScripts, liquibaseChangeLogs);
+		}
+	}
+
+	/**
+	 * Read dbUnit dataSet from class test class annotation.
+	 *
+	 * @return Parsed dataSet.
+	 * @throws DbUnitException If dataSet parsing failed.
+	 */
+	private static IDataSet readDataSet(Class<?> testClass) {
+		DbUnitDataSet annotation = findAnnotation(testClass, null, DbUnitDataSet.class);
+		if (annotation == null || annotation.value().length == 0) {
+			return null;
+		}
+
+		try {
+			return DataSetFactory.createDataSet(annotation.value());
+		}
+		catch (DataSetException ex) {
+			throw new DbUnitException(ex);
 		}
 	}
 

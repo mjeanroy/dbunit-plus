@@ -89,11 +89,6 @@ public class DbUnitRunner {
 	private final JdbcConnectionFactory factory;
 
 	/**
-	 * DbUnit data set to load before test method execution.
-	 */
-	private final IDataSet dataSet;
-
-	/**
 	 * Create runner.
 	 *
 	 * <br>
@@ -111,7 +106,6 @@ public class DbUnitRunner {
 	public DbUnitRunner(Class<?> testClass, JdbcConnectionFactory factory) {
 		this.testClass = notNull(testClass, "Test Class must not be null");
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
-		this.dataSet = readDataSet(testClass);
 		this.ctx = DbUnitClassContextFactory.from(testClass);
 
 		// Then, run SQL and/or liquibase initialization
@@ -171,7 +165,7 @@ public class DbUnitRunner {
 
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
 		// Read dataSet from method.
-		IDataSet dataSet = readDataSet(testMethod, this.dataSet);
+		IDataSet dataSet = readDataSet(testMethod, ctx.getDataSet());
 		if (dataSet == null) {
 			return;
 		}
@@ -218,22 +212,6 @@ public class DbUnitRunner {
 
 			closeQuietly(connection);
 		}
-	}
-
-	/**
-	 * Read dbUnit dataSet from class test class annotation.
-	 *
-	 * @return Parsed dataSet.
-	 * @throws DbUnitException If dataSet parsing failed.
-	 */
-	private static IDataSet readDataSet(Class<?> testClass) {
-		DbUnitDataSet annotation = findAnnotation(testClass, null, DbUnitDataSet.class);
-		if (annotation != null && annotation.value().length > 0) {
-			return readAnnotationDataSet(annotation);
-		}
-
-		log.warn("Cannot find @DbUnitDataSet annotation, skip.");
-		return null;
 	}
 
 	/**

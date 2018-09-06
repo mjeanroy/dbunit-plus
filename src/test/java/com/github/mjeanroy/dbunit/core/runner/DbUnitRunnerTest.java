@@ -34,7 +34,6 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithoutDataSet;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.dbunit.dataset.IDataSet;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -61,9 +60,10 @@ public class DbUnitRunnerTest {
 		assertThat((Class<?>) readPrivate(runner, "testClass")).isSameAs(klass);
 		assertThat((JdbcConnectionFactory) readPrivate(runner, "factory")).isSameAs(factory);
 
-		final IDataSet dataSet = readPrivate(runner, "dataSet");
-		assertThat(dataSet).isNotNull();
-		assertThat(dataSet.getTableNames())
+		final DbUnitClassContext ctx = readPrivate(runner, "ctx");
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getDataSet()).isNotNull();
+		assertThat(ctx.getDataSet().getTableNames())
 			.hasSize(2)
 			.contains("foo", "bar");
 	}
@@ -77,8 +77,9 @@ public class DbUnitRunnerTest {
 		assertThat((Class<?>) readPrivate(runner, "testClass")).isSameAs(klass);
 		assertThat((JdbcConnectionFactory) readPrivate(runner, "factory")).isSameAs(factory);
 
-		final IDataSet dataSet = readPrivate(runner, "dataSet");
-		assertThat(dataSet).isNull();
+		final DbUnitClassContext ctx = readPrivate(runner, "ctx");
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getDataSet()).isNull();
 	}
 
 	@Test

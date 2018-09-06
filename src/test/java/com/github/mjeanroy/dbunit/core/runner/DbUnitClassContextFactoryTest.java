@@ -26,11 +26,21 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
+import org.dbunit.dataset.CompositeDataSet;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbUnitClassContextFactoryTest {
+
+	@Test
+	public void it_should_read_dataset_from_class_context() {
+		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getDataSet()).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+	}
 
 	@Test
 	public void it_should_extract_sql_scripts_from_class_context() {

@@ -25,6 +25,8 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import org.dbunit.dataset.DefaultDataSet;
+import org.dbunit.dataset.IDataSet;
 import org.junit.Test;
 
 import java.util.List;
@@ -37,6 +39,8 @@ public class DbUnitClassContextTest {
 
 	@Test
 	public void it_should_create_class_context() {
+		final IDataSet dataSet = new DefaultDataSet();
+
 		final List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
 			"INSERT INTO foo VALUES(1, 'John Doe');",
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
@@ -46,8 +50,9 @@ public class DbUnitClassContextTest {
 			"/db/changelog.xml"
 		));
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(sqlScripts, liquibaseChangeLogs);
+		final DbUnitClassContext ctx = new DbUnitClassContext(dataSet, sqlScripts, liquibaseChangeLogs);
 
+		assertThat(ctx.getDataSet()).isEqualTo(dataSet);
 		assertThat(ctx.getInitScripts()).isEqualTo(sqlScripts);
 		assertThat(ctx.getLiquibaseChangeLogs()).isEqualTo(liquibaseChangeLogs);
 	}
@@ -59,6 +64,8 @@ public class DbUnitClassContextTest {
 
 	@Test
 	public void it_should_implement_to_string() {
+		final IDataSet dataSet = new DefaultDataSet();
+
 		final List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
 			"INSERT INTO foo VALUES(1, 'John Doe');",
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
@@ -68,10 +75,16 @@ public class DbUnitClassContextTest {
 			"/db/changelog.xml"
 		));
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(sqlScripts, liquibaseChangeLogs);
+		final DbUnitClassContext ctx = new DbUnitClassContext(
+			dataSet,
+			sqlScripts,
+			liquibaseChangeLogs
+		);
 
 		assertThat(ctx.toString()).isEqualTo(
 			"DbUnitClassContext{" +
+				"dataSet: " + dataSet.toString() + ", " +
+
 				"initScripts: [" +
 					"SqlScript{" +
 						"queries: [" +

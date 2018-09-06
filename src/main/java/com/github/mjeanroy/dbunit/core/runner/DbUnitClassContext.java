@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import org.dbunit.dataset.IDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,11 @@ import static java.util.Collections.unmodifiableList;
 final class DbUnitClassContext {
 
 	/**
+	 * The default dataset (may be overloaded by method), may be {@code null}.
+	 */
+	private final IDataSet dataSet;
+
+	/**
 	 * The list of initialization scripts to run.
 	 */
 	private final List<SqlScript> initScripts;
@@ -54,9 +60,12 @@ final class DbUnitClassContext {
 	/**
 	 * Create the class context.
 	 *
+	 * @param dataSet The class dataset (may be {@code null}).
 	 * @param initScripts The list of initialization scripts to run.
+	 * @param liquibaseChangeLogs The liquibase changelogs.
 	 */
-	DbUnitClassContext(List<SqlScript> initScripts, List<LiquibaseChangeLog> liquibaseChangeLogs) {
+	DbUnitClassContext(IDataSet dataSet, List<SqlScript> initScripts, List<LiquibaseChangeLog> liquibaseChangeLogs) {
+		this.dataSet = dataSet;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
 	}
@@ -79,6 +88,15 @@ final class DbUnitClassContext {
 		return liquibaseChangeLogs;
 	}
 
+	/**
+	 * Get {@link #dataSet}
+	 *
+	 * @return {@link #dataSet}
+	 */
+	IDataSet getDataSet() {
+		return dataSet;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -87,7 +105,9 @@ final class DbUnitClassContext {
 
 		if (o instanceof DbUnitClassContext) {
 			DbUnitClassContext ctx = (DbUnitClassContext) o;
-			return Objects.equals(initScripts, ctx.initScripts) && Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
+			return Objects.equals(dataSet, ctx.dataSet)
+				&& Objects.equals(initScripts, ctx.initScripts)
+				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
 		}
 
 		return false;
@@ -95,12 +115,13 @@ final class DbUnitClassContext {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(initScripts, liquibaseChangeLogs);
+		return Objects.hashCode(dataSet, initScripts, liquibaseChangeLogs);
 	}
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.create(getClass())
+			.append("dataSet", dataSet)
 			.append("initScripts", initScripts)
 			.append("liquibaseChangeLogs", liquibaseChangeLogs)
 			.build();
