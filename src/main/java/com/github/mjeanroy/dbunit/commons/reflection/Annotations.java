@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.commons.reflection;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -32,11 +33,21 @@ import java.util.List;
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
+import static java.util.Arrays.asList;
 
 /**
  * Static Annotation Utilities.
  */
 public final class Annotations {
+
+	/**
+	 * The list of packages that should not be scanned for meta-annotation (since these packages may not
+	 * contains annotations of DbUnit+!).
+	 */
+	private static final List<String> BLACKLISTED_PACKAGES = asList(
+		"java.lang",
+		"org.junit"
+	);
 
 	// Ensure non instantiation.
 	private Annotations() {
@@ -56,26 +67,80 @@ public final class Annotations {
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
 	public static <T extends Annotation> T findAnnotation(Class<?> klass, Method method, Class<T> annotationClass) {
-		T annotation = null;
-
 		// First, search on method.
 		if (method != null) {
-			annotation = method.getAnnotation(annotationClass);
+			T annotation = findAnnotationOn(method, annotationClass);
+			if (annotation != null) {
+				return annotation;
+			}
 		}
 
 		// Then, search on class.
-		Class<?> current = klass;
-		while (annotation == null && current != null) {
-			annotation = current.getAnnotation(annotationClass);
-			current = current.getSuperclass();
+		return findAnnotation(klass, annotationClass);
+	}
+
+	/**
+	 * Find expected annotation on class, or a class in the hierarchy.
+	 *
+	 * @param klass Class.
+	 * @param annotationClass Annotation class to look for.
+	 * @param <T> Type of annotation.
+	 * @return Annotation if found, {@code null} otherwise.
+	 */
+	public static <T extends Annotation> T findAnnotation(Class<?> klass, Class<T> annotationClass) {
+		return findAnnotationOn(klass, annotationClass);
+	}
+
+	/**
+	 * Find expected annotation on given element.
+	 *
+	 * @param element Class.
+	 * @param annotationClass Annotation class to look for.
+	 * @param <T> Type of annotation.
+	 * @return Annotation if found, {@code null} otherwise.
+	 */
+	static <T extends Annotation> T findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
+		if (element == null) {
+			return null;
 		}
 
-		// Then, search on package.
-		if (annotation == null) {
-			annotation = klass.getPackage().getAnnotation(annotationClass);
+		// Is it directly present?
+		if (element.isAnnotationPresent(annotationClass)) {
+			return element.getAnnotation(annotationClass);
 		}
 
-		return annotation;
+		// Search for meta-annotation
+		for (Annotation candidate : element.getAnnotations()) {
+			Class<? extends Annotation> candidateAnnotationType = candidate.annotationType();
+			if (shouldScan(candidateAnnotationType)) {
+				T result = findAnnotation(candidateAnnotationType, annotationClass);
+				if (result != null) {
+					return result;
+				}
+			}
+		}
+
+		if (element instanceof Class) {
+			Class<?> klass = (Class<?>) element;
+
+			// Look on interfaces.
+			for (Class<?> intf : klass.getInterfaces()) {
+				if (shouldScan(intf)) {
+					T result = findAnnotationOn(intf, annotationClass);
+					if (result != null) {
+						return result;
+					}
+				}
+			}
+
+			// Go up in the class hierarchy.
+			Class<?> superClass = klass.getSuperclass();
+			if (shouldScan(superClass)) {
+				return findAnnotation(superClass, annotationClass);
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -102,5 +167,28 @@ public final class Annotations {
 	public static <T extends Annotation> List<Method> findStaticMethodAnnotatedWith(Class<?> klass, Class<T> annotation) {
 		List<Method> fields = findStaticMethods(klass);
 		return filter(fields, new MemberAnnotatedWithPredicate<Method, T>(annotation));
+	}
+
+	/**
+	 * Check if it is worth scanning this element (i.e there is a chance to find useful
+	 * annotation).
+	 *
+	 * @param elementType The element class type.
+	 * @return {@code true} if element should be scanned, {@code false} otherwise.
+	 */
+	private static boolean shouldScan(Class<?> elementType) {
+		if (elementType == null) {
+			return false;
+		}
+
+		String name = elementType.getName();
+
+		for (String pkg : BLACKLISTED_PACKAGES) {
+			if (name.startsWith(pkg)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 }

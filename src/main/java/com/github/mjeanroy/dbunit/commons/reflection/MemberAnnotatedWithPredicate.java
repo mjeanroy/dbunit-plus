@@ -29,6 +29,8 @@ import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotationOn;
+
 /**
  * Check that a field/method is annotated with given annotation.
  *
@@ -52,6 +54,6 @@ class MemberAnnotatedWithPredicate<T extends AnnotatedElement, U extends Annotat
 
 	@Override
 	public boolean apply(T member) {
-		return member.isAnnotationPresent(annotation);
+		return findAnnotationOn(member, annotation) != null;
 	}
 }

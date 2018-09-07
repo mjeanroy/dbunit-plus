@@ -104,7 +104,7 @@ final class DbUnitClassContextFactory {
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
 	private static IDataSet readDataSet(Class<?> testClass) {
-		DbUnitDataSet annotation = findAnnotation(testClass, null, DbUnitDataSet.class);
+		DbUnitDataSet annotation = findAnnotation(testClass, DbUnitDataSet.class);
 		if (annotation == null || annotation.value().length == 0) {
 			return null;
 		}
@@ -123,7 +123,7 @@ final class DbUnitClassContextFactory {
 	 * @param testClass The tested class.
 	 */
 	private static List<SqlScript> extractSqlScript(Class<?> testClass) {
-		DbUnitInit annotation = findAnnotation(testClass, null, DbUnitInit.class);
+		DbUnitInit annotation = findAnnotation(testClass, DbUnitInit.class);
 		if (annotation == null) {
 			return emptyList();
 		}
@@ -140,7 +140,7 @@ final class DbUnitClassContextFactory {
 	 * @param testClass The tested class.
 	 */
 	private static List<LiquibaseChangeLog> extractLiquibaseChangeLogs(Class<?> testClass) {
-		DbUnitLiquibase annotation = findAnnotation(testClass, null, DbUnitLiquibase.class);
+		DbUnitLiquibase annotation = findAnnotation(testClass, DbUnitLiquibase.class);
 		if (annotation == null) {
 			return emptyList();
 		}
@@ -158,8 +158,8 @@ final class DbUnitClassContextFactory {
 	 */
 	@SuppressWarnings("deprecation")
 	private static JdbcConnectionFactory extractJdbcConnectionFactory(Class<?> testClass) {
-		DbUnitConfiguration a1 = findAnnotation(testClass, null, DbUnitConfiguration.class);
-		DbUnitConnection a2 = findAnnotation(testClass, null, DbUnitConnection.class);
+		DbUnitConfiguration a1 = findAnnotation(testClass, DbUnitConfiguration.class);
+		DbUnitConnection a2 = findAnnotation(testClass, DbUnitConnection.class);
 		if (a2 == null && a1 == null) {
 			return null;
 		}

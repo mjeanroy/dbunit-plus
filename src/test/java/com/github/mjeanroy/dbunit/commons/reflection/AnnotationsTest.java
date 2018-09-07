@@ -24,14 +24,12 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,77 +37,116 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class AnnotationsTest {
 
 	@Test
-	public void it_should_find_annotation_on_class() throws Exception {
-		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		Method method = klass.getMethod("method1");
-		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+	public void it_should_find_annotation_on_class() {
+		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("foo");
 	}
 
 	@Test
-	public void it_should_find_annotation_on_super_class() throws Exception {
-		Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
-		Method method = klass.getMethod("method1");
-		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+	public void it_should_find_annotation_on_meta_annotation() {
+		final Class<TestClassMetaAnnotated> klass = TestClassMetaAnnotated.class;
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+
+		assertThat(annotation).isNotNull();
+		assertThat(annotation.value()).isEqualTo("baz");
+	}
+
+	@Test
+	public void it_should_find_annotation_on_interface() {
+		final Class<TestClassAnnotatedOnInterface> klass = TestClassAnnotatedOnInterface.class;
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+
+		assertThat(annotation).isNotNull();
+		assertThat(annotation.value()).isEqualTo("quiz");
+	}
+
+	@Test
+	public void it_should_find_annotation_on_super_class() {
+		final Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+
+		assertThat(annotation).isNotNull();
+		assertThat(annotation.value()).isEqualTo("foo");
+	}
+
+	@Test
+	public void it_should_find_annotation_on_class_if_method_is_not_annotated() throws Exception {
+		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		final Method method = klass.getMethod("method1");
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+
+		assertThat(annotation).isNotNull();
+		assertThat(annotation.value()).isEqualTo("foo");
+	}
+
+	@Test
+	public void it_should_find_annotation_on_super_class_if_method_is_not_annotated() throws Exception {
+		final Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
+		final Method method = klass.getMethod("method1");
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("foo");
 	}
 
 	@Test
 	public void it_should_find_annotation_on_method() throws Exception {
-		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		Method method = klass.getMethod("method2");
-		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		final Method method = klass.getDeclaredMethod("method2");
+		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("bar");
 	}
 
 	@Test
 	public void it_should_not_find_annotation() throws Exception {
-		Class<TestClassWithoutAnnotation> klass = TestClassWithoutAnnotation.class;
-		Method method = klass.getMethod("method1");
-		TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
+		final Class<TestClassWithoutAnnotation> klass = TestClassWithoutAnnotation.class;
+		final Method method = klass.getMethod("method1");
+		final TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
+
 		assertThat(annotation).isNull();
 	}
 
 	@Test
-	public void it_should_find_static_fields_annotated() {
-		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		List<Field> fields = Annotations.findStaticFieldAnnotatedWith(klass, TestAnnotation.class);
+	public void it_should_find_static_fields_annotated_including_meta_annotation() {
+		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		final List<Field> fields = Annotations.findStaticFieldAnnotatedWith(klass, TestAnnotation.class);
 
 		assertThat(fields)
-			.isNotNull()
-			.isNotEmpty()
-			.are(new Condition<Field>() {
-				@Override
-				public boolean matches(Field field) {
-					return field.isAnnotationPresent(TestAnnotation.class) &&
-						Modifier.isStatic(field.getModifiers());
-				}
-			});
+			.hasSize(2)
+			.extracting("name")
+			.containsOnly("i1", "i3");
 	}
 
 	@Test
-	public void it_should_find_static_methods_annotated() {
-		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		List<Method> methods = Annotations.findStaticMethodAnnotatedWith(klass, TestAnnotation.class);
+	public void it_should_find_static_methods_annotated_including_meta_annotation() {
+		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		final List<Method> methods = Annotations.findStaticMethodAnnotatedWith(klass, TestAnnotation.class);
 
 		assertThat(methods)
-			.isNotNull()
-			.isNotEmpty()
-			.are(new Condition<Method>() {
-				@Override
-				public boolean matches(Method method) {
-					return method.isAnnotationPresent(TestAnnotation.class) &&
-						Modifier.isStatic(method.getModifiers());
-				}
-			});
+			.hasSize(2)
+			.extracting("name")
+			.containsOnly("m1", "m3");
 	}
+
+	// == Fixtures
 
 	@Retention(RetentionPolicy.RUNTIME)
 	@interface TestAnnotation {
 		String value();
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@TestAnnotation("baz")
+	@interface MetaAnnotation {
+	}
+
+	@TestAnnotation("quiz")
+	interface InterfaceAnnotated {
 	}
 
 	@SuppressWarnings("unused")
@@ -121,6 +158,9 @@ public class AnnotationsTest {
 
 		private static int i2;
 
+		@MetaAnnotation
+		private static int i3;
+
 		@TestAnnotation("foo")
 		public static void m1() {
 		}
@@ -128,18 +168,28 @@ public class AnnotationsTest {
 		public static void m2() {
 		}
 
+		@MetaAnnotation
+		public static void m3() {
+		}
+
 		public void method1() {
 		}
 
 		@TestAnnotation("bar")
-		public void method2() {
+		void method2() {
 		}
 	}
 
 	private class TestClassAnnotationChild extends TestClassAnnotation {
 	}
 
-	@SuppressWarnings("unused")
+	@MetaAnnotation
+	private class TestClassMetaAnnotated {
+	}
+
+	private class TestClassAnnotatedOnInterface implements InterfaceAnnotated {
+	}
+
 	private static class TestClassWithoutAnnotation {
 		public void method1() {
 		}
