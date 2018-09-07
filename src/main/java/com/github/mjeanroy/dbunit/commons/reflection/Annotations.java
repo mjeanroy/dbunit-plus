@@ -45,8 +45,8 @@ public final class Annotations {
 	 * contains annotations of DbUnit+!).
 	 */
 	private static final List<String> BLACKLISTED_PACKAGES = asList(
-		"java.lang",
-		"org.junit"
+		"java.lang.",
+		"org.junit."
 	);
 
 	// Ensure non instantiation.
