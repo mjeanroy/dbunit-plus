@@ -28,10 +28,10 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
+import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -45,18 +45,16 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 
@@ -189,7 +187,18 @@ public class DbUnitRunner {
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
 
 			log.trace(" 3- Load data set");
-			dbTester.setDataSet(runReplacements(testClass, dataSet));
+
+			List<Replacements> allReplacements = ctx.getReplacements();
+			if (!allReplacements.isEmpty()) {
+				dataSet = new ReplacementDataSet(dataSet);
+				for (Replacements replacements : allReplacements) {
+					for (Map.Entry<String, Object> entry : replacements.getReplacements().entrySet()) {
+						((ReplacementDataSet) dataSet).addReplacementObject(entry.getKey(), entry.getValue());
+					}
+				}
+			}
+
+			dbTester.setDataSet(dataSet);
 
 			// Apply operation (setup or tear down).
 			log.trace(" 4- Apply database operation");
@@ -245,29 +254,6 @@ public class DbUnitRunner {
 	private static IDataSet readDataSet(Method method, IDataSet defaultDataSet) {
 		boolean isAnnotated = method != null && method.isAnnotationPresent(DbUnitDataSet.class);
 		return isAnnotated ? readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) : defaultDataSet;
-	}
-
-	/**
-	 * Find replacements objects and decorate original data set if some are found.
-	 *
-	 * @param testClass Test class.
-	 * @param dataSet Original data set.
-	 * @return New data set.
-	 */
-	private static IDataSet runReplacements(Class<?> testClass, IDataSet dataSet) {
-		List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
-		List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
-		if (fields.isEmpty() && methods.isEmpty()) {
-			return dataSet;
-		}
-
-		ReplacementDataSet replacementDataSet = new ReplacementDataSet(dataSet);
-
-		// Apply replacements.
-		forEach(fields, new MemberReplacementFunction<Field>(replacementDataSet));
-		forEach(methods, new MemberReplacementFunction<Method>(replacementDataSet));
-
-		return replacementDataSet;
 	}
 
 	/**

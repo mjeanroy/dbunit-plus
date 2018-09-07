@@ -31,18 +31,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ObjectsTest {
 
 	@Test
-	public void it_should_compare_objects() {
-		assertThat(Objects.equals(null, null)).isTrue();
-		assertThat(Objects.equals("foo", null)).isFalse();
-		assertThat(Objects.equals(null, "foo")).isFalse();
-		assertThat(Objects.equals("foo", "foo")).isTrue();
-		assertThat(Objects.equals("foo", "bar")).isFalse();
-	}
-
-	@Test
-	public void it_should_compute_hash_code() {
-		assertThat(Objects.hashCode((Object[]) null)).isZero();
-		assertThat(Objects.hashCode("foo")).isNotZero();
-		assertThat(Objects.hashCode("foo", "bar")).isNotZero();
+	public void it_should_return_first_non_null_value() {
+		assertThat(Objects.firstNonNull(null, null)).isNull();
+		assertThat(Objects.firstNonNull("foo", null)).isEqualTo("foo");
+		assertThat(Objects.firstNonNull(null, "foo")).isEqualTo("foo");
+		assertThat(Objects.firstNonNull("foo", "bar")).isEqualTo("foo");
 	}
 }

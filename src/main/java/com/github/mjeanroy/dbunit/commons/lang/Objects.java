@@ -48,39 +48,4 @@ public final class Objects {
 	public static <T> T firstNonNull(T o1, T o2) {
 		return o1 == null ? o2 : o1;
 	}
-
-	/**
-	 * Check that two values are equals:
-	 * <ul>
-	 *   <li>If both are the same instances (or {@code null}, return {@code true}.</li>
-	 *   <li>If one is {@code null}, return {@code false}.</li>
-	 *   <li>Finally, if both are non {@code null}, return the result of {code o1.equals(o2)}.</li>
-	 * </ul>
-	 *
-	 * @param v1 First parameter to check.
-	 * @param v2 Second parameter to check.
-	 * @return Result of equality.
-	 */
-	public static boolean equals(Object v1, Object v2) {
-		return v1 == v2 || (v1 != null && v2 != null && v1.equals(v2));
-	}
-
-	/**
-	 * Compute {@code hashCode} value from all parameters.
-	 *
-	 * @param values Parameters.
-	 * @return Hash Code value.
-	 */
-	public static int hashCode(Object... values) {
-		if (values == null) {
-			return 0;
-		}
-
-		int result = 1;
-		for (Object element : values) {
-			result = 31 * result + (element == null ? 0 : element.hashCode());
-		}
-
-		return result;
-	}
 }

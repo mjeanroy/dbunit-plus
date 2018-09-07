@@ -29,9 +29,11 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -39,10 +41,15 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static java.util.Collections.emptyList;
 
@@ -85,7 +92,8 @@ final class DbUnitClassContextFactory {
 			final JdbcConnectionFactory connectionFactory = extractJdbcConnectionFactory(type);
 			final List<SqlScript> initScripts = extractSqlScript(type);
 			final List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
-			return new DbUnitClassContext(dataSet, connectionFactory, initScripts, liquibaseChangeLogs);
+			final List<Replacements> replacements = extractReplacements(type);
+			return new DbUnitClassContext(dataSet, connectionFactory, initScripts, liquibaseChangeLogs, replacements);
 		}
 	}
 
@@ -176,5 +184,31 @@ final class DbUnitClassContextFactory {
 		}
 
 		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
+	}
+
+	/**
+	 * Find replacements objects from given test class.
+	 *
+	 * @param testClass Test class.
+	 * @return The replacements values.
+	 */
+	private static List<Replacements> extractReplacements(Class<?> testClass) {
+		List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
+		List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
+		if (fields.isEmpty() && methods.isEmpty()) {
+			return emptyList();
+		}
+
+		List<Replacements> replacements = new ArrayList<>(fields.size() + methods.size());
+
+		for (Field field : fields) {
+			replacements.add(ReplacementsMapper.getInstance().apply(field));
+		}
+
+		for (Method method : methods) {
+			replacements.add(ReplacementsMapper.getInstance().apply(method));
+		}
+
+		return replacements;
 	}
 }

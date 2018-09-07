@@ -24,8 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
+import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
@@ -74,7 +75,7 @@ final class LiquibaseChangeLog {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(changeLog);
+		return Objects.hash(changeLog);
 	}
 
 	@Override

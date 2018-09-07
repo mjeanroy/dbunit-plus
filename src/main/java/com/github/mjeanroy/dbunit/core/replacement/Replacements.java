@@ -24,8 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static java.util.Collections.unmodifiableMap;
@@ -34,6 +37,17 @@ import static java.util.Collections.unmodifiableMap;
  * Replacement Objects.
  */
 public class Replacements {
+
+	/**
+	 * Create single replacement entry.
+	 *
+	 * @param key Replacement key.
+	 * @param value Replacement value.
+	 * @return The replacements.
+	 */
+	public static Replacements singletonReplacement(String key, Object value) {
+		return new Builder().put(key, value).build();
+	}
 
 	/**
 	 * Get a new builder instance.
@@ -67,6 +81,32 @@ public class Replacements {
 		return replacements;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (o instanceof Replacements) {
+			Replacements r = (Replacements) o;
+			return Objects.equals(replacements, r.replacements);
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(replacements);
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.create(getClass())
+			.append("replacements", replacements)
+			.build();
+	}
+
 	/**
 	 * Builder used to create new replacements objects.
 	 */
@@ -90,10 +130,25 @@ public class Replacements {
 		 * @return Builder.
 		 * @throws NullPointerException If {@code key} is {@code null}.
 		 * @throws IllegalArgumentException If {@code key} is empty or blank.
+		 * @see #put(String, Object)
 		 */
 		public Builder addReplacement(String key, Object value) {
 			this.replacements.put(notBlank(key, "Replacement key must be defined"), value);
 			return this;
+		}
+
+		/**
+		 * Add new replacement object.
+		 *
+		 * @param key Key (pattern) to replace.
+		 * @param value Value to use to replace key.
+		 * @return Builder.
+		 * @throws NullPointerException If {@code key} is {@code null}.
+		 * @throws IllegalArgumentException If {@code key} is empty or blank.
+		 * @see #addReplacement(String, Object)
+		 */
+		public Builder put(String key, Object value) {
+			return addReplacement(key, value);
 		}
 
 		/**

@@ -24,13 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import org.dbunit.dataset.IDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Collections.unmodifiableList;
 
@@ -64,6 +65,11 @@ final class DbUnitClassContext {
 	private final List<LiquibaseChangeLog> liquibaseChangeLogs;
 
 	/**
+	 * The list of replacements values, may be empty.
+	 */
+	private final List<Replacements> replacements;
+
+	/**
 	 * Create the class context.
 	 *
 	 * @param dataSet The class dataset (may be {@code null}).
@@ -74,12 +80,14 @@ final class DbUnitClassContext {
 		IDataSet dataSet,
 		JdbcConnectionFactory connectionFactory,
 		List<SqlScript> initScripts,
-		List<LiquibaseChangeLog> liquibaseChangeLogs) {
+		List<LiquibaseChangeLog> liquibaseChangeLogs,
+		List<Replacements> replacements) {
 
 		this.dataSet = dataSet;
 		this.connectionFactory = connectionFactory;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
+		this.replacements = replacements;
 	}
 
 	/**
@@ -118,6 +126,15 @@ final class DbUnitClassContext {
 		return connectionFactory;
 	}
 
+	/**
+	 * Get {@link #replacements}
+	 *
+	 * @return {@link #replacements}
+	 */
+	List<Replacements> getReplacements() {
+		return replacements;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -127,6 +144,7 @@ final class DbUnitClassContext {
 		if (o instanceof DbUnitClassContext) {
 			DbUnitClassContext ctx = (DbUnitClassContext) o;
 			return Objects.equals(dataSet, ctx.dataSet)
+				&& Objects.equals(replacements, ctx.replacements)
 				&& Objects.equals(connectionFactory, ctx.connectionFactory)
 				&& Objects.equals(initScripts, ctx.initScripts)
 				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
@@ -137,7 +155,7 @@ final class DbUnitClassContext {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(dataSet, connectionFactory, initScripts, liquibaseChangeLogs);
+		return Objects.hash(dataSet, replacements, connectionFactory, initScripts, liquibaseChangeLogs);
 	}
 
 	@Override
@@ -147,6 +165,7 @@ final class DbUnitClassContext {
 			.append("connectionFactory", connectionFactory)
 			.append("initScripts", initScripts)
 			.append("liquibaseChangeLogs", liquibaseChangeLogs)
+			.append("replacements", replacements)
 			.build();
 	}
 }

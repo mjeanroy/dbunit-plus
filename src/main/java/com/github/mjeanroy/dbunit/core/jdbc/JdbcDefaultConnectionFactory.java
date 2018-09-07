@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Objects;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
@@ -85,7 +85,7 @@ public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory 
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(configuration);
+		return Objects.hash(configuration);
 	}
 
 	@Override

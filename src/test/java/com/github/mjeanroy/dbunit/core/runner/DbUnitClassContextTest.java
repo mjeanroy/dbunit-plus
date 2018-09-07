@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.IDataSet;
@@ -57,11 +58,16 @@ public class DbUnitClassContextTest {
 			"/db/changelog.xml"
 		));
 
+		final List<Replacements> replacements = singletonList(Replacements.builder()
+			.addReplacement("foo", "bar")
+			.build());
+
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
 			connectionFactory,
 			sqlScripts,
-			liquibaseChangeLogs
+			liquibaseChangeLogs,
+			replacements
 		);
 
 		assertThat(ctx.getDataSet()).isEqualTo(dataSet);
@@ -91,11 +97,14 @@ public class DbUnitClassContextTest {
 			"/db/changelog.xml"
 		));
 
+		final List<Replacements> replacements = singletonList(Replacements.singletonReplacement("foo", "bar"));
+
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
 			connectionFactory,
 			sqlScripts,
-			liquibaseChangeLogs
+			liquibaseChangeLogs,
+			replacements
 		);
 
 		assertThat(ctx.toString()).isEqualTo(
@@ -122,6 +131,12 @@ public class DbUnitClassContextTest {
 				"liquibaseChangeLogs: [" +
 					"LiquibaseChangeLog{" +
 						"changeLog: \"/db/changelog.xml\"" +
+					"}" +
+				"], " +
+
+				"replacements: [" +
+					"Replacements{" +
+						"replacements: {foo=bar}" +
 					"}" +
 				"]" +
 			"}"

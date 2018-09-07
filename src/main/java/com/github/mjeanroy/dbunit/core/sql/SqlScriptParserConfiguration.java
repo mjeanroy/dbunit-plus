@@ -24,8 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
+import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 
@@ -177,7 +178,7 @@ public class SqlScriptParserConfiguration {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(delimiter, lineComment, startBlockComment, endBlockComment);
+		return Objects.hash(delimiter, lineComment, startBlockComment, endBlockComment);
 	}
 
 	@Override

@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,9 +34,9 @@ public class ReplacementsTest {
 
 	@Test
 	public void it_should_build_replacement_object() {
-		Replacements replacements = Replacements.builder()
+		final Replacements replacements = Replacements.builder()
 			.addReplacement("foo", "bar")
-			.addReplacement("bar", 10)
+			.put("bar", 10)
 			.build();
 
 		assertThat(replacements).isNotNull();
@@ -47,12 +49,25 @@ public class ReplacementsTest {
 	}
 
 	@Test
+	public void it_should_build_single_replacement_object() {
+		final Replacements replacements = Replacements.singletonReplacement("foo", "bar");
+
+		assertThat(replacements).isNotNull();
+		assertThat(replacements.getReplacements())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(1)
+			.containsEntry("foo", "bar");
+	}
+
+	@Test
 	public void it_should_build_immutable_replacement_object() {
-		Replacements.Builder builder = Replacements.builder()
+		final Replacements.Builder builder = Replacements.builder()
 			.addReplacement("foo", "bar")
 			.addReplacement("bar", 10);
 
-		Replacements replacements = builder.build();
+		final Replacements replacements = builder.build();
+
 		assertThat(replacements.getReplacements())
 			.hasSize(2)
 			.containsEntry("foo", "bar")
@@ -63,5 +78,29 @@ public class ReplacementsTest {
 			.hasSize(2)
 			.containsEntry("foo", "bar")
 			.containsEntry("bar", 10);
+	}
+
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(Replacements.class)
+			.suppress(Warning.STRICT_INHERITANCE)
+			.verify();
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		final Replacements replacements = Replacements.builder()
+			.addReplacement("foo", "bar")
+			.put("bar", 10)
+			.build();
+
+		assertThat(replacements.toString()).isEqualTo(
+			"Replacements{" +
+				"replacements: {" +
+					"foo=bar, " +
+					"bar=10" +
+				"}" +
+			"}"
+		);
 	}
 }

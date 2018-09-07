@@ -29,10 +29,12 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDeprecatedDbUnitConfiguration;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
 import org.dbunit.dataset.CompositeDataSet;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 public class DbUnitClassContextFactoryTest {
 
@@ -89,5 +91,21 @@ public class DbUnitClassContextFactoryTest {
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getLiquibaseChangeLogs()).isNotEmpty().hasSize(1);
 		assertThat(ctx.getLiquibaseChangeLogs().get(0).getChangeLog()).isEqualTo("/liquibase/changelog.xml");
+	}
+
+	@Test
+	public void it_should_read_replacements() {
+		final Class<WithReplacementsDataSet> testClass = WithReplacementsDataSet.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getReplacements()).isNotEmpty().hasSize(2);
+		assertThat(ctx.getReplacements().get(0).getReplacements()).hasSize(1).containsOnly(
+			entry("[JOHN_DOE]", "John Doe")
+		);
+
+		assertThat(ctx.getReplacements().get(1).getReplacements()).hasSize(1).containsOnly(
+			entry("[JANE_DOE]", "Jane Doe")
+		);
 	}
 }

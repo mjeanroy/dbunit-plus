@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Function;
+import com.github.mjeanroy.dbunit.commons.collections.Mapper;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -34,48 +34,53 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Map;
 
 /**
  * Apply replacements to given {@link ReplacementDataSet}.
  * Replacements values are retrieved using given field/method.
- *
- * @param <T> Type of input (field or method).
  */
-class MemberReplacementFunction<T extends Member> implements Function<T> {
+class ReplacementsMapper implements Mapper<Member, Replacements> {
 
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = Loggers.getLogger(MemberReplacementFunction.class);
+	private static final Logger log = Loggers.getLogger(ReplacementsMapper.class);
 
 	/**
-	 * DataSet to decorate with replacements.
+	 * The singleton instance.
 	 */
-	private final ReplacementDataSet dataSet;
+	private static final ReplacementsMapper INSTANCE = new ReplacementsMapper();
 
-	MemberReplacementFunction(ReplacementDataSet dataSet) {
-		this.dataSet = dataSet;
+	/**
+	 * Get {@link ReplacementsMapper} instance.
+	 *
+	 * @return The instance.
+	 */
+	static ReplacementsMapper getInstance() {
+		return INSTANCE;
+	}
+
+	// Ensure non instantiation.
+	private ReplacementsMapper() {
 	}
 
 	@Override
-	public void apply(T input) {
+	public Replacements apply(Member input) {
 		try {
-			final Replacements replacement;
+			final Replacements replacements;
+
 			if (input instanceof Field) {
-				replacement = (Replacements) ((Field) input).get(null);
+				replacements = (Replacements) ((Field) input).get(null);
 			}
 			else if (input instanceof Method) {
-				replacement = (Replacements) ((Method) input).invoke(null);
+				replacements = (Replacements) ((Method) input).invoke(null);
 			}
 			else {
 				// Should not happen.
 				throw new IllegalArgumentException("Cannot get replacements from non field/method member");
 			}
 
-			for (Map.Entry<String, Object> entry : replacement.getReplacements().entrySet()) {
-				dataSet.addReplacementObject(entry.getKey(), entry.getValue());
-			}
+			return replacements;
 		}
 		catch (InvocationTargetException | IllegalAccessException ex) {
 			log.error(ex.getMessage(), ex);

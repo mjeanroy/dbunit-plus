@@ -25,40 +25,46 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
-import org.dbunit.dataset.ReplacementDataSet;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-public class MemberReplacementFunctionTest {
+public class ReplacementsMapperTest {
 
 	@Test
 	public void it_should_add_replacement_from_field() throws Exception {
-		ReplacementDataSet dataSet = mock(ReplacementDataSet.class);
-		MemberReplacementFunction<Field> function = new MemberReplacementFunction<>(dataSet);
-		function.apply(TestClass.class.getField("replacements"));
-		verify(dataSet).addReplacementObject("foo", "bar");
+		final ReplacementsMapper mapper = ReplacementsMapper.getInstance();
+		final Replacements replacements = mapper.apply(TestClass.class.getDeclaredField("replacements"));
+
+		assertThat(replacements).isNotNull();
+		assertThat(replacements.getReplacements())
+			.hasSize(1)
+			.containsOnly(
+				entry("foo", "bar")
+			);
 	}
 
 	@Test
 	public void it_should_add_replacement_from_method() throws Exception {
-		ReplacementDataSet dataSet = mock(ReplacementDataSet.class);
-		MemberReplacementFunction<Method> function = new MemberReplacementFunction<>(dataSet);
-		function.apply(TestClass.class.getMethod("replacementsFunction"));
-		verify(dataSet).addReplacementObject("bar", "foo");
+		final ReplacementsMapper mapper = ReplacementsMapper.getInstance();
+		final Replacements replacements = mapper.apply(TestClass.class.getDeclaredMethod("replacementsFunction"));
+
+		assertThat(replacements).isNotNull();
+		assertThat(replacements.getReplacements())
+			.hasSize(1)
+			.containsOnly(
+				entry("bar", "foo")
+			);
 	}
 
 	@SuppressWarnings("unused")
 	private static class TestClass {
-		public static Replacements replacements = Replacements.builder()
+		static Replacements replacements = Replacements.builder()
 			.addReplacement("foo", "bar")
 			.build();
 
-		public static Replacements replacementsFunction() {
+		static Replacements replacementsFunction() {
 			return Replacements.builder()
 				.addReplacement("bar", "foo")
 				.build();

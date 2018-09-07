@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.util.Objects;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
@@ -72,7 +72,7 @@ public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFacto
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(dataSource);
+		return Objects.hash(dataSource);
 	}
 
 	@Override

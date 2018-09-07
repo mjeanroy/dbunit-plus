@@ -24,8 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.commons.lang.Objects;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+
+import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
@@ -131,7 +132,7 @@ public class JdbcConfiguration {
 
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(url, user, password);
+		return Objects.hash(url, user, password);
 	}
 
 	@Override
