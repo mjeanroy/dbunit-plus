@@ -82,7 +82,7 @@ final class DbUnitClassContextFactory {
 	 * @return The DbUnit context.
 	 */
 	static DbUnitClassContext from(Class<?> klass) {
-		return CACHE.computeValue(klass);
+		return CACHE.get(klass);
 	}
 
 	/**

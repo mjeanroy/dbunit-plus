@@ -128,8 +128,8 @@ public class DbUnitRunner {
 
 	private DbUnitRunner(Class<?> testClass, JdbcConnectionFactory connectionFactory, DbUnitClassContext ctx) {
 		this.testClass = notNull(testClass, "Test Class must not be null");
-		this.factory = readConnectionFactory(connectionFactory, ctx);
 		this.ctx = DbUnitClassContextFactory.from(testClass);
+		this.factory = readConnectionFactory(connectionFactory, ctx);
 
 		// Then, run SQL and/or liquibase initialization
 		runSqlScript(this.factory);
