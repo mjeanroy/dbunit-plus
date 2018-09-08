@@ -79,8 +79,11 @@ final class DbUnitClassContext {
 	 * Create the class context.
 	 *
 	 * @param dataSet The class dataset (may be {@code null}).
+	 * @param connectionFactory The custom JDBC connection factory.
 	 * @param initScripts The list of initialization scripts to run.
 	 * @param liquibaseChangeLogs The liquibase changelogs.
+	 * @param replacements The list of replacement value.
+	 * @param interceptor The DbUnit configuration interceptor (may be {@code null}).
 	 */
 	DbUnitClassContext(
 		IDataSet dataSet,
