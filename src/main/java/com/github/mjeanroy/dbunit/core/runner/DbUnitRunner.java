@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.commons.collections.Mapper;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
@@ -53,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
@@ -179,9 +181,11 @@ public class DbUnitRunner {
 			dbConnection = new DatabaseConnection(connection);
 
 			log.trace(" 2- Try to apply DbUnit connection configuration");
-			DbUnitConfigInterceptor interceptor = readConfig(testMethod, ctx.getInterceptor());
-			if (interceptor != null) {
-				interceptor.applyConfiguration(dbConnection.getConfig());
+			List<DbUnitConfigInterceptor> interceptors = readConfig(testMethod, ctx.getInterceptors());
+			if (!interceptors.isEmpty()) {
+				for (DbUnitConfigInterceptor interceptor : interceptors) {
+					interceptor.applyConfiguration(dbConnection.getConfig());
+				}
 			}
 
 			IDatabaseTester dbTester = new DefaultDatabaseTester(dbConnection);
@@ -229,17 +233,24 @@ public class DbUnitRunner {
 	/**
 	 * Read DbUnit configuration interceptor, returns {@code null} if no configuration is set.
 	 *
+	 * @param method The method to scan for.
+	 * @param defaultInterceptors The default interceptors to use if annotation is not present on method.
 	 * @return The interceptor, {@code null} if it is not configured.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private static DbUnitConfigInterceptor readConfig(Method method, DbUnitConfigInterceptor defaultInterceptor) {
+	private static List<DbUnitConfigInterceptor> readConfig(Method method, List<DbUnitConfigInterceptor> defaultInterceptors) {
 		DbUnitConfig annotation = findAnnotation(method, DbUnitConfig.class);
 		if (annotation == null) {
-			return defaultInterceptor;
+			return defaultInterceptors;
 		}
 
-		Class<? extends DbUnitConfigInterceptor> interceptorClass = annotation.value();
-		return ClassUtils.instantiate(interceptorClass);
+		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();
+		return map(interceptorClasses, new Mapper<Class<? extends DbUnitConfigInterceptor>, DbUnitConfigInterceptor>() {
+			@Override
+			public DbUnitConfigInterceptor apply(Class<? extends DbUnitConfigInterceptor> input) {
+				return ClassUtils.instantiate(input);
+			}
+		});
 	}
 
 	/**

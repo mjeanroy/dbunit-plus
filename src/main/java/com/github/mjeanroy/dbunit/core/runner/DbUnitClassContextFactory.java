@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.commons.collections.Mapper;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
@@ -96,7 +97,7 @@ final class DbUnitClassContextFactory {
 			final List<SqlScript> initScripts = extractSqlScript(type);
 			final List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
 			final List<Replacements> replacements = extractReplacements(type);
-			final DbUnitConfigInterceptor interceptor = readConfig(type);
+			final List<DbUnitConfigInterceptor> interceptors = readConfig(type);
 
 			return new DbUnitClassContext(
 				dataSet,
@@ -104,7 +105,7 @@ final class DbUnitClassContextFactory {
 				initScripts,
 				liquibaseChangeLogs,
 				replacements,
-				interceptor
+				interceptors
 			);
 		}
 	}
@@ -225,18 +226,28 @@ final class DbUnitClassContextFactory {
 	}
 
 	/**
-	 * Read DbUnit configuration interceptor, returns {@code null} if no configuration is set.
+	 * Read DbUnit configuration interceptors, returns empty list if no configuration is set (never {@code null}).
 	 *
-	 * @return The interceptor, {@code null} if it is not configured.
+	 * @param testClass The class to scan for.
+	 * @return The list of interceptors.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private static DbUnitConfigInterceptor readConfig(Class<?> testClass) {
+	private static List<DbUnitConfigInterceptor> readConfig(Class<?> testClass) {
 		DbUnitConfig annotation = findAnnotation(testClass, DbUnitConfig.class);
 		if (annotation == null) {
-			return null;
+			return emptyList();
 		}
 
-		Class<? extends DbUnitConfigInterceptor> interceptor = annotation.value();
-		return ClassUtils.instantiate(interceptor);
+		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();
+		if (interceptorClasses.length == 0) {
+			return emptyList();
+		}
+
+		return map(interceptorClasses, new Mapper<Class<? extends DbUnitConfigInterceptor>, DbUnitConfigInterceptor>() {
+			@Override
+			public DbUnitConfigInterceptor apply(Class<? extends DbUnitConfigInterceptor> input) {
+				return ClassUtils.instantiate(input);
+			}
+		});
 	}
 }

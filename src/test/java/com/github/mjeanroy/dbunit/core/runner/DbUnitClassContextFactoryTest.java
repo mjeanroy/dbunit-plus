@@ -117,6 +117,7 @@ public class DbUnitClassContextFactoryTest {
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
-		assertThat(ctx.getInterceptor()).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
+		assertThat(ctx.getInterceptors()).hasSize(1);
+		assertThat(ctx.getInterceptors().get(0)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
 	}
 }

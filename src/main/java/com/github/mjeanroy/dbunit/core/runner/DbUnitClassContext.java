@@ -73,7 +73,7 @@ final class DbUnitClassContext {
 	/**
 	 * The DBunit configuration interceptor, may be {@code null}.
 	 */
-	private final DbUnitConfigInterceptor interceptor;
+	private final List<DbUnitConfigInterceptor> interceptors;
 
 	/**
 	 * Create the class context.
@@ -83,7 +83,7 @@ final class DbUnitClassContext {
 	 * @param initScripts The list of initialization scripts to run.
 	 * @param liquibaseChangeLogs The liquibase changelogs.
 	 * @param replacements The list of replacement value.
-	 * @param interceptor The DbUnit configuration interceptor (may be {@code null}).
+	 * @param interceptors The list of DbUnit configuration interceptor.
 	 */
 	DbUnitClassContext(
 		IDataSet dataSet,
@@ -91,14 +91,14 @@ final class DbUnitClassContext {
 		List<SqlScript> initScripts,
 		List<LiquibaseChangeLog> liquibaseChangeLogs,
 		List<Replacements> replacements,
-		DbUnitConfigInterceptor interceptor) {
+		List<DbUnitConfigInterceptor> interceptors) {
 
 		this.dataSet = dataSet;
 		this.connectionFactory = connectionFactory;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
 		this.replacements = replacements;
-		this.interceptor = interceptor;
+		this.interceptors = unmodifiableList(new ArrayList<>(interceptors));
 	}
 
 	/**
@@ -147,12 +147,12 @@ final class DbUnitClassContext {
 	}
 
 	/**
-	 * Get {@link #interceptor}
+	 * Get {@link #interceptors}
 	 *
-	 * @return {@link #interceptor}
+	 * @return {@link #interceptors}
 	 */
-	DbUnitConfigInterceptor getInterceptor() {
-		return interceptor;
+	List<DbUnitConfigInterceptor> getInterceptors() {
+		return interceptors;
 	}
 
 	@Override
@@ -168,7 +168,7 @@ final class DbUnitClassContext {
 				&& Objects.equals(connectionFactory, ctx.connectionFactory)
 				&& Objects.equals(initScripts, ctx.initScripts)
 				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs)
-				&& Objects.equals(interceptor, ctx.interceptor);
+				&& Objects.equals(interceptors, ctx.interceptors);
 		}
 
 		return false;
@@ -182,7 +182,7 @@ final class DbUnitClassContext {
 			connectionFactory,
 			initScripts,
 			liquibaseChangeLogs,
-			interceptor
+			interceptors
 		);
 	}
 
@@ -194,7 +194,7 @@ final class DbUnitClassContext {
 			.append("initScripts", initScripts)
 			.append("liquibaseChangeLogs", liquibaseChangeLogs)
 			.append("replacements", replacements)
-			.append("interceptor", interceptor)
+			.append("interceptors", interceptors)
 			.build();
 	}
 }

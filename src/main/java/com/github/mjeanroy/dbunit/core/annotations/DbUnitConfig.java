@@ -82,6 +82,6 @@ public @interface DbUnitConfig {
 	 *
 	 * @return The interceptor class.
 	 */
-	Class<? extends DbUnitConfigInterceptor> value();
+	Class<? extends DbUnitConfigInterceptor>[] value();
 
 }

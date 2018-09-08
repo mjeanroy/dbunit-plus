@@ -64,7 +64,9 @@ public class DbUnitClassContextTest {
 			.addReplacement("foo", "bar")
 			.build());
 
-		final DbUnitConfigInterceptor interceptor = mock(DbUnitConfigInterceptor.class);
+		final List<DbUnitConfigInterceptor> interceptors = singletonList(
+			mock(DbUnitConfigInterceptor.class)
+		);
 
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
@@ -72,7 +74,7 @@ public class DbUnitClassContextTest {
 			sqlScripts,
 			liquibaseChangeLogs,
 			replacements,
-			interceptor
+			interceptors
 		);
 
 		assertThat(ctx.getDataSet()).isEqualTo(dataSet);
@@ -102,8 +104,13 @@ public class DbUnitClassContextTest {
 			"/db/changelog.xml"
 		));
 
-		final List<Replacements> replacements = singletonList(Replacements.singletonReplacement("foo", "bar"));
-		final DbUnitConfigInterceptor interceptor = mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor");
+		final List<Replacements> replacements = singletonList(
+			Replacements.singletonReplacement("foo", "bar")
+		);
+
+		final List<DbUnitConfigInterceptor> interceptors = singletonList(
+			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
+		);
 
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
@@ -111,7 +118,7 @@ public class DbUnitClassContextTest {
 			sqlScripts,
 			liquibaseChangeLogs,
 			replacements,
-			interceptor
+			interceptors
 		);
 
 		assertThat(ctx.toString()).isEqualTo(
@@ -147,7 +154,9 @@ public class DbUnitClassContextTest {
 					"}" +
 				"], " +
 
-				"interceptor: MockDbUnitConfigInterceptor" +
+				"interceptors: [" +
+					"MockDbUnitConfigInterceptor" +
+				"]" +
 			"}"
 		);
 	}
