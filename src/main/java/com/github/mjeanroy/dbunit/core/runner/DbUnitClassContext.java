@@ -39,8 +39,12 @@ import static java.util.Collections.unmodifiableList;
 /**
  * The DbUnit class context, containing initialization context, i.e:
  * <ul>
+ *   <li>The DbUnit dataset.</li>
+ *   <li>The JDBC Connection Factory.</li>
  *   <li>SQL Initialization Scripts.</li>
  *   <li>The liquibase changelogs.</li>
+ *   <li>The list of dataset replacements.</li>
+ *   <li>The list of configuration interceptors.</li>
  * </ul>
  */
 final class DbUnitClassContext {
