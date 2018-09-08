@@ -71,7 +71,7 @@ final class DbUnitClassContext {
 	private final List<Replacements> replacements;
 
 	/**
-	 * The DBunit configuration interceptor, may be {@code null}.
+	 * The list of DbUnit configuration interceptors.
 	 */
 	private final List<DbUnitConfigInterceptor> interceptors;
 
@@ -97,7 +97,7 @@ final class DbUnitClassContext {
 		this.connectionFactory = connectionFactory;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
-		this.replacements = replacements;
+		this.replacements = unmodifiableList(new ArrayList<>(replacements));
 		this.interceptors = unmodifiableList(new ArrayList<>(interceptors));
 	}
 
