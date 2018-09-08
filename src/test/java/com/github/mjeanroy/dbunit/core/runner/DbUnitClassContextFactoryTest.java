@@ -25,6 +25,8 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration.QualifiedTableNameConfigurationInterceptor;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
@@ -107,5 +109,14 @@ public class DbUnitClassContextFactoryTest {
 		assertThat(ctx.getReplacements().get(1).getReplacements()).hasSize(1).containsOnly(
 			entry("[JANE_DOE]", "Jane Doe")
 		);
+	}
+
+	@Test
+	public void it_should_read_interceptor() {
+		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getInterceptor()).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
 	}
 }

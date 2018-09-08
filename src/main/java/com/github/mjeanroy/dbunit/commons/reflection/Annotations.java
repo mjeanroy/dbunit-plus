@@ -54,6 +54,18 @@ public final class Annotations {
 	}
 
 	/**
+	 * Find expected annotation on method, if annotation is defined.
+	 *
+	 * @param method The method.
+	 * @param annotationClass Annotation class to look for.
+	 * @param <T> Type of annotation.
+	 * @return Annotation if found, {@code null} otherwise.
+	 */
+	public static <T extends Annotation> T findAnnotation(Method method, Class<T> annotationClass) {
+		return findAnnotationOn(method, annotationClass);
+	}
+
+	/**
 	 * Find expected annotation on:
 	 * <ul>
 	 * <li>Method if annotation is defined.</li>
@@ -69,7 +81,7 @@ public final class Annotations {
 	public static <T extends Annotation> T findAnnotation(Class<?> klass, Method method, Class<T> annotationClass) {
 		// First, search on method.
 		if (method != null) {
-			T annotation = findAnnotationOn(method, annotationClass);
+			T annotation = findAnnotation(method, annotationClass);
 			if (annotation != null) {
 				return annotation;
 			}

@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -55,7 +56,6 @@ import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 
 /**
@@ -179,7 +179,7 @@ public class DbUnitRunner {
 			dbConnection = new DatabaseConnection(connection);
 
 			log.trace(" 2- Try to apply DbUnit connection configuration");
-			DbUnitConfigInterceptor interceptor = readConfig(testClass, testMethod);
+			DbUnitConfigInterceptor interceptor = readConfig(testMethod, ctx.getInterceptor());
 			if (interceptor != null) {
 				interceptor.applyConfiguration(dbConnection.getConfig());
 			}
@@ -232,14 +232,14 @@ public class DbUnitRunner {
 	 * @return The interceptor, {@code null} if it is not configured.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private static DbUnitConfigInterceptor readConfig(Class<?> testClass, Method method) {
-		DbUnitConfig annotation = findAnnotation(testClass, method, DbUnitConfig.class);
+	private static DbUnitConfigInterceptor readConfig(Method method, DbUnitConfigInterceptor defaultInterceptor) {
+		DbUnitConfig annotation = findAnnotation(method, DbUnitConfig.class);
 		if (annotation == null) {
-			return null;
+			return defaultInterceptor;
 		}
 
-		Class<? extends DbUnitConfigInterceptor> interceptor = annotation.value();
-		return instantiate(interceptor);
+		Class<? extends DbUnitConfigInterceptor> interceptorClass = annotation.value();
+		return ClassUtils.instantiate(interceptorClass);
 	}
 
 	/**

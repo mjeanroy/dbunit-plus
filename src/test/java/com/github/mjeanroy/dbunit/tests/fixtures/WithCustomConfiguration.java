@@ -33,7 +33,7 @@ import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import org.dbunit.database.DatabaseConfig;
 
 @DbUnitDataSet("/dataset/qualified-table-names")
-@DbUnitConfig(WithCustomConfiguration.QualifiedTableNameConfiguration.class)
+@DbUnitConfig(WithCustomConfiguration.QualifiedTableNameConfigurationInterceptor.class)
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 public class WithCustomConfiguration {
@@ -46,7 +46,7 @@ public class WithCustomConfiguration {
 	public void method2() {
 	}
 
-	public static class QualifiedTableNameConfiguration implements DbUnitConfigInterceptor {
+	public static class QualifiedTableNameConfigurationInterceptor implements DbUnitConfigInterceptor {
 		@Override
 		public void applyConfiguration(DatabaseConfig config) {
 			config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);

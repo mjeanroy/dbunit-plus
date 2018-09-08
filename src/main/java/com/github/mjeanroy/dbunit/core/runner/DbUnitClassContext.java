@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import org.dbunit.dataset.IDataSet;
@@ -70,6 +71,11 @@ final class DbUnitClassContext {
 	private final List<Replacements> replacements;
 
 	/**
+	 * The DBunit configuration interceptor, may be {@code null}.
+	 */
+	private final DbUnitConfigInterceptor interceptor;
+
+	/**
 	 * Create the class context.
 	 *
 	 * @param dataSet The class dataset (may be {@code null}).
@@ -81,13 +87,15 @@ final class DbUnitClassContext {
 		JdbcConnectionFactory connectionFactory,
 		List<SqlScript> initScripts,
 		List<LiquibaseChangeLog> liquibaseChangeLogs,
-		List<Replacements> replacements) {
+		List<Replacements> replacements,
+		DbUnitConfigInterceptor interceptor) {
 
 		this.dataSet = dataSet;
 		this.connectionFactory = connectionFactory;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
 		this.replacements = replacements;
+		this.interceptor = interceptor;
 	}
 
 	/**
@@ -135,6 +143,15 @@ final class DbUnitClassContext {
 		return replacements;
 	}
 
+	/**
+	 * Get {@link #interceptor}
+	 *
+	 * @return {@link #interceptor}
+	 */
+	DbUnitConfigInterceptor getInterceptor() {
+		return interceptor;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -147,7 +164,8 @@ final class DbUnitClassContext {
 				&& Objects.equals(replacements, ctx.replacements)
 				&& Objects.equals(connectionFactory, ctx.connectionFactory)
 				&& Objects.equals(initScripts, ctx.initScripts)
-				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
+				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs)
+				&& Objects.equals(interceptor, ctx.interceptor);
 		}
 
 		return false;
@@ -155,7 +173,14 @@ final class DbUnitClassContext {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(dataSet, replacements, connectionFactory, initScripts, liquibaseChangeLogs);
+		return Objects.hash(
+			dataSet,
+			replacements,
+			connectionFactory,
+			initScripts,
+			liquibaseChangeLogs,
+			interceptor
+		);
 	}
 
 	@Override
@@ -166,6 +191,7 @@ final class DbUnitClassContext {
 			.append("initScripts", initScripts)
 			.append("liquibaseChangeLogs", liquibaseChangeLogs)
 			.append("replacements", replacements)
+			.append("interceptor", interceptor)
 			.build();
 	}
 }

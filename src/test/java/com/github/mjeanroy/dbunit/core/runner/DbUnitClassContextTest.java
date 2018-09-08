@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
@@ -38,6 +39,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class DbUnitClassContextTest {
 
@@ -62,12 +64,15 @@ public class DbUnitClassContextTest {
 			.addReplacement("foo", "bar")
 			.build());
 
+		final DbUnitConfigInterceptor interceptor = mock(DbUnitConfigInterceptor.class);
+
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
 			connectionFactory,
 			sqlScripts,
 			liquibaseChangeLogs,
-			replacements
+			replacements,
+			interceptor
 		);
 
 		assertThat(ctx.getDataSet()).isEqualTo(dataSet);
@@ -82,7 +87,7 @@ public class DbUnitClassContextTest {
 
 	@Test
 	public void it_should_implement_to_string() {
-		final IDataSet dataSet = new DefaultDataSet();
+		final IDataSet dataSet = mock(IDataSet.class, "MockDataSet");
 
 		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
 			JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "")
@@ -98,18 +103,20 @@ public class DbUnitClassContextTest {
 		));
 
 		final List<Replacements> replacements = singletonList(Replacements.singletonReplacement("foo", "bar"));
+		final DbUnitConfigInterceptor interceptor = mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor");
 
 		final DbUnitClassContext ctx = new DbUnitClassContext(
 			dataSet,
 			connectionFactory,
 			sqlScripts,
 			liquibaseChangeLogs,
-			replacements
+			replacements,
+			interceptor
 		);
 
 		assertThat(ctx.toString()).isEqualTo(
 			"DbUnitClassContext{" +
-				"dataSet: " + dataSet.toString() + ", " +
+				"dataSet: MockDataSet, " +
 
 				"connectionFactory: JdbcDefaultConnectionFactory{" +
 					"configuration: JdbcConfiguration{" +
@@ -138,7 +145,9 @@ public class DbUnitClassContextTest {
 					"Replacements{" +
 						"replacements: {foo=bar}" +
 					"}" +
-				"]" +
+				"], " +
+
+				"interceptor: MockDbUnitConfigInterceptor" +
 			"}"
 		);
 	}
