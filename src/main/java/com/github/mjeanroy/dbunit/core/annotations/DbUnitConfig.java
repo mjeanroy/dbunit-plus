@@ -84,4 +84,45 @@ public @interface DbUnitConfig {
 	 */
 	Class<? extends DbUnitConfigInterceptor>[] value();
 
+	/**
+	 * Enable or disable case sensitive table names.
+	 * If enabled, Dbunit handles all table names in a case sensitive way, default is {@code false}.
+	 *
+	 * @return Feature activation flag.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	boolean caseSensitiveTableNames() default false;
+
+	/**
+	 * Enable or disable multiple schemas support.
+	 * If enabled, Dbunit access tables with names fully qualified by schema using this format: {@code "SCHEMA.TABLE"}.
+	 *
+	 * @return Feature activation flag.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	boolean qualifiedTableNames() default false;
+
+	/**
+	 * Enable or disable usage of JDBC batched statement by DbUnit, default is {@code false}.
+	 *
+	 * @return Feature activation flag.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	boolean batchedStatements() default false;
+
+	/**
+	 * Enable or disable empty fields in dataset.
+	 *
+	 * @return Feature activation flag.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	boolean allowEmptyFields() default false;
+
+	/**
+	 * Enable or disable the warning message displayed when DbUnit encounter an unsupported data type.
+	 *
+	 * @return Feature activation flag.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	boolean datatypeWarning() default true;
 }

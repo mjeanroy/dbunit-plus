@@ -24,8 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Mapper;
-import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -34,38 +32,23 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
-import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-import static java.util.Collections.emptyList;
 
 /**
  * Factory to create {@link DbUnitClassContext} from given input class.
  */
 final class DbUnitClassContextFactory {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(DbUnitClassContextFactory.class);
 
 	/**
 	 * A cache, using {@link ClassValue} under the hood.
@@ -118,16 +101,7 @@ final class DbUnitClassContextFactory {
 	 */
 	private static IDataSet readDataSet(Class<?> testClass) {
 		DbUnitDataSet annotation = findAnnotation(testClass, DbUnitDataSet.class);
-		if (annotation == null || annotation.value().length == 0) {
-			return null;
-		}
-
-		try {
-			return DataSetFactory.createDataSet(annotation.value());
-		}
-		catch (DataSetException ex) {
-			throw new DbUnitException(ex);
-		}
+		return DbUnitAnnotationsParser.readDataSet(annotation);
 	}
 
 	/**
@@ -137,14 +111,7 @@ final class DbUnitClassContextFactory {
 	 */
 	private static List<SqlScript> extractSqlScript(Class<?> testClass) {
 		DbUnitInit annotation = findAnnotation(testClass, DbUnitInit.class);
-		if (annotation == null) {
-			return emptyList();
-		}
-
-		char delimiter = annotation.delimiter();
-		SqlScriptParserConfiguration configuration = SqlScriptParserConfiguration.builder().setDelimiter(delimiter).build();
-		SqlScriptMapper mapper = SqlScriptMapper.getInstance(configuration);
-		return map(annotation.sql(), mapper);
+		return DbUnitAnnotationsParser.extractSqlScript(annotation);
 	}
 
 	/**
@@ -154,12 +121,7 @@ final class DbUnitClassContextFactory {
 	 */
 	private static List<LiquibaseChangeLog> extractLiquibaseChangeLogs(Class<?> testClass) {
 		DbUnitLiquibase annotation = findAnnotation(testClass, DbUnitLiquibase.class);
-		if (annotation == null) {
-			return emptyList();
-		}
-
-		LiquibaseChangeLogMapper mapper = LiquibaseChangeLogMapper.getInstance();
-		return map(annotation.value(), mapper);
+		return DbUnitAnnotationsParser.extractLiquibaseChangeLogs(annotation);
 	}
 
 	/**
@@ -173,30 +135,7 @@ final class DbUnitClassContextFactory {
 	private static JdbcConnectionFactory extractJdbcConnectionFactory(Class<?> testClass) {
 		DbUnitConfiguration a1 = findAnnotation(testClass, DbUnitConfiguration.class);
 		DbUnitConnection a2 = findAnnotation(testClass, DbUnitConnection.class);
-		if (a2 == null && a1 == null) {
-			return null;
-		}
-
-		if (a1 != null) {
-			log.warn("@DbUnitConfiguration annotation is deprecated and will be removed in a next release, please use @DbUnitConnection instead");
-		}
-
-		final String url;
-		final String user;
-		final String password;
-
-		if (a2 != null) {
-			url = a2.url();
-			user = a2.user();
-			password = a2.password();
-		}
-		else {
-			url = a1.url();
-			user = a1.user();
-			password = a1.password();
-		}
-
-		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
+		return DbUnitAnnotationsParser.extractJdbcConnectionFactory(a1, a2);
 	}
 
 	/**
@@ -208,21 +147,7 @@ final class DbUnitClassContextFactory {
 	private static List<Replacements> extractReplacements(Class<?> testClass) {
 		List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
 		List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
-		if (fields.isEmpty() && methods.isEmpty()) {
-			return emptyList();
-		}
-
-		List<Replacements> replacements = new ArrayList<>(fields.size() + methods.size());
-
-		for (Field field : fields) {
-			replacements.add(ReplacementsMapper.getInstance().apply(field));
-		}
-
-		for (Method method : methods) {
-			replacements.add(ReplacementsMapper.getInstance().apply(method));
-		}
-
-		return replacements;
+		return DbUnitAnnotationsParser.extractReplacements(fields, methods);
 	}
 
 	/**
@@ -234,20 +159,6 @@ final class DbUnitClassContextFactory {
 	 */
 	private static List<DbUnitConfigInterceptor> readConfig(Class<?> testClass) {
 		DbUnitConfig annotation = findAnnotation(testClass, DbUnitConfig.class);
-		if (annotation == null) {
-			return emptyList();
-		}
-
-		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();
-		if (interceptorClasses.length == 0) {
-			return emptyList();
-		}
-
-		return map(interceptorClasses, new Mapper<Class<? extends DbUnitConfigInterceptor>, DbUnitConfigInterceptor>() {
-			@Override
-			public DbUnitConfigInterceptor apply(Class<? extends DbUnitConfigInterceptor> input) {
-				return ClassUtils.instantiate(input);
-			}
-		});
+		return DbUnitAnnotationsParser.readConfig(annotation);
 	}
 }

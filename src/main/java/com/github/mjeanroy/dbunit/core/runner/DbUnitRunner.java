@@ -24,8 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Mapper;
-import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -42,7 +40,6 @@ import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 
@@ -54,11 +51,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.
@@ -168,7 +163,7 @@ public class DbUnitRunner {
 
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
 		// Read dataSet from method.
-		IDataSet dataSet = readDataSet(testMethod, ctx.getDataSet());
+		IDataSet dataSet = readDataSet(testMethod);
 		if (dataSet == null) {
 			return;
 		}
@@ -181,7 +176,7 @@ public class DbUnitRunner {
 			dbConnection = new DatabaseConnection(connection);
 
 			log.trace(" 2- Try to apply DbUnit connection configuration");
-			List<DbUnitConfigInterceptor> interceptors = readConfig(testMethod, ctx.getInterceptors());
+			List<DbUnitConfigInterceptor> interceptors = readConfig(testMethod);
 			if (!interceptors.isEmpty()) {
 				for (DbUnitConfigInterceptor interceptor : interceptors) {
 					interceptor.applyConfiguration(dbConnection.getConfig());
@@ -234,23 +229,12 @@ public class DbUnitRunner {
 	 * Read DbUnit configuration interceptor, returns {@code null} if no configuration is set.
 	 *
 	 * @param method The method to scan for.
-	 * @param defaultInterceptors The default interceptors to use if annotation is not present on method.
 	 * @return The interceptor, {@code null} if it is not configured.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private static List<DbUnitConfigInterceptor> readConfig(Method method, List<DbUnitConfigInterceptor> defaultInterceptors) {
+	private List<DbUnitConfigInterceptor> readConfig(Method method) {
 		DbUnitConfig annotation = findAnnotation(method, DbUnitConfig.class);
-		if (annotation == null) {
-			return defaultInterceptors;
-		}
-
-		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();
-		return map(interceptorClasses, new Mapper<Class<? extends DbUnitConfigInterceptor>, DbUnitConfigInterceptor>() {
-			@Override
-			public DbUnitConfigInterceptor apply(Class<? extends DbUnitConfigInterceptor> input) {
-				return ClassUtils.instantiate(input);
-			}
-		});
+		return annotation == null ? ctx.getInterceptors() : DbUnitAnnotationsParser.readConfig(annotation);
 	}
 
 	/**
@@ -259,33 +243,11 @@ public class DbUnitRunner {
 	 * class annotation is returned.
 	 *
 	 * @param method Tested method.
-	 * @param defaultDataSet The default dataSet returned if method is not annotated.
 	 * @return DataSet.
 	 */
-	private static IDataSet readDataSet(Method method, IDataSet defaultDataSet) {
+	private IDataSet readDataSet(Method method) {
 		boolean isAnnotated = method != null && method.isAnnotationPresent(DbUnitDataSet.class);
-		return isAnnotated ? readAnnotationDataSet(method.getAnnotation(DbUnitDataSet.class)) : defaultDataSet;
-	}
-
-	/**
-	 * Create dataSet from annotation parameter.
-	 *
-	 * @param annotation Annotation.
-	 * @return DataSet.
-	 */
-	private static IDataSet readAnnotationDataSet(DbUnitDataSet annotation) {
-		if (annotation.value().length == 0) {
-			return null;
-		}
-
-		try {
-			log.debug("Fond @DbUnitDataSet annotation, parse annotation value: {}", (Object[]) annotation.value());
-			return createDataSet(annotation.value());
-		}
-		catch (DataSetException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new DbUnitException(ex);
-		}
+		return isAnnotated ? DbUnitAnnotationsParser.readDataSet(method.getAnnotation(DbUnitDataSet.class)) : ctx.getDataSet();
 	}
 
 	/**
