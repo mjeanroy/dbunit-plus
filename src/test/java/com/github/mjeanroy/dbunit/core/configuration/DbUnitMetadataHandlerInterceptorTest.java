@@ -1,0 +1,98 @@
+/**
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015-2018 Mickael Jeanroy
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package com.github.mjeanroy.dbunit.core.configuration;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DefaultMetadataHandler;
+import org.dbunit.database.IMetadataHandler;
+import org.dbunit.ext.db2.Db2MetadataHandler;
+import org.dbunit.ext.mysql.MySqlMetadataHandler;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+
+public class DbUnitMetadataHandlerInterceptorTest {
+
+	private static final String PROPERTY_NAME = "http://www.dbunit.org/properties/metadataHandler";
+
+	@Test
+	public void it_should_set_property() {
+		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class);
+		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isSameAs(metadataHandler);
+	}
+
+	@Test
+	public void it_should_instantiate_class_and_set_property() {
+		final Class<DefaultMetadataHandler> metadataHandlerClass = DefaultMetadataHandler.class;
+		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(metadataHandlerClass);
+	}
+
+	@Test
+	public void it_should_set_mysql_metadata_handler_property() {
+		final Class<MySqlMetadataHandler> metadataHandlerClass = MySqlMetadataHandler.class;
+		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(metadataHandlerClass);
+	}
+
+	@Test
+	public void it_should_set_db2_metadata_handler_property() {
+		final Class<Db2MetadataHandler> metadataHandlerClass = Db2MetadataHandler.class;
+		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(metadataHandlerClass);
+	}
+
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(DbUnitMetadataHandlerInterceptor.class).verify();
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class, "MockMetadataHandler");
+		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
+		assertThat(interceptor.toString()).isEqualTo(
+			"DbUnitMetadataHandlerInterceptor{" +
+				"property: \"http://www.dbunit.org/properties/metadataHandler\", " +
+				"value: MockMetadataHandler" +
+			"}"
+		);
+	}
+}

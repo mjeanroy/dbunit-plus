@@ -24,32 +24,21 @@
 
 package com.github.mjeanroy.dbunit.core.configuration;
 
-import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import org.dbunit.database.DatabaseConfig;
-import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 /**
- * An interceptor that can specify the {@code "datatypeFactory"} property of DbUnit.
+ * An interceptor that can set the {@code "batchSize"} property of DbUnit.
  *
- * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
+ * @see DatabaseConfig#PROPERTY_BATCH_SIZE
  */
-public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> implements DbUnitConfigInterceptor {
+public final class DbUnitBatchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor.
 	 *
-	 * @param dataTypeFactoryClass The datatype property class, that will be instantiated.
+	 * @param batchSize The batch size value.
 	 */
-	public DbUnitDatatypeFactoryInterceptor(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
-		this(ClassUtils.instantiate(dataTypeFactoryClass));
-	}
-
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param dataTypeFactory The datatype factory instance.
-	 */
-	public DbUnitDatatypeFactoryInterceptor(IDataTypeFactory dataTypeFactory) {
-		super(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
+	public DbUnitBatchSizeInterceptor(int batchSize) {
+		super(DatabaseConfig.PROPERTY_BATCH_SIZE, batchSize);
 	}
 }

@@ -24,11 +24,18 @@
 
 package com.github.mjeanroy.dbunit.core.configuration;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
+import org.dbunit.dataset.datatype.IDataTypeFactory;
 import org.dbunit.ext.h2.H2DataTypeFactory;
+import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlDataTypeFactory;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class DbUnitDatatypeFactoryInterceptorTest {
 
@@ -36,11 +43,78 @@ public class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	public void it_should_set_property() {
+		final IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class);
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isSameAs(dataTypeFactory);
+	}
+
+	@Test
+	public void it_should_instantiate_default_datatype_and_set_property() {
+		final Class<DefaultDataTypeFactory> dataTypeFactoryClass = DefaultDataTypeFactory.class;
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
+	}
+
+	@Test
+	public void it_should_instantiate_h2_datatype_and_set_property() {
 		final Class<H2DataTypeFactory> dataTypeFactoryClass = H2DataTypeFactory.class;
 		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
 		final DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
+	}
+
+	@Test
+	public void it_should_instantiate_hsql_datatype_and_set_property() {
+		final Class<HsqldbDataTypeFactory> dataTypeFactoryClass = HsqldbDataTypeFactory.class;
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
+	}
+
+	@Test
+	public void it_should_instantiate_mysql_datatype_and_set_property() {
+		final Class<MySqlDataTypeFactory> dataTypeFactoryClass = MySqlDataTypeFactory.class;
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
+	}
+
+	@Test
+	public void it_should_instantiate_postgresql_datatype_and_set_property() {
+		final Class<PostgresqlDataTypeFactory> dataTypeFactoryClass = PostgresqlDataTypeFactory.class;
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
+	}
+
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(DbUnitDatatypeFactoryInterceptor.class).verify();
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		final IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class, "MockDatatypeFactory");
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
+		assertThat(interceptor.toString()).isEqualTo(
+			"DbUnitDatatypeFactoryInterceptor{" +
+				"property: \"http://www.dbunit.org/properties/datatypeFactory\", " +
+				"value: MockDatatypeFactory" +
+			"}"
+		);
 	}
 }

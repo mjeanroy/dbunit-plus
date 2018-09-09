@@ -31,11 +31,14 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitCaseSensitiveTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeFactoryInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeWarningInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitFetchSizeInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitMetadataHandlerInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
@@ -145,7 +148,7 @@ public class DbUnitAnnotationsParserTest {
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
 		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
 
-		assertThat(interceptors).hasSize(7);
+		assertThat(interceptors).hasSize(10);
 
 		// Default ones.
 		assertThat(interceptors.get(0)).isExactlyInstanceOf(DbUnitAllowEmptyFieldsInterceptor.class);
@@ -154,8 +157,11 @@ public class DbUnitAnnotationsParserTest {
 		assertThat(interceptors.get(3)).isExactlyInstanceOf(DbUnitBatchedStatementsInterceptor.class);
 		assertThat(interceptors.get(4)).isExactlyInstanceOf(DbUnitDatatypeWarningInterceptor.class);
 		assertThat(interceptors.get(5)).isExactlyInstanceOf(DbUnitDatatypeFactoryInterceptor.class);
+		assertThat(interceptors.get(6)).isExactlyInstanceOf(DbUnitFetchSizeInterceptor.class);
+		assertThat(interceptors.get(7)).isExactlyInstanceOf(DbUnitBatchSizeInterceptor.class);
+		assertThat(interceptors.get(8)).isExactlyInstanceOf(DbUnitMetadataHandlerInterceptor.class);
 
 		// The custom one, must be the last.
-		assertThat(interceptors.get(6)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
+		assertThat(interceptors.get(9)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
 	}
 }

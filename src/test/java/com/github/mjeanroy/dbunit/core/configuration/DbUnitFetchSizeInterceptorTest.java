@@ -24,32 +24,38 @@
 
 package com.github.mjeanroy.dbunit.core.configuration;
 
-import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.database.DatabaseConfig;
-import org.dbunit.dataset.datatype.IDataTypeFactory;
+import org.junit.Test;
 
-/**
- * An interceptor that can specify the {@code "datatypeFactory"} property of DbUnit.
- *
- * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
- */
-public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> implements DbUnitConfigInterceptor {
+import static org.assertj.core.api.Assertions.assertThat;
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param dataTypeFactoryClass The datatype property class, that will be instantiated.
-	 */
-	public DbUnitDatatypeFactoryInterceptor(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
-		this(ClassUtils.instantiate(dataTypeFactoryClass));
+public class DbUnitFetchSizeInterceptorTest {
+
+	private static final String PROPERTY_NAME = "http://www.dbunit.org/properties/fetchSize";
+
+	@Test
+	public void it_should_activate_property() {
+		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(200);
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param dataTypeFactory The datatype factory instance.
-	 */
-	public DbUnitDatatypeFactoryInterceptor(IDataTypeFactory dataTypeFactory) {
-		super(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
+	@Test
+	public void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(DbUnitFetchSizeInterceptor.class).verify();
+	}
+
+	@Test
+	public void it_should_implement_to_string() {
+		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
+		assertThat(interceptor.toString()).isEqualTo(
+			"DbUnitFetchSizeInterceptor{" +
+				"property: \"http://www.dbunit.org/properties/fetchSize\", " +
+				"value: 200" +
+			"}"
+		);
 	}
 }

@@ -33,11 +33,14 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitCaseSensitiveTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeFactoryInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeWarningInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitFetchSizeInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitMetadataHandlerInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
@@ -205,7 +208,10 @@ final class DbUnitAnnotationsParser {
 			new DbUnitCaseSensitiveTableNamesInterceptor(annotation.allowEmptyFields()),
 			new DbUnitBatchedStatementsInterceptor(annotation.allowEmptyFields()),
 			new DbUnitDatatypeWarningInterceptor(annotation.allowEmptyFields()),
-			new DbUnitDatatypeFactoryInterceptor(annotation.datatypeFactory())
+			new DbUnitDatatypeFactoryInterceptor(annotation.datatypeFactory()),
+			new DbUnitFetchSizeInterceptor(annotation.fetchSize()),
+			new DbUnitBatchSizeInterceptor(annotation.batchSize()),
+			new DbUnitMetadataHandlerInterceptor(annotation.metadataHandler())
 		);
 
 		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();

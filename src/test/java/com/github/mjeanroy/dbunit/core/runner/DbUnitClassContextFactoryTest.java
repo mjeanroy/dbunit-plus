@@ -25,10 +25,13 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitCaseSensitiveTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeFactoryInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeWarningInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitFetchSizeInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitMetadataHandlerInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
@@ -123,7 +126,7 @@ public class DbUnitClassContextFactoryTest {
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
-		assertThat(ctx.getInterceptors()).hasSize(7);
+		assertThat(ctx.getInterceptors()).hasSize(10);
 
 		// Default ones.
 		assertThat(ctx.getInterceptors().get(0)).isExactlyInstanceOf(DbUnitAllowEmptyFieldsInterceptor.class);
@@ -132,8 +135,11 @@ public class DbUnitClassContextFactoryTest {
 		assertThat(ctx.getInterceptors().get(3)).isExactlyInstanceOf(DbUnitBatchedStatementsInterceptor.class);
 		assertThat(ctx.getInterceptors().get(4)).isExactlyInstanceOf(DbUnitDatatypeWarningInterceptor.class);
 		assertThat(ctx.getInterceptors().get(5)).isExactlyInstanceOf(DbUnitDatatypeFactoryInterceptor.class);
+		assertThat(ctx.getInterceptors().get(6)).isExactlyInstanceOf(DbUnitFetchSizeInterceptor.class);
+		assertThat(ctx.getInterceptors().get(7)).isExactlyInstanceOf(DbUnitBatchSizeInterceptor.class);
+		assertThat(ctx.getInterceptors().get(8)).isExactlyInstanceOf(DbUnitMetadataHandlerInterceptor.class);
 
 		// The custom one, must be the last.
-		assertThat(ctx.getInterceptors().get(6)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
+		assertThat(ctx.getInterceptors().get(9)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
 	}
 }

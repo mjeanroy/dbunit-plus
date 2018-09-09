@@ -25,6 +25,8 @@
 package com.github.mjeanroy.dbunit.core.annotations;
 
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import org.dbunit.database.DefaultMetadataHandler;
+import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
 
@@ -129,6 +131,22 @@ public @interface DbUnitConfig {
 	boolean datatypeWarning() default true;
 
 	/**
+	 * Integer object giving the statement fetch size for loading data into a result set table.
+	 *
+	 * @return The fetch size.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	int fetchSize() default 100;
+
+	/**
+	 * Integer object giving the size of batch updates.
+	 *
+	 * @return The batch size.
+	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 */
+	int batchSize() default 100;
+
+	/**
 	 * Used to configure the DataType factory. You can replace the default factory to add support for non-standard database vendor data types.
 	 *
 	 * The following factories are currently available:
@@ -150,4 +168,22 @@ public @interface DbUnitConfig {
 	 * @return The datatype factory.
 	 */
 	Class<? extends IDataTypeFactory> datatypeFactory() default DefaultDataTypeFactory.class;
+
+	/**
+	 * Used to configure the handler used to control database metadata related methods.
+	 *
+	 * The following RDBMS specific handlers are currently available:
+	 * <ul>
+	 *   <li>{@link org.dbunit.ext.db2.Db2MetadataHandler}</li>
+	 *   <li>{@link org.dbunit.ext.mysql.MySqlMetadataHandler}</li>
+	 *   <li>{@link org.dbunit.ext.netezza.NetezzaMetadataHandler}</li>
+	 * </ul>
+	 *
+	 * For all others the default handler should do the job: {@link DefaultMetadataHandler}.
+	 *
+	 * Note that the {@link IMetadataHandler} specified here must have a no-args constructor.
+	 *
+	 * @return The metadata handler implementation.
+	 */
+	Class<? extends IMetadataHandler> metadataHandler() default DefaultMetadataHandler.class;
 }

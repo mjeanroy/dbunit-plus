@@ -26,30 +26,30 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import org.dbunit.database.DatabaseConfig;
-import org.dbunit.dataset.datatype.IDataTypeFactory;
+import org.dbunit.database.IMetadataHandler;
 
 /**
- * An interceptor that can specify the {@code "datatypeFactory"} property of DbUnit.
+ * An interceptor that can set the {@code "metadataHandler"} property of DbUnit.
  *
- * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
+ * @see DatabaseConfig#PROPERTY_METADATA_HANDLER
  */
-public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> implements DbUnitConfigInterceptor {
+public final class DbUnitMetadataHandlerInterceptor extends AbstractDbUnitPropertyInterceptor<IMetadataHandler> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor.
 	 *
-	 * @param dataTypeFactoryClass The datatype property class, that will be instantiated.
+	 * @param metadataHandlerClass The metadata handler implementation.
 	 */
-	public DbUnitDatatypeFactoryInterceptor(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
-		this(ClassUtils.instantiate(dataTypeFactoryClass));
+	public DbUnitMetadataHandlerInterceptor(Class<? extends IMetadataHandler> metadataHandlerClass) {
+		this(ClassUtils.instantiate(metadataHandlerClass));
 	}
 
 	/**
 	 * Create the interceptor.
 	 *
-	 * @param dataTypeFactory The datatype factory instance.
+	 * @param metadataHandler The metadata handler.
 	 */
-	public DbUnitDatatypeFactoryInterceptor(IDataTypeFactory dataTypeFactory) {
-		super(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
+	public DbUnitMetadataHandlerInterceptor(IMetadataHandler metadataHandler) {
+		super(DatabaseConfig.PROPERTY_METADATA_HANDLER, metadataHandler);
 	}
 }
