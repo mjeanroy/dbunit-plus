@@ -25,6 +25,8 @@
 package com.github.mjeanroy.dbunit.core.annotations;
 
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
+import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -125,4 +127,27 @@ public @interface DbUnitConfig {
 	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
 	 */
 	boolean datatypeWarning() default true;
+
+	/**
+	 * Used to configure the DataType factory. You can replace the default factory to add support for non-standard database vendor data types.
+	 *
+	 * The following factories are currently available:
+	 * <ul>
+	 *   <li>{@link org.dbunit.ext.db2.Db2DataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.h2.H2DataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.hsqldb.HsqldbDataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.mckoi.MckoiDataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.mssql.MsSqlDataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.mysql.MySqlDataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.oracle.OracleDataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.oracle.Oracle10DataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.postgresql.PostgresqlDataTypeFactory}</li>
+	 *   <li>{@link org.dbunit.ext.netezza.NetezzaDataTypeFactory}</li>
+	 * </ul>
+	 *
+	 * Note that the {@link IDataTypeFactory} specified here must have a no-args constructor.
+	 *
+	 * @return The datatype factory.
+	 */
+	Class<? extends IDataTypeFactory> datatypeFactory() default DefaultDataTypeFactory.class;
 }

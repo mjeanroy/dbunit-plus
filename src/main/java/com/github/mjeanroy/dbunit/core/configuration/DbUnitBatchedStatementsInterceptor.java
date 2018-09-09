@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#FEATURE_BATCHED_STATEMENTS
  */
-public final class DbUnitBatchedStatementsInterceptor extends AbstractDbUnitConfigInterceptor implements DbUnitConfigInterceptor {
+public final class DbUnitBatchedStatementsInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor, the feature is enabled by default.

@@ -36,6 +36,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInter
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitCaseSensitiveTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeFactoryInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeWarningInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
@@ -203,7 +204,8 @@ final class DbUnitAnnotationsParser {
 			new DbUnitQualifiedTableNamesInterceptor(annotation.qualifiedTableNames()),
 			new DbUnitCaseSensitiveTableNamesInterceptor(annotation.allowEmptyFields()),
 			new DbUnitBatchedStatementsInterceptor(annotation.allowEmptyFields()),
-			new DbUnitDatatypeWarningInterceptor(annotation.allowEmptyFields())
+			new DbUnitDatatypeWarningInterceptor(annotation.allowEmptyFields()),
+			new DbUnitDatatypeFactoryInterceptor(annotation.datatypeFactory())
 		);
 
 		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();

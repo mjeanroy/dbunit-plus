@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#FEATURE_ALLOW_EMPTY_FIELDS
  */
-public final class DbUnitAllowEmptyFieldsInterceptor extends AbstractDbUnitConfigInterceptor implements DbUnitConfigInterceptor {
+public final class DbUnitAllowEmptyFieldsInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor, the feature is enabled by default.

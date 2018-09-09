@@ -25,27 +25,22 @@
 package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.ext.h2.H2DataTypeFactory;
+import org.junit.Test;
 
-/**
- * An interceptor that can enable/disable the {@code "qualifiedTableNames"} feature of DbUnit.
- *
- * @see DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES
- */
-public final class DbUnitQualifiedTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
+import static org.assertj.core.api.Assertions.assertThat;
 
-	/**
-	 * Create the interceptor, the feature is enabled by default.
-	 */
-	public DbUnitQualifiedTableNamesInterceptor() {
-		this(true);
-	}
+public class DbUnitDatatypeFactoryInterceptorTest {
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param qualifiedTableNames Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
-	 */
-	public DbUnitQualifiedTableNamesInterceptor(boolean qualifiedTableNames) {
-		super(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
+	private static final String PROPERTY_NAME = "http://www.dbunit.org/properties/datatypeFactory";
+
+	@Test
+	public void it_should_set_property() {
+		final Class<H2DataTypeFactory> dataTypeFactoryClass = H2DataTypeFactory.class;
+		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		final DatabaseConfig config = new DatabaseConfig();
+		interceptor.applyConfiguration(config);
+
+		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
 	}
 }

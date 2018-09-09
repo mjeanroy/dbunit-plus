@@ -32,7 +32,7 @@ import java.util.Objects;
 /**
  * An abstract and simple implementation of {@link DbUnitConfigInterceptor}.
  */
-abstract class AbstractDbUnitConfigInterceptor implements DbUnitConfigInterceptor {
+abstract class AbstractDbUnitPropertyInterceptor<T> implements DbUnitConfigInterceptor {
 
 	/**
 	 * The property name.
@@ -42,7 +42,7 @@ abstract class AbstractDbUnitConfigInterceptor implements DbUnitConfigIntercepto
 	/**
 	 * The property value.
 	 */
-	private final boolean value;
+	private final T value;
 
 	/**
 	 * Create interceptor.
@@ -50,7 +50,7 @@ abstract class AbstractDbUnitConfigInterceptor implements DbUnitConfigIntercepto
 	 * @param property The property name.
 	 * @param value The property value.
 	 */
-	AbstractDbUnitConfigInterceptor(String property, boolean value) {
+	AbstractDbUnitPropertyInterceptor(String property, T value) {
 		this.property = property;
 		this.value = value;
 	}
@@ -66,8 +66,8 @@ abstract class AbstractDbUnitConfigInterceptor implements DbUnitConfigIntercepto
 			return true;
 		}
 
-		if (o instanceof AbstractDbUnitConfigInterceptor) {
-			AbstractDbUnitConfigInterceptor i = (AbstractDbUnitConfigInterceptor) o;
+		if (o instanceof AbstractDbUnitPropertyInterceptor) {
+			AbstractDbUnitPropertyInterceptor i = (AbstractDbUnitPropertyInterceptor) o;
 			return Objects.equals(property, i.property) && Objects.equals(value, i.value);
 		}
 

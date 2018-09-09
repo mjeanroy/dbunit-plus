@@ -24,28 +24,23 @@
 
 package com.github.mjeanroy.dbunit.core.configuration;
 
+import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 /**
- * An interceptor that can enable/disable the {@code "qualifiedTableNames"} feature of DbUnit.
+ * An interceptor that can specify the {@code "datatypeFactory"} property of DbUnit.
  *
- * @see DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES
+ * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
  */
-public final class DbUnitQualifiedTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
-
-	/**
-	 * Create the interceptor, the feature is enabled by default.
-	 */
-	public DbUnitQualifiedTableNamesInterceptor() {
-		this(true);
-	}
+public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor.
 	 *
-	 * @param qualifiedTableNames Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
+	 * @param dataTypeFactoryClass The datatype property class, that will be instantiated.
 	 */
-	public DbUnitQualifiedTableNamesInterceptor(boolean qualifiedTableNames) {
-		super(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
+	public DbUnitDatatypeFactoryInterceptor(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
+		super(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, ClassUtils.instantiate(dataTypeFactoryClass));
 	}
 }

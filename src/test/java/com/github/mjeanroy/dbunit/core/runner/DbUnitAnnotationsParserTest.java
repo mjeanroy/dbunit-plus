@@ -34,6 +34,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInter
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitCaseSensitiveTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeFactoryInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeWarningInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
@@ -144,7 +145,7 @@ public class DbUnitAnnotationsParserTest {
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
 		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
 
-		assertThat(interceptors).hasSize(6);
+		assertThat(interceptors).hasSize(7);
 
 		// Default ones.
 		assertThat(interceptors.get(0)).isExactlyInstanceOf(DbUnitAllowEmptyFieldsInterceptor.class);
@@ -152,8 +153,9 @@ public class DbUnitAnnotationsParserTest {
 		assertThat(interceptors.get(2)).isExactlyInstanceOf(DbUnitCaseSensitiveTableNamesInterceptor.class);
 		assertThat(interceptors.get(3)).isExactlyInstanceOf(DbUnitBatchedStatementsInterceptor.class);
 		assertThat(interceptors.get(4)).isExactlyInstanceOf(DbUnitDatatypeWarningInterceptor.class);
+		assertThat(interceptors.get(5)).isExactlyInstanceOf(DbUnitDatatypeFactoryInterceptor.class);
 
 		// The custom one, must be the last.
-		assertThat(interceptors.get(5)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
+		assertThat(interceptors.get(6)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
 	}
 }

@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#FEATURE_DATATYPE_WARNING
  */
-public final class DbUnitDatatypeWarningInterceptor extends AbstractDbUnitConfigInterceptor implements DbUnitConfigInterceptor {
+public final class DbUnitDatatypeWarningInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor, the feature is disabled by default.

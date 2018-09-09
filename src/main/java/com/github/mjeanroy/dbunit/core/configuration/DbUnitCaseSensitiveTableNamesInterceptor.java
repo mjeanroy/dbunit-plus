@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#FEATURE_CASE_SENSITIVE_TABLE_NAMES
  */
-public final class DbUnitCaseSensitiveTableNamesInterceptor extends AbstractDbUnitConfigInterceptor implements DbUnitConfigInterceptor {
+public final class DbUnitCaseSensitiveTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
 
 	/**
 	 * Create the interceptor, the feature is enabled by default.
