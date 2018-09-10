@@ -25,45 +25,45 @@
 package com.github.mjeanroy.dbunit.it.junit4;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.spring.DbUnitTestExecutionListener;
-import com.github.mjeanroy.dbunit.it.configuration.TestSpringConfiguration;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.junit.rules.RuleChain;
 
-import javax.sql.DataSource;
+import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestSpringConfiguration.class)
-@TestExecutionListeners({DependencyInjectionTestExecutionListener.class, DbUnitTestExecutionListener.class})
-@DbUnitDataSet("classpath:/dataset/xml")
+@DbUnitDataSet("/dataset/xml")
+@DbUnitInit(sql = "classpath:/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitSpringIT {
+public class DbUnitClassRuleITest {
 
-	@Autowired
-	private DataSource dataSource;
+	private static final EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+
+	private static final DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
+		@Override
+		protected Connection createConnection() {
+			return dbRule.getConnection();
+		}
+	});
+
+	@ClassRule
+	public static RuleChain chain = RuleChain
+		.outerRule(dbRule)
+		.around(dbUnitRule);
 
 	@Test
-	public void method1() throws Exception {
-		assertThat(countFrom(dataSource.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dataSource.getConnection(), "bar")).isEqualTo(3);
-	}
-
-	@Test
-	@DbUnitDataSet("classpath:/dataset/xml/foo.xml")
-	public void method2() throws Exception {
-		assertThat(countFrom(dataSource.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dataSource.getConnection(), "bar")).isZero();
+	public void test1() throws Exception {
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
 	}
 }

@@ -24,39 +24,37 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-
-import java.sql.Connection;
+import org.junit.runner.RunWith;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("deprecation")
+@RunWith(DbUnitJunitRunner.class)
+@DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
 @DbUnitDataSet("/dataset/xml")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleIT {
+public class DbUnitRunnerWithDeprecatedDbUnitConfigurationITest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
 
-	@Rule
-	public DbUnitRule rule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
-		@Override
-		protected Connection createConnection() {
-			return dbRule.getConnection();
-		}
-	});
+	@BeforeClass
+	public static void setup() throws Exception {
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+	}
 
 	@Test
 	public void test1() throws Exception {

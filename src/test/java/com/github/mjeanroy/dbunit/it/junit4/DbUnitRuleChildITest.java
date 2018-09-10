@@ -24,44 +24,16 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
-import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DbUnitDataSet("/dataset/xml")
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleWithDefaultConnectionFactoryIT {
-
-	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
-
-	@Rule
-	public DbUnitRule rule = new DbUnitRule();
+public class DbUnitRuleChildITest extends DbUnitRuleITest {
 
 	@Test
-	public void test1() throws Exception {
+	public void testChildClass() throws Exception {
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
-	}
-
-	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
 	}
 }

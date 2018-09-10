@@ -24,14 +24,12 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
-import com.github.mjeanroy.dbunit.it.configuration.QualifiedTableNameConfiguration;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -43,11 +41,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-@DbUnitConfig(QualifiedTableNameConfiguration.class)
-@DbUnitDataSet("/dataset/qualified-table-names")
+@DbUnitDataSet("/dataset/xml")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRunnerWithQualifiedTableNameIT {
+public class DbUnitRunnerITest {
 
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
@@ -64,4 +61,10 @@ public class DbUnitRunnerWithQualifiedTableNameIT {
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
 	}
 
+	@Test
+	@DbUnitDataSet("/dataset/xml/foo.xml")
+	public void test2() throws Exception {
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
+	}
 }
