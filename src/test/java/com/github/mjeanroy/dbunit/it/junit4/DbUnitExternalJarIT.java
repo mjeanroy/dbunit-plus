@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it;
+package com.github.mjeanroy.dbunit.it.junit4;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
@@ -41,11 +41,11 @@ import java.sql.Connection;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DbUnitDataSet("/dataset/xml")
+@DbUnitDataSet("/jar/dataset/xml")
 @DbUnitInit(sql = "classpath:/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleIT {
+public class DbUnitExternalJarIT {
 
 	@ClassRule
 	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
@@ -62,12 +62,5 @@ public class DbUnitRuleIT {
 	public void test1() throws Exception {
 		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
-	}
-
-	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
 	}
 }

@@ -22,23 +22,18 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it;
+package com.github.mjeanroy.dbunit.it.junit4;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.junit.Test;
 
-import javax.sql.DataSource;
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@Configuration
-public class TestSpringConfiguration {
+public class DbUnitRuleChildIT extends DbUnitRuleIT {
 
-	@Bean(destroyMethod = "shutdown")
-	public DataSource dataSource() {
-		return new EmbeddedDatabaseBuilder()
-			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
-			.build();
+	@Test
+	public void testChildClass() throws Exception {
+		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
 	}
 }
