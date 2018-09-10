@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.spring.junit4;
+package com.github.mjeanroy.dbunit.integration.spring;
 
 import org.junit.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -31,34 +31,37 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class EmbeddedDatabaseRuleTest {
+public class EmbeddedDatabaseRunnerTest {
 
 	@Test
-	public void it_should_create_rule() {
+	public void it_should_create_runner() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseRule rule = createRule(db);
-		assertThat(rule.getDb()).isSameAs(db);
+		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
+		assertThat(runner.getDb()).isSameAs(db);
 	}
 
 	@Test
-	public void it_should_create_default_rule() {
-		final EmbeddedDatabaseRule rule = createRule();
+	public void it_should_create_default_runner() {
+		final EmbeddedDatabaseRunner rule = new EmbeddedDatabaseRunner();
 		assertThat(rule.getDb()).isNotNull();
 	}
 
 	@Test
 	public void it_should_shutdown_db_after_test() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseRule rule = createRule(db);
-		rule.after();
+		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
+		runner.after();
 		verify(db).shutdown();
 	}
 
-	protected EmbeddedDatabaseRule createRule() {
-		return new EmbeddedDatabaseRule();
-	}
-
-	protected EmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
-		return new EmbeddedDatabaseRule(db);
+	@Test
+	public void it_should_implement_to_string() {
+		final EmbeddedDatabase db = mock(EmbeddedDatabase.class, "MockEmbeddedDatabase");
+		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
+		assertThat(runner.toString()).isEqualTo(
+			"EmbeddedDatabaseRunner{" +
+				"db: MockEmbeddedDatabase" +
+			"}"
+		);
 	}
 }

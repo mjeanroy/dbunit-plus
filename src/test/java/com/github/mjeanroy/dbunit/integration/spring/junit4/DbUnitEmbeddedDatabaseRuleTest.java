@@ -49,14 +49,14 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 
 	@Test
 	public void it_should_create_rule_with_database() {
-		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		DbUnitEmbeddedDatabaseRule rule = createRule(db);
+		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		final DbUnitEmbeddedDatabaseRule rule = createRule(db);
 		assertThat(rule.getDb()).isSameAs(db);
 	}
 
 	@Test
 	public void it_should_create_rule_with_default_database() {
-		DbUnitEmbeddedDatabaseRule rule = createRule();
+		final DbUnitEmbeddedDatabaseRule rule = createRule();
 		assertThat(rule.getDb()).isNotNull();
 	}
 
@@ -65,7 +65,6 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 	public void it_should_start_database_and_load_data_set() throws Throwable {
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method1");
-
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/init.sql")
@@ -73,7 +72,7 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 
 		final DbUnitEmbeddedDatabaseRule rule = createRule(db);
 
-		Statement result = rule.apply(statement, description);
+		final Statement result = rule.apply(statement, description);
 
 		assertThat(result).isNotNull();
 		verify(statement, never()).evaluate();

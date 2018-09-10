@@ -35,34 +35,16 @@ public class TransactionalDbUnitTestExecutionListenerTest {
 
 	@Test
 	public void it_should_create_listener() throws Exception {
-		TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
+		final TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
 
-		TestExecutionListener[] listeners = readPrivate(listener, "listeners");
-		assertThat(listeners)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2);
+		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");
+		assertThat(listeners).isNotNull().isNotEmpty().hasSize(2);
+		assertThat(listeners[0]).isExactlyInstanceOf(TransactionalTestExecutionListener.class);
+		assertThat(listeners[1]).isExactlyInstanceOf(DbUnitTestExecutionListener.class);
 
-		assertThat(listeners[0])
-			.isNotNull()
-			.isExactlyInstanceOf(TransactionalTestExecutionListener.class);
-
-		assertThat(listeners[1])
-			.isNotNull()
-			.isExactlyInstanceOf(DbUnitTestExecutionListener.class);
-
-		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
-		assertThat(reverseListeners)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2);
-
-		assertThat(reverseListeners[0])
-			.isNotNull()
-			.isExactlyInstanceOf(DbUnitTestExecutionListener.class);
-
-		assertThat(reverseListeners[1])
-			.isNotNull()
-			.isExactlyInstanceOf(TransactionalTestExecutionListener.class);
+		final TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
+		assertThat(reverseListeners).isNotNull().isNotEmpty().hasSize(2);
+		assertThat(reverseListeners[0]).isExactlyInstanceOf(DbUnitTestExecutionListener.class);
+		assertThat(reverseListeners[1]).isExactlyInstanceOf(TransactionalTestExecutionListener.class);
 	}
 }

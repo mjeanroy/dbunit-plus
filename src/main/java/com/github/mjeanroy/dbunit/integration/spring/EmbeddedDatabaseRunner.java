@@ -22,56 +22,52 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.spring.junit4;
+package com.github.mjeanroy.dbunit.integration.spring;
 
-import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRunner;
-import org.junit.rules.ExternalResource;
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
- * A JUnit 4 {@link org.junit.Rule} that can be used to start/stop embedded database.
- *
- * <p/>
- *
- * Note that:
- *
- * <ul>
- *   <li>When used as a {@link org.junit.ClassRule}, the embedded database will be started before all tests, and stopped after all tests.</li>
- *   <li>When used as a {@link org.junit.Rule}, the embedded database will be started before each test, and stopped after each test.</li>
- * </ul>
+ * A standalone runner that can be used to start/stop embedded database.
+ * This runner is framework agnostic and may be used on whatever test framework (JUnit 4, JUnit Jupiter, etc.).
  */
-public class EmbeddedDatabaseRule extends ExternalResource {
+public class EmbeddedDatabaseRunner {
 
 	/**
 	 * Instance of {@link EmbeddedDatabase}.
 	 */
-	private final EmbeddedDatabaseRunner dbRunner;
+	private final EmbeddedDatabase db;
 
 	/**
 	 * Create rule.
 	 *
 	 * @param db Embedded database.
 	 */
-	public EmbeddedDatabaseRule(EmbeddedDatabase db) {
-		this.dbRunner = new EmbeddedDatabaseRunner(db);
+	public EmbeddedDatabaseRunner(EmbeddedDatabase db) {
+		this.db = notNull(db, "Embedded database must not be null");
 	}
 
 	/**
 	 * Create rule with default builder.
 	 */
-	public EmbeddedDatabaseRule() {
-		this.dbRunner = new EmbeddedDatabaseRunner();
+	public EmbeddedDatabaseRunner() {
+		this(new EmbeddedDatabaseBuilder().build());
 	}
 
-	@Override
-	protected void before() {
-		dbRunner.before();
+	/**
+	 * Execute the before test handler.
+	 */
+	public void before() {
 	}
 
-	@Override
-	protected void after() {
-		super.after();
-		dbRunner.after();
+	/**
+	 * Execute the after test handler.
+	 */
+	public void after() {
+		this.db.shutdown();
 	}
 
 	/**
@@ -80,6 +76,13 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	 * @return Database instance, may be {@code null} until rule has not been started.
 	 */
 	public EmbeddedDatabase getDb() {
-		return dbRunner.getDb();
+		return this.db;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.create(getClass())
+			.append("db", db)
+			.build();
 	}
 }
