@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 public class LiquibaseFunctionTest {
 
 	@Rule
-	public EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	public HsqldbRule hsqldb = new HsqldbRule(false);
 
 	private JdbcConnectionFactory factory;
 
@@ -54,7 +54,7 @@ public class LiquibaseFunctionTest {
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
 			public Connection answer(InvocationOnMock invocationOnMock) throws Throwable {
-				return dbRule.getConnection();
+				return hsqldb.getConnection();
 			}
 		});
 	}
@@ -65,8 +65,8 @@ public class LiquibaseFunctionTest {
 		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 		liquibaseUpdater.update();
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 		verify(factory, atLeastOnce()).getConnection();
 	}
 }

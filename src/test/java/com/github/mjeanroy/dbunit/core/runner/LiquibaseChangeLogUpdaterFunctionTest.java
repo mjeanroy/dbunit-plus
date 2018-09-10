@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 public class LiquibaseChangeLogUpdaterFunctionTest {
 
 	@Rule
-	public EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	public HsqldbRule hsqldb = new HsqldbRule(false);
 
 	@Test
 	public void it_should_load_liquibase_change_logs() throws Exception {
@@ -54,14 +54,14 @@ public class LiquibaseChangeLogUpdaterFunctionTest {
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
 			public Connection answer(InvocationOnMock invocationOnMock) {
-				return dbRule.getConnection();
+				return hsqldb.getConnection();
 			}
 		});
 
 		function.apply(changeLog);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 		verify(factory).getConnection();
 	}
 }

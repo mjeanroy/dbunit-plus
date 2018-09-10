@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -37,27 +37,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DbUnitRunnerWithSqlInitTest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	public static HsqldbRule hsqldb = new HsqldbRule(false);
 
 	@Test
 	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
 		Class<WithDataSetAndSqlInit> klass = WithDataSetAndSqlInit.class;
-		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 
 		// Setup Operation
 		Method testMethod = klass.getMethod("method1");
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 }

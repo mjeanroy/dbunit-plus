@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
 public class SqlScriptRunnerFunctionTest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(true);
+	public static HsqldbRule hsqldb = new HsqldbRule(true);
 
 	private SqlScript sqlScript;
 	private JdbcConnectionFactory factory;
@@ -66,7 +66,7 @@ public class SqlScriptRunnerFunctionTest {
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
 			public Connection answer(InvocationOnMock invocationOnMock) {
-				return dbRule.getConnection();
+				return hsqldb.getConnection();
 			}
 		});
 	}
@@ -86,13 +86,13 @@ public class SqlScriptRunnerFunctionTest {
 	public void it_should_load_script() throws Exception {
 		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 
 		func.apply(sqlScript);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 
 		verify(factory).getConnection();
 	}

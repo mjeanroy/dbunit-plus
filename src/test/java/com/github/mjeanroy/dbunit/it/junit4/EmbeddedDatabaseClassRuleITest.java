@@ -24,50 +24,31 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRule;
 import org.junit.ClassRule;
-import org.junit.Rule;
 import org.junit.Test;
-
-import java.sql.Connection;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DbUnitDataSet("/dataset/xml")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitRuleITest {
+public class EmbeddedDatabaseClassRuleITest {
 
 	@ClassRule
-	public static HsqldbRule hsqldb = new HsqldbRule(false);
-
-	@Rule
-	public DbUnitRule rule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
-		@Override
-		protected Connection createConnection() {
-			return hsqldb.getConnection();
-		}
-	});
+	public static EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(new EmbeddedDatabaseBuilder()
+		.addScript("classpath:/sql/init.sql")
+		.addScript("classpath:/sql/data.sql")
+		.build());
 
 	@Test
-	public void test1() throws Exception {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+	public void it_should_be_ok_with_first_test() throws Exception {
+		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+	public void it_should_be_ok_with_second_test() throws Exception {
+		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
 	}
 }

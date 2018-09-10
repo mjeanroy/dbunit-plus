@@ -57,7 +57,7 @@ public class DbUnitClassContextTest {
 		)));
 
 		final List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
-			"/db/changelog.xml"
+			"/hsqldb/changelog.xml"
 		));
 
 		final List<Replacements> replacements = singletonList(Replacements.builder()
@@ -101,7 +101,7 @@ public class DbUnitClassContextTest {
 		)));
 
 		final List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
-			"/db/changelog.xml"
+			"/hsqldb/changelog.xml"
 		));
 
 		final List<Replacements> replacements = singletonList(
@@ -144,7 +144,7 @@ public class DbUnitClassContextTest {
 
 				"liquibaseChangeLogs: [" +
 					"LiquibaseChangeLog{" +
-						"changeLog: \"/db/changelog.xml\"" +
+						"changeLog: \"/hsqldb/changelog.xml\"" +
 					"}" +
 				"], " +
 

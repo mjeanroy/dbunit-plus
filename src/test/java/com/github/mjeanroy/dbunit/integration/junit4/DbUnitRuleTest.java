@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
@@ -56,12 +56,12 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 public class DbUnitRuleTest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule db = new EmbeddedDatabaseRule();
+	public static HsqldbRule hsqldb = new HsqldbRule();
 
 	@Before
 	public void setup() throws Exception {
-		assertThat(countFrom(db.getConnection(), "foo")).isZero();
-		assertThat(countFrom(db.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class DbUnitRuleTest {
 
 	@Test
 	public void it_should_load_rule_with_configuration() throws Throwable {
-		final JdbcConfiguration config = newJdbcConfiguration(db.getUrl(), db.getUser(), db.getPassword());
+		final JdbcConfiguration config = newJdbcConfiguration(hsqldb.getUrl(), hsqldb.getUser(), hsqldb.getPassword());
 		final DbUnitRule rule = createRule(config);
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method1");
@@ -85,7 +85,7 @@ public class DbUnitRuleTest {
 
 	@Test
 	public void it_should_load_database_for_class_test() throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(hsqldb.getDb());
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method1");
@@ -95,7 +95,7 @@ public class DbUnitRuleTest {
 
 	@Test
 	public void it_should_load_database_for_class_rule() throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(hsqldb.getDb());
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
 		final Description description = createSuiteDescription(WithDataSet.class);
@@ -105,7 +105,7 @@ public class DbUnitRuleTest {
 
 	@Test
 	public void it_should_load_database_for_method_test() throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db.getDb());
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(hsqldb.getDb());
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method2");
@@ -152,8 +152,8 @@ public class DbUnitRuleTest {
 		return new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(expectedFoo);
-				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(expectedBar);
+				assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(expectedFoo);
+				assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(expectedBar);
 				return null;
 			}
 		};

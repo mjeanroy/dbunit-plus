@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.mock;
 public class DbUnitRunnerTest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
+	public static HsqldbRule hsqldb = new HsqldbRule();
 
 	@Test
 	public void it_should_create_runner_and_read_data_set_on_class() throws Exception {
@@ -94,127 +94,127 @@ public class DbUnitRunnerTest {
 	@Test
 	public void it_should_create_runner_and_load_connection_from_annotation() throws Exception {
 		final Class<WithDbUnitConnection> klass = WithDbUnitConnection.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("test1");
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void it_should_load_data_set() throws Exception {
 		final Class<WithDataSet> klass = WithDataSet.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method1");
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void it_should_load_data_set_without_method_invocation() throws Exception {
 		final Class<WithDataSet> klass = WithDataSet.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 
 		// Setup Operation
 		runner.beforeTest(null);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(null);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void it_should_create_runner_and_read_data_set_on_method() throws Exception {
 		final Class<WithDataSet> klass = WithDataSet.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method2");
 
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void it_should_load_data_set_with_custom_operation() throws Exception {
 		final Class<WithDataSet> klass = WithDataSet.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method3");
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void it_should_load_dataset_with_custom_config() throws Exception {
 		final Class<WithCustomConfiguration> klass = WithCustomConfiguration.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method1");
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
 
 	@Test
 	public void it_should_load_dataset_with_custom_config_per_method() throws Exception {
 		final Class<WithCustomConfiguration> klass = WithCustomConfiguration.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method2");
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isZero();
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
 	}
 
 	@Test

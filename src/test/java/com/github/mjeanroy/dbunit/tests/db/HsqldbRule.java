@@ -35,7 +35,7 @@ import java.sql.SQLException;
 /**
  * Start and Stop embedded database.
  */
-public class EmbeddedDatabaseRule extends ExternalResource {
+public class HsqldbRule extends ExternalResource {
 
 	private final String dbName;
 	private final boolean loadScript;
@@ -45,11 +45,11 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	 */
 	private EmbeddedDatabase db;
 
-	public EmbeddedDatabaseRule() {
+	public HsqldbRule() {
 		this(true);
 	}
 
-	public EmbeddedDatabaseRule(boolean loadScript) {
+	public HsqldbRule(boolean loadScript) {
 		this.dbName = "testdb";
 		this.loadScript = loadScript;
 	}

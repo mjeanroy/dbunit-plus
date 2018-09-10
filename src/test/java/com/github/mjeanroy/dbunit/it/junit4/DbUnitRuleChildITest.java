@@ -33,7 +33,7 @@ public class DbUnitRuleChildITest extends DbUnitRuleITest {
 
 	@Test
 	public void testChildClass() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 	}
 }

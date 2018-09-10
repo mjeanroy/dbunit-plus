@@ -31,7 +31,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,21 +47,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DbUnitRuleWithDefaultConnectionFactoryITest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	public static HsqldbRule hsqldb = new HsqldbRule(false);
 
 	@Rule
 	public DbUnitRule rule = new DbUnitRule();
 
 	@Test
 	public void test1() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 	}
 
 	@Test
 	@DbUnitDataSet("/dataset/xml/foo.xml")
 	public void test2() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(0);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
 	}
 }

@@ -32,7 +32,7 @@ public class LiquibaseChangeLogMapperTest {
 
 	@Test
 	public void it_should_create_changelog_from_input() {
-		final String input = "/db/master-changelog.xml";
+		final String input = "/hsqldb/master-changelog.xml";
 		final LiquibaseChangeLogMapper mapper = LiquibaseChangeLogMapper.getInstance();
 		final LiquibaseChangeLog changeLog = mapper.apply(input);
 

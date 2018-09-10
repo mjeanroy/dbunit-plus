@@ -22,42 +22,33 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.runner;
+package com.github.mjeanroy.dbunit.it.junit4;
 
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
-import org.junit.ClassRule;
+import com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRule;
+import org.junit.Rule;
 import org.junit.Test;
-
-import java.lang.reflect.Method;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitRunnerWithLiquibaseTest {
+public class EmbeddedDatabaseRuleITest {
 
-	@ClassRule
-	public static HsqldbRule hsqldb = new HsqldbRule(false);
+	@Rule
+	public EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(new EmbeddedDatabaseBuilder()
+		.addScript("classpath:/sql/init.sql")
+		.addScript("classpath:/sql/data.sql")
+		.build());
 
 	@Test
-	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
-		Class<WithDataSetAndLiquibase> klass = WithDataSetAndLiquibase.class;
-		DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
+	public void it_should_be_ok_with_first_test() throws Exception {
+		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
+	}
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
-
-		// Setup Operation
-		Method testMethod = klass.getMethod("method1");
-		runner.beforeTest(testMethod);
-
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
-
-		// Tear Down Operation
-		runner.afterTest(testMethod);
-
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+	@Test
+	public void it_should_be_ok_with_second_test() throws Exception {
+		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
 	}
 }

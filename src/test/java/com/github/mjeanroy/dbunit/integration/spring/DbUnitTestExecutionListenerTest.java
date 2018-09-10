@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.ClassRule;
@@ -53,7 +53,7 @@ public class DbUnitTestExecutionListenerTest {
 	private static final String DBUNIT_RUNNER_KEY = "DBUNIT_RUNNER";
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
+	public static HsqldbRule hsqldb = new HsqldbRule();
 
 	@SuppressWarnings({"unchecked"})
 	@Test
@@ -64,7 +64,7 @@ public class DbUnitTestExecutionListenerTest {
 		when(ctx.getTestClass()).thenReturn(testClass);
 
 		final ApplicationContext appContext = mock(ApplicationContext.class);
-		when(appContext.getBean(DataSource.class)).thenReturn(dbRule.getDb());
+		when(appContext.getBean(DataSource.class)).thenReturn(hsqldb.getDb());
 		when(ctx.getApplicationContext()).thenReturn(appContext);
 
 		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();

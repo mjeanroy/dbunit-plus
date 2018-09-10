@@ -31,7 +31,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -47,23 +47,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 public class DbUnitClassRuleITest {
 
-	private static final EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule(false);
+	private static final HsqldbRule hsqldb = new HsqldbRule(false);
 
 	private static final DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
 		@Override
 		protected Connection createConnection() {
-			return dbRule.getConnection();
+			return hsqldb.getConnection();
 		}
 	});
 
 	@ClassRule
 	public static RuleChain chain = RuleChain
-		.outerRule(dbRule)
+		.outerRule(hsqldb)
 		.around(dbUnitRule);
 
 	@Test
 	public void test1() throws Exception {
-		assertThat(countFrom(dbRule.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dbRule.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 	}
 }

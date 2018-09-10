@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseRule;
+import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -37,23 +37,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DbUnitRunnerWithReplacementsTest {
 
 	@ClassRule
-	public static EmbeddedDatabaseRule dbRule = new EmbeddedDatabaseRule();
+	public static HsqldbRule hsqldb = new HsqldbRule();
 
 	@Test
 	public void it_should_replace_values() throws Exception {
 		Class<WithReplacementsDataSet> klass = WithReplacementsDataSet.class;
-		DbUnitRunner runner = new DbUnitRunner(klass, dbRule.getDb());
+		DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 
 		// Setup Operation
 		Method testMethod = klass.getMethod("method1");
 		runner.beforeTest(testMethod);
 
-		ResultSet r1 = dbRule.getConnection().prepareStatement("SELECT * FROM foo WHERE id = 1").executeQuery();
+		ResultSet r1 = hsqldb.getConnection().prepareStatement("SELECT * FROM foo WHERE id = 1").executeQuery();
 		assertThat(r1.next()).isTrue();
 		assertThat(r1.getInt("id")).isEqualTo(1);
 		assertThat(r1.getString("name")).isEqualTo("John Doe");
 
-		ResultSet r2 = dbRule.getConnection().prepareStatement("SELECT * FROM foo WHERE id = 2").executeQuery();
+		ResultSet r2 = hsqldb.getConnection().prepareStatement("SELECT * FROM foo WHERE id = 2").executeQuery();
 		assertThat(r2.next()).isTrue();
 		assertThat(r2.getInt("id")).isEqualTo(2);
 		assertThat(r2.getString("name")).isEqualTo("Jane Doe");
