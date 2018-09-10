@@ -32,7 +32,7 @@ public class ObjectsTest {
 
 	@Test
 	public void it_should_return_first_non_null_value() {
-		assertThat(Objects.firstNonNull(null, null)).isNull();
+		assertThat((String) Objects.firstNonNull(null, null)).isNull();
 		assertThat(Objects.firstNonNull("foo", null)).isEqualTo("foo");
 		assertThat(Objects.firstNonNull(null, "foo")).isEqualTo("foo");
 		assertThat(Objects.firstNonNull("foo", "bar")).isEqualTo("foo");
