@@ -133,7 +133,7 @@ public class LiquibaseUpdater {
 	}
 
 	private ResourceAccessor createResourceAccessor() {
-		FileSystemResourceAccessor fileSystemResourceAccessor = new FileSystemResourceAccessor();
+		FileSystemResourceAccessor fileSystemResourceAccessor = new CustomFileSystemResourceAccessor();
 		ClassLoaderResourceAccessor classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
 		return new CompositeResourceAccessor(fileSystemResourceAccessor, classLoaderResourceAccessor);
 	}

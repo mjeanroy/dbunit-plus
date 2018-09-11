@@ -57,9 +57,10 @@ public class LiquibaseUpdateTest {
 	@Before
 	public void setUp() {
 		factory = mock(JdbcConnectionFactory.class);
+
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
-			public Connection answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Connection answer(InvocationOnMock invocationOnMock) {
 				return hsqldb.getConnection();
 			}
 		});

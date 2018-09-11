@@ -51,9 +51,10 @@ public class LiquibaseFunctionTest {
 	@Before
 	public void setUp() {
 		factory = mock(JdbcConnectionFactory.class);
+
 		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
 			@Override
-			public Connection answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Connection answer(InvocationOnMock invocationOnMock) {
 				return hsqldb.getConnection();
 			}
 		});
@@ -61,8 +62,9 @@ public class LiquibaseFunctionTest {
 
 	@Test
 	public void it_should_load_liquibase_changelogs() throws Exception {
-		String changeLog = "/liquibase/changelog.xml";
-		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
+		final String changeLog = "/liquibase/changelog.xml";
+		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
+
 		liquibaseUpdater.update();
 
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
