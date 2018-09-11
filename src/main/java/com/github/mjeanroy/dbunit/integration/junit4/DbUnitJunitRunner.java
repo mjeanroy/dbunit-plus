@@ -49,7 +49,7 @@ import java.util.List;
  *   &#64;RunWith(DbUnitJunitRunner.class)
  *   &#64;DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
  *   &#64;bUnitDataSet("classpath:/dataset/xml")
- *   public MyDaoTest {
+ *   public class MyDaoTest {
  *     &#64;Test
  *     public void test1() {
  *       // ...

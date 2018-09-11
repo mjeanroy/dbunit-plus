@@ -25,20 +25,48 @@
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
 import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRunner;
+import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 /**
- * A JUnit 4 {@link org.junit.Rule} that can be used to start/stop embedded database.
+ * A JUnit 4 {@link Rule} that can be used to start/stop embedded database.
  *
  * <p/>
  *
  * Note that:
  *
  * <ul>
- *   <li>When used as a {@link org.junit.ClassRule}, the embedded database will be started before all tests, and stopped after all tests.</li>
- *   <li>When used as a {@link org.junit.Rule}, the embedded database will be started before each test, and stopped after each test.</li>
+ *   <li>
+ *     When used as a {@link ClassRule}, the embedded database will be started before all tests,
+ *     and stopped after all tests.
+ *   </li>
+ *   <li>
+ *     When used as a {@link Rule}, the embedded database will be started before each test,
+ *     and stopped after each test.
+ *   </li>
  * </ul>
+ *
+ * Here is an example using the {@link ClassRule} annotation:
+ *
+ * <pre><code>
+ *   public class MyDaoTest {
+ *     &#64;ClassRule
+ *     public static EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(
+ *       new EmbeddedDatabaseBuilder()
+ *         .generateUniqueName(true)
+ *         .addScript("classpath:/sql/init.sql")
+ *         .addScript("classpath:/sql/data.sql")
+ *         .build()
+ *     );
+ *
+ *     &#64;Test
+ *     public void test1() throws Exception {
+ *       Assert.assertEquals(2, count(rule.getDb().getConnection()));
+ *     }
+ *   }
+ * </code></pre>
  */
 public class EmbeddedDatabaseRule extends ExternalResource {
 
@@ -70,7 +98,6 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 
 	@Override
 	protected void after() {
-		super.after();
 		dbRunner.after();
 	}
 
