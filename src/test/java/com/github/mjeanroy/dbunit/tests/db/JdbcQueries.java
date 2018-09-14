@@ -28,14 +28,30 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Static JDBC Queries utilities, to use in unit tests only.
+ */
 public final class JdbcQueries {
 
+	// Ensure no instantiation.
 	private JdbcQueries() {
 	}
 
-	public static int countFrom(Connection connection, String tableName) throws SQLException {
-		ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
-		result.next();
-		return result.getInt("nb");
+	/**
+	 * Run SQL {@code "COUNT"} query against given table using given {@link Connection}.
+	 *
+	 * @param connection The SQL Connection.
+	 * @param tableName The table name.
+	 * @return The number of rows in given table.
+	 */
+	public static int countFrom(Connection connection, String tableName) {
+		try {
+			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
+			result.next();
+			return result.getInt("nb");
+		}
+		catch (SQLException ex) {
+			throw new AssertionError(ex);
+		}
 	}
 }

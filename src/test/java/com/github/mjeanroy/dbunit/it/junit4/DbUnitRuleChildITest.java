@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class DbUnitRuleChildITest extends DbUnitRuleITest {
 
 	@Test
-	public void testChildClass() throws Exception {
+	public void testChildClass() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 	}

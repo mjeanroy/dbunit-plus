@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
 import java.net.URL;
@@ -149,6 +150,23 @@ public final class TestUtils {
 			modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
 			field.set(null, value);
+		}
+		catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
+	}
+
+	/**
+	 * Find and returns given method of given class.
+	 *
+	 * @param klass The class.
+	 * @param methodName The method name.
+	 * @param parameterTypes Optional parameter types.
+	 * @return The method.
+	 */
+	public static Method lookupMethod(Class<?> klass, String methodName, Class<?>... parameterTypes) {
+		try {
+			return klass.getDeclaredMethod(methodName, parameterTypes);
 		}
 		catch (Exception ex) {
 			throw new AssertionError(ex);

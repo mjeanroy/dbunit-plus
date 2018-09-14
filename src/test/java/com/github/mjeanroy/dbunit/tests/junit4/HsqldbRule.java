@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.db;
+package com.github.mjeanroy.dbunit.tests.junit4;
 
 import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;

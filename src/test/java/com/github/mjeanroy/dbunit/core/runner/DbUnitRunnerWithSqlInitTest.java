@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import org.junit.ClassRule;
 import org.junit.Test;

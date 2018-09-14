@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.integration.liquibase;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import liquibase.exception.LiquibaseException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
@@ -95,7 +95,7 @@ public class LiquibaseUpdateTest {
 			.hasCauseInstanceOf(LiquibaseException.class);
 	}
 
-	private void assertLiquibaseUpdate(String changeLog) throws Exception {
+	private void assertLiquibaseUpdate(String changeLog) {
 		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 
 		liquibaseUpdater.update();

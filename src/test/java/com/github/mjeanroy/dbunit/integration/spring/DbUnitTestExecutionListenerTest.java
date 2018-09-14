@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.ClassRule;

@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -45,7 +45,7 @@ public class LiquibaseChangeLogUpdaterFunctionTest {
 	public HsqldbRule hsqldb = new HsqldbRule(false);
 
 	@Test
-	public void it_should_load_liquibase_change_logs() throws Exception {
+	public void it_should_load_liquibase_change_logs() {
 		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 		final LiquibaseChangeLogUpdaterFunction function = new LiquibaseChangeLogUpdaterFunction(factory);
 		final String path = "/liquibase/changelog.xml";

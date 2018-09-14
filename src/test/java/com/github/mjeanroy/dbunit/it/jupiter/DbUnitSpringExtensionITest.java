@@ -22,48 +22,46 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it.junit4;
+package com.github.mjeanroy.dbunit.it.jupiter;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import com.github.mjeanroy.dbunit.integration.spring.DbUnitSpring;
+import com.github.mjeanroy.dbunit.it.configuration.TestSpringConfiguration;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.sql.Connection;
+import javax.sql.DataSource;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DbUnitDataSet("/dataset/xml")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = TestSpringConfiguration.class)
+@DbUnitSpring
+@DbUnitDataSet("classpath:/dataset/xml")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class DbUnitClassRuleITest {
+class DbUnitSpringExtensionITest {
 
-	private static final HsqldbRule hsqldb = new HsqldbRule(false);
-
-	private static final DbUnitRule dbUnitRule = new DbUnitRule(new AbstractJdbcConnectionFactory() {
-		@Override
-		protected Connection createConnection() {
-			return hsqldb.getConnection();
-		}
-	});
-
-	@ClassRule
-	public static RuleChain chain = RuleChain
-		.outerRule(hsqldb)
-		.around(dbUnitRule);
+	@Autowired
+	private DataSource dataSource;
 
 	@Test
-	public void test1() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+	void method1() throws Exception {
+		assertThat(countFrom(dataSource.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dataSource.getConnection(), "bar")).isEqualTo(3);
+	}
+
+	@Test
+	@DbUnitDataSet("classpath:/dataset/xml/foo.xml")
+	void method2() throws Exception {
+		assertThat(countFrom(dataSource.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(dataSource.getConnection(), "bar")).isZero();
 	}
 }

@@ -54,10 +54,16 @@ public class FakeExtensionContext implements ExtensionContext {
 	 */
 	private final Object testInstance;
 
-	public FakeExtensionContext(Object testInstance) {
+	/**
+	 * The tested method, may be {@code null}.
+	 */
+	private final Method testMethod;
+
+	public FakeExtensionContext(Object testInstance, Method testMethod) {
 		this.stores = new HashMap<>();
 		this.id = UUID.randomUUID().toString();
 		this.testInstance = testInstance;
+		this.testMethod = testMethod;
 	}
 
 	@Override
@@ -112,12 +118,25 @@ public class FakeExtensionContext implements ExtensionContext {
 
 	@Override
 	public Object getRequiredTestInstance() {
+		if (testInstance == null) {
+			throw new AssertionError("Test Instance is required");
+		}
+
 		return testInstance;
 	}
 
 	@Override
 	public Optional<Method> getTestMethod() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Method getRequiredTestMethod() {
+		if (testMethod == null) {
+			throw new AssertionError("Test Method is required");
+		}
+
+		return testMethod;
 	}
 
 	@Override

@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
@@ -130,7 +130,7 @@ public class DbUnitRunnerTest {
 	}
 
 	@Test
-	public void it_should_load_data_set_without_method_invocation() throws Exception {
+	public void it_should_load_data_set_without_method_invocation() {
 		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 

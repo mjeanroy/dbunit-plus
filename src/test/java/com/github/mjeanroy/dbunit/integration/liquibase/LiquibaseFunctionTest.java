@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,7 +61,7 @@ public class LiquibaseFunctionTest {
 	}
 
 	@Test
-	public void it_should_load_liquibase_changelogs() throws Exception {
+	public void it_should_load_liquibase_changelogs() {
 		final String changeLog = "/liquibase/changelog.xml";
 		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 

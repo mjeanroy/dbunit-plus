@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
@@ -59,7 +59,7 @@ public class DbUnitRuleTest {
 	public static HsqldbRule hsqldb = new HsqldbRule();
 
 	@Before
-	public void setup() throws Exception {
+	public void setup() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
 	}
@@ -151,7 +151,7 @@ public class DbUnitRuleTest {
 	private static Answer<Void> statementAnswer(final int expectedFoo, final int expectedBar) {
 		return new Answer<Void>() {
 			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
+			public Void answer(InvocationOnMock invocation) {
 				assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(expectedFoo);
 				assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(expectedBar);
 				return null;

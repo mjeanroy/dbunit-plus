@@ -34,6 +34,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -46,7 +47,8 @@ public class EmbeddedDatabaseExtensionTest {
 	public void it_should_start_default_embedded_database_before_all_tests_and_after_all_tests() {
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension();
 		final FixtureClass testInstance = new FixtureClass();
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance);
+		final Method testMethod = null;
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		verifyStaticMode(extensionContext);
@@ -60,7 +62,8 @@ public class EmbeddedDatabaseExtensionTest {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance);
+		final Method testMethod = null;
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		verifyStaticMode(extensionContext);
@@ -76,7 +79,8 @@ public class EmbeddedDatabaseExtensionTest {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance);
+		final Method testMethod = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeEach(extensionContext);
 		verifyEmptyStore(extensionContext);
@@ -92,7 +96,8 @@ public class EmbeddedDatabaseExtensionTest {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance);
+		final Method testMethod = null;
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
@@ -110,7 +115,8 @@ public class EmbeddedDatabaseExtensionTest {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance);
+		final Method testMethod = null;
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 		final ParameterContext parameterContext = createParameterContext("method_with_embedded_db", EmbeddedDatabase.class);
 
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
@@ -122,7 +128,8 @@ public class EmbeddedDatabaseExtensionTest {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance);
+		final Method testMethod = null;
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 		final ParameterContext parameterContext = createParameterContext("method_without_embedded_db", String.class);
 
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isFalse();

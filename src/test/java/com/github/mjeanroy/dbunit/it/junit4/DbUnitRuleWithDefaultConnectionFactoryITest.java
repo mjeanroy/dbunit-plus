@@ -31,7 +31,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,14 +53,14 @@ public class DbUnitRuleWithDefaultConnectionFactoryITest {
 	public DbUnitRule rule = new DbUnitRule();
 
 	@Test
-	public void test1() throws Exception {
+	public void test1() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 	}
 
 	@Test
 	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() throws Exception {
+	public void test2() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
 	}

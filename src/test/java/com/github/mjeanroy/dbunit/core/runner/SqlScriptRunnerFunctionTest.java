@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -83,7 +83,7 @@ public class SqlScriptRunnerFunctionTest {
 	}
 
 	@Test
-	public void it_should_load_script() throws Exception {
+	public void it_should_load_script() {
 		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
 
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
