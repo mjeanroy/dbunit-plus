@@ -30,6 +30,9 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.integration.spring.jupiter.EmbeddedDatabaseExtension;
 import org.junit.jupiter.api.extension.AfterAllCallback;
@@ -40,6 +43,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.RegisterExtension;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * A simple JUnit Jupiter extension for DbUnit.
@@ -107,6 +112,38 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	 */
 	private static final String STATIC_MODE_KEY = "static";
 
+	/**
+	 * The JDBC Connection Factory to use.
+	 */
+	private final JdbcConnectionFactory connectionFactory;
+
+	/**
+	 * Create the extension.
+	 */
+	public DbUnitExtension() {
+		this.connectionFactory = null;
+	}
+
+	/**
+	 * Create rule using {@link JdbcConfiguration} instance.
+	 * This constructor should be used with {@link RegisterExtension} annotation.
+	 *
+	 * @param configuration JDBC Configuration.
+	 */
+	public DbUnitExtension(JdbcConfiguration configuration) {
+		this(new JdbcDefaultConnectionFactory(configuration));
+	}
+
+	/**
+	 * Create rule using {@link JdbcConnectionFactory} to create SQL Connection.
+	 * This constructor should be used with {@link RegisterExtension} annotation.
+	 *
+	 * @param factory JDBC Configuration.
+	 */
+	public DbUnitExtension(JdbcConnectionFactory factory) {
+		this.connectionFactory = notNull(factory, "The JDBC Connection Factory must not be null");
+	}
+
 	@Override
 	public void beforeAll(ExtensionContext context) {
 		final Store store = getStore(context);
@@ -147,11 +184,15 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	 * @param store The internal store.
 	 * @return The runner.
 	 */
-	private static DbUnitRunner initializeDbUnitRunner(ExtensionContext context, Store store, boolean staticField) {
+	private DbUnitRunner initializeDbUnitRunner(ExtensionContext context, Store store, boolean staticField) {
 		DbUnitRunner dbUnitRunner = store.get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
 
 		if (dbUnitRunner == null) {
-			dbUnitRunner = new DbUnitRunner(context.getRequiredTestClass());
+			Class<?> testClass = context.getRequiredTestClass();
+			dbUnitRunner = connectionFactory == null ?
+				new DbUnitRunner(testClass) :
+				new DbUnitRunner(testClass, connectionFactory);
+
 			populateStore(store, dbUnitRunner, staticField);
 		}
 
