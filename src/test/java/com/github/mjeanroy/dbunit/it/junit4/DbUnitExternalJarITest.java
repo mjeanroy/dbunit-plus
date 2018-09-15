@@ -26,11 +26,9 @@ package com.github.mjeanroy.dbunit.it.junit4;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -43,8 +41,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitDataSet("/jar/dataset/xml")
 @DbUnitInit(sql = "classpath:/sql/init.sql")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+@DbUnitOperations
 public class DbUnitExternalJarITest {
 
 	@ClassRule

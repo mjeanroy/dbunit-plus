@@ -22,32 +22,22 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.integration.jupiter;
+package com.github.mjeanroy.dbunit.it.configuration;
 
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
-import org.junit.Test;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 
-import java.sql.Connection;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-public class ConnectionParameterResolverFunctionTest {
-
-	@Test
-	public void it_should_resolve_sql_connection() {
-		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
-		final Connection connection = mock(Connection.class);
-		when(factory.getConnection()).thenReturn(connection);
-
-		final DbUnitRunner runner = new DbUnitRunner(ConnectionParameterResolverFunctionTest.class, factory);
-		final ConnectionParameterResolverFunction resolverFunction = ConnectionParameterResolverFunction.getInstance();
-		final Connection result = (Connection) resolverFunction.resolve(runner);
-
-		assertThat(result).isSameAs(connection);
-		verify(factory).getConnection();
-	}
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@DbUnitDataSet("/dataset/xml")
+@DbUnitOperations
+public @interface DbUnitTest {
 }

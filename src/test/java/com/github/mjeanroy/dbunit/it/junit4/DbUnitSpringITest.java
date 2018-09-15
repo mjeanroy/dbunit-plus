@@ -25,10 +25,8 @@
 package com.github.mjeanroy.dbunit.it.junit4;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.spring.DbUnitSpring;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.it.configuration.TestSpringConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,9 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestSpringConfiguration.class)
 @DbUnitSpring
-@DbUnitDataSet("classpath:/dataset/xml")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+@DbUnitTest
 public class DbUnitSpringITest {
 
 	@Autowired

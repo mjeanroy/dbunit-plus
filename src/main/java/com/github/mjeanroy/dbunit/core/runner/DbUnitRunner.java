@@ -170,6 +170,15 @@ public class DbUnitRunner {
 		return factory;
 	}
 
+	/**
+	 * Get JDBC Connection to the target database.
+	 *
+	 * @return SQL Connection.
+	 */
+	public Connection getConnection() {
+		return factory.getConnection();
+	}
+
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
 		// Read dataSet from method.
 		IDataSet dataSet = readDataSet(testMethod);

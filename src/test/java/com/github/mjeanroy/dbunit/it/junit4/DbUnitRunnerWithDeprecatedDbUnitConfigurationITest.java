@@ -26,10 +26,8 @@ package com.github.mjeanroy.dbunit.it.junit4;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -42,9 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SuppressWarnings("deprecation")
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitConfiguration(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-@DbUnitDataSet("/dataset/xml")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+@DbUnitTest
 public class DbUnitRunnerWithDeprecatedDbUnitConfigurationITest {
 
 	@ClassRule

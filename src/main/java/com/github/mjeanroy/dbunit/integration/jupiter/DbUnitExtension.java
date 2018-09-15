@@ -49,8 +49,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
@@ -121,13 +119,6 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	private static final String STATIC_MODE_KEY = "static";
 
 	/**
-	 * The list of parameter resolvers.
-	 */
-	private static final Map<Class<?>, ParameterResolverFunction> RESOLVERS = new HashMap<Class<?>, ParameterResolverFunction>() {{
-		put(Connection.class, ConnectionParameterResolverFunction.getInstance());
-	}};
-
-	/**
 	 * The JDBC Connection Factory to use.
 	 */
 	private final JdbcConnectionFactory connectionFactory;
@@ -196,41 +187,12 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
 		final Parameter parameter = parameterContext.getParameter();
 		final Class<?> parameterClass = parameter.getType();
-
-		// Fast case: a perfect match.
-		if (RESOLVERS.containsKey(parameterClass)) {
-			return true;
-		}
-
-		for (Class<?> klass : RESOLVERS.keySet()) {
-			if (klass.isAssignableFrom(parameterClass)) {
-				return true;
-			}
-		}
-
-		return false;
+		return Connection.class.isAssignableFrom(parameterClass);
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-		final Parameter parameter = parameterContext.getParameter();
-		final Class<?> parameterClass = parameter.getType();
-		final DbUnitRunner dbUnitRunner = getStore(extensionContext).get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
-
-		// Fast case: a perfect match.
-		if (RESOLVERS.containsKey(parameterClass)) {
-			return RESOLVERS.get(parameterClass).resolve(dbUnitRunner);
-		}
-
-		for (Class<?> klass : RESOLVERS.keySet()) {
-			if (klass.isAssignableFrom(parameterClass)) {
-				return RESOLVERS.get(klass).resolve(dbUnitRunner);
-			}
-		}
-
-		// Should not happen since Junit framework will call this method if, and only if, the
-		// method `supportsParameter` has previously returned `true`.
-		return null;
+		return getStore(extensionContext).get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class).getConnection();
 	}
 
 	/**

@@ -26,10 +26,8 @@ package com.github.mjeanroy.dbunit.it.jupiter;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -43,10 +41,8 @@ import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(HsqldbExtension.class)
+@DbUnitTest
 @DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-@DbUnitDataSet("/dataset/xml")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 class DbUnitRegisterStaticExtensionITest {
 
 	@RegisterExtension
