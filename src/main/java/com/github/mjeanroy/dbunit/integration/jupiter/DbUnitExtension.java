@@ -39,6 +39,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * A simple JUnit Jupiter extension for DbUnit.
@@ -61,6 +62,10 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  *
  * <br>
  *
+ * This extension can also be used with {@link RegisterExtension} annotation as a static field or as an instance field.
+ *
+ * <br>
+ *
  * Here is an example:
  *
  * <pre><code>
@@ -76,6 +81,10 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  *   }
  *
  * </code></pre>
+ *
+ * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration">https://junit.org/junit5/docs/current/user-guide/#extensions-registration</a>
+ * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields</a>
+ * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields</a>
  */
 public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
 
@@ -89,29 +98,64 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	 */
 	private static final String DB_UNIT_RUNNER_KEY = "dbUnitRunner";
 
+	/**
+	 * The key of the registered mode in the internal store (the exstension may be used as a test instance extension
+	 * using the {@link RegisterExtension} annotation).
+	 *
+	 * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields</a>
+	 * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields</a>
+	 */
+	private static final String STATIC_MODE_KEY = "static";
+
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		final Class<?> testClass = context.getRequiredTestClass();
-		final DbUnitRunner dbUnitRunner = new DbUnitRunner(testClass);
-
-		getStore(context).put(DB_UNIT_RUNNER_KEY, dbUnitRunner);
+		final Store store = getStore(context);
+		initializeDbUnitRunner(context, store, true);
 	}
 
 	@Override
 	public void afterAll(ExtensionContext context) {
-		getStore(context).remove(DB_UNIT_RUNNER_KEY);
+		clearStore(getStore(context));
 	}
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		final DbUnitRunner runner = getStore(context).get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
-		runner.beforeTest(context.getRequiredTestMethod());
+		final Store store = getStore(context);
+		final DbUnitRunner dbUnitRunner = initializeDbUnitRunner(context, store, false);
+		dbUnitRunner.beforeTest(context.getRequiredTestMethod());
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) {
-		final DbUnitRunner runner = getStore(context).get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
-		runner.afterTest(context.getRequiredTestMethod());
+		final Store store = getStore(context);
+		final DbUnitRunner runner = store.get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
+
+		try {
+			runner.afterTest(context.getRequiredTestMethod());
+		}
+		finally {
+			if (!store.get(STATIC_MODE_KEY, Boolean.class)) {
+				clearStore(store);
+			}
+		}
+	}
+
+	/**
+	 * Gte DbUnit runner from store, if it exists, or create it and add it to the internal store.
+	 *
+	 * @param context The extension context.
+	 * @param store The internal store.
+	 * @return The runner.
+	 */
+	private static DbUnitRunner initializeDbUnitRunner(ExtensionContext context, Store store, boolean staticField) {
+		DbUnitRunner dbUnitRunner = store.get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
+
+		if (dbUnitRunner == null) {
+			dbUnitRunner = new DbUnitRunner(context.getRequiredTestClass());
+			populateStore(store, dbUnitRunner, staticField);
+		}
+
+		return dbUnitRunner;
 	}
 
 	/**
@@ -122,5 +166,27 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	 */
 	private static Store getStore(ExtensionContext context) {
 		return context.getStore(NAMESPACE);
+	}
+
+	/**
+	 * Populate store with extension data.
+	 *
+	 * @param store The extension internal store.
+	 * @param runner The DbUnit internal runner.
+	 * @param staticField The mode in which the extension has been registered.
+	 */
+	private static void populateStore(Store store, DbUnitRunner runner, boolean staticField) {
+		store.put(DB_UNIT_RUNNER_KEY, runner);
+		store.put(STATIC_MODE_KEY, staticField);
+	}
+
+	/**
+	 * Clear internal store.
+	 *
+	 * @param store The extension internal store.
+	 */
+	private static void clearStore(Store store) {
+		store.remove(DB_UNIT_RUNNER_KEY);
+		store.remove(STATIC_MODE_KEY);
 	}
 }

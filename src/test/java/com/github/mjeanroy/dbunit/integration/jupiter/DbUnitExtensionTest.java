@@ -109,9 +109,35 @@ public class DbUnitExtensionTest {
 		verifyEmptyStore(extensionContext);
 	}
 
+	@Test
+	public void it_should_initialize_dbunit_and_populate_db_before_each_test_when_use_as_instance_field() {
+		final DbUnitExtension extension = new DbUnitExtension();
+		final TestFixtures testInstance = new TestFixtures();
+		final Method testMethod = lookupMethod(TestFixtures.class, "testMethod");
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+
+		extension.beforeEach(extensionContext);
+		verifyState(extensionContext, 2);
+	}
+
+	@Test
+	public void it_should_clean_db_and_store_after_each_test_when_use_as_instance_field() {
+		final DbUnitExtension extension = new DbUnitExtension();
+		final TestFixtures testInstance = new TestFixtures();
+		final Method testMethod = lookupMethod(TestFixtures.class, "testMethod");
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+
+		extension.beforeEach(extensionContext);
+		verifyState(extensionContext, 2);
+
+		extension.afterEach(extensionContext);
+		verifyEmptyStore(extensionContext);
+	}
+
 	private void verifyState(FakeExtensionContext extensionContext, int expectedRows) {
 		final FakeStore store = extensionContext.getSingleStore();
 		assertThat(store.get("dbUnitRunner", DbUnitRunner.class)).isNotNull();
+		assertThat(store.get("static", Boolean.class)).isNotNull();
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(expectedRows);
 	}
 
