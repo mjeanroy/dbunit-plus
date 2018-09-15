@@ -32,11 +32,14 @@ import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeExtensionContext;
+import com.github.mjeanroy.dbunit.tests.jupiter.FakeParameterContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeStore;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
@@ -134,11 +137,34 @@ public class DbUnitExtensionTest {
 		verifyEmptyStore(extensionContext);
 	}
 
+	@Test
+	public void it_should_resolve_connection_parameter() {
+		final DbUnitExtension extension = new DbUnitExtension();
+		final TestFixtures testInstance = new TestFixtures();
+		final Method testMethod = lookupMethod(TestFixtures.class, "test_method_with_connection_parameter", Connection.class);
+		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+
+		extension.beforeAll(extensionContext);
+		extension.beforeEach(extensionContext);
+
+		final Parameter parameter = testMethod.getParameters()[0];
+		final FakeParameterContext parameterContext = new FakeParameterContext(parameter);
+		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
+
+		final Connection connection = (Connection) extension.resolveParameter(parameterContext, extensionContext);
+		assertThat(connection).isNotNull();
+		verifyData(connection, 2);
+	}
+
 	private void verifyState(FakeExtensionContext extensionContext, int expectedRows) {
 		final FakeStore store = extensionContext.getSingleStore();
 		assertThat(store.get("dbUnitRunner", DbUnitRunner.class)).isNotNull();
 		assertThat(store.get("static", Boolean.class)).isNotNull();
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(expectedRows);
+		verifyData(hsqldb.getConnection(), expectedRows);
+	}
+
+	private void verifyData(Connection connection, int expectedRows) {
+		assertThat(countFrom(connection, "foo")).isEqualTo(expectedRows);
 	}
 
 	private void verifyEmptyStore(FakeExtensionContext extensionContext) {
@@ -154,6 +180,9 @@ public class DbUnitExtensionTest {
 	private static class TestFixtures {
 
 		void testMethod() {
+		}
+
+		void test_method_with_connection_parameter(Connection connection) {
 		}
 	}
 }

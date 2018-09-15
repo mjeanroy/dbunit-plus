@@ -161,6 +161,15 @@ public class DbUnitRunner {
 		setupOrTearDown(testMethod, TearDownDbOperation.getInstance());
 	}
 
+	/**
+	 * Get {@link #factory}
+	 *
+	 * @return {@link #factory}
+	 */
+	public JdbcConnectionFactory getFactory() {
+		return factory;
+	}
+
 	private void setupOrTearDown(Method testMethod, DbOperation op) {
 		// Read dataSet from method.
 		IDataSet dataSet = readDataSet(testMethod);

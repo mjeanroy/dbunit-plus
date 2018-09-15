@@ -42,7 +42,15 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+
+import java.lang.reflect.Parameter;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
@@ -91,7 +99,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
  * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields</a>
  * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields</a>
  */
-public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback {
+public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
 	/**
 	 * The namespace in which extension data will be stored.
@@ -111,6 +119,13 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	 * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields</a>
 	 */
 	private static final String STATIC_MODE_KEY = "static";
+
+	/**
+	 * The list of parameter resolvers.
+	 */
+	private static final Map<Class<?>, ParameterResolverFunction> RESOLVERS = new HashMap<Class<?>, ParameterResolverFunction>() {{
+		put(Connection.class, ConnectionParameterResolverFunction.getInstance());
+	}};
 
 	/**
 	 * The JDBC Connection Factory to use.
@@ -175,6 +190,47 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 				clearStore(store);
 			}
 		}
+	}
+
+	@Override
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+		final Parameter parameter = parameterContext.getParameter();
+		final Class<?> parameterClass = parameter.getType();
+
+		// Fast case: a perfect match.
+		if (RESOLVERS.containsKey(parameterClass)) {
+			return true;
+		}
+
+		for (Class<?> klass : RESOLVERS.keySet()) {
+			if (klass.isAssignableFrom(parameterClass)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+		final Parameter parameter = parameterContext.getParameter();
+		final Class<?> parameterClass = parameter.getType();
+		final DbUnitRunner dbUnitRunner = getStore(extensionContext).get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
+
+		// Fast case: a perfect match.
+		if (RESOLVERS.containsKey(parameterClass)) {
+			return RESOLVERS.get(parameterClass).resolve(dbUnitRunner);
+		}
+
+		for (Class<?> klass : RESOLVERS.keySet()) {
+			if (klass.isAssignableFrom(parameterClass)) {
+				return RESOLVERS.get(klass).resolve(dbUnitRunner);
+			}
+		}
+
+		// Should not happen since Junit framework will call this method if, and only if, the
+		// method `supportsParameter` has previously returned `true`.
+		return null;
 	}
 
 	/**

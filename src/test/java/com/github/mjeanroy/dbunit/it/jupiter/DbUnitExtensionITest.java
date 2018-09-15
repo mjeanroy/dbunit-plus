@@ -34,7 +34,8 @@ import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+
+import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,21 +48,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 class DbUnitExtensionITest {
 
 	@BeforeAll
-	static void setup(EmbeddedDatabase hsqldb) throws Exception {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+	static void setup(Connection connection) {
+		assertThat(countFrom(connection, "foo")).isZero();
+		assertThat(countFrom(connection, "bar")).isZero();
 	}
 
 	@Test
-	void test1(EmbeddedDatabase hsqldb) throws Exception {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+	void test1(Connection connection) {
+		assertThat(countFrom(connection, "foo")).isEqualTo(2);
+		assertThat(countFrom(connection, "bar")).isEqualTo(3);
 	}
 
 	@Test
 	@DbUnitDataSet("/dataset/xml/foo.xml")
-	void test2(EmbeddedDatabase hsqldb) throws Exception {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+	void test2(Connection connection) {
+		assertThat(countFrom(connection, "foo")).isEqualTo(2);
+		assertThat(countFrom(connection, "bar")).isEqualTo(0);
 	}
 }
