@@ -151,16 +151,16 @@ public @interface DbUnitConfig {
 	 *
 	 * The following factories are currently available:
 	 * <ul>
-	 *   <li>{@link org.dbunit.ext.db2.Db2DataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.h2.H2DataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.hsqldb.HsqldbDataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.mckoi.MckoiDataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.mssql.MsSqlDataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.mysql.MySqlDataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.oracle.OracleDataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.oracle.Oracle10DataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.postgresql.PostgresqlDataTypeFactory}</li>
-	 *   <li>{@link org.dbunit.ext.netezza.NetezzaDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.db2.Db2DataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.h2.H2DataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.hsqldb.HsqldbDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.mckoi.MckoiDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.mssql.MsSqlDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.mysql.MySqlDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.oracle.OracleDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.oracle.Oracle10DataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.postgresql.PostgresqlDataTypeFactory}</li>
+	 *   <li>{@code org.dbunit.ext.netezza.NetezzaDataTypeFactory}</li>
 	 * </ul>
 	 *
 	 * Note that the {@link IDataTypeFactory} specified here must have a no-args constructor.
@@ -174,9 +174,9 @@ public @interface DbUnitConfig {
 	 *
 	 * The following RDBMS specific handlers are currently available:
 	 * <ul>
-	 *   <li>{@link org.dbunit.ext.db2.Db2MetadataHandler}</li>
-	 *   <li>{@link org.dbunit.ext.mysql.MySqlMetadataHandler}</li>
-	 *   <li>{@link org.dbunit.ext.netezza.NetezzaMetadataHandler}</li>
+	 *   <li>{@code org.dbunit.ext.db2.Db2MetadataHandler}</li>
+	 *   <li>{@code org.dbunit.ext.mysql.MySqlMetadataHandler}</li>
+	 *   <li>{@code org.dbunit.ext.netezza.NetezzaMetadataHandler}</li>
 	 * </ul>
 	 *
 	 * For all others the default handler should do the job: {@link DefaultMetadataHandler}.
