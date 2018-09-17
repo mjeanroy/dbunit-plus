@@ -148,14 +148,9 @@ public class EmbeddedDatabaseExtensionTest {
 	}
 
 	private static ParameterContext createParameterContext(String methodName, Class<?> parameterClass) {
-		try {
-			final Method method = FixtureClass.class.getMethod(methodName, parameterClass);
-			final Parameter parameter = method.getParameters()[0];
-			return new FakeParameterContext(parameter);
-		}
-		catch (Exception ex) {
-			throw new AssertionError(ex);
-		}
+		final Method method = lookupMethod(FixtureClass.class, methodName, parameterClass);
+		final Parameter parameter = method.getParameters()[0];
+		return new FakeParameterContext(parameter);
 	}
 
 	private static class FixtureClass {

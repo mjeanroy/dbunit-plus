@@ -175,6 +175,15 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	}
 
 	/**
+	 * Get the initialized embedded database.
+	 *
+	 * @return The embedded database.
+	 */
+	public EmbeddedDatabase getDb() {
+		return dbRunner.getDb();
+	}
+
+	/**
 	 * Get the extension store.
 	 *
 	 * @param context The extension test context.
