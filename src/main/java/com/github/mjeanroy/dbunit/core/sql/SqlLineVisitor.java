@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.sql;
 import com.github.mjeanroy.dbunit.commons.io.ReaderVisitor;
 
 /**
- * Visit line from SQL script.
+ * Visit line from SQL scripts.
  */
 class SqlLineVisitor implements ReaderVisitor {
 

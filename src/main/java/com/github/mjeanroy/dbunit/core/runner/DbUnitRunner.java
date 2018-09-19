@@ -269,8 +269,8 @@ public class DbUnitRunner {
 	}
 
 	/**
-	 * Run SQL initialization script when runner is initialized.
-	 * If a script failed, then entire process is stopped and an instance
+	 * Run SQL initialization scripts when runner is initialized.
+	 * If a scripts failed, then entire process is stopped and an instance
 	 * of {@link DbUnitException} if thrown.
 	 *
 	 * @param factory The JDBC Connection Factory.
@@ -281,7 +281,7 @@ public class DbUnitRunner {
 
 	/**
 	 * Run liquibase changelogs scripts when runner is initialized.
-	 * If a script failed, then entire process is stopped and an instance
+	 * If a scripts failed, then entire process is stopped and an instance
 	 * of {@link DbUnitException} if thrown.
 	 *
 	 * @param factory The JDBC Connection Factory.

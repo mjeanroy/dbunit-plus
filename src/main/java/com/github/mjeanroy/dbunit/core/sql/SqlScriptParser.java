@@ -41,7 +41,7 @@ import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
 /**
- * Run SQL script against SQL {@link java.sql.Connection}.
+ * Run SQL scripts against SQL {@link java.sql.Connection}.
  */
 public final class SqlScriptParser {
 
@@ -52,7 +52,7 @@ public final class SqlScriptParser {
 	}
 
 	/**
-	 * Parse SQL script and return list of SQL query.
+	 * Parse SQL scripts and return list of SQL query.
 	 *
 	 * @param stream Stream input.
 	 * @param configuration Parsing configuration.
@@ -77,7 +77,7 @@ public final class SqlScriptParser {
 	}
 
 	/**
-	 * Parse SQL script and return list of SQL query.
+	 * Parse SQL scripts and return list of SQL query.
 	 *
 	 * @param path SQL file path.
 	 * @param configuration Parsing configuration.
@@ -90,7 +90,7 @@ public final class SqlScriptParser {
 	}
 
 	/**
-	 * Parse SQL script file and return list of SQL query.
+	 * Parse SQL scripts file and return list of SQL query.
 	 *
 	 * @param sqlFile SQL File.
 	 * @param configuration Parsing configuration.
@@ -113,7 +113,7 @@ public final class SqlScriptParser {
 	}
 
 	/**
-	 * Parse SQL script and execute queries one by one (if a query failed, next queries are not executed).
+	 * Parse SQL scripts and execute queries one by one (if a query failed, next queries are not executed).
 	 *
 	 * @param connection SQL Connection.
 	 * @param stream Stream of SQL Script.
@@ -126,7 +126,7 @@ public final class SqlScriptParser {
 	}
 
 	/**
-	 * Parse SQL script file and execute queries one by one (if a query failed, next queries are not executed).
+	 * Parse SQL scripts file and execute queries one by one (if a query failed, next queries are not executed).
 	 *
 	 * @param connection SQL Connection.
 	 * @param sqlFile SQL Script.
@@ -139,10 +139,10 @@ public final class SqlScriptParser {
 	}
 
 	/**
-	 * Parse SQL script file and execute queries one by one (if a query failed, next queries are not executed).
+	 * Parse SQL scripts file and execute queries one by one (if a query failed, next queries are not executed).
 	 *
 	 * @param connection SQL connection.
-	 * @param sqlFilePath SQL script path.
+	 * @param sqlFilePath SQL scripts path.
 	 * @param configuration SQL parser configuration.
 	 * @throws SQLException If a query failed.
 	 */

@@ -40,25 +40,11 @@ import java.sql.Connection;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 public class DbUnitEmbeddedDatabaseExtensionTest {
-
-	@Test
-	public void it_should_create_extension_with_database() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
-		assertThat(extension.getDb()).isSameAs(db);
-	}
-
-	@Test
-	public void it_should_create_extension_with_default_database() {
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension();
-		assertThat(extension.getDb()).isNotNull();
-	}
 
 	@Test
 	public void it_should_start_database_and_load_data_set() throws Exception {

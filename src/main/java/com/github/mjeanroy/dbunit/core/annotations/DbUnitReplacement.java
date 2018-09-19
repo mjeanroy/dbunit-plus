@@ -31,7 +31,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * DbUnit initialization: allow user to run SQL script before
+ * DbUnit initialization: allow user to run SQL scripts before
  * loading DbUnit data set.
  *
  * This annotation can be used on:

@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
+import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRunner;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -91,6 +92,16 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 		this.dbRunner = new EmbeddedDatabaseRunner();
 	}
 
+	/**
+	 * Create rule and lookup for {@link EmbeddedDatabaseConfiguration} in the {@code testClass}
+	 * to initialize the embedded database.
+	 *
+	 * @param testClass The tested class.
+	 */
+	public EmbeddedDatabaseRule(Class<?> testClass) {
+		this.dbRunner = new EmbeddedDatabaseRunner(testClass);
+	}
+
 	@Override
 	protected void before() {
 		dbRunner.before();
@@ -104,7 +115,7 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 	/**
 	 * Gets currently created database instance.
 	 *
-	 * @return Database instance, may be {@code null} until rule has not been started.
+	 * @return Database instance, may be {@code null} until rule has been initialized.
 	 */
 	public EmbeddedDatabase getDb() {
 		return dbRunner.getDb();

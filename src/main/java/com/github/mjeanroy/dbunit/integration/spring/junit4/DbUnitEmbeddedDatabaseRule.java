@@ -24,17 +24,22 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * This rule provide a fine integration between spring embedded database
  * and dbunit:
+ *
  * <ul>
  *   <li>Ensure that embedded database is started and available before dbUnit load dataSet.</li>
  *   <li>Shutdown database after test.</li>
@@ -43,20 +48,23 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 public class DbUnitEmbeddedDatabaseRule implements TestRule {
 
 	/**
-	 * Rule used to start/shutdown embedded database before/after test execution.
+	 * The embedded database to use, may be {@code null} (in this case, it will be initialized during
+	 * test setup).
 	 */
-	private final EmbeddedDatabaseRule dbRule;
+	private EmbeddedDatabase db;
 
 	/**
-	 * Rule used to load/unload dataSet before/after test execution.
+	 * The embedded database rule, that will be used to get the initialized {@link EmbeddedDatabase} instance
+	 * or new {@link Connection}.
 	 */
-	private final DbUnitRule dbUnitRule;
+	private EmbeddedDatabaseRule dbRule;
 
 	/**
-	 * Create rule with default database.
+	 * Create rule, embedded database will be initialized with {@link EmbeddedDatabaseConfiguration} if defined on the test class,
+	 * or using a default embedded database.
 	 */
 	public DbUnitEmbeddedDatabaseRule() {
-		this(new EmbeddedDatabaseBuilder().build());
+		this.db = null;
 	}
 
 	/**
@@ -65,8 +73,7 @@ public class DbUnitEmbeddedDatabaseRule implements TestRule {
 	 * @param db Embedded database.
 	 */
 	public DbUnitEmbeddedDatabaseRule(EmbeddedDatabase db) {
-		dbRule = new EmbeddedDatabaseRule(db);
-		dbUnitRule = new DbUnitRule(new JdbcDataSourceConnectionFactory(db));
+		this.db = notNull(db, "Embedded Database must not be null");
 	}
 
 	@Override
@@ -74,23 +81,49 @@ public class DbUnitEmbeddedDatabaseRule implements TestRule {
 		return new Statement() {
 			@Override
 			public void evaluate() throws Throwable {
+				dbRule = db == null ?
+					new EmbeddedDatabaseRule(description.getTestClass()) :
+					new EmbeddedDatabaseRule(db);
+
 				dbRule.before();
+
 				try {
+					DbUnitRule dbUnitRule = new DbUnitRule(dbRule.getDb());
 					dbUnitRule.apply(base, description).evaluate();
 				}
 				finally {
 					dbRule.after();
+					dbRule = null;
 				}
 			}
 		};
 	}
 
 	/**
-	 * Get embedded database.
+	 * Get embedded database, may return {@code null} if the database has not been initialized yet.
 	 *
 	 * @return Embedded database.
 	 */
 	public EmbeddedDatabase getDb() {
-		return dbRule.getDb();
+		if (db != null) {
+			return db;
+		}
+
+		return dbRule == null ? null : dbRule.getDb();
+	}
+
+	/**
+	 * Return new database connection,  may return {@code null} if the database has not been initialized yet.
+	 *
+	 * @return New database connection.
+	 */
+	public Connection getConnection() {
+		try {
+			EmbeddedDatabase db = getDb();
+			return db == null ? null : db.getConnection();
+		}
+		catch (SQLException ex) {
+			throw new AssertionError(ex);
+		}
 	}
 }

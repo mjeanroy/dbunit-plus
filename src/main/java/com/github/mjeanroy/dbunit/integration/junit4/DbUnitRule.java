@@ -26,12 +26,14 @@ package com.github.mjeanroy.dbunit.integration.junit4;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 
@@ -61,6 +63,15 @@ public class DbUnitRule implements TestRule {
 	 */
 	public DbUnitRule(JdbcConnectionFactory factory) {
 		this.connectionFactory = factory;
+	}
+
+	/**
+	 * Create rule using {@code dataSource} to get database {@link Connection}.
+	 *
+	 * @param dataSource The dataSource.
+	 */
+	public DbUnitRule(DataSource dataSource) {
+		this(new JdbcDataSourceConnectionFactory(dataSource));
 	}
 
 	/**

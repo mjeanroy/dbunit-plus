@@ -38,7 +38,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeQueries;
 
 /**
- * Function to execute SQL script against SQL connection.
+ * Function to execute SQL scripts against SQL connection.
  *
  * <p />
  *
@@ -53,7 +53,7 @@ class SqlScriptRunnerFunction implements Function<SqlScript> {
 	private static final Logger log = Loggers.getLogger(SqlScriptRunnerFunction.class);
 
 	/**
-	 * Factory to get new {@link Connection} before executing SQL script.
+	 * Factory to get new {@link Connection} before executing SQL scripts.
 	 */
 	private final JdbcConnectionFactory factory;
 

@@ -33,7 +33,7 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
- * Function to execute liquibase update script against SQL connection.
+ * Function to execute liquibase update scripts against SQL connection.
  */
 class LiquibaseChangeLogUpdaterFunction implements Function<LiquibaseChangeLog> {
 

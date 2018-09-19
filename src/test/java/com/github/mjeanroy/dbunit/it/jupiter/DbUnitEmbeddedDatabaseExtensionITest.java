@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
+import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.jupiter.DbUnitEmbeddedDatabaseExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import java.sql.Connection;
 
@@ -36,15 +36,14 @@ import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitTest
+@EmbeddedDatabaseConfiguration(scripts = "classpath:/sql/init.sql")
 class DbUnitEmbeddedDatabaseExtensionITest {
 
 	@RegisterExtension
-	static DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(new EmbeddedDatabaseBuilder()
-		.addScript("classpath:/sql/init.sql")
-		.build());
+	static DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension();
 
 	@Test
-	void test1(Connection connection) throws Exception {
+	void test1(Connection connection) {
 		assertThat(countFrom(connection, "foo")).isEqualTo(2);
 		assertThat(countFrom(connection, "bar")).isEqualTo(3);
 	}

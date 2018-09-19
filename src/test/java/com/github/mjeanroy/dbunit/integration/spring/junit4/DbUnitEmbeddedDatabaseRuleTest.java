@@ -35,6 +35,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+import java.sql.Connection;
+
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.runner.Description.createTestDescription;
@@ -44,20 +46,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class DbUnitEmbeddedDatabaseRuleTest {
 
 	@Test
-	public void it_should_create_rule_with_database() {
+	public void it_should_create_rule_with_database() throws Exception {
+		final Connection connection = mock(Connection.class);
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		when(db.getConnection()).thenReturn(connection);
+
 		final DbUnitEmbeddedDatabaseRule rule = createRule(db);
 		assertThat(rule.getDb()).isSameAs(db);
+		assertThat(rule.getConnection()).isNotNull();
 	}
 
 	@Test
 	public void it_should_create_rule_with_default_database() {
 		final DbUnitEmbeddedDatabaseRule rule = createRule();
-		assertThat(rule.getDb()).isNotNull();
+		assertThat(rule.getDb()).isNull();
+		assertThat(rule.getConnection()).isNull();
 	}
 
 	@SuppressWarnings("rawtypes")

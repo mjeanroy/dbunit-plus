@@ -32,6 +32,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.integration.spring.jupiter.EmbeddedDatabaseExtension;
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
+import javax.sql.DataSource;
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
 
@@ -148,6 +150,16 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	 */
 	public DbUnitExtension(JdbcConnectionFactory factory) {
 		this.connectionFactory = notNull(factory, "The JDBC Connection Factory must not be null");
+	}
+
+	/**
+	 * Create rule using {@link DataSource} to create SQL Connection.
+	 * This constructor should be used with {@link RegisterExtension} annotation.
+	 *
+	 * @param dataSource The datasource to use.
+	 */
+	public DbUnitExtension(DataSource dataSource) {
+		this(new JdbcDataSourceConnectionFactory(dataSource));
 	}
 
 	@Override

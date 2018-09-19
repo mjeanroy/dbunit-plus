@@ -105,7 +105,7 @@ final class DbUnitClassContextFactory {
 	}
 
 	/**
-	 * Read and parse SQL initialization script configured (with {@link DbUnitInit} annotation) on given class.
+	 * Read and parse SQL initialization scripts configured (with {@link DbUnitInit} annotation) on given class.
 	 *
 	 * @param testClass The tested class.
 	 */

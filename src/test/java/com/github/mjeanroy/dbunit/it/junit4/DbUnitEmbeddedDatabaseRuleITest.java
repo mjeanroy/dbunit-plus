@@ -24,32 +24,31 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
+import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.junit4.DbUnitEmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
-import org.junit.Rule;
+import org.junit.ClassRule;
 import org.junit.Test;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitTest
+@EmbeddedDatabaseConfiguration(scripts = "classpath:/sql/init.sql")
 public class DbUnitEmbeddedDatabaseRuleITest {
 
-	@Rule
-	public DbUnitEmbeddedDatabaseRule rule = new DbUnitEmbeddedDatabaseRule(new EmbeddedDatabaseBuilder()
-		.addScript("classpath:/sql/init.sql")
-		.build());
+	@ClassRule
+	public static DbUnitEmbeddedDatabaseRule rule = new DbUnitEmbeddedDatabaseRule();
 
 	@Test
-	public void test1() throws Exception {
-		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
+	public void test1() {
+		assertThat(countFrom(rule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(rule.getConnection(), "bar")).isEqualTo(3);
 	}
 
 	@Test
-	public void test2() throws Exception {
-		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
+	public void test2() {
+		assertThat(countFrom(rule.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(rule.getConnection(), "bar")).isEqualTo(3);
 	}
 }

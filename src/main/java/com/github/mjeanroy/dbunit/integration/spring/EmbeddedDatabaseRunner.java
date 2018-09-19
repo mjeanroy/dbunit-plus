@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.integration.spring;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import com.github.mjeanroy.dbunit.commons.reflection.Annotations;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
@@ -40,6 +41,15 @@ public class EmbeddedDatabaseRunner {
 	 * Instance of {@link EmbeddedDatabase}.
 	 */
 	private final EmbeddedDatabase db;
+
+	/**
+	 * Create runner.
+	 *
+	 * @param testClass The tested class.
+	 */
+	public EmbeddedDatabaseRunner(Class<?> testClass) {
+		this(extractBuilder(testClass).build());
+	}
 
 	/**
 	 * Create rule.
@@ -84,5 +94,29 @@ public class EmbeddedDatabaseRunner {
 		return ToStringBuilder.create(getClass())
 			.append("db", db)
 			.build();
+	}
+
+	private static EmbeddedDatabaseBuilder extractBuilder(Class<?> testClass) {
+		final EmbeddedDatabaseConfiguration dbConfiguration = Annotations.findAnnotation(testClass, EmbeddedDatabaseConfiguration.class);
+		if (dbConfiguration == null) {
+			return new EmbeddedDatabaseBuilder();
+		}
+
+		final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder()
+			.setType(dbConfiguration.databaseType())
+			.generateUniqueName(dbConfiguration.generateUniqueName())
+			.setName(dbConfiguration.databaseName())
+			.continueOnError(dbConfiguration.continueOnError())
+			.ignoreFailedDrops(dbConfiguration.ignoreFailedDrops());
+
+		if (dbConfiguration.defaultScripts()) {
+			builder.addDefaultScripts();
+		}
+
+		if (dbConfiguration.scripts().length > 0) {
+			builder.addScripts(dbConfiguration.scripts());
+		}
+
+		return builder;
 	}
 }

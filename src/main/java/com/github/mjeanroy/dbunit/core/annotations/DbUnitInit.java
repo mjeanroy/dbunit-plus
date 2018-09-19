@@ -33,7 +33,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * DbUnit initialization: allow user to run SQL script before
+ * DbUnit initialization: allow user to run SQL scripts before
  * loading DbUnit data set.
  *
  * This annotation can be used on:
@@ -68,14 +68,14 @@ import java.lang.annotation.Target;
 public @interface DbUnitInit {
 
 	/**
-	 * Set of SQL script to load
+	 * Set of SQL scripts to load
 	 *
-	 * @return SQL script file to load.
+	 * @return SQL scripts file to load.
 	 */
 	String[] sql() default {};
 
 	/**
-	 * Delimiter for these set of SQL script.
+	 * Delimiter for these set of SQL scripts.
 	 *
 	 * @return Delimiter.
 	 */

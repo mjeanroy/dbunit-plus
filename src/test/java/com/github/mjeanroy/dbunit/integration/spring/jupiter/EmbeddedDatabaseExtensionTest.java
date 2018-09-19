@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.jupiter;
 
+import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRunner;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeExtensionContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeParameterContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeStore;
@@ -51,7 +52,7 @@ public class EmbeddedDatabaseExtensionTest {
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyStaticMode(extensionContext);
+		verifyStore(extensionContext, true);
 
 		extension.afterAll(extensionContext);
 		verifyEmptyStore(extensionContext);
@@ -66,7 +67,7 @@ public class EmbeddedDatabaseExtensionTest {
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyStaticMode(extensionContext);
+		verifyStore(extensionContext, true);
 		verifyZeroInteractions(db);
 
 		extension.afterAll(extensionContext);
@@ -83,7 +84,7 @@ public class EmbeddedDatabaseExtensionTest {
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeEach(extensionContext);
-		verifyEmptyStore(extensionContext);
+		verifyStore(extensionContext, false);
 		verifyZeroInteractions(db);
 
 		extension.afterEach(extensionContext);
@@ -101,10 +102,13 @@ public class EmbeddedDatabaseExtensionTest {
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
-		verifyStaticMode(extensionContext);
+		verifyStore(extensionContext, true);
 		verifyZeroInteractions(db);
 
 		extension.afterEach(extensionContext);
+		verifyStore(extensionContext, true);
+		verifyZeroInteractions(db);
+
 		extension.afterAll(extensionContext);
 		verifyEmptyStore(extensionContext);
 		verify(db, times(1)).shutdown();
@@ -117,29 +121,20 @@ public class EmbeddedDatabaseExtensionTest {
 		final FixtureClass testInstance = new FixtureClass();
 		final Method testMethod = null;
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
-		final ParameterContext parameterContext = createParameterContext("method_with_embedded_db", EmbeddedDatabase.class);
 
+		extension.beforeAll(extensionContext);
+
+		final ParameterContext parameterContext = createParameterContext();
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 		assertThat(extension.resolveParameter(parameterContext, extensionContext)).isSameAs(db);
 	}
 
-	@Test
-	public void it_should_support_non_embedded_database_parameter() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = null;
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
-		final ParameterContext parameterContext = createParameterContext("method_without_embedded_db", String.class);
-
-		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isFalse();
-	}
-
-	private static void verifyStaticMode(FakeExtensionContext extensionContext) {
+	private static void verifyStore(FakeExtensionContext extensionContext, boolean staticMode) {
 		FakeStore singleStore = extensionContext.getSingleStore();
 		assertThat(singleStore.isEmpty()).isFalse();
-		assertThat(singleStore.size()).isEqualTo(1);
-		assertThat(singleStore.get("static", Boolean.class)).isTrue();
+		assertThat(singleStore.size()).isEqualTo(2);
+		assertThat(singleStore.get("static", Boolean.class)).isNotNull().isEqualTo(staticMode);
+		assertThat(singleStore.get("runner", EmbeddedDatabaseRunner.class)).isNotNull();
 	}
 
 	private static void verifyEmptyStore(FakeExtensionContext extensionContext) {
@@ -147,8 +142,8 @@ public class EmbeddedDatabaseExtensionTest {
 		assertThat(singleStore.isEmpty()).isTrue();
 	}
 
-	private static ParameterContext createParameterContext(String methodName, Class<?> parameterClass) {
-		final Method method = lookupMethod(FixtureClass.class, methodName, parameterClass);
+	private static ParameterContext createParameterContext() {
+		final Method method = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
 		final Parameter parameter = method.getParameters()[0];
 		return new FakeParameterContext(parameter);
 	}
@@ -156,10 +151,6 @@ public class EmbeddedDatabaseExtensionTest {
 	private static class FixtureClass {
 		@SuppressWarnings("unused")
 		public void method_with_embedded_db(EmbeddedDatabase db) {
-		}
-
-		@SuppressWarnings("unused")
-		public void method_without_embedded_db(String test) {
 		}
 	}
 }

@@ -31,7 +31,7 @@ import java.util.Objects;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 
 /**
- * Configuration for SQL script parser.
+ * Configuration for SQL scripts parser.
  * Default values are:
  * <ul>
  *   <li>Delimiter: {@code ;}</li>

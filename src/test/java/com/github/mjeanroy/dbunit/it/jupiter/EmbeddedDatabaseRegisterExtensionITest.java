@@ -24,25 +24,26 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
+import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.jupiter.EmbeddedDatabaseExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@EmbeddedDatabaseConfiguration(
+	generateUniqueName = true,
+	scripts = {
+		"classpath:/sql/init.sql",
+		"classpath:/sql/data.sql"
+	}
+)
 class EmbeddedDatabaseRegisterExtensionITest {
 
 	@RegisterExtension
-	EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(
-			new EmbeddedDatabaseBuilder()
-				.generateUniqueName(true)
-				.addScript("classpath:/sql/init.sql")
-				.addScript("classpath:/sql/data.sql")
-				.build()
-	);
+	EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension();
 
 	@Test
 	void it_should_inject_parameter(EmbeddedDatabase db) {

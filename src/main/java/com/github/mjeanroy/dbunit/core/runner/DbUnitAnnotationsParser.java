@@ -98,7 +98,7 @@ final class DbUnitAnnotationsParser {
 	}
 
 	/**
-	 * Read and parse SQL initialization script configured (with {@link DbUnitInit} annotation).
+	 * Read and parse SQL initialization scripts configured (with {@link DbUnitInit} annotation).
 	 *
 	 * @param annotation The configured annotation.
 	 * @return The list of SQL Scripts.
