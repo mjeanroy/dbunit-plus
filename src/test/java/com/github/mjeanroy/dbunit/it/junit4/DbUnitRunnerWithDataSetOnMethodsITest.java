@@ -30,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitDefaultDataSet;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitFooDataSet;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
@@ -64,5 +65,13 @@ public class DbUnitRunnerWithDataSetOnMethodsITest {
 	public void test2() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+	}
+
+	@Test
+	@DbUnitFooDataSet
+	@DbUnitDataSet(value = "/dataset/xml/bar.xml", inherit = true)
+	public void test3() {
+		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
 	}
 }

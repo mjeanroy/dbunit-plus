@@ -24,6 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -54,14 +62,6 @@ import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-
 public class DbUnitAnnotationsParserTest {
 
 	@Test
@@ -69,6 +69,15 @@ public class DbUnitAnnotationsParserTest {
 		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		final DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
+
+		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+	}
+
+	@Test
+	public void it_should_read_dataset_from_annotations() {
+		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		final DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(singletonList(annotation), null);
 
 		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
 	}

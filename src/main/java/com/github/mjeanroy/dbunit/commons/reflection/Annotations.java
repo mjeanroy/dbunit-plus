@@ -116,8 +116,20 @@ public final class Annotations {
 	 * @param <T> Type of annotation.
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
-	public static <T extends Annotation> Collection<T> findAnnotations(Class<?> klass, Class<T> annotationClass) {
+	public static <T extends Annotation> List<T> findAnnotations(Class<?> klass, Class<T> annotationClass) {
 		return findAnnotationOn(klass, annotationClass);
+	}
+
+	/**
+	 * Find expected annotation on method.
+	 *
+	 * @param method The method.
+	 * @param annotationClass Annotation class to look for.
+	 * @param <T> Type of annotation.
+	 * @return Annotation if found, {@code null} otherwise.
+	 */
+	public static <T extends Annotation> List<T> findAnnotations(Method method, Class<T> annotationClass) {
+		return findAnnotationOn(method, annotationClass);
 	}
 
 	/**
@@ -128,7 +140,7 @@ public final class Annotations {
 	 * @param <T> Type of annotation.
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
-	static <T extends Annotation> Collection<T> findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
+	static <T extends Annotation> List<T> findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
 		final List<T> results = new ArrayList<>();
 
 		if (element == null) {
@@ -157,7 +169,7 @@ public final class Annotations {
 			// Look on interfaces.
 			for (Class<?> intf : klass.getInterfaces()) {
 				if (shouldScan(intf)) {
-					final Collection<T> subResults = findAnnotationOn(intf, annotationClass);
+					final List<T> subResults = findAnnotationOn(intf, annotationClass);
 					if (!subResults.isEmpty()) {
 						results.addAll(subResults);
 					}
@@ -167,7 +179,7 @@ public final class Annotations {
 			// Go up in the class hierarchy.
 			Class<?> superClass = klass.getSuperclass();
 			if (shouldScan(superClass)) {
-				final Collection<T> subResults = findAnnotations(superClass, annotationClass);
+				final List<T> subResults = findAnnotations(superClass, annotationClass);
 				if (!subResults.isEmpty()) {
 					results.addAll(subResults);
 				}

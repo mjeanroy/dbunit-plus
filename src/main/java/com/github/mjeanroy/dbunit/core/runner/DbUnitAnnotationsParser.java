@@ -76,6 +76,7 @@ final class DbUnitAnnotationsParser {
 	// Ensure non instantiation.
 	private DbUnitAnnotationsParser() {
 	}
+
 	/**
 	 * Read dbUnit dataSet from annotation.
 	 *
@@ -90,6 +91,52 @@ final class DbUnitAnnotationsParser {
 
 		try {
 			return DataSetFactory.createDataSet(annotation.value());
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
+	}
+
+	/**
+	 * Read dbUnit list of dataSet from annotations, and merge it with parent dataset if:
+	 *
+	 * <ul>
+	 *   <li>The input annotations should inherit from given parent dataset.</li>
+	 *   <li>The parent dataset is not {@code null}.</li>
+	 * </ul>
+	 *
+	 * @param annotations The configured annotations.
+	 * @param parentDataSet The parent dataset.
+	 * @return Parsed dataSet.
+	 * @throws DbUnitException If dataSet parsing failed.
+	 */
+	static IDataSet readDataSet(List<DbUnitDataSet> annotations, IDataSet parentDataSet) {
+		final List<IDataSet> dataSets = new ArrayList<>(annotations.size());
+
+		boolean inheritable = false;
+
+		for (DbUnitDataSet annotation : annotations) {
+			final IDataSet input = DbUnitAnnotationsParser.readDataSet(annotation);
+			if (input != null) {
+				dataSets.add(input);
+			}
+
+			inheritable = annotation.inherit();
+
+			// If we found an annotation that should not inherit, we can stop here.
+			if (!inheritable) {
+				break;
+			}
+		}
+
+		if (dataSets.isEmpty()) {
+			return parentDataSet;
+		}
+
+		try {
+			final IDataSet dataSet = DataSetFactory.createDataSet(dataSets);
+			return !inheritable || parentDataSet == null ? dataSet : DataSetFactory.mergeDataSet(dataSet, parentDataSet);
 		}
 		catch (DataSetException ex) {
 			log.error(ex.getMessage(), ex);

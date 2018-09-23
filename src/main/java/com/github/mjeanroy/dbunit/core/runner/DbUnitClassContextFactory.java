@@ -31,8 +31,6 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStat
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
@@ -43,13 +41,11 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
-import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
 /**
@@ -112,7 +108,7 @@ final class DbUnitClassContextFactory {
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
 	private static IDataSet readDataSet(Class<?> testClass) {
-		final Collection<DbUnitDataSet> annotations = findAnnotations(testClass, DbUnitDataSet.class);
+		final List<DbUnitDataSet> annotations = findAnnotations(testClass, DbUnitDataSet.class);
 
 		if (annotations.isEmpty()) {
 			return null;
@@ -122,26 +118,7 @@ final class DbUnitClassContextFactory {
 			return DbUnitAnnotationsParser.readDataSet(annotations.iterator().next());
 		}
 
-		List<IDataSet> dataSets = new ArrayList<>(annotations.size());
-		for (DbUnitDataSet annotation : annotations) {
-			final IDataSet input = DbUnitAnnotationsParser.readDataSet(annotation);
-			if (input != null) {
-				dataSets.add(input);
-			}
-
-			// If we found an annotation that should not inherit, we can stop here.
-			if (!annotation.inherit()) {
-				break;
-			}
-		}
-
-		try {
-			return DataSetFactory.createDataSet(dataSets);
-		}
-		catch (DataSetException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new DbUnitException(ex);
-		}
+		return DbUnitAnnotationsParser.readDataSet(annotations, null);
 	}
 
 	/**

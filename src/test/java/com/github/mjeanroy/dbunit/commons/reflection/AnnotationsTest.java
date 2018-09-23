@@ -30,8 +30,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -155,14 +153,13 @@ public class AnnotationsTest {
 	@Test
 	public void it_should_find_all_annotation_starting_from_class() {
 		final Class<TestClassWithMultipleAnnotations> klass = TestClassWithMultipleAnnotations.class;
-		final Collection<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
-		final List<TestAnnotation> list = new ArrayList<>(annotations);
+		final List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
 
-		assertThat(list).hasSize(4);
-		assertThat(list.get(0).value()).isEqualTo("TestClassWithMultipleAnnotations");
-		assertThat(list.get(1).value()).isEqualTo("MetaAnnotation");
-		assertThat(list.get(2).value()).isEqualTo("InterfaceAnnotated");
-		assertThat(list.get(3).value()).isEqualTo("TestClassAnnotation");
+		assertThat(annotations).hasSize(4);
+		assertThat(annotations.get(0).value()).isEqualTo("TestClassWithMultipleAnnotations");
+		assertThat(annotations.get(1).value()).isEqualTo("MetaAnnotation");
+		assertThat(annotations.get(2).value()).isEqualTo("InterfaceAnnotated");
+		assertThat(annotations.get(3).value()).isEqualTo("TestClassAnnotation");
 	}
 
 	// == Fixtures

@@ -41,7 +41,6 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
-import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
@@ -53,7 +52,6 @@ import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
 
@@ -271,22 +269,9 @@ public class DbUnitRunner {
 			return parentDataSet;
 		}
 
-		final DbUnitDataSet annotation = Annotations.findAnnotation(method, DbUnitDataSet.class);
-		final boolean isAnnotated = annotation != null;
-		if (!isAnnotated) {
-			return parentDataSet;
-		}
-
-		final boolean inheritable = annotation.inherit();
-		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
-
-		try {
-			return !inheritable || parentDataSet == null ? dataSet : DataSetFactory.mergeDataSet(dataSet, parentDataSet);
-		}
-		catch (DataSetException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new DbUnitException(ex);
-		}
+		final List<DbUnitDataSet> annotations = Annotations.findAnnotations(method, DbUnitDataSet.class);
+		final boolean isAnnotated = !annotations.isEmpty();
+		return isAnnotated ? DbUnitAnnotationsParser.readDataSet(annotations, parentDataSet) : parentDataSet;
 	}
 
 	/**
