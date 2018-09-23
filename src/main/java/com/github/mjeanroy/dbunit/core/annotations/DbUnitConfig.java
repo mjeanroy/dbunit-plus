@@ -24,17 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
-import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
-import org.dbunit.database.DefaultMetadataHandler;
-import org.dbunit.database.IMetadataHandler;
-import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
-import org.dbunit.dataset.datatype.IDataTypeFactory;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import org.dbunit.database.DefaultMetadataHandler;
+import org.dbunit.database.IMetadataHandler;
+import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
+import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 /**
  * Annotation that can be used to customize DBUnit configuration
@@ -77,7 +77,6 @@ import java.lang.annotation.Target;
 @Target({
 	ElementType.METHOD,
 	ElementType.TYPE,
-	ElementType.PACKAGE
 })
 public @interface DbUnitConfig {
 

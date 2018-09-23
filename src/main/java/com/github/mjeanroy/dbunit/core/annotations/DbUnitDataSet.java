@@ -67,7 +67,6 @@ import java.lang.annotation.Target;
 @Target({
 	ElementType.METHOD,
 	ElementType.TYPE,
-	ElementType.PACKAGE
 })
 public @interface DbUnitDataSet {
 

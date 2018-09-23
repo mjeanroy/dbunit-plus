@@ -61,7 +61,6 @@ import java.lang.annotation.Target;
 @Documented
 @Target({
 	ElementType.TYPE,
-	ElementType.PACKAGE
 })
 public @interface DbUnitLiquibase {
 

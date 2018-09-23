@@ -61,7 +61,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target({
 	ElementType.FIELD,
-	ElementType.METHOD
+	ElementType.METHOD,
 })
 public @interface DbUnitReplacement {
 }
