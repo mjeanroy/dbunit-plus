@@ -24,16 +24,19 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Static Annotation Utilities.
@@ -62,7 +65,8 @@ public final class Annotations {
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
 	public static <T extends Annotation> T findAnnotation(Method method, Class<T> annotationClass) {
-		return findAnnotationOn(method, annotationClass);
+		Collection<T> annotations = findAnnotationOn(method, annotationClass);
+		return annotations.isEmpty() ? null : annotations.iterator().next();
 	}
 
 	/**
@@ -100,6 +104,19 @@ public final class Annotations {
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
 	public static <T extends Annotation> T findAnnotation(Class<?> klass, Class<T> annotationClass) {
+		Collection<T> annotations = findAnnotationOn(klass, annotationClass);
+		return annotations.isEmpty() ? null : annotations.iterator().next();
+	}
+
+	/**
+	 * Find expected annotation on class, or a class in the hierarchy.
+	 *
+	 * @param klass Class.
+	 * @param annotationClass Annotation class to look for.
+	 * @param <T> Type of annotation.
+	 * @return Annotation if found, {@code null} otherwise.
+	 */
+	public static <T extends Annotation> Collection<T> findAnnotations(Class<?> klass, Class<T> annotationClass) {
 		return findAnnotationOn(klass, annotationClass);
 	}
 
@@ -111,14 +128,16 @@ public final class Annotations {
 	 * @param <T> Type of annotation.
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
-	static <T extends Annotation> T findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
+	static <T extends Annotation> Collection<T> findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
+		final List<T> results = new ArrayList<>();
+
 		if (element == null) {
-			return null;
+			return emptyList();
 		}
 
 		// Is it directly present?
 		if (element.isAnnotationPresent(annotationClass)) {
-			return element.getAnnotation(annotationClass);
+			results.add(element.getAnnotation(annotationClass));
 		}
 
 		// Search for meta-annotation
@@ -127,7 +146,7 @@ public final class Annotations {
 			if (shouldScan(candidateAnnotationType)) {
 				T result = findAnnotation(candidateAnnotationType, annotationClass);
 				if (result != null) {
-					return result;
+					results.add(result);
 				}
 			}
 		}
@@ -138,9 +157,9 @@ public final class Annotations {
 			// Look on interfaces.
 			for (Class<?> intf : klass.getInterfaces()) {
 				if (shouldScan(intf)) {
-					T result = findAnnotationOn(intf, annotationClass);
-					if (result != null) {
-						return result;
+					final Collection<T> subResults = findAnnotationOn(intf, annotationClass);
+					if (!subResults.isEmpty()) {
+						results.addAll(subResults);
 					}
 				}
 			}
@@ -148,11 +167,14 @@ public final class Annotations {
 			// Go up in the class hierarchy.
 			Class<?> superClass = klass.getSuperclass();
 			if (shouldScan(superClass)) {
-				return findAnnotation(superClass, annotationClass);
+				final Collection<T> subResults = findAnnotations(superClass, annotationClass);
+				if (!subResults.isEmpty()) {
+					results.addAll(subResults);
+				}
 			}
 		}
 
-		return null;
+		return results;
 	}
 
 	/**
@@ -177,7 +199,7 @@ public final class Annotations {
 	 * @return List of fields annotated with given annotation.
 	 */
 	public static <T extends Annotation> List<Method> findStaticMethodAnnotatedWith(Class<?> klass, Class<T> annotation) {
-		List<Method> fields = findStaticMethods(klass);
+		final List<Method> fields = findStaticMethods(klass);
 		return filter(fields, new MemberAnnotatedWithPredicate<Method, T>(annotation));
 	}
 

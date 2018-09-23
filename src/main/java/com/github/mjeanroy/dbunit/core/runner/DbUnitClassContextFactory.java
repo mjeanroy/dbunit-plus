@@ -24,6 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotations;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -32,23 +43,24 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 
 /**
  * Factory to create {@link DbUnitClassContext} from given input class.
  */
 final class DbUnitClassContextFactory {
+
+	/**
+	 * Class Logger.
+	 */
+	private static final Logger log = Loggers.getLogger(DbUnitClassContextFactory.class);
 
 	/**
 	 * A cache, using {@link ClassValue} under the hood.
@@ -100,8 +112,36 @@ final class DbUnitClassContextFactory {
 	 * @throws DbUnitException If dataSet parsing failed.
 	 */
 	private static IDataSet readDataSet(Class<?> testClass) {
-		DbUnitDataSet annotation = findAnnotation(testClass, DbUnitDataSet.class);
-		return DbUnitAnnotationsParser.readDataSet(annotation);
+		final Collection<DbUnitDataSet> annotations = findAnnotations(testClass, DbUnitDataSet.class);
+
+		if (annotations.isEmpty()) {
+			return null;
+		}
+
+		if (annotations.size() == 1) {
+			return DbUnitAnnotationsParser.readDataSet(annotations.iterator().next());
+		}
+
+		List<IDataSet> dataSets = new ArrayList<>(annotations.size());
+		for (DbUnitDataSet annotation : annotations) {
+			final IDataSet input = DbUnitAnnotationsParser.readDataSet(annotation);
+			if (input != null) {
+				dataSets.add(input);
+			}
+
+			// If we found an annotation that should not inherit, we can stop here.
+			if (!annotation.inherit()) {
+				break;
+			}
+		}
+
+		try {
+			return DataSetFactory.createDataSet(dataSets);
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
 	}
 
 	/**

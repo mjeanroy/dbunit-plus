@@ -24,12 +24,13 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import com.github.mjeanroy.dbunit.commons.collections.Predicate;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotationOn;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Collection;
 
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotationOn;
+import com.github.mjeanroy.dbunit.commons.collections.Predicate;
 
 /**
  * Check that a field/method is annotated with given annotation.
@@ -54,6 +55,7 @@ class MemberAnnotatedWithPredicate<T extends AnnotatedElement, U extends Annotat
 
 	@Override
 	public boolean apply(T member) {
-		return findAnnotationOn(member, annotation) != null;
+		final Collection<U> annotations = findAnnotationOn(member, annotation);
+		return !annotations.isEmpty();
 	}
 }

@@ -76,4 +76,19 @@ public @interface DbUnitDataSet {
 	 * @return DataSet file to load.
 	 */
 	String[] value() default {};
+
+	/**
+	 * A flag indicating if given annotation should be merged with "parent" annotations. For example, a method can
+	 * define additional dataset to load than the dataset defined at class level.
+	 *
+	 * The default value is {@code false} (mainly for retro-compatibility reasons).
+	 * This means that the dataset for the annotated method or class will <em>shadow</em> and effectively
+	 * replace any datasets defined by superclasses.
+	 *
+	 * If this flag is set to {@code true}, this means that an annotated method or class will <em>inherit</em>
+	 * the datasets defined by test superclasses (or meta-annotations).
+	 *
+	 * @return The inherit flag value.
+	 */
+	boolean inherit() default false;
 }

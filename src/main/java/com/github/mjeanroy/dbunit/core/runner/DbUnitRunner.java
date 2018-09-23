@@ -24,11 +24,24 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
@@ -40,20 +53,9 @@ import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
-
-import javax.sql.DataSource;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.
@@ -265,7 +267,22 @@ public class DbUnitRunner {
 	 */
 	private IDataSet readDataSet(Method method) {
 		boolean isAnnotated = method != null && method.isAnnotationPresent(DbUnitDataSet.class);
-		return isAnnotated ? DbUnitAnnotationsParser.readDataSet(method.getAnnotation(DbUnitDataSet.class)) : ctx.getDataSet();
+		final IDataSet parentDataSet = ctx.getDataSet();
+		if (!isAnnotated) {
+			return parentDataSet;
+		}
+
+		final DbUnitDataSet annotation = method.getAnnotation(DbUnitDataSet.class);
+		final boolean inheritable = annotation.inherit();
+		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
+
+		try {
+			return !inheritable || parentDataSet == null ? dataSet : DataSetFactory.mergeDataSet(dataSet, parentDataSet);
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
 	}
 
 	/**

@@ -24,6 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static java.util.Arrays.asList;
+
+import java.util.Collection;
+
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -32,10 +38,6 @@ import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
-
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static java.util.Arrays.asList;
 
 /**
  * Factory to create instance of {@link IDataSet}.
@@ -52,26 +54,6 @@ public final class DataSetFactory {
 	}
 
 	/**
-	 * Create data set from file path.
-	 * See also {@link #createDataSet(Resource)}.
-	 *
-	 * @param path File path.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
-	 */
-	public static IDataSet createDataSet(String path) throws DataSetException {
-		notNull(path, "Path must not be null to create data set");
-		ResourceLoader loader = ResourceLoader.find(path);
-		if (loader == null) {
-			log.debug("Cannot find resource loader with path: {}, use default (CLASSPATH)", path);
-			loader = ResourceLoader.CLASSPATH;
-		}
-
-		Resource resource = loader.load(path);
-		return createDataSet(resource);
-	}
-
-	/**
 	 * Create data set from collection of file path.
 	 *
 	 * @param paths List of file paths.
@@ -85,7 +67,72 @@ public final class DataSetFactory {
 			dataSets[i++] = createDataSet(path);
 		}
 
+		return createDataSet(dataSets);
+	}
+
+	/**
+	 * Create data set from collection of file path.
+	 *
+	 * @param dataSets List of datasets.
+	 * @return Instance of {@link IDataSet}.
+	 * @throws DataSetException If data set cannot be created.
+	 */
+	public static IDataSet createDataSet(Collection<IDataSet> dataSets) throws DataSetException {
+		return new CompositeDataSet(dataSets.toArray(new IDataSet[0]));
+	}
+
+	/**
+	 * Create data set from collection of file path.
+	 *
+	 * @param first The first dataset to load.
+	 * @param second The second dataset to load.
+	 * @param others Additional dataset to include.
+	 * @return Instance of {@link IDataSet}.
+	 * @throws DataSetException If data set cannot be created.
+	 */
+	public static IDataSet mergeDataSet(IDataSet first, IDataSet second, IDataSet... others) throws DataSetException {
+		IDataSet[] inputs = new IDataSet[2 + others.length];
+		inputs[0] = first;
+		inputs[1] = second;
+
+		int i = 2;
+		for (IDataSet other : others) {
+			inputs[i] = other;
+			++i;
+		}
+
+		return createDataSet(inputs);
+	}
+
+	/**
+	 * Create data set from collection of file path.
+	 *
+	 * @param dataSets List of datasets.
+	 * @return Instance of {@link IDataSet}.
+	 * @throws DataSetException If data set cannot be created.
+	 */
+	static IDataSet createDataSet(IDataSet[] dataSets) throws DataSetException {
 		return new CompositeDataSet(dataSets);
+	}
+
+	/**
+	 * Create data set from file path.
+	 * See also {@link #createDataSet(Resource)}.
+	 *
+	 * @param path File path.
+	 * @return Instance of {@link IDataSet}.
+	 * @throws DataSetException If data set cannot be created.
+	 */
+	static IDataSet createDataSet(String path) throws DataSetException {
+		notNull(path, "Path must not be null to create data set");
+		ResourceLoader loader = ResourceLoader.find(path);
+		if (loader == null) {
+			log.debug("Cannot find resource loader with path: {}, use default (CLASSPATH)", path);
+			loader = ResourceLoader.CLASSPATH;
+		}
+
+		Resource resource = loader.load(path);
+		return createDataSet(resource);
 	}
 
 	/**
@@ -113,7 +160,7 @@ public final class DataSetFactory {
 	 * @return Instance of {@link IDataSet}.
 	 * @throws DataSetException If data set cannot be created.
 	 */
-	public static IDataSet createDataSet(Resource resource) throws DataSetException {
+	static IDataSet createDataSet(Resource resource) throws DataSetException {
 		notNull(resource, "Resource must not be null to create data set");
 
 		log.debug("Create data set from file: {}", resource);
@@ -142,5 +189,4 @@ public final class DataSetFactory {
 
 		return type;
 	}
-
 }

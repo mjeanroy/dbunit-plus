@@ -24,15 +24,17 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 public class AnnotationsTest {
 
@@ -42,7 +44,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("foo");
+		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
 	}
 
 	@Test
@@ -51,7 +53,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("baz");
+		assertThat(annotation.value()).isEqualTo("MetaAnnotation");
 	}
 
 	@Test
@@ -60,7 +62,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("quiz");
+		assertThat(annotation.value()).isEqualTo("InterfaceAnnotated");
 	}
 
 	@Test
@@ -69,7 +71,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("foo");
+		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
 	}
 
 	@Test
@@ -79,7 +81,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("foo");
+		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
 	}
 
 	@Test
@@ -89,7 +91,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("foo");
+		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
 	}
 
 	@Test
@@ -98,7 +100,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("bar");
+		assertThat(annotation.value()).isEqualTo("method2");
 	}
 
 	@Test
@@ -116,7 +118,7 @@ public class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
-		assertThat(annotation.value()).isEqualTo("bar");
+		assertThat(annotation.value()).isEqualTo("method2");
 	}
 
 	@Test
@@ -150,6 +152,19 @@ public class AnnotationsTest {
 			.containsOnly("m1", "m3");
 	}
 
+	@Test
+	public void it_should_find_all_annotation_starting_from_class() {
+		final Class<TestClassWithMultipleAnnotations> klass = TestClassWithMultipleAnnotations.class;
+		final Collection<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
+		final List<TestAnnotation> list = new ArrayList<>(annotations);
+
+		assertThat(list).hasSize(4);
+		assertThat(list.get(0).value()).isEqualTo("TestClassWithMultipleAnnotations");
+		assertThat(list.get(1).value()).isEqualTo("MetaAnnotation");
+		assertThat(list.get(2).value()).isEqualTo("InterfaceAnnotated");
+		assertThat(list.get(3).value()).isEqualTo("TestClassAnnotation");
+	}
+
 	// == Fixtures
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -158,19 +173,19 @@ public class AnnotationsTest {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@TestAnnotation("baz")
+	@TestAnnotation("MetaAnnotation")
 	@interface MetaAnnotation {
 	}
 
-	@TestAnnotation("quiz")
+	@TestAnnotation("InterfaceAnnotated")
 	interface InterfaceAnnotated {
 	}
 
 	@SuppressWarnings("unused")
-	@TestAnnotation("foo")
+	@TestAnnotation("TestClassAnnotation")
 	public static class TestClassAnnotation {
 
-		@TestAnnotation("foo")
+		@TestAnnotation("i1")
 		private static int i1;
 
 		private static int i2;
@@ -178,7 +193,7 @@ public class AnnotationsTest {
 		@MetaAnnotation
 		private static int i3;
 
-		@TestAnnotation("foo")
+		@TestAnnotation("m1")
 		public static void m1() {
 		}
 
@@ -192,7 +207,7 @@ public class AnnotationsTest {
 		public void method1() {
 		}
 
-		@TestAnnotation("bar")
+		@TestAnnotation("method2")
 		void method2() {
 		}
 	}
@@ -205,6 +220,11 @@ public class AnnotationsTest {
 	}
 
 	private class TestClassAnnotatedOnInterface implements InterfaceAnnotated {
+	}
+
+	@TestAnnotation("TestClassWithMultipleAnnotations")
+	@MetaAnnotation
+	private class TestClassWithMultipleAnnotations extends TestClassAnnotation implements InterfaceAnnotated {
 	}
 
 	private static class TestClassWithoutAnnotation {

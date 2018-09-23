@@ -24,20 +24,22 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.File;
+
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class DataSetFactoryTest {
 
@@ -46,17 +48,14 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.setFilename("foo.xml")
 			.fromClasspath("/dataset/xml/foo.xml")
 			.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(FlatXmlDataSet.class);
-
+		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames())
 			.isNotNull()
 			.isNotEmpty()
@@ -66,14 +65,10 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
-		String path = "/dataset/xml/foo.xml";
+		final String path = "/dataset/xml/foo.xml";
+		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
-		IDataSet dataSet = DataSetFactory.createDataSet(path);
-
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(FlatXmlDataSet.class);
-
+		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames())
 			.isNotNull()
 			.isNotEmpty()
@@ -83,14 +78,10 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
-		String path = "classpath:/dataset/xml/foo.xml";
+		final String path = "classpath:/dataset/xml/foo.xml";
+		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
-		IDataSet dataSet = DataSetFactory.createDataSet(path);
-
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(FlatXmlDataSet.class);
-
+		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames())
 			.isNotNull()
 			.isNotEmpty()
@@ -100,15 +91,11 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
-		File file = getTestResource("/dataset/xml/foo.xml");
-		String path = "file:" + file.getAbsolutePath();
+		final File file = getTestResource("/dataset/xml/foo.xml");
+		final String path = "file:" + file.getAbsolutePath();
+		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
-		IDataSet dataSet = DataSetFactory.createDataSet(path);
-
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(FlatXmlDataSet.class);
-
+		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames())
 			.isNotNull()
 			.isNotEmpty()
@@ -118,17 +105,14 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_data_set_from_array_of_path() throws Exception {
-		String[] path = new String[]{
+		final String[] path = new String[]{
 			"classpath:/dataset/xml/foo.xml",
 			"classpath:/dataset/xml/bar.xml"
 		};
 
-		IDataSet dataSet = DataSetFactory.createDataSet(path);
+		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(CompositeDataSet.class);
-
+		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
 		assertThat(dataSet.getTableNames())
 			.isNotNull()
 			.isNotEmpty()
@@ -138,44 +122,103 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_directory_data_set() throws Exception {
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.setFilename("xml")
 			.setDirectory()
 			.fromClasspath("/dataset/xml")
 			.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(DirectoryDataSet.class);
+		assertThat(dataSet).isExactlyInstanceOf(DirectoryDataSet.class);
 	}
 
 	@Test
 	public void it_should_create_json_data_set() throws Exception {
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.setFilename("foo.json")
 			.fromClasspath("/dataset/json/foo.json")
 			.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
-		assertThat(dataSet)
-			.isNotNull()
-			.isExactlyInstanceOf(JsonDataSet.class);
+		assertThat(dataSet).isExactlyInstanceOf(JsonDataSet.class);
 	}
 
 	@Test
 	public void it_should_create_csv_data_set() throws Exception {
-		Resource resource = new ResourceMockBuilder()
+		final Resource resource = new ResourceMockBuilder()
 			.setFilename("foo.csv")
 			.fromClasspath("/dataset/csv/foo.csv")
 			.build();
 
-		IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
-		assertThat(dataSet)
+		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
+	}
+
+	@Test
+	public void it_should_merge_dataset() throws Exception {
+		final IDataSet first = new FlatXmlDataSetBuilder()
+			.setColumnSensing(true)
+			.build(getClass().getResourceAsStream("/dataset/xml/foo.xml"));
+
+		final IDataSet second = new FlatXmlDataSetBuilder()
+			.setColumnSensing(true)
+			.build(getClass().getResourceAsStream("/dataset/xml/bar.xml"));
+
+		final IDataSet dataSet = DataSetFactory.mergeDataSet(first, second);
+
+		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(dataSet.getTableNames())
 			.isNotNull()
-			.isExactlyInstanceOf(CsvDataSet.class);
+			.isNotEmpty()
+			.hasSize(2)
+			.containsOnly("foo", "bar");
+	}
+
+	@Test
+	public void it_should_create_dataset_from_collection_of_datasets() throws Exception {
+		final IDataSet first = new FlatXmlDataSetBuilder()
+			.setColumnSensing(true)
+			.build(getClass().getResourceAsStream("/dataset/xml/foo.xml"));
+
+		final IDataSet second = new FlatXmlDataSetBuilder()
+			.setColumnSensing(true)
+			.build(getClass().getResourceAsStream("/dataset/xml/bar.xml"));
+
+		final IDataSet dataSet = DataSetFactory.createDataSet(asList(first, second));
+
+		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(dataSet.getTableNames())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.containsOnly("foo", "bar");
+	}
+
+	@Test
+	public void it_should_create_dataset_from_array_of_datasets() throws Exception {
+		final IDataSet first = new FlatXmlDataSetBuilder()
+			.setColumnSensing(true)
+			.build(getClass().getResourceAsStream("/dataset/xml/foo.xml"));
+
+		final IDataSet second = new FlatXmlDataSetBuilder()
+			.setColumnSensing(true)
+			.build(getClass().getResourceAsStream("/dataset/xml/bar.xml"));
+
+		final IDataSet[] inputs = new IDataSet[]{
+			first,
+			second
+		};
+
+		final IDataSet dataSet = DataSetFactory.createDataSet(inputs);
+
+		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(dataSet.getTableNames())
+			.isNotNull()
+			.isNotEmpty()
+			.hasSize(2)
+			.containsOnly("foo", "bar");
 	}
 }
