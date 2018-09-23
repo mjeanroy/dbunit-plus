@@ -24,9 +24,14 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
 import org.junit.jupiter.api.BeforeAll;
@@ -35,14 +40,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
-import java.sql.Connection;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(HsqldbExtension.class)
 @DbUnitTest
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@DbUnitHsqldbConnection
 class DbUnitRegisterStaticExtensionITest {
 
 	@RegisterExtension

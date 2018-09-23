@@ -22,45 +22,45 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it.junit4;
+package com.github.mjeanroy.dbunit.it.jupiter;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitFooDataSet;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-@RunWith(DbUnitJunitRunner.class)
+@ExtendWith({HsqldbExtension.class, DbUnitExtension.class})
+@DbUnitFooDataSet
+@DbUnitOperations
 @DbUnitHsqldbConnection
-@DbUnitTest
-public class DbUnitRunnerITest {
+class DbUnitExtensionWithInheritableDatasetITest {
 
-	@ClassRule
-	public static HsqldbRule hsqldb = new HsqldbRule();
-
-	@BeforeClass
-	public static void setup() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+	@BeforeAll
+	static void setup(Connection connection) {
+		assertThat(countFrom(connection, "foo")).isZero();
+		assertThat(countFrom(connection, "bar")).isZero();
 	}
 
 	@Test
-	public void test1() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+	void test1(Connection connection) {
+		assertThat(countFrom(connection, "foo")).isEqualTo(2);
+		assertThat(countFrom(connection, "bar")).isEqualTo(0);
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	public void test2() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+	@DbUnitDataSet(value = "/dataset/xml/bar.xml", inherit = true)
+	void test2(Connection connection) {
+		assertThat(countFrom(connection, "foo")).isEqualTo(2);
+		assertThat(countFrom(connection, "bar")).isEqualTo(3);
 	}
 }

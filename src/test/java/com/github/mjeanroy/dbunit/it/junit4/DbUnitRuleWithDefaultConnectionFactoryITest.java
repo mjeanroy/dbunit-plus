@@ -24,21 +24,21 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitFooDataSet;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
 @DbUnitTest
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@DbUnitHsqldbConnection
 @DbUnitInit(sql = "classpath:/sql/init.sql")
 public class DbUnitRuleWithDefaultConnectionFactoryITest {
 
@@ -55,7 +55,7 @@ public class DbUnitRuleWithDefaultConnectionFactoryITest {
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
+	@DbUnitFooDataSet
 	public void test2() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);

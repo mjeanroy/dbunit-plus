@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.core.runner;
 import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
@@ -36,6 +35,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import com.github.mjeanroy.dbunit.commons.reflection.Annotations;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -253,7 +253,7 @@ public class DbUnitRunner {
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
 	private List<DbUnitConfigInterceptor> readConfig(Method method) {
-		DbUnitConfig annotation = findAnnotation(method, DbUnitConfig.class);
+		DbUnitConfig annotation = Annotations.findAnnotation(method, DbUnitConfig.class);
 		return annotation == null ? ctx.getInterceptors() : DbUnitAnnotationsParser.readConfig(annotation);
 	}
 
@@ -266,13 +266,17 @@ public class DbUnitRunner {
 	 * @return DataSet.
 	 */
 	private IDataSet readDataSet(Method method) {
-		boolean isAnnotated = method != null && method.isAnnotationPresent(DbUnitDataSet.class);
 		final IDataSet parentDataSet = ctx.getDataSet();
+		if (method == null) {
+			return parentDataSet;
+		}
+
+		final DbUnitDataSet annotation = Annotations.findAnnotation(method, DbUnitDataSet.class);
+		final boolean isAnnotated = annotation != null;
 		if (!isAnnotated) {
 			return parentDataSet;
 		}
 
-		final DbUnitDataSet annotation = method.getAnnotation(DbUnitDataSet.class);
 		final boolean inheritable = annotation.inherit();
 		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
 

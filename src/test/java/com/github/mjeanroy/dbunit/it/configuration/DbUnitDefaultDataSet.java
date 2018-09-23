@@ -22,40 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it.jupiter;
+package com.github.mjeanroy.dbunit.it.configuration;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.Connection;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
-@ExtendWith(HsqldbExtension.class)
-@DbUnitTest
-@DbUnitHsqldbConnection
-class DbUnitRegisterExtensionITest {
-
-	@RegisterExtension
-	DbUnitExtension extension = new DbUnitExtension();
-
-	@Test
-	void test1(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isEqualTo(2);
-		assertThat(countFrom(connection, "bar")).isEqualTo(3);
-	}
-
-	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
-	void test2(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isEqualTo(2);
-		assertThat(countFrom(connection, "bar")).isEqualTo(0);
-	}
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@DbUnitDataSet("/dataset/xml")
+public @interface DbUnitDefaultDataSet {
 }

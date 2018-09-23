@@ -24,10 +24,13 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
 import com.github.mjeanroy.dbunit.it.configuration.QualifiedTableNameConfiguration;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
@@ -36,14 +39,11 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-
 
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitDataSet("/dataset/qualified-table-names")
 @DbUnitOperations
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@DbUnitHsqldbConnection
 @DbUnitConfig(QualifiedTableNameConfiguration.class)
 public class DbUnitRunnerWithQualifiedTableNameITest {
 

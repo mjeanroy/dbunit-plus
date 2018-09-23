@@ -31,11 +31,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@DbUnitDefaultDataSet
-@DbUnitOperations
-public @interface DbUnitTest {
+@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+public @interface DbUnitHsqldbConnection {
 }

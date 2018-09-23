@@ -29,8 +29,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitDefaultDataSet;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -39,8 +40,8 @@ import org.junit.runner.RunWith;
 
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitHsqldbConnection
-@DbUnitTest
-public class DbUnitRunnerITest {
+@DbUnitOperations
+public class DbUnitRunnerWithDataSetOnMethodsITest {
 
 	@ClassRule
 	public static HsqldbRule hsqldb = new HsqldbRule();
@@ -52,6 +53,7 @@ public class DbUnitRunnerITest {
 	}
 
 	@Test
+	@DbUnitDefaultDataSet
 	public void test1() {
 		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
 		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);

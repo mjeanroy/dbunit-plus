@@ -27,9 +27,10 @@ package com.github.mjeanroy.dbunit.it.junit4;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitFooDataSet;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.BeforeClass;
@@ -38,9 +39,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(DbUnitJunitRunner.class)
-@DbUnitDataSet("/dataset/xml/foo.xml")
+@DbUnitFooDataSet
 @DbUnitOperations
-@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+@DbUnitHsqldbConnection
 public class DbUnitRunnerWithInheritableDatasetITest {
 
 	@ClassRule
