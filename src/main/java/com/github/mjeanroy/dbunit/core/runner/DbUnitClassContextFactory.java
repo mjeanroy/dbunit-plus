@@ -24,15 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotations;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
-import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
+import com.github.mjeanroy.dbunit.commons.reflection.Annotations;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -40,23 +32,27 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacements;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.IDataSet;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotations;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticFieldAnnotatedWith;
+import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findStaticMethodAnnotatedWith;
 
 /**
  * Factory to create {@link DbUnitClassContext} from given input class.
  */
 final class DbUnitClassContextFactory {
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(DbUnitClassContextFactory.class);
 
 	/**
 	 * A cache, using {@link ClassValue} under the hood.
@@ -161,10 +157,22 @@ final class DbUnitClassContextFactory {
 	 * @param testClass Test class.
 	 * @return The replacements values.
 	 */
+	@SuppressWarnings("deprecation")
 	private static List<Replacements> extractReplacements(Class<?> testClass) {
-		List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
-		List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
-		return DbUnitAnnotationsParser.extractReplacements(fields, methods);
+		// The deprecated way.
+		final List<Field> fields = findStaticFieldAnnotatedWith(testClass, DbUnitReplacement.class);
+		final List<Method> methods = findStaticMethodAnnotatedWith(testClass, DbUnitReplacement.class);
+		final List<Replacements> fieldOrMethodReplacements = DbUnitAnnotationsParser.extractReplacements(fields, methods);
+
+		// The recommended way.
+		final DbUnitReplacements annotation = Annotations.findAnnotation(testClass, DbUnitReplacements.class);
+		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotation);
+
+		// Concat both.
+		final List<Replacements> allReplacements = new ArrayList<>(fieldOrMethodReplacements.size() + replacements.size());
+		allReplacements.addAll(fieldOrMethodReplacements);
+		allReplacements.addAll(replacements);
+		return allReplacements;
 	}
 
 	/**

@@ -25,31 +25,33 @@
 package com.github.mjeanroy.dbunit.tests.fixtures;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacements;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+import com.github.mjeanroy.dbunit.core.replacement.ReplacementsProvider;
 
 @DbUnitDataSet("/dataset/replacements")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class WithReplacementsDataSet {
+@DbUnitReplacements(providers = {
+	WithReplacementsProvidersDataSet.JohnDoeReplacementProvider.class,
+	WithReplacementsProvidersDataSet.JaneDoeReplacementProvider.class,
+})
+public class WithReplacementsProvidersDataSet {
 
-	@SuppressWarnings("deprecation")
-	@DbUnitReplacement
-	public static Replacements johnDoe = Replacements.builder()
-		.addReplacement("[JOHN_DOE]", "John Doe")
-		.build();
-
-	@SuppressWarnings("deprecation")
-	@DbUnitReplacement
-	public static Replacements janeDoe() {
-		return Replacements.builder()
-			.addReplacement("[JANE_DOE]", "Jane Doe")
-			.build();
+	static class JohnDoeReplacementProvider implements ReplacementsProvider {
+		@Override
+		public Replacements create() {
+			return Replacements.singletonReplacement("[JOHN_DOE]", "John Doe");
+		}
 	}
 
-	public void method1() {
+	static class JaneDoeReplacementProvider implements ReplacementsProvider {
+		@Override
+		public Replacements create() {
+			return Replacements.singletonReplacement("[JANE_DOE]", "Jane Doe");
+		}
 	}
 }

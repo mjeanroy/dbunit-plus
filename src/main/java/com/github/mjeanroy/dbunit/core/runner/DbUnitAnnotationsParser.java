@@ -24,16 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.mjeanroy.dbunit.commons.collections.Mapper;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
@@ -42,6 +32,7 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacements;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
@@ -56,12 +47,23 @@ import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+import com.github.mjeanroy.dbunit.core.replacement.ReplacementsProvider;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 /**
  * DbUnit+ parsers.
@@ -235,6 +237,30 @@ final class DbUnitAnnotationsParser {
 		}
 
 		return replacements;
+	}
+
+	/**
+	 * Extract replacements from given providers configuration.
+	 *
+	 * @param replacements The replacements configuration.
+	 * @return The list of replacements, may be empty.
+	 */
+	static List<Replacements> extractReplacements(DbUnitReplacements replacements) {
+		if (replacements == null) {
+			return emptyList();
+		}
+
+		Class<? extends ReplacementsProvider>[] providerClasses = replacements.providers();
+		if (providerClasses.length == 0) {
+			return emptyList();
+		}
+
+		return map(providerClasses, new Mapper<Class<? extends ReplacementsProvider>, Replacements>() {
+			@Override
+			public Replacements apply(Class<? extends ReplacementsProvider> input) {
+				return ClassUtils.instantiate(input).create();
+			}
+		});
 	}
 
 	/**

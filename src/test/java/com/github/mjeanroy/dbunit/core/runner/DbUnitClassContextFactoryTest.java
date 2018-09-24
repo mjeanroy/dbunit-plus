@@ -41,6 +41,7 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDeprecatedDbUnitConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
 import org.dbunit.dataset.CompositeDataSet;
 import org.junit.Test;
 
@@ -107,6 +108,22 @@ public class DbUnitClassContextFactoryTest {
 	@Test
 	public void it_should_read_replacements() {
 		final Class<WithReplacementsDataSet> testClass = WithReplacementsDataSet.class;
+		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+
+		assertThat(ctx).isNotNull();
+		assertThat(ctx.getReplacements()).isNotEmpty().hasSize(2);
+		assertThat(ctx.getReplacements().get(0).getReplacements()).hasSize(1).containsOnly(
+			entry("[JOHN_DOE]", "John Doe")
+		);
+
+		assertThat(ctx.getReplacements().get(1).getReplacements()).hasSize(1).containsOnly(
+			entry("[JANE_DOE]", "Jane Doe")
+		);
+	}
+
+	@Test
+	public void it_should_read_replacements_from_providers() {
+		final Class<WithReplacementsProvidersDataSet> testClass = WithReplacementsProvidersDataSet.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();

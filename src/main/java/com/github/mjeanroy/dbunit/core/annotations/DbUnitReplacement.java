@@ -33,7 +33,10 @@ import java.lang.annotation.Target;
 
 /**
  * DbUnit replacement marker for field or methods.
+ *
+ * @deprecated Use {@link DbUnitReplacements} instead.
  */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented

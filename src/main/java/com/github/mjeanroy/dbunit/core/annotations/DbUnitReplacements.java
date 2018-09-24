@@ -22,34 +22,30 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.fixtures;
+package com.github.mjeanroy.dbunit.core.annotations;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+import com.github.mjeanroy.dbunit.core.replacement.ReplacementsProvider;
 
-@DbUnitDataSet("/dataset/replacements")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class WithReplacementsDataSet {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	@SuppressWarnings("deprecation")
-	@DbUnitReplacement
-	public static Replacements johnDoe = Replacements.builder()
-		.addReplacement("[JOHN_DOE]", "John Doe")
-		.build();
+/**
+ * DbUnit replacement marker for field or methods.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target(ElementType.TYPE)
+@Inherited
+public @interface DbUnitReplacements {
 
-	@SuppressWarnings("deprecation")
-	@DbUnitReplacement
-	public static Replacements janeDoe() {
-		return Replacements.builder()
-			.addReplacement("[JANE_DOE]", "Jane Doe")
-			.build();
-	}
-
-	public void method1() {
-	}
+	/**
+	 * The list of providers to use.
+	 *
+	 * @return List of providers.
+	 */
+	Class<? extends ReplacementsProvider>[] providers();
 }

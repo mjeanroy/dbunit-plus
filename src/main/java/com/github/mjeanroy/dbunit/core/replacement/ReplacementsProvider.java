@@ -22,34 +22,17 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.fixtures;
+package com.github.mjeanroy.dbunit.core.replacement;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacement;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
-import com.github.mjeanroy.dbunit.core.replacement.Replacements;
+/**
+ * Replacements provider, used to create re-usable replacements objects.
+ */
+public interface ReplacementsProvider {
 
-@DbUnitDataSet("/dataset/replacements")
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
-public class WithReplacementsDataSet {
-
-	@SuppressWarnings("deprecation")
-	@DbUnitReplacement
-	public static Replacements johnDoe = Replacements.builder()
-		.addReplacement("[JOHN_DOE]", "John Doe")
-		.build();
-
-	@SuppressWarnings("deprecation")
-	@DbUnitReplacement
-	public static Replacements janeDoe() {
-		return Replacements.builder()
-			.addReplacement("[JANE_DOE]", "Jane Doe")
-			.build();
-	}
-
-	public void method1() {
-	}
+	/**
+	 * Create replacements values.
+	 *
+	 * @return The replacements values.
+	 */
+	Replacements create();
 }
