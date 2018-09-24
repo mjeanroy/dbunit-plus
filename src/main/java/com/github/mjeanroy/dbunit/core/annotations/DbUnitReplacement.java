@@ -26,38 +26,16 @@ package com.github.mjeanroy.dbunit.core.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * DbUnit initialization: allow user to run SQL scripts before
- * loading DbUnit data set.
- *
- * This annotation can be used on:
- * <ul>
- *   <li>Class (i.e test class).</li>
- *   <li>Package (i.e package where test classes belongs)</li>
- * </ul>
- *
- * For example:
- *
- * <pre><code>
- *
- *   &#64;DbUnitInit(sql = "/sql/schema.sql")
- *   &#64;DbUnitDataSet("/dataset/xml")
- *   public class TestClass {
- *     &#64;Rule
- *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
- *
- *     &#64;Test
- *     public void test1() {
- *     }
- *   }
- *
- * </code></pre>
+ * DbUnit replacement marker for field or methods.
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
 @Target({
 	ElementType.FIELD,

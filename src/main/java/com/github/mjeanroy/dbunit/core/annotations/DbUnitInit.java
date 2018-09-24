@@ -24,13 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
+import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 
 /**
  * DbUnit initialization: allow user to run SQL scripts before
@@ -60,6 +61,7 @@ import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
  * </code></pre>
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
 @Target({
 	ElementType.TYPE,

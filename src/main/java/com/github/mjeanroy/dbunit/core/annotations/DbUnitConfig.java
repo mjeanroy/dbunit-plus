@@ -24,17 +24,18 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import org.dbunit.database.DefaultMetadataHandler;
 import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Annotation that can be used to customize DBUnit configuration
@@ -73,6 +74,7 @@ import org.dbunit.dataset.datatype.IDataTypeFactory;
  * @see org.dbunit.database.DatabaseConfig
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
 @Target({
 	ElementType.METHOD,
