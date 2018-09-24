@@ -165,8 +165,8 @@ final class DbUnitClassContextFactory {
 		final List<Replacements> fieldOrMethodReplacements = DbUnitAnnotationsParser.extractReplacements(fields, methods);
 
 		// The recommended way.
-		final DbUnitReplacements annotation = Annotations.findAnnotation(testClass, DbUnitReplacements.class);
-		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotation);
+		final List<DbUnitReplacements> annotations = Annotations.findAnnotations(testClass, DbUnitReplacements.class);
+		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
 
 		// Concat both.
 		final List<Replacements> allReplacements = new ArrayList<>(fieldOrMethodReplacements.size() + replacements.size());

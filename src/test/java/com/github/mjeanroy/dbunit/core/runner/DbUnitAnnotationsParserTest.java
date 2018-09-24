@@ -60,6 +60,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -156,7 +157,8 @@ public class DbUnitAnnotationsParserTest {
 	@Test
 	public void it_should_read_replacements_from_providers() {
 		final DbUnitReplacements annotation = WithReplacementsProvidersDataSet.class.getAnnotation(DbUnitReplacements.class);
-		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotation);
+		final List<DbUnitReplacements> annotations = singletonList(annotation);
+		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
 
 		assertThat(replacements).isNotEmpty().hasSize(2);
 
@@ -171,8 +173,8 @@ public class DbUnitAnnotationsParserTest {
 
 	@Test
 	public void it_should_not_try_to_read_replacements_without_providers() {
-		final DbUnitReplacements annotation = null;
-		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotation);
+		final List<DbUnitReplacements> annotations = emptyList();
+		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
 		assertThat(replacements).isEmpty();
 	}
 

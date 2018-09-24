@@ -242,25 +242,30 @@ final class DbUnitAnnotationsParser {
 	/**
 	 * Extract replacements from given providers configuration.
 	 *
-	 * @param replacements The replacements configuration.
+	 * @param annotations The replacements configuration.
 	 * @return The list of replacements, may be empty.
 	 */
-	static List<Replacements> extractReplacements(DbUnitReplacements replacements) {
-		if (replacements == null) {
+	static List<Replacements> extractReplacements(List<DbUnitReplacements> annotations) {
+		if (annotations.isEmpty()) {
 			return emptyList();
 		}
 
-		Class<? extends ReplacementsProvider>[] providerClasses = replacements.providers();
-		if (providerClasses.length == 0) {
-			return emptyList();
-		}
+		List<Replacements> replacements = new ArrayList<>();
 
-		return map(providerClasses, new Mapper<Class<? extends ReplacementsProvider>, Replacements>() {
-			@Override
-			public Replacements apply(Class<? extends ReplacementsProvider> input) {
-				return ClassUtils.instantiate(input).create();
+		for (DbUnitReplacements annotation : annotations) {
+			replacements.addAll(map(annotation.providers(), new Mapper<Class<? extends ReplacementsProvider>, Replacements>() {
+				@Override
+				public Replacements apply(Class<? extends ReplacementsProvider> input) {
+					return ClassUtils.instantiate(input).create();
+				}
+			}));
+
+			if (!annotation.inherit()) {
+				break;
 			}
-		});
+		}
+
+		return replacements;
 	}
 
 	/**

@@ -48,4 +48,18 @@ public @interface DbUnitReplacements {
 	 * @return List of providers.
 	 */
 	Class<? extends ReplacementsProvider>[] providers();
+
+	/**
+	 * A flag indicating if given annotation should be merged with "parent" annotations. For example, a method can
+	 * define additional replacements providers to load.
+	 *
+	 * The default value is {@code false}, this means that the providers for the annotated class
+	 * will <em>shadow</em> and effectively replace any datasets defined by superclasses.
+	 *
+	 * If {@code true}, this means that an annotated class will <em>inherit</em>
+	 * the datasets defined by test superclasses (or meta-annotations).
+	 *
+	 * @return The inherit flag value.
+	 */
+	boolean inherit() default false;
 }
