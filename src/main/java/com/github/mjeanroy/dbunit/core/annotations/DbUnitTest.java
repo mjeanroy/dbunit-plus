@@ -24,7 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
-import com.github.mjeanroy.dbunit.core.replacement.ReplacementsProvider;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.core.replacement.CurrentTimeValueReplacementsProvider;
+import com.github.mjeanroy.dbunit.core.replacement.CurrentTimestampValueReplacementsProvider;
+import com.github.mjeanroy.dbunit.core.replacement.NowValueReplacementsProvider;
+import com.github.mjeanroy.dbunit.core.replacement.NullValueReplacementsProvider;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,35 +37,18 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation that define the list of {@link com.github.mjeanroy.dbunit.core.replacement.Replacements} to use during
- * test suite. These replacements are created by given {@link #providers()} (note that these providers must have an
- * empty public constructor).
- */
 @Retention(RetentionPolicy.RUNTIME)
+@Inherited
 @Documented
 @Target(ElementType.TYPE)
-@Inherited
-public @interface DbUnitReplacements {
-
-	/**
-	 * The list of providers to use.
-	 *
-	 * @return List of providers.
-	 */
-	Class<? extends ReplacementsProvider>[] providers();
-
-	/**
-	 * A flag indicating if given annotation should be merged with "parent" annotations. For example, a method can
-	 * define additional replacements providers to load.
-	 *
-	 * The default value is {@code false}, this means that the providers for the annotated class
-	 * will <em>shadow</em> and effectively replace any datasets defined by superclasses.
-	 *
-	 * If {@code true}, this means that an annotated class will <em>inherit</em>
-	 * the datasets defined by test superclasses (or meta-annotations).
-	 *
-	 * @return The inherit flag value.
-	 */
-	boolean inherit() default false;
+@DbUnitDataSet(value = "/dataset", inherit = true)
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+@DbUnitReplacements(inherit = true, providers = {
+	NullValueReplacementsProvider.class,
+	NowValueReplacementsProvider.class,
+	CurrentTimestampValueReplacementsProvider.class,
+	CurrentTimeValueReplacementsProvider.class,
+})
+public @interface DbUnitTest {
 }
