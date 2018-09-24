@@ -24,59 +24,43 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.json.JsonParser;
-import com.github.mjeanroy.dbunit.json.JsonParserFactory;
-import org.dbunit.dataset.DataSetException;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.yaml.YamlParser;
+import org.junit.Test;
 
-/**
- * Builder for {@link JsonDataSet} instances.
- *
- * <br>
- *
- * If not set, JSON parser will be created using classpath detection.
- * Supported implementations are (checked in order):
- * <ul>
- *   <li>Jackson 2</li>
- *   <li>Gson</li>
- *   <li>Jackson 1</li>
- * </ul>
- */
-public class JsonDataSetBuilder extends AbstractParseableDataSetBuilder<JsonDataSetBuilder, JsonParser, JsonDataSet> {
+public class YamlDataSetBuilderTest {
 
-	/**
-	 * Create builder.
-	 */
-	public JsonDataSetBuilder() {
-		super();
+	@Test
+	public void it_should_create_default_data_set_with_file() throws Exception {
+		final Resource resource = createResource();
+		final YamlDataSet dataSet = new YamlDataSetBuilder(resource).build();
+
+		assertThat(dataSet.getResource()).isSameAs(resource);
+		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
 	}
 
-	/**
-	 * Create builder with JSON resource.
-	 *
-	 * @param resource JSON resource.
-	 */
-	public JsonDataSetBuilder(Resource resource) {
-		super(resource);
+	@Test
+	public void it_should_create_custom_data_set() throws Exception {
+		final Resource resource = createResource();
+		final YamlParser parser = mock(YamlParser.class);
+		final YamlDataSet dataSet = new YamlDataSetBuilder()
+			.setYamlFile(resource)
+			.setCaseSensitiveTableNames(true)
+			.setParser(parser)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getResource()).isSameAs(resource);
+		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
+		verify(parser).parse(resource);
 	}
 
-	/**
-	 * Initialize JSON resource.
-	 *
-	 * @param resource JSON resource.
-	 * @return Builder.
-	 */
-	public JsonDataSetBuilder setJsonFile(Resource resource) {
-		return setResource(resource);
-	}
-
-	@Override
-	JsonDataSet build(JsonParser parser, Resource resource, boolean caseSensitiveTableNames) throws DataSetException {
-		return new JsonDataSet(resource, caseSensitiveTableNames, parser);
-	}
-
-	@Override
-	JsonParser getDefaultParser() {
-		return JsonParserFactory.createDefault();
+	private static Resource createResource() {
+		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/foo.yml").build();
 	}
 }

@@ -22,17 +22,23 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.core.parsers;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
+import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.parsers.AbstractDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.AbstractParserException;
 import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.exception.AbstractParserException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
- * Abstract implementation of {@link JsonParser} that create {@link Reader} from
+ * Abstract implementation of {@link DatasetParser} that create {@link Reader} from
  * given {@link Resource} and execute {@link #doParse(Reader)}.
  *
  * <p>
@@ -40,10 +46,37 @@ import com.github.mjeanroy.dbunit.exception.JsonException;
  * Note that exceptions thrown from {@link #doParse(Reader)} method will automatically
  * be wrapped into {@link JsonException}.
  */
-public abstract class AbstractJsonParser extends AbstractDatasetParser implements JsonParser {
+public abstract class AbstractDatasetParser implements DatasetParser {
+
+	/**
+	 * Class logger.
+	 */
+	private static final Logger log = Loggers.getLogger(AbstractDatasetParser.class);
 
 	@Override
-	protected AbstractParserException wrapException(Exception ex) {
-		return new JsonException(ex);
+	public Map<String, List<Map<String, Object>>> parse(Resource resource) {
+		try (InputStream stream = resource.openStream(); InputStreamReader reader = new InputStreamReader(stream); BufferedReader buf = new BufferedReader(reader)) {
+			return doParse(buf);
+		}
+		catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			throw wrapException(ex);
+		}
 	}
+
+	/**
+	 * Parse given {@link Reader}:
+	 *
+	 * <ol>
+	 *   <li>Read input.</li>
+	 *   <li>Create dataset model from it.</li>
+	 * </ol>
+	 *
+	 * @param reader The reader.
+	 * @return The dataset input.
+	 * @throws Exception If an error occurred during JSON parsing.
+	 */
+	protected abstract Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception;
+
+	protected abstract AbstractParserException wrapException(Exception ex);
 }

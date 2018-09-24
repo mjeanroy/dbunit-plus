@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.yaml;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
@@ -30,38 +30,40 @@ import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 /**
- * Json Parser using Google {@link Gson} as internal implementation.
+ * YAML Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
  */
-class GsonParser extends AbstractJsonParser implements JsonParser {
+public class JacksonYamlParser extends AbstractYamlParser implements YamlParser {
 
 	/**
-	 * Internal parser.
+	 * Internal Jackson2 Mapper.
 	 */
-	private final Gson gson;
+	private final ObjectMapper mapper;
 
 	/**
-	 * Create parser using default Gson mapper.
+	 * Create parser with default YAML Factory.
 	 */
-	GsonParser() {
-		this(new Gson());
+	JacksonYamlParser() {
+		this(new YAMLFactory());
 	}
 
 	/**
-	 * Create parser using specific Gson mapper.
+	 * Create parser with Jackson2 mapper.
 	 *
-	 * @param gson Gson Mapper.
-	 * @throws NullPointerException If {@code gson} is {@code null}.
+	 * @param yamlFactory The YAML Factory that will be used to create Jackson Object Mapper.
+	 * @throws NullPointerException If {@code mapper} is {@code null}.
 	 */
-	GsonParser(Gson gson) {
-		this.gson = notNull(gson, "Gson Parser should not be null");
+	private JacksonYamlParser(YAMLFactory yamlFactory) {
+		notNull(yamlFactory, "YAML Factory must not be null");
+		this.mapper = new ObjectMapper(yamlFactory);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) {
-		return (Map<String, List<Map<String, Object>>>) gson.fromJson(reader, Map.class);
+	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
+		return (Map<String, List<Map<String, Object>>>) mapper.readValue(reader, Map.class);
 	}
 }

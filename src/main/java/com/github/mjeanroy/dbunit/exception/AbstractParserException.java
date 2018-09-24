@@ -22,19 +22,23 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
-
-import java.util.Map;
-
-import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+package com.github.mjeanroy.dbunit.exception;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
+ * Wrap external parsing exception.
  *
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * This exception should provide a unique way to handle parser exception,
+ * whatever the internal mapper library.
  */
-public interface JsonParser extends DatasetParser {
-}
+@SuppressWarnings("serial")
+public abstract class AbstractParserException extends AbstractDbUnitException {
 
+	/**
+	 * Wrap {@link Exception}.
+	 *
+	 * @param e Original Exception.
+	 */
+	public AbstractParserException(Exception e) {
+		super(e);
+	}
+}

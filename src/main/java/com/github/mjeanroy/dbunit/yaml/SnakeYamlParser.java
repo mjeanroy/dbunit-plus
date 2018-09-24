@@ -22,19 +22,46 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.yaml;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+import java.io.Reader;
+import java.util.List;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import org.yaml.snakeyaml.Yaml;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
- *
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * YAML Parser using SnakeYAML as internal implementation.
  */
-public interface JsonParser extends DatasetParser {
-}
+public class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
 
+	/**
+	 * Internal parser.
+	 */
+	private final Yaml yaml;
+
+	/**
+	 * Create parser with default YAML Factory.
+	 */
+	SnakeYamlParser() {
+		this(new Yaml());
+	}
+
+	/**
+	 * Create parser with SnakeYAML parser.
+	 *
+	 * @param yaml The internal yaml parser
+	 * @throws NullPointerException If {@code yaml} is {@code null}.
+	 */
+	private SnakeYamlParser(Yaml yaml) {
+		this.yaml = notNull(yaml, "YAML Parser must not be null");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) {
+		return (Map<String, List<Map<String, Object>>>) yaml.load(reader);
+	}
+}

@@ -22,19 +22,18 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.yaml;
 
 import java.util.Map;
 
 import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.exception.YamlException;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
+ * Parse YAML file and return DBUnit dataSet as {@link Map}.
  *
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
+ * Each implementation should wrap specific exception to an internal {@link YamlException} (library
  * will catch instance of this exception and re-throw appropriate exception).
  */
-public interface JsonParser extends DatasetParser {
+public interface YamlParser extends DatasetParser {
 }
-

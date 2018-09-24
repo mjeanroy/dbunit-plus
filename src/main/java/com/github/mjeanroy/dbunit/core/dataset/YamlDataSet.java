@@ -22,19 +22,42 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.core.dataset;
 
-import java.util.Map;
-
-import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.yaml.YamlParser;
+import org.dbunit.dataset.DataSetException;
+import org.dbunit.dataset.IDataSet;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
+ * Implementation of {@link IDataSet} with YAML file as input.
  *
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * <p>
+ *
+ * A valid YAML file must respect this schema:
+ *
+ * <pre><code>
+ *   table_name_1:
+ *     - col1: 1
+ *       col2: "value
+ *   table_name_2:
+ *     - col1: 1
+ *       col2: "value"
+ *     - col1: 2
+ *       col2: "value"
+ * </code></pre>
  */
-public interface JsonParser extends DatasetParser {
-}
+public class YamlDataSet extends AbstractParseableDataSet implements IDataSet {
 
+	/**
+	 * Create JSON DataSet.
+	 *
+	 * @param resource Input resource.
+	 * @param caseSensitiveTableNames Case Insensitivity Flag.
+	 * @param parser JSON Parser (will be used to parser input resource).
+	 * @throws DataSetException If JSON parsing fail.
+	 */
+	YamlDataSet(Resource resource, boolean caseSensitiveTableNames, YamlParser parser) throws DataSetException {
+		super(resource, caseSensitiveTableNames, parser);
+	}
+}

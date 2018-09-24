@@ -26,11 +26,12 @@ package com.github.mjeanroy.dbunit.exception;
 
 /**
  * Wrap external JSON parsing exception.
+ *
  * This exception should provide a unique way to handler JSON exception,
  * whatever the internal mapper library.
  */
 @SuppressWarnings("serial")
-public class JsonException extends AbstractDbUnitException {
+public class JsonException extends AbstractParserException {
 
 	/**
 	 * Wrap {@link Exception}.

@@ -25,41 +25,57 @@
 package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.json.JsonParser;
+import com.github.mjeanroy.dbunit.yaml.YamlParser;
+import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
 import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
 
 /**
- * Implementation of {@link IDataSet} with JSON file as input.
+ * Builder for {@link YamlDataSet} instances.
  *
- * <p>
+ * <br>
  *
- * A valid JSON file must respect this schema:
- *
- * <pre><code>
- *   {
- *     "table_name_1": [
- *       { "col1": 1, "col2": "value" }
- *     ],
- *
- *     "table_name_2": [
- *       { "col1": 1, "col2": "value" }
- *       { "col1": 2, "col2": "value" }
- *     ]
- *   }
- * </code></pre>
+ * If not set, YAML parser will be created using classpath detection.
+ * Supported implementations are (checked in order):
+ * <ul>
+ *   <li>Jackson</li>
+ *   <li>SnakeYAML</li>
+ * </ul>
  */
-public class JsonDataSet extends AbstractParseableDataSet implements IDataSet {
+public class YamlDataSetBuilder extends AbstractParseableDataSetBuilder<YamlDataSetBuilder, YamlParser, YamlDataSet> {
 
 	/**
-	 * Create JSON DataSet.
-	 *
-	 * @param resource Input resource.
-	 * @param caseSensitiveTableNames Case Insensitivity Flag.
-	 * @param parser JSON Parser (will be used to parser input resource).
-	 * @throws DataSetException If JSON parsing fail.
+	 * Create builder.
 	 */
-	JsonDataSet(Resource resource, boolean caseSensitiveTableNames, JsonParser parser) throws DataSetException {
-		super(resource, caseSensitiveTableNames, parser);
+	public YamlDataSetBuilder() {
+		super();
+	}
+
+	/**
+	 * Create builder with JSON resource.
+	 *
+	 * @param resource JSON resource.
+	 */
+	public YamlDataSetBuilder(Resource resource) {
+		super(resource);
+	}
+
+	/**
+	 * Initialize JSON resource.
+	 *
+	 * @param resource JSON resource.
+	 * @return Builder.
+	 */
+	public YamlDataSetBuilder setYamlFile(Resource resource) {
+		return setResource(resource);
+	}
+
+	@Override
+	YamlDataSet build(YamlParser parser, Resource resource, boolean caseSensitiveTableNames) throws DataSetException {
+		return new YamlDataSet(resource, caseSensitiveTableNames, parser);
+	}
+
+	@Override
+	YamlParser getDefaultParser() {
+		return YamlParserFactory.createDefault();
 	}
 }

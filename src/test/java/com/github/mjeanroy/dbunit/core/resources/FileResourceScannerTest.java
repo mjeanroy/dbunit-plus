@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Collection;
+
 import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collection;
-
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class FileResourceScannerTest extends AbstractResourceScannerTest {
 
@@ -46,11 +46,8 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	public void it_should_return_list_of_files() {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.build();
-
-		Collection<Resource> resources = scanner.scan(resource);
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").build();
+		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.isNotNull()
@@ -68,11 +65,8 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	public void it_should_return_empty_list_without_directory() {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
-			.build();
-
-		Collection<Resource> resources = scanner.scan(resource);
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/foo.xml").build();
+		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.isNotNull()
@@ -81,11 +75,8 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	public void it_should_not_scan_recursively() {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset")
-			.build();
-
-		Collection<Resource> resources = scanner.scan(resource);
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset").build();
+		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.isNotNull()
@@ -99,6 +90,7 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 			})
 			.containsOnly(
 				"xml",
+				"yaml",
 				"json",
 				"csv",
 				"replacements",

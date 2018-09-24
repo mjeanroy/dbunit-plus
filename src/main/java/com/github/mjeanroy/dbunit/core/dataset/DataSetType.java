@@ -24,6 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+import java.io.File;
+
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -31,10 +35,6 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-
-import java.io.File;
-
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Set of data set implementation supported out of the box.
@@ -49,6 +49,19 @@ enum DataSetType {
 		@Override
 		IDataSet doCreate(Resource resource) throws Exception {
 			return new JsonDataSetBuilder(resource).build();
+		}
+	},
+
+	YAML {
+		@Override
+		boolean doMatch(Resource resource) {
+			final String lowerCaseName = resource.getFilename().toLowerCase();
+			return lowerCaseName.endsWith(".yml") || lowerCaseName.endsWith(".yaml");
+		}
+
+		@Override
+		IDataSet doCreate(Resource resource) throws Exception {
+			return new YamlDataSetBuilder(resource).build();
 		}
 	},
 

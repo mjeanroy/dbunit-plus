@@ -22,19 +22,29 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.yaml;
 
-import java.util.Map;
+import java.io.Reader;
 
-import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.core.parsers.AbstractDatasetParser;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.exception.AbstractParserException;
+import com.github.mjeanroy.dbunit.exception.YamlException;
+import com.github.mjeanroy.dbunit.json.JsonParser;
 
 /**
- * Parse JSON file and return DBUnit dataSet as {@link Map}.
+ * Abstract implementation of {@link JsonParser} that create {@link Reader} from
+ * given {@link Resource} and execute {@link #doParse(Reader)}.
  *
- * Each implementation should wrap specific exception to an internal {@link JsonException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * <p>
+ *
+ * Note that exceptions thrown from {@link #doParse(Reader)} method will automatically
+ * be wrapped into {@link YamlException}.
  */
-public interface JsonParser extends DatasetParser {
-}
+public abstract class AbstractYamlParser extends AbstractDatasetParser implements JsonParser {
 
+	@Override
+	protected AbstractParserException wrapException(Exception ex) {
+		return new YamlException(ex);
+	}
+}
