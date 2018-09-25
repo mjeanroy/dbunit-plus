@@ -24,6 +24,12 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
@@ -33,9 +39,6 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("deprecation")
 @RunWith(DbUnitJunitRunner.class)
@@ -48,20 +51,23 @@ public class DbUnitRunnerWithDeprecatedDbUnitConfigurationITest {
 
 	@BeforeClass
 	public static void setup() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
 	public void test1() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
+	@DbUnitDataSet("/dataset/xml/users.xml")
 	public void test2() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(0);
 	}
 }

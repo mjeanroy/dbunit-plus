@@ -24,13 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -38,16 +31,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
+import org.junit.Test;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 public class DirectoryDataSetBuilderTest {
 
 	@Test
 	public void it_should_create_default_directory_dataset() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
+		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
 		assertThat(dataSet.getResource()).isEqualTo(resource);
@@ -56,35 +52,36 @@ public class DirectoryDataSetBuilderTest {
 
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
-		Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
+		final Resource r1 = new ResourceMockBuilder()
+			.fromClasspath("/dataset/xml/users.xml")
 			.setFile()
 			.setFilename("foo.xml")
 			.build();
 
-		Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/bar.xml")
+		final Resource r2 = new ResourceMockBuilder()
+			.fromClasspath("/dataset/xml/movies.xml")
 			.setFile()
-			.setFilename("bar.xml")
+			.setFilename("movies.xml")
 			.build();
 
-		Resource directory = new ResourceMockBuilder()
+		final Resource directory = new ResourceMockBuilder()
 			.fromClasspath("/dataset/xml")
 			.addSubResources(r1, r2)
 			.setDirectory()
 			.build();
 
-		ResourceComparator comparator = mock(ResourceComparator.class);
+		final ResourceComparator comparator = mock(ResourceComparator.class);
+
 		when(comparator.compare(any(Resource.class), any(Resource.class))).thenAnswer(new Answer<Integer>() {
 			@Override
-			public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
+			public Integer answer(InvocationOnMock invocationOnMock) {
 				Resource f1 = (Resource) invocationOnMock.getArguments()[0];
 				Resource f2 = (Resource) invocationOnMock.getArguments()[1];
 				return f2.getPath().compareTo(f1.getPath());
 			}
 		});
 
-		DirectoryDataSet dataSet = new DirectoryDataSetBuilder()
+		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder()
 			.setDirectory(directory)
 			.setCaseSensitiveTableNames(true)
 			.setComparator(comparator)

@@ -24,27 +24,29 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithoutDataSet;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.ClassRule;
 import org.junit.Test;
-
-import javax.sql.DataSource;
-import java.lang.reflect.Method;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
 
 public class DbUnitRunnerTest {
 
@@ -65,7 +67,7 @@ public class DbUnitRunnerTest {
 		assertThat(ctx.getDataSet()).isNotNull();
 		assertThat(ctx.getDataSet().getTableNames())
 			.hasSize(2)
-			.contains("foo", "bar");
+			.contains("users", "movies");
 	}
 
 	@Test
@@ -96,18 +98,19 @@ public class DbUnitRunnerTest {
 		final Class<WithDbUnitConnection> klass = WithDbUnitConnection.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("test1");
+		final Connection connection = hsqldb.getConnection();
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
@@ -115,36 +118,38 @@ public class DbUnitRunnerTest {
 		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method1");
+		final Connection connection = hsqldb.getConnection();
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
 	public void it_should_load_data_set_without_method_invocation() {
 		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
+		final Connection connection = hsqldb.getConnection();
 
 		// Setup Operation
 		runner.beforeTest(null);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(null);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
@@ -152,16 +157,17 @@ public class DbUnitRunnerTest {
 		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method2");
+		final Connection connection = hsqldb.getConnection();
 
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isZero();
 
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
@@ -169,18 +175,19 @@ public class DbUnitRunnerTest {
 		final Class<WithDataSet> klass = WithDataSet.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method3");
+		final Connection connection = hsqldb.getConnection();
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
@@ -188,18 +195,19 @@ public class DbUnitRunnerTest {
 		final Class<WithCustomConfiguration> klass = WithCustomConfiguration.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method1");
+		final Connection connection = hsqldb.getConnection();
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
@@ -207,14 +215,15 @@ public class DbUnitRunnerTest {
 		final Class<WithCustomConfiguration> klass = WithCustomConfiguration.class;
 		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 		final Method testMethod = klass.getMethod("method2");
+		final Connection connection = hsqldb.getConnection();
 
 		// Setup Operation
 		runner.beforeTest(testMethod);
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
+		assertThat(countUsers(connection)).isEqualTo(2);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
+		assertThat(countUsers(connection)).isZero();
 	}
 
 	@Test

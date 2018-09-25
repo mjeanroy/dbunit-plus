@@ -26,6 +26,7 @@ bar:
   - id: 1
     title: "Lord Of The Rings"
   - id: 2
-    title": "Star Wars"
+    title: "Star Wars"
   - id: 3
-    title": "Back To The Future"
+    title: "Back To The Future"
+    synopsys: "The story of Marty MacFly"

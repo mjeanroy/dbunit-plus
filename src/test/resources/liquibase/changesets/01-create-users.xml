@@ -22,8 +22,21 @@
  SOFTWARE.
 -->
 
-<dataset>
-  <PUBLIC.bar id="1" title="Lord Of The Rings"/>
-  <PUBLIC.bar id="2" title="Star Wars"/>
-  <PUBLIC.bar id="3" title="Back To The Future"/>
-</dataset>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+  <changeSet id="create-table-users" author="mjeanroy">
+    <createTable tableName="users">
+      <column name="id" type="INT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="name" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>

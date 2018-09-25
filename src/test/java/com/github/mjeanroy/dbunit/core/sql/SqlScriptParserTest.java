@@ -24,11 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InOrder;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -37,11 +38,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.InOrder;
 
 public class SqlScriptParserTest {
 
@@ -56,74 +57,48 @@ public class SqlScriptParserTest {
 
 	@Test
 	public void it_should_parse_simple_query() {
-		String query = "DROP TABLE foo;";
-		InputStream reader = createStream(query);
-
-		List<String> queries = SqlScriptParser.parseScript(reader, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.contains(query);
+		final String query = "DROP TABLE users;";
+		final InputStream reader = createStream(query);
+		final List<String> queries = SqlScriptParser.parseScript(reader, configuration);
+		assertThat(queries).hasSize(1).contains(query);
 	}
 
 	@Test
 	public void it_should_parse_simple_query_without_end_delimiter() {
-		String query = "DROP TABLE foo";
-		InputStream stringReader = createStream(query);
-
-		List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.contains(query);
+		final String query = "DROP TABLE users";
+		final InputStream stringReader = createStream(query);
+		final List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
+		assertThat(queries).hasSize(1).contains(query);
 	}
 
 	@Test
 	public void it_should_parse_two_simple_query() {
-		String q1 = "DROP TABLE foo;";
-		String q2 = "DROP TABLE bar;";
-		String query = "" +
-			q1 + BR +
-			q2 + BR;
-
-		InputStream stringReader = createStream(query);
-
-		List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsExactly(q1, q2);
+		final String q1 = "DROP TABLE users;";
+		final String q2 = "DROP TABLE movies;";
+		final String query = q1 + BR + q2 + BR;
+		final InputStream stringReader = createStream(query);
+		final List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
+		assertThat(queries).hasSize(2).containsExactly(q1, q2);
 	}
 
 	@Test
 	public void it_should_add_escaping_character() {
-		String query = "SELECT * FROM foo WHERE title = 'John\\'s file';";
-		InputStream stream = createStream(query);
-
-		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.contains(query);
+		final String query = "SELECT * FROM users WHERE title = 'John\\'s file';";
+		final InputStream stream = createStream(query);
+		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
+		assertThat(queries).hasSize(1).contains(query);
 	}
 
 	@Test
 	public void it_should_parse_query_and_comment_line() {
-		String q1 = "DROP TABLE foo;";
-		String q2 = "DROP TABLE bar;";
-		String query = "" +
-			"-- Drop Table foo" + BR +
-			q1 + BR +
-			"-- Drop Table bar" + BR +
-			q2 + BR;
+		final String q1 = "DROP TABLE users;";
+		final String q2 = "DROP TABLE movies;";
+		final String query = join(asList(
+			"-- Drop Table users",
+			q1,
+			"-- Drop Table movies",
+			q2
+		));
 
 		InputStream stream = createStream(query);
 
@@ -138,17 +113,18 @@ public class SqlScriptParserTest {
 
 	@Test
 	public void it_should_parse_query_and_block_comment() {
-		String q1 = "DROP TABLE foo;";
-		String q2 = "DROP TABLE bar;";
-		String query = "" +
-			"/* " + BR +
-			" * Drop schema." + BR +
-			" */" + BR +
-			"" + BR +
-			"/* Drop Table foo */" + BR +
-			q1 + BR +
-			"/* Drop Table bar */" + BR +
-			q2 + BR;
+		final String q1 = "DROP TABLE users;";
+		final String q2 = "DROP TABLE movies;";
+		final String query = join(asList(
+			"/* ",
+			" * Drop schema.",
+			" */",
+			"",
+			"/* Drop Table users */",
+			q1,
+			"/* Drop Table movies */",
+			q2
+		));
 
 		InputStream stream = createStream(query);
 
@@ -163,181 +139,153 @@ public class SqlScriptParserTest {
 
 	@Test
 	public void it_should_parse_query_with_varchar_values() {
-		String q1 = "UPDATE foo SET name = 'Hello -- John';";
-		String q2 = "UPDATE foo SET name = 'Hello /* John */';";
-		String query = "" +
-			"/* " + BR +
-			" * Drop schema." + BR +
-			" */" + BR +
-			"" + BR +
-			"/* Drop Table foo */" + BR +
-			q1 + BR +
-			"/* Drop Table bar */" + BR +
-			q2 + BR;
+		final String q1 = "UPDATE users SET name = 'Hello -- John';";
+		final String q2 = "UPDATE users SET name = 'Hello /* John */';";
+		final String query = join(asList(
+			"/* ",
+			" * Drop schema.",
+			" */",
+			"",
+			"/* Drop Table users */",
+			q1,
+			"/* Drop Table movies */",
+			q2
+		));
 
-		InputStream stream = createStream(query);
-
-		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsExactly(q1, q2);
+		final InputStream stream = createStream(query);
+		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
+		assertThat(queries).hasSize(2).containsExactly(q1, q2);
 	}
 
 	@Test
 	public void it_should_parse_query_with_quote_escaping() {
-		String query = "UPDATE foo SET name = 'John''s Name';";
-		InputStream stream = createStream(query);
-
-		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsExactly(query);
+		final String query = "UPDATE users SET name = 'John''s Name';";
+		final InputStream stream = createStream(query);
+		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
+		assertThat(queries).hasSize(1).containsExactly(query);
 	}
 
 	@Test
-	public void it_should_parse_file() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/sql/init.sql")
-			.build();
+	public void it_should_parse_file() {
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
+		final List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
-		List<String> queries = SqlScriptParser.parseScript(resource, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(4)
-			.containsExactly(
-				"DROP TABLE IF EXISTS foo;",
-				"DROP TABLE IF EXISTS bar;",
-				"CREATE TABLE foo (id INT, name varchar(100));",
-				"CREATE TABLE bar (id INT, title varchar(100));"
-			);
+		assertThat(queries).hasSize(4).containsExactly(
+			"DROP TABLE IF EXISTS users;",
+			"DROP TABLE IF EXISTS movies;",
+			"CREATE TABLE users (id INT, name varchar(100));",
+			"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
+		);
 	}
 
 	@Test
-	public void it_should_parse_file_path() throws Exception {
-		String script = "/sql/init.sql";
-
-		List<String> queries = SqlScriptParser.parseScript(script, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(4)
-			.containsExactly(
-				"DROP TABLE IF EXISTS foo;",
-				"DROP TABLE IF EXISTS bar;",
-				"CREATE TABLE foo (id INT, name varchar(100));",
-				"CREATE TABLE bar (id INT, title varchar(100));"
-			);
+	public void it_should_parse_file_path() {
+		final String script = "/sql/init.sql";
+		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
+		assertThat(queries).hasSize(4).containsExactly(
+			"DROP TABLE IF EXISTS users;",
+			"DROP TABLE IF EXISTS movies;",
+			"CREATE TABLE users (id INT, name varchar(100));",
+			"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
+		);
 	}
 
 	@Test
-	public void it_should_parse_file_path_classpath() throws Exception {
-		String script = "classpath:/sql/init.sql";
-
-		List<String> queries = SqlScriptParser.parseScript(script, configuration);
-
-		assertThat(queries)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(4)
-			.containsExactly(
-				"DROP TABLE IF EXISTS foo;",
-				"DROP TABLE IF EXISTS bar;",
-				"CREATE TABLE foo (id INT, name varchar(100));",
-				"CREATE TABLE bar (id INT, title varchar(100));"
-			);
+	public void it_should_parse_file_path_classpath() {
+		final String script = "classpath:/sql/init.sql";
+		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
+		assertThat(queries).hasSize(4).containsExactly(
+			"DROP TABLE IF EXISTS users;",
+			"DROP TABLE IF EXISTS movies;",
+			"CREATE TABLE users (id INT, name varchar(100));",
+			"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
+		);
 	}
 
 	@Test
 	public void it_should_execute_sql_file() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/sql/init.sql")
-			.build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
+		final Connection connection = mock(Connection.class);
+		final PreparedStatement statement = mock(PreparedStatement.class);
 
-		Connection connection = mock(Connection.class);
-		PreparedStatement statement = mock(PreparedStatement.class);
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
 		SqlScriptParser.executeScript(connection, resource, configuration);
 
 		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS foo;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS bar;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE foo (id INT, name varchar(100));");
+		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT, name varchar(100));");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE bar (id INT, title varchar(100));");
+		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));");
 		inOrder.verify(statement).execute();
 	}
 
 	@Test
 	public void it_should_execute_sql_file_path() throws Exception {
-		String script = "/sql/init.sql";
-		Connection connection = mock(Connection.class);
-		PreparedStatement statement = mock(PreparedStatement.class);
+		final String script = "/sql/init.sql";
+		final Connection connection = mock(Connection.class);
+		final PreparedStatement statement = mock(PreparedStatement.class);
+
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
 		SqlScriptParser.executeScript(connection, script, configuration);
 
 		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS foo;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS bar;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE foo (id INT, name varchar(100));");
+		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT, name varchar(100));");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE bar (id INT, title varchar(100));");
+		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));");
 		inOrder.verify(statement).execute();
 	}
 
 	@Test
 	public void it_should_execute_sql_file_path_from_classpath() throws Exception {
-		String script = "classpath:/sql/init.sql";
-		Connection connection = mock(Connection.class);
-		PreparedStatement statement = mock(PreparedStatement.class);
+		final String script = "classpath:/sql/init.sql";
+		final Connection connection = mock(Connection.class);
+		final PreparedStatement statement = mock(PreparedStatement.class);
+
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
 		SqlScriptParser.executeScript(connection, script, configuration);
 
 		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS foo;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS bar;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE foo (id INT, name varchar(100));");
+		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT, name varchar(100));");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE bar (id INT, title varchar(100));");
+		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));");
 		inOrder.verify(statement).execute();
 	}
 
 	@Test
 	public void it_should_execute_all_queries() throws Exception {
-		String q1 = "UPDATE foo SET name = 'Hello -- John';";
-		String q2 = "UPDATE foo SET name = 'Hello /* John */';";
-		String query = "" +
-			"/* " + BR +
-			" * Drop schema." + BR +
-			" */" + BR +
-			"" + BR +
-			"/* Drop Table foo */" + BR +
-			q1 + BR +
-			"/* Drop Table bar */" + BR +
-			q2 + BR;
+		final String q1 = "UPDATE users SET name = 'Hello -- John';";
+		final String q2 = "UPDATE users SET name = 'Hello /* John */';";
+		final String query = join(asList(
+			"/* ",
+			" * Drop schema.",
+			" */",
+			"",
+			"/* Drop Table users */",
+			q1,
+			"/* Drop Table movies */",
+			q2
+		));
 
-		Connection connection = mock(Connection.class);
-		PreparedStatement statement = mock(PreparedStatement.class);
+		final Connection connection = mock(Connection.class);
+		final PreparedStatement statement = mock(PreparedStatement.class);
+
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
-		InputStream stream = createStream(query);
+		final InputStream stream = createStream(query);
 
 		SqlScriptParser.executeScript(connection, stream, configuration);
 
@@ -348,7 +296,16 @@ public class SqlScriptParserTest {
 		inOrder.verify(statement).execute();
 	}
 
-	private InputStream createStream(String query) {
+	private static InputStream createStream(String query) {
 		return new ByteArrayInputStream(query.getBytes(Charset.defaultCharset()));
+	}
+
+	private static String join(List<String> lines) {
+		StringBuilder sb = new StringBuilder();
+		for (String current : lines) {
+			sb.append(current).append(BR);
+		}
+
+		return sb.toString();
 	}
 }

@@ -41,7 +41,7 @@ public class WithCustomConfiguration {
 	public void method1() {
 	}
 
-	@DbUnitDataSet("/dataset/xml/foo.xml")
+	@DbUnitDataSet("/dataset/xml/users.xml")
 	@DbUnitConfig(WithCustomConfiguration.NoOpConfiguration.class)
 	public void method2() {
 	}

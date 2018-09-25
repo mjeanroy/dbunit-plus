@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.google.gson.Gson;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.google.gson.Gson;
+import org.junit.Test;
 
 public class GsonParserTest {
 
@@ -41,18 +41,14 @@ public class GsonParserTest {
 	public void it_should_parse_file() {
 		final Gson gson = new Gson();
 		final GsonParser parser = new GsonParser(gson);
-
-		final Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/json/foo.json")
-			.build();
-
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
 		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
 			.hasSize(1)
-			.containsKey("foo");
+			.containsKey("users");
 
-		final List<Map<String, Object>> table = tables.get("foo");
+		final List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
 		final Map<String, Object> row1 = table.get(0);

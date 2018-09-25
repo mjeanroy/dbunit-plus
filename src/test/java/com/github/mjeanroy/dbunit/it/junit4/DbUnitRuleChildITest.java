@@ -24,16 +24,20 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import org.junit.Test;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.Connection;
+
+import org.junit.Test;
 
 public class DbUnitRuleChildITest extends DbUnitRuleITest {
 
 	@Test
 	public void testChildClass() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 }

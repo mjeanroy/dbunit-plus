@@ -37,6 +37,6 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@DbUnitDataSet("/dataset/xml/foo.xml")
-public @interface DbUnitFooDataSet {
+@DbUnitDataSet("/dataset/xml/users.xml")
+public @interface DbUnitUsersDataSet {
 }

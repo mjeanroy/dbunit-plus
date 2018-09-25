@@ -49,8 +49,8 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
 		final Resource resource = new ResourceMockBuilder()
-			.setFilename("foo.xml")
-			.fromClasspath("/dataset/xml/foo.xml")
+			.setFilename("users.xml")
+			.fromClasspath("/dataset/xml/users.xml")
 			.build();
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
@@ -60,12 +60,12 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(1)
-			.containsOnly("foo");
+			.containsOnly("users");
 	}
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
-		final String path = "/dataset/xml/foo.xml";
+		final String path = "/dataset/xml/users.xml";
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
@@ -73,12 +73,12 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(1)
-			.containsOnly("foo");
+			.containsOnly("users");
 	}
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
-		final String path = "classpath:/dataset/xml/foo.xml";
+		final String path = "classpath:/dataset/xml/users.xml";
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
@@ -86,12 +86,12 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(1)
-			.containsOnly("foo");
+			.containsOnly("users");
 	}
 
 	@Test
 	public void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
-		final File file = getTestResource("/dataset/xml/foo.xml");
+		final File file = getTestResource("/dataset/xml/users.xml");
 		final String path = "file:" + file.getAbsolutePath();
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
@@ -100,14 +100,14 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(1)
-			.containsOnly("foo");
+			.containsOnly("users");
 	}
 
 	@Test
 	public void it_should_create_data_set_from_array_of_path() throws Exception {
 		final String[] path = new String[]{
-			"classpath:/dataset/xml/foo.xml",
-			"classpath:/dataset/xml/bar.xml"
+			"classpath:/dataset/xml/users.xml",
+			"classpath:/dataset/xml/movies.xml"
 		};
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
@@ -117,7 +117,7 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
-			.containsOnly("foo", "bar");
+			.containsOnly("users", "movies");
 	}
 
 	@Test
@@ -136,8 +136,8 @@ public class DataSetFactoryTest {
 	@Test
 	public void it_should_create_json_data_set() throws Exception {
 		final Resource resource = new ResourceMockBuilder()
-			.setFilename("foo.json")
-			.fromClasspath("/dataset/json/foo.json")
+			.setFilename("users.json")
+			.fromClasspath("/dataset/json/users.json")
 			.build();
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
@@ -147,13 +147,8 @@ public class DataSetFactoryTest {
 
 	@Test
 	public void it_should_create_csv_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder()
-			.setFilename("foo.csv")
-			.fromClasspath("/dataset/csv/foo.csv")
-			.build();
-
+		final Resource resource = new ResourceMockBuilder().setFilename("users.csv").fromClasspath("/dataset/csv/users.csv").build();
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
-
 		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
 	}
 
@@ -161,11 +156,11 @@ public class DataSetFactoryTest {
 	public void it_should_merge_dataset() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/foo.xml"));
+			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
 
 		final IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/bar.xml"));
+			.build(getClass().getResourceAsStream("/dataset/xml/movies.xml"));
 
 		final IDataSet dataSet = DataSetFactory.mergeDataSet(first, second);
 
@@ -174,18 +169,18 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
-			.containsOnly("foo", "bar");
+			.containsOnly("users", "movies");
 	}
 
 	@Test
 	public void it_should_create_dataset_from_collection_of_datasets() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/foo.xml"));
+			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
 
 		final IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/bar.xml"));
+			.build(getClass().getResourceAsStream("/dataset/xml/movies.xml"));
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(asList(first, second));
 
@@ -194,18 +189,18 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
-			.containsOnly("foo", "bar");
+			.containsOnly("users", "movies");
 	}
 
 	@Test
 	public void it_should_create_dataset_from_array_of_datasets() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/foo.xml"));
+			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
 
 		final IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/bar.xml"));
+			.build(getClass().getResourceAsStream("/dataset/xml/movies.xml"));
 
 		final IDataSet[] inputs = new IDataSet[]{
 			first,
@@ -219,6 +214,6 @@ public class DataSetFactoryTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
-			.containsOnly("foo", "bar");
+			.containsOnly("users", "movies");
 	}
 }

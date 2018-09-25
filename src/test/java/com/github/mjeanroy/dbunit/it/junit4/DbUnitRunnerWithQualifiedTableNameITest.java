@@ -24,7 +24,8 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
@@ -52,14 +53,14 @@ public class DbUnitRunnerWithQualifiedTableNameITest {
 
 	@BeforeClass
 	public static void setup() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(hsqldb.getConnection())).isZero();
+		assertThat(countMovies(hsqldb.getConnection())).isZero();
 	}
 
 	@Test
 	public void test1() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(hsqldb.getConnection())).isEqualTo(2);
+		assertThat(countMovies(hsqldb.getConnection())).isEqualTo(3);
 	}
 
 }

@@ -24,6 +24,19 @@
 
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
@@ -34,18 +47,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-
-import java.io.File;
-import java.sql.Connection;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class LiquibaseUpdateTest {
 
@@ -67,19 +68,19 @@ public class LiquibaseUpdateTest {
 	}
 
 	@Test
-	public void it_should_load_liquibase_changelogs() throws Exception {
+	public void it_should_load_liquibase_changelogs() {
 		final String changeLog = "/liquibase/changelog.xml";
 		assertLiquibaseUpdate(changeLog);
 	}
 
 	@Test
-	public void it_should_load_liquibase_changelogs_from_classpath() throws Exception {
+	public void it_should_load_liquibase_changelogs_from_classpath() {
 		final String changeLog = "classpath:/liquibase/changelog.xml";
 		assertLiquibaseUpdate(changeLog);
 	}
 
 	@Test
-	public void it_should_load_liquibase_changelogs_from_file_system() throws Exception {
+	public void it_should_load_liquibase_changelogs_from_file_system() {
 		final File changeLogFile = getTestResource("/liquibase/changelog.xml");
 		final String changeLog = "file:" + changeLogFile.getAbsolutePath();
 		assertLiquibaseUpdate(changeLog);
@@ -100,8 +101,9 @@ public class LiquibaseUpdateTest {
 
 		liquibaseUpdater.update();
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 		verify(factory, atLeastOnce()).getConnection();
 	}
 

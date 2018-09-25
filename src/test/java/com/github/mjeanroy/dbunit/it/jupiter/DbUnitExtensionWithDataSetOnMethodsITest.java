@@ -24,16 +24,17 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
 
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitDefaultDataSet;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitFooDataSet;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitUsersDataSet;
 import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -46,21 +47,21 @@ class DbUnitExtensionWithDataSetOnMethodsITest {
 
 	@BeforeAll
 	static void setup(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isZero();
-		assertThat(countFrom(connection, "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
 	@DbUnitDefaultDataSet
 	void test1(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isEqualTo(2);
-		assertThat(countFrom(connection, "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
-	@DbUnitFooDataSet
+	@DbUnitUsersDataSet
 	void test2(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isEqualTo(2);
-		assertThat(countFrom(connection, "bar")).isEqualTo(0);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(0);
 	}
 }

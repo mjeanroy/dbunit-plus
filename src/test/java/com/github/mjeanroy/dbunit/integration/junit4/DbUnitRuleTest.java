@@ -24,25 +24,9 @@
 
 package com.github.mjeanroy.dbunit.integration.junit4;
 
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.runner.Description.createSuiteDescription;
@@ -52,6 +36,25 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
+import java.sql.Connection;
+
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.junit.Before;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 @SuppressWarnings("SameParameterValue")
 public class DbUnitRuleTest {
 
@@ -60,8 +63,9 @@ public class DbUnitRuleTest {
 
 	@Before
 	public void setup() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
@@ -136,13 +140,13 @@ public class DbUnitRuleTest {
 		return new DbUnitRule(factory);
 	}
 
-	private static void applyAndVerifyRule(DbUnitRule rule, Statement statement, Description description, final int expectedFoo, final int expectedBar) throws Throwable {
+	private static void applyAndVerifyRule(DbUnitRule rule, Statement statement, Description description, final int expectedCountUsers, final int expectedCountMovies) throws Throwable {
 		final Statement result = rule.apply(statement, description);
 
 		assertThat(result).isNotNull();
 		verifyZeroInteractions(statement);
 
-		doAnswer(statementAnswer(expectedFoo, expectedBar)).when(statement).evaluate();
+		doAnswer(statementAnswer(expectedCountUsers, expectedCountMovies)).when(statement).evaluate();
 
 		result.evaluate();
 		verify(statement).evaluate();
@@ -152,8 +156,9 @@ public class DbUnitRuleTest {
 		return new Answer<Void>() {
 			@Override
 			public Void answer(InvocationOnMock invocation) {
-				assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(expectedFoo);
-				assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(expectedBar);
+				final Connection connection = hsqldb.getConnection();
+				assertThat(countUsers(connection)).isEqualTo(expectedFoo);
+				assertThat(countMovies(connection)).isEqualTo(expectedBar);
 				return null;
 			}
 		};

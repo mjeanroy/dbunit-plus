@@ -37,7 +37,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
@@ -153,8 +154,8 @@ public class DbUnitEmbeddedDatabaseExtensionTest {
 
 	private static void verifyData(Connection connection, int countFoo, int countBar) {
 		assertThat(connection).isNotNull();
-		assertThat(countFrom(connection, "foo")).isEqualTo(countFoo);
-		assertThat(countFrom(connection, "bar")).isEqualTo(countBar);
+		assertThat(countUsers(connection)).isEqualTo(countFoo);
+		assertThat(countMovies(connection)).isEqualTo(countBar);
 	}
 
 	@SuppressWarnings("unused")

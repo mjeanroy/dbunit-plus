@@ -23,7 +23,6 @@
 -->
 
 <dataset>
-  <bar id="1" title="Lord Of The Rings"/>
-  <bar id="2" title="Star Wars"/>
-  <bar id="3" title="Back To The Future"/>
+  <users id="1" name="[JOHN_DOE]"/>
+  <users id="2" name="[JANE_DOE]"/>
 </dataset>

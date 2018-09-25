@@ -24,6 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
@@ -32,209 +37,112 @@ import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_create_directory_dataset() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
-
-		assertThat(dataSet.getResource())
-			.isNotNull()
-			.isEqualTo(resource);
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
+		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		assertThat(dataSet.getResource()).isEqualTo(resource);
 	}
 
 	@Test
 	public void it_should_return_table_names() throws Exception {
-		Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
-			.setFilename("foo.xml")
-			.build();
+		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFilename("users.xml").build();
+		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFilename("movies.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
+		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/bar.xml")
-			.setFilename("bar.xml")
-			.build();
+		final String[] tableNames = dataSet.getTableNames();
 
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.addSubResources(r1, r2)
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
-
-		String[] tableNames = dataSet.getTableNames();
-		assertThat(tableNames)
-			.isNotNull()
-			.hasSize(2)
-			.containsOnly("foo", "bar");
+		assertThat(tableNames).hasSize(2).containsOnly("users", "movies");
 	}
 
 	@Test
 	public void it_should_get_table() throws Exception {
-		Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
-			.setFile()
-			.setFilename("foo.xml")
-			.build();
+		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
+		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
+		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/bar.xml")
-			.setFile()
-			.setFilename("bar.xml")
-			.build();
+		final ITable t1 = dataSet.getTable("users");
+		final ITable t2 = dataSet.getTable("movies");
 
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.addSubResources(r1, r2)
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
-
-		ITable t1 = dataSet.getTable("foo");
-		ITable t2 = dataSet.getTable("bar");
 		assertThat(t1).isNotNull();
 		assertThat(t1.getRowCount()).isEqualTo(2);
-
 		assertThat(t2).isNotNull();
 		assertThat(t2.getRowCount()).isEqualTo(3);
 	}
 
 	@Test
 	public void it_should_get_table_metadata() throws Exception {
-		Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
-			.setFile()
-			.setFilename("foo.xml")
-			.build();
+		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
+		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
+		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/bar.xml")
-			.setFile()
-			.setFilename("bar.xml")
-			.build();
-
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.addSubResources(r1, r2)
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
-
-		ITableMetaData meta1 = dataSet.getTableMetaData("foo");
+		final ITableMetaData meta1 = dataSet.getTableMetaData("users");
 
 		assertThat(meta1).isNotNull();
 		assertThat(meta1.getColumns())
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.extracting("columnName")
 			.containsOnly("id", "name");
 
-		ITableMetaData meta2 = dataSet.getTableMetaData("bar");
+		final ITableMetaData meta2 = dataSet.getTableMetaData("movies");
 
 		assertThat(meta2).isNotNull();
 		assertThat(meta2.getColumns())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
+			.hasSize(3)
 			.extracting("columnName")
-			.containsOnly("id", "title");
+			.containsOnly("id", "title", "synopsys");
 	}
 
 	@Test
 	public void it_should_iterate_over_tables() throws Exception {
-		Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
-			.setFile()
-			.setFilename("foo.xml")
-			.build();
+		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
+		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
+		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/bar.xml")
-			.setFile()
-			.setFilename("bar.xml")
-			.build();
+		final ITableIterator it = dataSet.iterator();
+		final List<ITable> tables = new ArrayList<>();
 
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.addSubResources(r1, r2)
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
-
-		ITableIterator it = dataSet.iterator();
-
-		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
 			tables.add(it.getTable());
 		}
 
 		assertThat(tables)
-			.isNotNull()
 			.hasSize(2)
 			.extracting("tableMetaData.tableName")
-			.containsExactly("bar", "foo");
+			.containsExactly("movies", "users");
 	}
 
 	@Test
 	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/foo.xml")
-			.setFile()
-			.setFilename("foo.xml")
-			.build();
+		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
+		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
+		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/bar.xml")
-			.setFile()
-			.setFilename("bar.xml")
-			.build();
+		final ITableIterator it = dataSet.reverseIterator();
+		final List<ITable> tables = new ArrayList<>();
 
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.addSubResources(r1, r2)
-			.build();
-
-		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
-
-		ITableIterator it = dataSet.reverseIterator();
-
-		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
 			tables.add(it.getTable());
 		}
 
 		assertThat(tables)
-			.isNotNull()
 			.hasSize(2)
 			.extracting("tableMetaData.tableName")
-			.containsExactly("foo", "bar");
+			.containsExactly("users", "movies");
 	}
 
 	@Test
 	public void it_should_check_for_case_insensitive_names() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.build();
-
-		DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
-		DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
+		final DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
+		final DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();
@@ -242,13 +150,8 @@ public class DirectoryDataSetTest {
 
 	@Test
 	public void it_should_implement_to_string() throws Exception {
-		Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
-			.setDirectory()
-			.build();
-
-		DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
-
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
+		final DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
 		assertThat(ds.toString()).isEqualTo(String.format("DirectoryDataSet{resource: %s}", resource.toString()));
 	}
 }

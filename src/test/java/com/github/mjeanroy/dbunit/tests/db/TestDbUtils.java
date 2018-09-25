@@ -22,38 +22,38 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it.junit4;
+package com.github.mjeanroy.dbunit.tests.db;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 
 import java.sql.Connection;
 
-import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
-import com.github.mjeanroy.dbunit.integration.spring.junit4.DbUnitEmbeddedDatabaseRule;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
-import org.junit.ClassRule;
-import org.junit.Test;
+/**
+ * Static test DB Utilities.
+ */
+public final class TestDbUtils {
 
-@DbUnitTest
-@EmbeddedDatabaseConfiguration(scripts = "classpath:/sql/init.sql")
-public class DbUnitEmbeddedDatabaseRuleITest {
-
-	@ClassRule
-	public static DbUnitEmbeddedDatabaseRule rule = new DbUnitEmbeddedDatabaseRule();
-
-	@Test
-	public void test1() {
-		final Connection connection = rule.getConnection();
-		assertThat(countUsers(connection)).isEqualTo(2);
-		assertThat(countMovies(connection)).isEqualTo(3);
+	// Ensure non instantiation.
+	private TestDbUtils() {
 	}
 
-	@Test
-	public void test2() {
-		final Connection connection = rule.getConnection();
-		assertThat(countUsers(connection)).isEqualTo(2);
-		assertThat(countMovies(connection)).isEqualTo(3);
+	/**
+	 * Count number of rows in `users` table.
+	 *
+	 * @param connection The SQL Connection to use.
+	 * @return The number of rows in table.
+	 */
+	public static long countUsers(Connection connection) {
+		return countFrom(connection, "users");
+	}
+
+	/**
+	 * Count number of rows in `movies` table.
+	 *
+	 * @param connection The SQL Connection to use.
+	 * @return The number of rows in table.
+	 */
+	public static long countMovies(Connection connection) {
+		return countFrom(connection, "movies");
 	}
 }

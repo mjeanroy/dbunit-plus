@@ -61,6 +61,6 @@ public class YamlDataSetBuilderTest {
 	}
 
 	private static Resource createResource() {
-		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/foo.yml").build();
+		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
 	}
 }

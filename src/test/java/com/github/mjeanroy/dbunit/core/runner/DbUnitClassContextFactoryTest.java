@@ -24,6 +24,9 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitAllowEmptyFieldsInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitBatchedStatementsInterceptor;
@@ -44,9 +47,6 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
 import org.dbunit.dataset.CompositeDataSet;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 public class DbUnitClassContextFactoryTest {
 
@@ -88,10 +88,10 @@ public class DbUnitClassContextFactoryTest {
 			.isNotEmpty()
 			.hasSize(4)
 			.containsOnly(
-				"DROP TABLE IF EXISTS foo;",
-				"DROP TABLE IF EXISTS bar;",
-				"CREATE TABLE foo (id INT, name varchar(100));",
-				"CREATE TABLE bar (id INT, title varchar(100));"
+				"DROP TABLE IF EXISTS users;",
+				"DROP TABLE IF EXISTS movies;",
+				"CREATE TABLE users (id INT, name varchar(100));",
+				"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
 			);
 	}
 

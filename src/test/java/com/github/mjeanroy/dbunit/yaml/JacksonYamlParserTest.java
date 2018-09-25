@@ -47,12 +47,12 @@ public class JacksonYamlParserTest {
 	@Test
 	public void it_should_parse_file() {
 		final JacksonYamlParser parser = new JacksonYamlParser();
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/foo.yml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
 		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
-		assertThat(tables).hasSize(1).containsKey("foo");
+		assertThat(tables).hasSize(1).containsKey("users");
 
-		final List<Map<String, Object>> table = tables.get("foo");
+		final List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
 		final Map<String, Object> row1 = table.get(0);

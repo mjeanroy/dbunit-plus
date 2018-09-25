@@ -24,6 +24,20 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.runner.Description.createTestDescription;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import org.junit.Test;
 import org.junit.runner.Description;
@@ -34,19 +48,6 @@ import org.mockito.stubbing.Answer;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-
-import java.sql.Connection;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.runner.Description.createTestDescription;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class DbUnitEmbeddedDatabaseRuleTest {
 
@@ -89,8 +90,9 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 		doAnswer(new Answer() {
 			@Override
 			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-				assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
+				final Connection connection = db.getConnection();
+				assertThat(countUsers(connection)).isEqualTo(2);
+				assertThat(countMovies(connection)).isEqualTo(3);
 				return null;
 			}
 		}).when(statement).evaluate();

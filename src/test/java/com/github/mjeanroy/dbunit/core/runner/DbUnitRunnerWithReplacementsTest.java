@@ -24,15 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
-import org.junit.ClassRule;
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
+import org.junit.ClassRule;
+import org.junit.Test;
 
 public class DbUnitRunnerWithReplacementsTest {
 
@@ -41,24 +42,28 @@ public class DbUnitRunnerWithReplacementsTest {
 
 	@Test
 	public void it_should_replace_values() throws Exception {
-		Class<WithReplacementsDataSet> klass = WithReplacementsDataSet.class;
-		DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
+		final Class<WithReplacementsDataSet> klass = WithReplacementsDataSet.class;
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
 
 		// Setup Operation
-		Method testMethod = klass.getMethod("method1");
+		final Method testMethod = klass.getMethod("method1");
 		runner.beforeTest(testMethod);
 
-		ResultSet r1 = hsqldb.getConnection().prepareStatement("SELECT * FROM foo WHERE id = 1").executeQuery();
+		ResultSet r1 = getUser(1);
 		assertThat(r1.next()).isTrue();
 		assertThat(r1.getInt("id")).isEqualTo(1);
 		assertThat(r1.getString("name")).isEqualTo("John Doe");
 
-		ResultSet r2 = hsqldb.getConnection().prepareStatement("SELECT * FROM foo WHERE id = 2").executeQuery();
+		ResultSet r2 = getUser(2);
 		assertThat(r2.next()).isTrue();
 		assertThat(r2.getInt("id")).isEqualTo(2);
 		assertThat(r2.getString("name")).isEqualTo("Jane Doe");
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
+	}
+
+	private static ResultSet getUser(int id) throws SQLException {
+		return hsqldb.getConnection().prepareStatement("SELECT * FROM users WHERE id = " + id).executeQuery();
 	}
 }

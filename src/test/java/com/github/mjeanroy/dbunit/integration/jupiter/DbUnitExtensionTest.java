@@ -42,7 +42,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -184,13 +184,13 @@ public class DbUnitExtensionTest {
 	}
 
 	private void verifyData(Connection connection, int expectedRows) {
-		assertThat(countFrom(connection, "foo")).isEqualTo(expectedRows);
+		assertThat(countUsers(connection)).isEqualTo(expectedRows);
 	}
 
 	private void verifyEmptyStore(FakeExtensionContext extensionContext) {
 		final FakeStore store = extensionContext.getSingleStore();
 		assertThat(store.size()).isEqualTo(0);
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(0);
+		assertThat(countUsers(hsqldb.getConnection())).isEqualTo(0);
 	}
 
 	@SuppressWarnings("unused")

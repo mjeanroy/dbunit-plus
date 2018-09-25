@@ -24,14 +24,15 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.jupiter.EmbeddedDatabaseExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @EmbeddedDatabaseConfiguration(
 	generateUniqueName = true,
@@ -52,13 +53,13 @@ class EmbeddedDatabaseRegisterExtensionITest {
 
 	@Test
 	void it_should_populate_db_in_first_test(EmbeddedDatabase db) throws Exception {
-		assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(db.getConnection())).isEqualTo(2);
+		assertThat(countMovies(db.getConnection())).isEqualTo(3);
 	}
 
 	@Test
 	void it_should_populate_db_in_second_test(EmbeddedDatabase db) throws Exception {
-		assertThat(countFrom(db.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(db.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(db.getConnection())).isEqualTo(2);
+		assertThat(countMovies(db.getConnection())).isEqualTo(3);
 	}
 }

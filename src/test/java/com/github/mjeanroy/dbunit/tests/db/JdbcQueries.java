@@ -44,7 +44,7 @@ public final class JdbcQueries {
 	 * @param tableName The table name.
 	 * @return The number of rows in given table.
 	 */
-	public static int countFrom(Connection connection, String tableName) {
+	static int countFrom(Connection connection, String tableName) {
 		try {
 			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
 			result.next();

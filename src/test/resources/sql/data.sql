@@ -25,9 +25,9 @@
 --
 -- Add some data.
 --
-INSERT INTO foo VALUES(1, 'John Doe');
-INSERT INTO foo VALUES(2, 'Jane Doe');
+INSERT INTO users VALUES(1, 'John Doe');
+INSERT INTO users VALUES(2, 'Jane Doe');
 
-INSERT INTO bar VALUES(1, 'Back To The Future');
-INSERT INTO bar VALUES(2, 'Star Wars');
-INSERT INTO bar VALUES(3, 'Lord Of The Rings');
+INSERT INTO movies VALUES(1, 'Star Wars', NULL);
+INSERT INTO movies VALUES(2, 'Lord Of The Rings', NULL);
+INSERT INTO movies VALUES(3, 'Back To The Future', 'The story of Marty MacFly');

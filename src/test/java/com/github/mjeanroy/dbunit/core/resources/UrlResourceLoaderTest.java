@@ -24,6 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.net.URL;
+
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -32,16 +42,6 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.net.URL;
-
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UrlResourceLoaderTest {
 
@@ -60,22 +60,22 @@ public class UrlResourceLoaderTest {
 
 	@Test
 	public void it_should_match_these_prefixes() {
-		assertThat(loader.match("http:/foo.txt")).isTrue();
-		assertThat(loader.match("HTTP:/foo.txt")).isTrue();
-		assertThat(loader.match("https:/foo.txt")).isTrue();
-		assertThat(loader.match("HTTPS:/foo.txt")).isTrue();
+		assertThat(loader.match("http:/users.txt")).isTrue();
+		assertThat(loader.match("HTTP:/users.txt")).isTrue();
+		assertThat(loader.match("https:/users.txt")).isTrue();
+		assertThat(loader.match("HTTPS:/users.txt")).isTrue();
 	}
 
 	@Test
 	public void it_should_not_match_these_prefixes() {
-		assertThat(loader.match("http/foo.txt")).isFalse();
-		assertThat(loader.match("https/foo.txt")).isFalse();
-		assertThat(loader.match("/foo.txt")).isFalse();
+		assertThat(loader.match("http/users.txt")).isFalse();
+		assertThat(loader.match("https/users.txt")).isFalse();
+		assertThat(loader.match("/users.txt")).isFalse();
 	}
 
 	@Test
 	public void it_should_load_resource() {
-		final String path = "/dataset/json/foo.json";
+		final String path = "/dataset/json/users.json";
 		final String dataset = readTestResource(path);
 
 		stubFor(WireMock.get(urlEqualTo(path))
@@ -89,7 +89,7 @@ public class UrlResourceLoaderTest {
 
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
-		assertThat(resource.getFilename()).isEqualTo("foo.json");
+		assertThat(resource.getFilename()).isEqualTo("users.json");
 	}
 
 	@Test

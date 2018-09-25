@@ -60,12 +60,12 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 					return resource.getFilename();
 				}
 			})
-			.containsOnly("foo.xml", "bar.xml");
+			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
 	public void it_should_return_empty_list_without_directory() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/foo.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)

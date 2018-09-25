@@ -24,15 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
-import org.junit.ClassRule;
-import org.junit.Test;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
+import java.sql.Connection;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
+import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
+import org.junit.ClassRule;
+import org.junit.Test;
 
 public class DbUnitRunnerWithSqlInitTest {
 
@@ -41,23 +43,24 @@ public class DbUnitRunnerWithSqlInitTest {
 
 	@Test
 	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
-		Class<WithDataSetAndSqlInit> klass = WithDataSetAndSqlInit.class;
-		DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
+		final Class<WithDataSetAndSqlInit> klass = WithDataSetAndSqlInit.class;
+		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
+		final Connection connection = hsqldb.getConnection();
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 
 		// Setup Operation
-		Method testMethod = klass.getMethod("method1");
+		final Method testMethod = klass.getMethod("method1");
 		runner.beforeTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 
 		// Tear Down Operation
 		runner.afterTest(testMethod);
 
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isZero();
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 }

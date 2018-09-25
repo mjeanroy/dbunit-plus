@@ -24,6 +24,13 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.spring.DbUnitSpring;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
@@ -33,11 +40,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import javax.sql.DataSource;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestSpringConfiguration.class)
@@ -50,14 +52,16 @@ class DbUnitSpringExtensionITest {
 
 	@Test
 	void method1() throws Exception {
-		assertThat(countFrom(dataSource.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dataSource.getConnection(), "bar")).isEqualTo(3);
+		final Connection connection = dataSource.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
-	@DbUnitDataSet("classpath:/dataset/xml/foo.xml")
+	@DbUnitDataSet("classpath:/dataset/xml/users.xml")
 	void method2() throws Exception {
-		assertThat(countFrom(dataSource.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(dataSource.getConnection(), "bar")).isZero();
+		final Connection connection = dataSource.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isZero();
 	}
 }

@@ -24,13 +24,16 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.sql.Connection;
+
 import com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmbeddedDatabaseRuleITest {
 
@@ -42,13 +45,15 @@ public class EmbeddedDatabaseRuleITest {
 
 	@Test
 	public void it_should_be_ok_with_first_test() throws Exception {
-		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
+		final Connection connection = rule.getDb().getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
 	public void it_should_be_ok_with_second_test() throws Exception {
-		assertThat(countFrom(rule.getDb().getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(rule.getDb().getConnection(), "bar")).isEqualTo(3);
+		final Connection connection = rule.getDb().getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 }

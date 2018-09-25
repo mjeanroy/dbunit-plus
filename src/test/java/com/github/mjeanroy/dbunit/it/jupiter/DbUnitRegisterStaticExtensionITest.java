@@ -24,7 +24,8 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
@@ -50,20 +51,20 @@ class DbUnitRegisterStaticExtensionITest {
 
 	@BeforeAll
 	static void setup(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isZero();
-		assertThat(countFrom(connection, "bar")).isZero();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
 	void test1(Connection connection) {
-		assertThat(countFrom(connection, "foo")).isEqualTo(2);
-		assertThat(countFrom(connection, "bar")).isEqualTo(3);
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/xml/foo.xml")
+	@DbUnitDataSet("/dataset/xml/users.xml")
 	void test2(EmbeddedDatabase hsqldb) throws Exception {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+		assertThat(countUsers(hsqldb.getConnection())).isEqualTo(2);
+		assertThat(countMovies(hsqldb.getConnection())).isEqualTo(0);
 	}
 }

@@ -22,7 +22,22 @@
  SOFTWARE.
 -->
 
-<dataset>
-  <foo id="1" name="John Doe"/>
-  <foo id="2" name="Jane Doe"/>
-</dataset>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
+
+  <changeSet id="create-table-movies" author="mjeanroy">
+    <createTable tableName="movies">
+      <column name="id" type="INT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="title" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="synopsys" type="varchar(200)"/>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>

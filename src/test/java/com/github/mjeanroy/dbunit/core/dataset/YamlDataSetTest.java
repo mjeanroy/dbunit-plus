@@ -81,14 +81,14 @@ public class YamlDataSetTest {
 		assertThat(tableNames)
 			.isNotNull()
 			.hasSize(1)
-			.containsOnly("foo");
+			.containsOnly("users");
 	}
 
 	@Test
 	public void it_should_get_table() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITable table = dataSet.getTable("foo");
+		final ITable table = dataSet.getTable("users");
 
 		assertThat(table).isNotNull();
 		assertThat(table.getRowCount()).isEqualTo(2);
@@ -98,7 +98,7 @@ public class YamlDataSetTest {
 	public void it_should_get_table_metadata() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITableMetaData metaData = dataSet.getTableMetaData("foo");
+		final ITableMetaData metaData = dataSet.getTableMetaData("users");
 
 		assertThat(metaData).isNotNull();
 		assertThat(metaData.getColumns())
@@ -113,7 +113,7 @@ public class YamlDataSetTest {
 	public void it_should_get_table_data() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITable table = dataSet.getTable("foo");
+		final ITable table = dataSet.getTable("users");
 
 		for (int row = 0; row < table.getRowCount(); row++) {
 			assertThat(table.getValue(row, "name")).isNotNull();
@@ -134,7 +134,7 @@ public class YamlDataSetTest {
 		assertThat(tables)
 			.hasSize(1)
 			.extracting("tableMetaData.tableName")
-			.containsExactly("foo");
+			.containsExactly("users");
 	}
 
 	@Test
@@ -151,7 +151,7 @@ public class YamlDataSetTest {
 		assertThat(tables)
 			.hasSize(1)
 			.extracting("tableMetaData.tableName")
-			.containsExactly("foo");
+			.containsExactly("users");
 	}
 
 	@Test
@@ -172,7 +172,7 @@ public class YamlDataSetTest {
 	}
 
 	private static Resource createResource() {
-		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/foo.yml").build();
+		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
 	}
 
 	private static ThrowingCallable newYamlDataset(final Resource resource, final boolean caseInsensitiveTableNames, final YamlParser parser) {

@@ -25,11 +25,11 @@
 --
 -- Drop tables if it already exist.
 --
-DROP TABLE IF EXISTS foo;
-DROP TABLE IF EXISTS bar;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS movies;
 
 --
 -- Create tables.
 --
-CREATE TABLE foo (id INT, name varchar(100));
-CREATE TABLE bar (id INT, title varchar(100));
+CREATE TABLE users (id INT, name varchar(100));
+CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));

@@ -23,6 +23,7 @@
 -->
 
 <dataset>
-  <PUBLIC.foo id="1" name="John Doe"/>
-  <PUBLIC.foo id="2" name="Jane Doe"/>
+  <movies id="1" title="Lord Of The Rings"/>
+  <movies id="2" title="Star Wars"/>
+  <movies id="3" title="Back To The Future" synopsys="The story of Marty MacFly"/>
 </dataset>

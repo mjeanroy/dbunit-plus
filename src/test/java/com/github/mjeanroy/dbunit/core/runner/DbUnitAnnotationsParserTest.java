@@ -24,6 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.List;
+
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -55,15 +64,6 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSe
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.junit.Test;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 public class DbUnitAnnotationsParserTest {
 
@@ -115,10 +115,10 @@ public class DbUnitAnnotationsParserTest {
 			.isNotEmpty()
 			.hasSize(4)
 			.containsOnly(
-				"DROP TABLE IF EXISTS foo;",
-				"DROP TABLE IF EXISTS bar;",
-				"CREATE TABLE foo (id INT, name varchar(100));",
-				"CREATE TABLE bar (id INT, title varchar(100));"
+				"DROP TABLE IF EXISTS users;",
+				"DROP TABLE IF EXISTS movies;",
+				"CREATE TABLE users (id INT, name varchar(100));",
+				"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
 			);
 	}
 

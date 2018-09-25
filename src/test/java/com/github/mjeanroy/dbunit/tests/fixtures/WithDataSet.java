@@ -37,7 +37,7 @@ public class WithDataSet {
 	public void method1() {
 	}
 
-	@DbUnitDataSet("/dataset/xml/foo.xml")
+	@DbUnitDataSet("/dataset/xml/users.xml")
 	public void method2() {
 	}
 

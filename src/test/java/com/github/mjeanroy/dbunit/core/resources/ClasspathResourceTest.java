@@ -24,6 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
+
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -31,36 +41,26 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.assertj.core.api.iterable.Extractor;
 import org.junit.Test;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collection;
-
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 @SuppressWarnings("SameParameterValue")
 public class ClasspathResourceTest {
 
 	@Test
 	public void it_should_return_true_if_exists_with_resource_in_jar() {
-		final URL url = getClass().getResource("/jar/dataset/xml/foo.xml");
+		final URL url = getClass().getResource("/jar/dataset/xml/users.xml");
 		final ClasspathResource resource = new ClasspathResource(url);
 		assertThat(resource.exists()).isTrue();
 	}
 
 	@Test
 	public void it_should_get_filename_from_file_in_jar() {
-		final URL url = getClass().getResource("/jar/dataset/xml/foo.xml");
+		final URL url = getClass().getResource("/jar/dataset/xml/users.xml");
 		final ClasspathResource resource = new ClasspathResource(url);
-		assertThat(resource.getFilename()).isEqualTo("foo.xml");
+		assertThat(resource.getFilename()).isEqualTo("users.xml");
 	}
 
 	@Test
 	public void it_should_get_input_stream_on_resource_in_jar() throws Exception {
-		final String path = "/jar/dataset/xml/foo.xml";
+		final String path = "/jar/dataset/xml/users.xml";
 		final URL url = getClass().getResource(path);
 		final ClasspathResource resource = new ClasspathResource(url);
 
@@ -78,7 +78,7 @@ public class ClasspathResourceTest {
 
 	@Test
 	public void it_should_return_false_if_file_is_not_a_directory_with_resource_in_jar() {
-		final String path = "/jar/dataset/xml/foo.xml";
+		final String path = "/jar/dataset/xml/users.xml";
 		final URL url = getClass().getResource(path);
 		final ClasspathResource resource = new ClasspathResource(url);
 		assertThat(resource.isDirectory()).isFalse();
@@ -94,7 +94,7 @@ public class ClasspathResourceTest {
 
 	@Test
 	public void it_should_cant_get_file_from_jar() {
-		final String path = "/jar/dataset/xml/foo.xml";
+		final String path = "/jar/dataset/xml/users.xml";
 		final URL url = getClass().getResource(path);
 		final ClasspathResource resource = new ClasspathResource(url);
 		final String message = "Resource <URL %s cannot be resolved to absolute file path because it does not reside in the file system> does not exist";
@@ -106,14 +106,11 @@ public class ClasspathResourceTest {
 
 	@Test
 	public void it_should_returns_empty_list_of_resources_without_directory() {
-		final String path = "/jar/dataset/xml/foo.xml";
+		final String path = "/jar/dataset/xml/users.xml";
 		final URL url = getClass().getResource(path);
 		final ClasspathResource resource = new ClasspathResource(url);
 		final Collection<Resource> subResources = resource.listResources();
-
-		assertThat(subResources)
-			.isNotNull()
-			.isEmpty();
+		assertThat(subResources).isNotNull().isEmpty();
 	}
 
 	@Test
@@ -124,8 +121,6 @@ public class ClasspathResourceTest {
 		final Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.are(isInstanceOf(ClasspathResource.class))
 			.extracting(new Extractor<Resource, String>() {
@@ -134,7 +129,7 @@ public class ClasspathResourceTest {
 					return resource.getFilename();
 				}
 			})
-			.containsOnly("foo.xml", "bar.xml");
+			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
@@ -145,8 +140,6 @@ public class ClasspathResourceTest {
 		final Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(2)
 			.are(isInstanceOf(ClasspathResource.class))
 			.extracting(new Extractor<Resource, String>() {
@@ -155,7 +148,7 @@ public class ClasspathResourceTest {
 					return resource.getFilename();
 				}
 			})
-			.containsOnly("foo.xml", "bar.xml");
+			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
@@ -166,8 +159,6 @@ public class ClasspathResourceTest {
 		final Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-			.isNotNull()
-			.isNotEmpty()
 			.hasSize(1)
 			.are(isInstanceOf(ClasspathResource.class))
 			.extracting(new Extractor<Resource, String>() {
@@ -190,7 +181,7 @@ public class ClasspathResourceTest {
 
 	@Test
 	public void it_should_implement_to_string() {
-		final String path = "/jar/dataset/xml/foo.xml";
+		final String path = "/jar/dataset/xml/users.xml";
 		final URL url = url(path);
 		final ClasspathResource r1 = new ClasspathResource(url);
 

@@ -24,6 +24,17 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.data.MapEntry.entry;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,35 +44,20 @@ import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.data.MapEntry.entry;
-
 public class Jackson2ParserTest {
 
 	@Test
 	public void it_should_parse_file() {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Jackson2Parser parser = new Jackson2Parser(mapper);
-
-		final Resource resource = new ResourceMockBuilder()
-			.fromClasspath("/dataset/json/foo.json")
-			.build();
-
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
 		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
 			.hasSize(1)
-			.containsKey("foo");
+			.containsKey("users");
 
-		final List<Map<String, Object>> table = tables.get("foo");
+		final List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
 		final Map<String, Object> row1 = table.get(0);

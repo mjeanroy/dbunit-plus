@@ -24,7 +24,8 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.sql.Connection;
@@ -32,8 +33,8 @@ import java.sql.Connection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.jdbc.AbstractJdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitRule;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitFooDataSet;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitUsersDataSet;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -56,14 +57,16 @@ public class DbUnitRuleITest {
 
 	@Test
 	public void test1() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(3);
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
-	@DbUnitFooDataSet
+	@DbUnitUsersDataSet
 	public void test2() {
-		assertThat(countFrom(hsqldb.getConnection(), "foo")).isEqualTo(2);
-		assertThat(countFrom(hsqldb.getConnection(), "bar")).isEqualTo(0);
+		final Connection connection = hsqldb.getConnection();
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(0);
 	}
 }

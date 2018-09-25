@@ -37,10 +37,10 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_match_yaml_file() {
-		final Resource r1 = new ResourceMockBuilder().setFilename("foo.yml").setFile().build();
-		final Resource r2 = new ResourceMockBuilder().setFilename("FOO.YML").setFile().build();
-		final Resource r3 = new ResourceMockBuilder().setFilename("foo.yaml").setFile().build();
-		final Resource r4 = new ResourceMockBuilder().setFilename("FOO.YAML").setFile().build();
+		final Resource r1 = new ResourceMockBuilder().setFilename("users.yml").setFile().build();
+		final Resource r2 = new ResourceMockBuilder().setFilename("USERS.YML").setFile().build();
+		final Resource r3 = new ResourceMockBuilder().setFilename("users.yaml").setFile().build();
+		final Resource r4 = new ResourceMockBuilder().setFilename("USERS.YAML").setFile().build();
 
 		verifyMatching(r1, DataSetType.YAML);
 		verifyMatching(r2, DataSetType.YAML);
@@ -50,15 +50,15 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_create_yaml_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/foo.yml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
 		final IDataSet dataSet = DataSetType.YAML.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(YamlDataSet.class);
 	}
 
 	@Test
 	public void it_should_match_json_file() {
-		final Resource r1 = new ResourceMockBuilder().setFilename("foo.json").setFile().build();
-		final Resource r2 = new ResourceMockBuilder().setFilename("FOO.JSON").setFile().build();
+		final Resource r1 = new ResourceMockBuilder().setFilename("users.json").setFile().build();
+		final Resource r2 = new ResourceMockBuilder().setFilename("USERS.JSON").setFile().build();
 
 		verifyMatching(r1, DataSetType.JSON);
 		verifyMatching(r2, DataSetType.JSON);
@@ -66,15 +66,15 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_create_json_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/foo.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
 		final IDataSet dataSet = DataSetType.JSON.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(JsonDataSet.class);
 	}
 
 	@Test
 	public void it_should_match_xml_file() {
-		final Resource r1 = new ResourceMockBuilder().setFilename("foo.xml").setFile().build();
-		final Resource r2 = new ResourceMockBuilder().setFilename("FOO.XML").setFile().build();
+		final Resource r1 = new ResourceMockBuilder().setFilename("users.xml").setFile().build();
+		final Resource r2 = new ResourceMockBuilder().setFilename("USERS.XML").setFile().build();
 
 		verifyMatching(r1, DataSetType.XML);
 		verifyMatching(r2, DataSetType.XML);
@@ -82,15 +82,15 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_create_xml_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/foo.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").build();
 		final IDataSet dataSet = DataSetType.XML.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 	}
 
 	@Test
 	public void it_should_match_csv_file() {
-		final Resource r1 = new ResourceMockBuilder().setFilename("foo.csv").setFile().build();
-		final Resource r2 = new ResourceMockBuilder().setFilename("FOO.CSV").setFile().build();
+		final Resource r1 = new ResourceMockBuilder().setFilename("users.csv").setFile().build();
+		final Resource r2 = new ResourceMockBuilder().setFilename("USERS.CSV").setFile().build();
 
 		verifyMatching(r1, DataSetType.CSV);
 		verifyMatching(r2, DataSetType.CSV);
@@ -98,14 +98,14 @@ public class DataSetTypeTest {
 
 	@Test
 	public void it_should_create_csv_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/csv/foo.csv").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/csv/users.csv").build();
 		final IDataSet dataSet = DataSetType.CSV.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
 	}
 
 	@Test
 	public void it_should_match_directory_file() {
-		final Resource resource = new ResourceMockBuilder().setFilename("foo").setDirectory().build();
+		final Resource resource = new ResourceMockBuilder().setFilename("users").setDirectory().build();
 		verifyMatching(resource, DataSetType.DIRECTORY);
 	}
 
