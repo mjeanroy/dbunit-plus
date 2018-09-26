@@ -22,7 +22,7 @@
 # SOFTWARE.
 ##
 
-bar:
+movies:
   - id: 1
     title: "Lord Of The Rings"
   - id: 2
