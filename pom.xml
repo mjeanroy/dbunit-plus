@@ -111,7 +111,7 @@
     <liquibase.version>3.6.2</liquibase.version>
 
     <!-- The android classifier is the JDK7 compatible artifact -->
-    <guava.version>26.0-android</guava.version>
+    <guava.version>27.0.1-android</guava.version>
 
     <!-- Test Dependencies -->
     <assertj.version>2.9.1</assertj.version>
