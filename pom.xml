@@ -100,7 +100,7 @@
 
     <!-- Runtime Dependencies -->
     <junit.version>4.12</junit.version>
-    <jupiter.version>5.3.1</jupiter.version>
+    <jupiter.version>5.3.2</jupiter.version>
     <dbunit.version>2.5.4</dbunit.version>
     <jackson1.version>1.9.13</jackson1.version>
     <jackson.version>2.9.7</jackson.version>
