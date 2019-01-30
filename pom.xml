@@ -108,7 +108,7 @@
     <snakeyaml.version>1.23</snakeyaml.version>
     <hsqldb.version>2.4.1</hsqldb.version>
     <spring.version>5.1.1.RELEASE</spring.version>
-    <liquibase.version>3.6.2</liquibase.version>
+    <liquibase.version>3.6.3</liquibase.version>
 
     <!-- The android classifier is the JDK7 compatible artifact -->
     <guava.version>27.0.1-android</guava.version>
