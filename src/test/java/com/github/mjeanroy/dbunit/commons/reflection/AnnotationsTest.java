@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -32,7 +32,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AnnotationsTest {
 
@@ -162,6 +162,18 @@ public class AnnotationsTest {
 		assertThat(annotations.get(3).value()).isEqualTo("TestClassAnnotation");
 	}
 
+	@Test
+	public void it_should_find_annotation_on_outer_class() {
+		final Class<TestClassWithInnerClass.InnerClass> klass = TestClassWithInnerClass.InnerClass.class;
+		final List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
+
+		assertThat(annotations).hasSize(4);
+		assertThat(annotations.get(0).value()).isEqualTo("TestClassWithMultipleAnnotations");
+		assertThat(annotations.get(1).value()).isEqualTo("MetaAnnotation");
+		assertThat(annotations.get(2).value()).isEqualTo("InterfaceAnnotated");
+		assertThat(annotations.get(3).value()).isEqualTo("TestClassAnnotation");
+	}
+
 	// == Fixtures
 
 	@Retention(RetentionPolicy.RUNTIME)
@@ -226,6 +238,13 @@ public class AnnotationsTest {
 
 	private static class TestClassWithoutAnnotation {
 		public void method1() {
+		}
+	}
+
+	@TestAnnotation("TestClassWithMultipleAnnotations")
+	@MetaAnnotation
+	private class TestClassWithInnerClass extends TestClassAnnotation implements InterfaceAnnotated {
+		private class InnerClass {
 		}
 	}
 }

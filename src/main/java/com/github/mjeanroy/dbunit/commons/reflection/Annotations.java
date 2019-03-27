@@ -24,12 +24,6 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
-import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
-import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
@@ -37,6 +31,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 /**
  * Static Annotation Utilities.
@@ -180,6 +180,15 @@ public final class Annotations {
 			Class<?> superClass = klass.getSuperclass();
 			if (shouldScan(superClass)) {
 				final List<T> subResults = findAnnotations(superClass, annotationClass);
+				if (!subResults.isEmpty()) {
+					results.addAll(subResults);
+				}
+			}
+
+			// Search in outer class.
+			Class<?> declaringClass = klass.getDeclaringClass();
+			if (shouldScan(declaringClass)) {
+				final List<T> subResults = findAnnotations(declaringClass, annotationClass);
 				if (!subResults.isEmpty()) {
 					results.addAll(subResults);
 				}

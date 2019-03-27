@@ -22,16 +22,21 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.fixtures;
+package com.github.mjeanroy.dbunit.it.configuration;
 
-import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
-import org.junit.Ignore;
-import org.junit.runner.RunWith;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 
-@RunWith(DbUnitJunitRunner.class)
-@Ignore
-public class WithRunnerWithoutConfiguration {
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-	public void test1() {
-	}
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Inherited
+@DbUnitDataSet(inherit = true, value = "/dataset/xml/movies.xml")
+public @interface DbUnitMoviesDataSet {
 }

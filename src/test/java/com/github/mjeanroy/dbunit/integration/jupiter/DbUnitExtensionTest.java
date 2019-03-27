@@ -90,7 +90,7 @@ public class DbUnitExtensionTest {
 		verifyState(extensionContext, 2);
 
 		extension.afterEach(extensionContext);
-		verifyState(extensionContext, 0);
+		verifyEmptyStore(extensionContext);
 	}
 
 	@Test
@@ -107,7 +107,7 @@ public class DbUnitExtensionTest {
 		verifyState(extensionContext, 2);
 
 		extension.afterEach(extensionContext);
-		verifyState(extensionContext, 0);
+		verifyEmptyStore(extensionContext);
 
 		extension.afterAll(extensionContext);
 		verifyEmptyStore(extensionContext);
@@ -178,8 +178,8 @@ public class DbUnitExtensionTest {
 
 	private void verifyState(FakeExtensionContext extensionContext, int expectedRows) {
 		final FakeStore store = extensionContext.getSingleStore();
-		assertThat(store.get("dbUnitRunner", DbUnitRunner.class)).isNotNull();
-		assertThat(store.get("static", Boolean.class)).isNotNull();
+		final DbUnitRunner dbUnitExtensionContext = store.get(extensionContext.getRequiredTestClass(), DbUnitRunner.class);
+		assertThat(dbUnitExtensionContext).isNotNull();
 		verifyData(hsqldb.getConnection(), expectedRows);
 	}
 

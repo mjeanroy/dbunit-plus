@@ -49,8 +49,10 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
+import java.util.function.Function;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
@@ -112,15 +114,6 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	private static final String DB_UNIT_RUNNER_KEY = "dbUnitRunner";
 
 	/**
-	 * The key of the registered mode in the internal store (the exstension may be used as a test instance extension
-	 * using the {@link RegisterExtension} annotation).
-	 *
-	 * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields</a>
-	 * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields</a>
-	 */
-	private static final String STATIC_MODE_KEY = "static";
-
-	/**
 	 * The JDBC Connection Factory to use.
 	 */
 	private final JdbcConnectionFactory connectionFactory;
@@ -165,33 +158,36 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 	@Override
 	public void beforeAll(ExtensionContext context) {
 		final Store store = getStore(context);
-		initializeDbUnitRunner(context, store, true);
+		final Class<?> testClass = getTestClass(context);
+		getOrInitializeDbUnitExtensionContext(store, testClass);
 	}
 
 	@Override
 	public void afterAll(ExtensionContext context) {
-		clearStore(getStore(context));
+		getStore(context).remove(DB_UNIT_RUNNER_KEY);
 	}
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
 		final Store store = getStore(context);
-		final DbUnitRunner dbUnitRunner = initializeDbUnitRunner(context, store, false);
-		dbUnitRunner.beforeTest(context.getRequiredTestMethod());
+		final Class<?> testClass = getTestClass(context);
+		final DbUnitRunner dbUnitRunner = getOrInitializeDbUnitExtensionContext(store, testClass);
+		final Method testMethod = context.getRequiredTestMethod();
+		dbUnitRunner.beforeTest(testMethod);
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) {
 		final Store store = getStore(context);
-		final DbUnitRunner runner = store.get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
+		final Class<?> testClass = getTestClass(context);
+		final DbUnitRunner dbUnitRunner = getOrInitializeDbUnitExtensionContext(store, testClass);
+		final Method testMethod = context.getRequiredTestMethod();
 
 		try {
-			runner.afterTest(context.getRequiredTestMethod());
+			dbUnitRunner.afterTest(testMethod);
 		}
 		finally {
-			if (!store.get(STATIC_MODE_KEY, Boolean.class)) {
-				clearStore(store);
-			}
+			clearStore(store, testClass);
 		}
 	}
 
@@ -204,29 +200,42 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-		return getStore(extensionContext).get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class).getConnection();
+		final Store store = getStore(extensionContext);
+		final Class<?> testClass = getTestClass(extensionContext);
+		final DbUnitRunner dbUnitRunner = getOrInitializeDbUnitExtensionContext(store, testClass);
+		return dbUnitRunner.getConnection();
 	}
 
 	/**
-	 * Gte DbUnit runner from store, if it exists, or create it and add it to the internal store.
+	 * Get or create DbUnit context from store internal store.
 	 *
-	 * @param context The extension context.
+	 * @param testClass The extension context.
 	 * @param store The internal store.
 	 * @return The runner.
 	 */
-	private DbUnitRunner initializeDbUnitRunner(ExtensionContext context, Store store, boolean staticField) {
-		DbUnitRunner dbUnitRunner = store.get(DB_UNIT_RUNNER_KEY, DbUnitRunner.class);
+	private DbUnitRunner getOrInitializeDbUnitExtensionContext(Store store, Class<?> testClass) {
+		final DbUnitRunnerFactory dbUnitRunnerFactory = new DbUnitRunnerFactory(connectionFactory);
+		return store.getOrComputeIfAbsent(testClass, dbUnitRunnerFactory, DbUnitRunner.class);
+	}
 
-		if (dbUnitRunner == null) {
-			Class<?> testClass = context.getRequiredTestClass();
-			dbUnitRunner = connectionFactory == null ?
-				new DbUnitRunner(testClass) :
-				new DbUnitRunner(testClass, connectionFactory);
+	/**
+	 * Get the tested class from given JUnit Jupiter extension context.
+	 *
+	 * @param extensionContext The extension context.
+	 * @return The tested class.
+	 */
+	private static Class<?> getTestClass(ExtensionContext extensionContext) {
+		return extensionContext.getRequiredTestClass();
+	}
 
-			populateStore(store, dbUnitRunner, staticField);
-		}
-
-		return dbUnitRunner;
+	/**
+	 * Clear store from DbUnit runner previously created for given test class.
+	 *
+	 * @param store The internal store.
+	 * @param testClass The tested class.
+	 */
+	private static void clearStore(Store store, Class<?> testClass) {
+		store.remove(testClass);
 	}
 
 	/**
@@ -239,25 +248,16 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 		return context.getStore(NAMESPACE);
 	}
 
-	/**
-	 * Populate store with extension data.
-	 *
-	 * @param store The extension internal store.
-	 * @param runner The DbUnit internal runner.
-	 * @param staticField The mode in which the extension has been registered.
-	 */
-	private static void populateStore(Store store, DbUnitRunner runner, boolean staticField) {
-		store.put(DB_UNIT_RUNNER_KEY, runner);
-		store.put(STATIC_MODE_KEY, staticField);
-	}
+	private static class DbUnitRunnerFactory implements Function<Class<?>, DbUnitRunner> {
+		private final JdbcConnectionFactory connectionFactory;
 
-	/**
-	 * Clear internal store.
-	 *
-	 * @param store The extension internal store.
-	 */
-	private static void clearStore(Store store) {
-		store.remove(DB_UNIT_RUNNER_KEY);
-		store.remove(STATIC_MODE_KEY);
+		private DbUnitRunnerFactory(JdbcConnectionFactory connectionFactory) {
+			this.connectionFactory = connectionFactory;
+		}
+
+		@Override
+		public DbUnitRunner apply(Class<?> testClass) {
+			return connectionFactory == null ? new DbUnitRunner(testClass) : new DbUnitRunner(testClass, connectionFactory);
+		}
 	}
 }
