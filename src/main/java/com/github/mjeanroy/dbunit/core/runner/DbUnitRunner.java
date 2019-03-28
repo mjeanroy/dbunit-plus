@@ -24,17 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-
-import javax.sql.DataSource;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.commons.reflection.Annotations;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
@@ -54,6 +43,17 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ReplacementDataSet;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
+import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Generic class to run DbUnit before/after test method invocation.
@@ -125,7 +125,7 @@ public class DbUnitRunner {
 
 	private DbUnitRunner(Class<?> testClass, JdbcConnectionFactory connectionFactory, DbUnitClassContext ctx) {
 		this.testClass = notNull(testClass, "Test Class must not be null");
-		this.ctx = DbUnitClassContextFactory.from(testClass);
+		this.ctx = ctx;
 		this.factory = readConnectionFactory(connectionFactory, ctx);
 
 		// Then, run SQL and/or liquibase initialization
