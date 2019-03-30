@@ -25,32 +25,16 @@
 package com.github.mjeanroy.dbunit.cache;
 
 import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
-import org.junit.After;
 import org.junit.Test;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.writeStaticField;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class CacheFactoryTest {
-
-	@After
-	public void tearDown() throws Exception {
-		writeStaticField(CacheFactory.class, "GUAVA_AVAILABLE", true);
-	}
 
 	@Test
 	public void it_should_return_guava_cache() {
 		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>().build();
 		Cache<String, String> cache = CacheFactory.newCache(loader);
 		assertThat(cache).isExactlyInstanceOf(GuavaCache.class);
-	}
-
-	@Test
-	public void it_should_return_default_cache_if_guava_is_not_available() throws Exception {
-		writeStaticField(CacheFactory.class, "GUAVA_AVAILABLE", false);
-
-		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>().build();
-		Cache<String, String> cache = CacheFactory.newCache(loader);
-		assertThat(cache).isExactlyInstanceOf(DefaultCache.class);
 	}
 }
