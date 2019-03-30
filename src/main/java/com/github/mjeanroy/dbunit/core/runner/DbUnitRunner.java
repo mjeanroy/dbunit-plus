@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.commons.reflection.Annotations;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
@@ -114,11 +113,10 @@ public class DbUnitRunner {
 
 	/**
 	 * Create runner and extract the JDBC Connection factory from the {@code testClass} that should
-	 * be annotated with {@link DbUnitConnection} (or with deprecated {@link DbUnitConfiguration}).
+	 * be annotated with {@link DbUnitConnection}.
 	 *
 	 * @param testClass The tested class.
 	 */
-	@SuppressWarnings("deprecation")
 	public DbUnitRunner(Class<?> testClass) {
 		this(testClass, null, DbUnitClassContextFactory.from(testClass));
 	}

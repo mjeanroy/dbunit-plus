@@ -24,6 +24,19 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
+import org.junit.Test;
+import org.junit.runner.Description;
+import org.junit.runners.model.Statement;
+import org.mockito.InOrder;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+
+import java.sql.Connection;
+
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,19 +48,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.sql.Connection;
-
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
-import org.junit.Test;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
-import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 public class DbUnitEmbeddedDatabaseRuleTest {
 
@@ -104,11 +104,11 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 		inOrder.verify(db).shutdown();
 	}
 
-	protected DbUnitEmbeddedDatabaseRule createRule() {
+	private static DbUnitEmbeddedDatabaseRule createRule() {
 		return new DbUnitEmbeddedDatabaseRule();
 	}
 
-	protected DbUnitEmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
+	private static DbUnitEmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
 		return new DbUnitEmbeddedDatabaseRule(db);
 	}
 }

@@ -54,11 +54,11 @@ public class EmbeddedDatabaseRuleTest {
 		verify(db).shutdown();
 	}
 
-	protected EmbeddedDatabaseRule createRule() {
+	private static EmbeddedDatabaseRule createRule() {
 		return new EmbeddedDatabaseRule();
 	}
 
-	protected EmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
+	private static EmbeddedDatabaseRule createRule(EmbeddedDatabase db) {
 		return new EmbeddedDatabaseRule(db);
 	}
 }
