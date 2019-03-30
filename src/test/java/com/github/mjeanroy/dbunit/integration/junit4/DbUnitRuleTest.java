@@ -24,20 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.junit4;
 
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.runner.Description.createSuiteDescription;
-import static org.junit.runner.Description.createTestDescription;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
-
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
@@ -54,6 +40,20 @@ import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.runner.Description.createSuiteDescription;
+import static org.junit.runner.Description.createTestDescription;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @SuppressWarnings("SameParameterValue")
 public class DbUnitRuleTest {
@@ -128,15 +128,15 @@ public class DbUnitRuleTest {
 			.hasMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");
 	}
 
-	protected DbUnitRule createRule() {
+	private static DbUnitRule createRule() {
 		return new DbUnitRule();
 	}
 
-	protected DbUnitRule createRule(JdbcConfiguration configuration) {
+	private static DbUnitRule createRule(JdbcConfiguration configuration) {
 		return new DbUnitRule(configuration);
 	}
 
-	protected DbUnitRule createRule(JdbcConnectionFactory factory) {
+	private static DbUnitRule createRule(JdbcConnectionFactory factory) {
 		return new DbUnitRule(factory);
 	}
 

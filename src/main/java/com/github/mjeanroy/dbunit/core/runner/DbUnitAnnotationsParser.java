@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.commons.collections.Mapper;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
@@ -179,39 +178,21 @@ final class DbUnitAnnotationsParser {
 	}
 
 	/**
-	 * Extract {@link JdbcConnectionFactory} configuration from {@link DbUnitConnection}
-	 * or with deprecated {@link DbUnitConfiguration}.
+	 * Extract {@link JdbcConnectionFactory} configuration from {@link DbUnitConnection}.
 	 *
-	 * @param a1 The old deprecated annotation.
-	 * @param a2 The new non-deprecated annotation.
+	 * @param annotation The annotation.
 	 * @return The JDBC Connection Factory.
 	 */
-	@SuppressWarnings("deprecation")
-	static JdbcConnectionFactory extractJdbcConnectionFactory(DbUnitConfiguration a1, DbUnitConnection a2) {
-		if (a2 == null && a1 == null) {
+	static JdbcConnectionFactory extractJdbcConnectionFactory(DbUnitConnection annotation) {
+		if (annotation == null) {
 			return null;
 		}
 
-		if (a1 != null) {
-			log.warn("@DbUnitConfiguration annotation is deprecated and will be removed in a next release, please use @DbUnitConnection instead");
-		}
-
-		final String url;
-		final String user;
-		final String password;
-
-		if (a2 != null) {
-			url = a2.url();
-			user = a2.user();
-			password = a2.password();
-		}
-		else {
-			url = a1.url();
-			user = a1.user();
-			password = a1.password();
-		}
-
-		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(url, user, password));
+		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(
+			annotation.url(),
+			annotation.user(),
+			annotation.password())
+		);
 	}
 
 	/**

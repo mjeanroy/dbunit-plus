@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.junit4;
 
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDeprecatedDbUnitConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunner;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
@@ -36,7 +35,7 @@ public class DbUnitJunitRunnerTest {
 
 	@Test
 	public void it_should_create_runner() throws Exception {
-		final DbUnitJunitRunner runner = createRunner(WithRunner.class);
+		final DbUnitJunitRunner runner = new DbUnitJunitRunner(WithRunner.class);
 		assertThat(runner.getTestRules(new WithRunner()))
 			.isNotNull()
 			.isNotEmpty()
@@ -46,23 +45,5 @@ public class DbUnitJunitRunnerTest {
 					return testRule instanceof DbUnitRule;
 				}
 			});
-	}
-
-	@Test
-	public void it_should_create_runner_with_deprecated_dbunit_configuration() throws Exception {
-		final DbUnitJunitRunner runner = createRunner(WithDeprecatedDbUnitConfiguration.class);
-		assertThat(runner.getTestRules(new WithDeprecatedDbUnitConfiguration()))
-			.isNotNull()
-			.isNotEmpty()
-			.areAtLeastOne(new Condition<TestRule>() {
-				@Override
-				public boolean matches(TestRule testRule) {
-					return testRule instanceof DbUnitRule;
-				}
-			});
-	}
-
-	protected DbUnitJunitRunner createRunner(Class<?> klass) throws Exception {
-		return new DbUnitJunitRunner(klass);
 	}
 }

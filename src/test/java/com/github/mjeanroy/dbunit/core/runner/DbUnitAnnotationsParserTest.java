@@ -24,17 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfiguration;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
@@ -58,12 +48,17 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration.Qualifi
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithDeprecatedDbUnitConfiguration;
-import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.junit.Test;
+
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 public class DbUnitAnnotationsParserTest {
 
@@ -86,20 +81,10 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_read_connection_factory_from_non_deprecated_annotation() {
+	public void it_should_read_connection_factory_from_annotation() {
 		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
 		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
-		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(null, annotation);
-
-		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	public void it_should_read_connection_factory_from_deprecated_annotation() {
-		final Class<WithDeprecatedDbUnitConfiguration> testClass = WithDeprecatedDbUnitConfiguration.class;
-		final DbUnitConfiguration annotation = testClass.getAnnotation(DbUnitConfiguration.class);
-		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation, null);
+		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
 
 		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
 	}
@@ -130,28 +115,6 @@ public class DbUnitAnnotationsParserTest {
 
 		assertThat(liquibaseChangeLogs).isNotEmpty().hasSize(1);
 		assertThat(liquibaseChangeLogs.get(0).getChangeLog()).isEqualTo("/liquibase/changelog.xml");
-	}
-
-	@Test
-	public void it_should_read_replacements() throws Exception {
-		final List<Field> fields = singletonList(
-			WithReplacementsDataSet.class.getField("johnDoe")
-		);
-
-		final List<Method> methods = singletonList(
-			WithReplacementsDataSet.class.getMethod("janeDoe")
-		);
-
-		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(fields, methods);
-
-		assertThat(replacements).isNotEmpty().hasSize(2);
-		assertThat(replacements.get(0).getReplacements()).hasSize(1).containsOnly(
-			entry("[JOHN_DOE]", "John Doe")
-		);
-
-		assertThat(replacements.get(1).getReplacements()).hasSize(1).containsOnly(
-			entry("[JANE_DOE]", "Jane Doe")
-		);
 	}
 
 	@Test
