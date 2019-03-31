@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.tests.jupiter;
 
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestInstances;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -113,6 +114,11 @@ public class FakeExtensionContext implements ExtensionContext {
 
 	@Override
 	public Optional<Object> getTestInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Optional<TestInstances> getTestInstances() {
 		throw new UnsupportedOperationException();
 	}
 
