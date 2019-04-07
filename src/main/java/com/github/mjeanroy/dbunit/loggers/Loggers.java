@@ -24,12 +24,15 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
-import org.slf4j.LoggerFactory;
+import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
 /**
  * Logger factory.
  */
 public final class Loggers {
+
+	private static final String SLF4J_CLASS = "org.slf4j.Logger";
+	private static final boolean SLF4J_AVAILABLE = ClassUtils.isPresent(SLF4J_CLASS);
 
 	// Ensure non instantiation.
 	private Loggers() {
@@ -42,6 +45,10 @@ public final class Loggers {
 	 * @return The logger.
 	 */
 	public static Logger getLogger(Class<?> klass) {
-		return new Slf4jLogger(LoggerFactory.getLogger(klass));
+		if (SLF4J_AVAILABLE) {
+			return new Slf4jLogger(klass);
+		}
+
+		return new NoopLogger();
 	}
 }

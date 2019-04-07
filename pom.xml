@@ -101,6 +101,7 @@
     <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
     <!-- Runtime Dependencies -->
+    <slf4j.version>1.7.25</slf4j.version>
     <junit.version>4.12</junit.version>
     <jupiter.version>5.4.1</jupiter.version>
     <dbunit.version>2.5.4</dbunit.version>
@@ -257,6 +258,13 @@
   </repositories>
 
   <dependencies>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+      <optional>true</optional>
+    </dependency>
+
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

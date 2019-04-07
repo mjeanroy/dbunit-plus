@@ -22,22 +22,59 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.loggers;
+package com.github.mjeanroy.dbunit.tests.junit4;
 
-import org.junit.Test;
+import org.junit.rules.ExternalResource;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
-public class LoggersTest {
+/**
+ * Catch System.out logging and store in a buffer.
+ */
+public class SystemOutRule extends ExternalResource {
 
-	@Test
-	public void it_should_create_logger() throws Exception {
-		Logger log = Loggers.getLogger(LoggersTest.class);
-		assertThat(log).isExactlyInstanceOf(Slf4jLogger.class);
+	/**
+	 * Original out stream.
+	 * Will be initialized before each tests.
+	 * Will be restored after each tests.
+	 */
+	private PrintStream originalOut;
 
-		org.slf4j.Logger slf4j = readPrivate(log, "log");
-		assertThat(slf4j).isNotNull();
-		assertThat(slf4j.getName()).isEqualTo(LoggersTest.class.getName());
+	/**
+	 * Custom out stream.
+	 * Will be initialized before each tests.
+	 * Will be flushed after each tests.
+	 */
+	private ByteArrayOutputStream out;
+
+	@Override
+	public void before() {
+		originalOut = System.out;
+		out = new ByteArrayOutputStream();
+
+		System.setOut(new PrintStream(out));
+	}
+
+	@Override
+	public void after() {
+		try {
+			out.flush();
+		}
+		catch (IOException ex) {
+			// No worries
+		}
+
+		// Restore original out stream
+		System.setOut(originalOut);
+	}
+
+	public String getOut() {
+		if (out == null) {
+			return null;
+		}
+
+		return out.toString();
 	}
 }

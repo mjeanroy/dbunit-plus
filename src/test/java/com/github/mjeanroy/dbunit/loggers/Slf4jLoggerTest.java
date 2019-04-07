@@ -24,198 +24,185 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.ConsoleAppender;
+import com.github.mjeanroy.dbunit.tests.junit4.SystemOutRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Slf4jLoggerTest {
 
-	private org.slf4j.Logger slf4j;
+	@Rule
+	public SystemOutRule systemOutRule = new SystemOutRule();
+
 	private Logger log;
 
 	@Before
-	public void setUp() {
-		slf4j = mock(org.slf4j.Logger.class);
-		log = new Slf4jLogger(slf4j);
+	public void setUp() throws Exception {
+		log = new Slf4jLogger(Slf4jLoggerTest.class);
+		configureInternalLogger();
 	}
 
 	@Test
 	public void it_should_log_trace_message_with_one_argument() {
-		String message = "Message with placeholder: {}";
-		String arg1 = "arg1";
-		log.trace(message, arg1);
-		verify(slf4j).trace(message, arg1);
+		log.trace("Message with placeholder: {}", "arg1");
+		verifyOutput("TRACE", "Message with placeholder: arg1");
 	}
 
 	@Test
 	public void it_should_log_trace_message_with_two_arguments() {
-		String message = "Message with placeholder: {} {}";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		log.trace(message, arg1, arg2);
-		verify(slf4j).trace(message, arg1, arg2);
+		log.trace("Message with placeholder: {} {}", "arg1", "arg2");
+		verifyOutput("TRACE", "Message with placeholder: arg1 arg2");
 	}
 
 	@Test
 	public void it_should_log_trace_message_without_argument() {
 		String message = "Message with placeholder";
 		log.trace(message);
-		verify(slf4j).trace(message);
+
+		verifyOutput("TRACE", message);
 	}
 
 	@Test
 	public void it_should_log_trace_message_with_list_of_arguments() {
-		String message = "Message with placeholder";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		String arg3 = "arg3";
-		log.trace(message, arg1, arg2, arg3);
-		verify(slf4j).trace(message, arg1, arg2, arg3);
+		log.trace("Message with placeholder: {} {} {}", "arg1", "arg2", "arg3");
+		verifyOutput("TRACE", "Message with placeholder: arg1 arg2 arg3");
 	}
 
 	@Test
 	public void it_should_log_debug_message_with_one_argument() {
-		String message = "Message with placeholder: {}";
-		String arg1 = "arg1";
-		log.debug(message, arg1);
-		verify(slf4j).debug(message, arg1);
+		log.debug("Message with placeholder: {}", "arg1");
+		verifyOutput("DEBUG", "Message with placeholder: arg1");
 	}
 
 	@Test
 	public void it_should_log_debug_message_with_two_arguments() {
-		String message = "Message with placeholder: {} {}";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		log.debug(message, arg1, arg2);
-		verify(slf4j).debug(message, arg1, arg2);
+		log.debug("Message with placeholder: {} {}", "arg1", "arg2");
+		verifyOutput("DEBUG", "Message with placeholder: arg1 arg2");
 	}
 
 	@Test
 	public void it_should_log_debug_message_without_argument() {
-		String message = "Message with placeholder";
-		log.debug(message);
-		verify(slf4j).debug(message);
+		log.debug("Message with placeholder");
+		verifyOutput("DEBUG", "Message with placeholder");
 	}
 
 	@Test
 	public void it_should_log_debug_message_with_list_of_arguments() {
-		String message = "Message with placeholder";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		String arg3 = "arg3";
-		log.debug(message, arg1, arg2, arg3);
-		verify(slf4j).debug(message, arg1, arg2, arg3);
+		log.debug("Message with placeholder: {} {} {}", "arg1", "arg2", "arg3");
+		verifyOutput("DEBUG", "Message with placeholder: arg1 arg2 arg3");
 	}
 
 	@Test
 	public void it_should_log_info_message_with_one_argument() {
-		String message = "Message with placeholder: {}";
-		String arg1 = "arg1";
-		log.info(message, arg1);
-		verify(slf4j).info(message, arg1);
+		log.info("Message with placeholder: {}", "arg1");
+		verifyOutput("INFO", "Message with placeholder: arg1");
 	}
 
 	@Test
 	public void it_should_log_info_message_with_two_arguments() {
-		String message = "Message with placeholder: {} {}";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		log.info(message, arg1, arg2);
-		verify(slf4j).info(message, arg1, arg2);
+		log.info("Message with placeholder: {} {}", "arg1", "arg2");
+		verifyOutput("INFO", "Message with placeholder: arg1 arg2");
 	}
 
 	@Test
 	public void it_should_log_info_message_without_argument() {
-		String message = "Message with placeholder";
-		log.info(message);
-		verify(slf4j).info(message);
+		log.info("Message with placeholder");
+		verifyOutput("INFO", "Message with placeholder");
 	}
 
 	@Test
 	public void it_should_log_info_message_with_list_of_arguments() {
-		String message = "Message with placeholder";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		String arg3 = "arg3";
-		log.info(message, arg1, arg2, arg3);
-		verify(slf4j).info(message, arg1, arg2, arg3);
+		log.info("Message with placeholder: {} {} {}", "arg1", "arg2", "arg3");
+		verifyOutput("INFO", "Message with placeholder: arg1 arg2 arg3");
 	}
 
 	@Test
 	public void it_should_log_warn_message_with_one_argument() {
-		String message = "Message with placeholder: {}";
-		String arg1 = "arg1";
-		log.warn(message, arg1);
-		verify(slf4j).warn(message, arg1);
+		log.warn("Message with placeholder: {}", "arg1");
+		verifyOutput("WARN", "Message with placeholder: arg1");
 	}
 
 	@Test
 	public void it_should_log_warn_message_with_two_arguments() {
-		String message = "Message with placeholder: {} {}";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		log.warn(message, arg1, arg2);
-		verify(slf4j).warn(message, arg1, arg2);
+		log.warn("Message with placeholder: {} {}", "arg1", "arg2");
+		verifyOutput("WARN", "Message with placeholder: arg1 arg2");
 	}
 
 	@Test
 	public void it_should_log_warn_message_without_argument() {
-		String message = "Message with placeholder";
-		log.warn(message);
-		verify(slf4j).warn(message);
+		log.warn("Message with placeholder");
+		verifyOutput("WARN", "Message with placeholder");
 	}
 
 	@Test
 	public void it_should_log_warn_message_with_list_of_arguments() {
-		String message = "Message with placeholder";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		String arg3 = "arg3";
-		log.warn(message, arg1, arg2, arg3);
-		verify(slf4j).warn(message, arg1, arg2, arg3);
+		log.warn("Message with placeholder: {} {} {}", "arg1", "arg2", "arg3");
+		verifyOutput("WARN", "Message with placeholder: arg1 arg2 arg3");
 	}
 
 	@Test
 	public void it_should_log_error_message_with_one_argument() {
-		String message = "Message with placeholder: {}";
-		String arg1 = "arg1";
-		log.error(message, arg1);
-		verify(slf4j).error(message, arg1);
+		log.error("Message with placeholder: {}", "arg1");
+		verifyOutput("ERROR", "Message with placeholder: arg1");
 	}
 
 	@Test
 	public void it_should_log_error_message_with_two_arguments() {
-		String message = "Message with placeholder: {} {}";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		log.error(message, arg1, arg2);
-		verify(slf4j).error(message, arg1, arg2);
+		log.error("Message with placeholder: {} {}", "arg1", "arg2");
+		verifyOutput("ERROR", "Message with placeholder: arg1 arg2");
 	}
 
 	@Test
 	public void it_should_log_error_message_without_argument() {
-		String message = "Message with placeholder";
-		log.error(message);
-		verify(slf4j).error(message);
+		log.error("Message with placeholder");
+		verifyOutput("ERROR", "Message with placeholder");
 	}
 
 	@Test
 	public void it_should_log_error_message_with_list_of_arguments() {
-		String message = "Message with placeholder";
-		String arg1 = "arg1";
-		String arg2 = "arg2";
-		String arg3 = "arg3";
-		log.error(message, arg1, arg2, arg3);
-		verify(slf4j).error(message, arg1, arg2, arg3);
+		log.error("Message with placeholder: {} {} {}", "arg1", "arg2", "arg3");
+		verifyOutput("ERROR", "Message with placeholder: arg1 arg2 arg3");
 	}
 
 	@Test
 	public void it_should_log_throwable() {
-		Exception ex = new RuntimeException();
+		Exception ex = new RuntimeException("A runtime exception");
 		String message = "error message";
 		log.error(message, ex);
-		verify(slf4j).error(message, ex);
+
+		verifyOutput("ERROR", ex.getMessage());
+	}
+
+	private void verifyOutput(String logLevel, String message) {
+		assertThat(systemOutRule.getOut()).contains(logLevel);
+		assertThat(systemOutRule.getOut()).contains(message);
+	}
+
+	private void configureInternalLogger() throws Exception {
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+		PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+		encoder.setPattern("%msg");
+		encoder.setContext(loggerContext);
+		encoder.start();
+
+		ConsoleAppender<ILoggingEvent> consoleAppender = new ConsoleAppender<>();
+		consoleAppender.setImmediateFlush(true);
+		consoleAppender.setContext(loggerContext);
+		consoleAppender.setEncoder(encoder);
+
+		ch.qos.logback.classic.Logger logback = readPrivate(log, "log");
+		logback.setLevel(Level.TRACE);
+		logback.addAppender(consoleAppender);
+		logback.setAdditive(true);
 	}
 }

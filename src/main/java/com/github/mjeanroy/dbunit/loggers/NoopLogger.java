@@ -24,129 +24,99 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
-import org.slf4j.LoggerFactory;
-
 /**
- * Implementation of {@link Logger} backed by SLF4J ({@link org.slf4j.Logger} instances).
+ * Implementation of {@link Logger} that does nothing.
+ * Used when no appropriate implement can be selected.
  */
-class Slf4jLogger implements Logger {
-
-	/**
-	 * SLF4J instance.
-	 */
-	private final org.slf4j.Logger log;
+class NoopLogger implements Logger {
 
 	/**
 	 * Create logger.
-	 *
-	 * @param klass The logger instance identifier.
 	 */
-	Slf4jLogger(Class<?> klass) {
-		this.log = LoggerFactory.getLogger(klass);
+	NoopLogger() {
 	}
 
 	@Override
 	public void trace(String message) {
-		log.trace(message);
 	}
 
 	@Override
 	public void trace(String message, Object arg1) {
-		log.trace(message, arg1);
 	}
 
 	@Override
 	public void trace(String message, Object arg1, Object arg2) {
-		log.trace(message, arg1, arg2);
 	}
 
 	@Override
 	public void trace(String message, Object... args) {
-		log.trace(message, args);
 	}
 
 	@Override
 	public void debug(String message) {
-		log.debug(message);
 	}
 
 	@Override
 	public void debug(String message, Object arg1) {
-		log.debug(message, arg1);
 	}
 
 	@Override
 	public void debug(String message, Object arg1, Object arg2) {
-		log.debug(message, arg1, arg2);
 	}
 
 	@Override
 	public void debug(String message, Object... args) {
-		log.debug(message, args);
 	}
 
 	@Override
 	public void info(String message) {
-		log.info(message);
 	}
 
 	@Override
 	public void info(String message, Object arg1) {
-		log.info(message, arg1);
 	}
 
 	@Override
 	public void info(String message, Object arg1, Object arg2) {
-		log.info(message, arg1, arg2);
 	}
 
 	@Override
 	public void info(String message, Object... args) {
-		log.info(message, args);
 	}
 
 	@Override
 	public void warn(String message) {
-		log.warn(message);
 	}
 
 	@Override
 	public void warn(String message, Object arg1) {
-		log.warn(message, arg1);
 	}
 
 	@Override
 	public void warn(String message, Object arg1, Object arg2) {
-		log.warn(message, arg1, arg2);
 	}
 
 	@Override
 	public void warn(String message, Object... args) {
-		log.warn(message, args);
 	}
 
 	@Override
 	public void error(String message) {
-		log.error(message);
 	}
 
 	@Override
 	public void error(String message, Object arg1) {
-		log.error(message, arg1);
 	}
 
 	@Override
 	public void error(String message, Object arg1, Object arg2) {
-		log.error(message, arg1, arg2);
 	}
 
 	@Override
 	public void error(String message, Object... args) {
-		log.error(message, args);
 	}
 
 	@Override
 	public void error(String message, Throwable t) {
-		log.error(message, t);
 	}
 }
