@@ -109,7 +109,7 @@ public final class TestUtils {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public static <T> T readPrivate(Object o, String field) throws Exception {
+	public static <T> T readPrivate(Object o, String field) {
 		Class c = o.getClass();
 		NoSuchFieldException ex = null;
 
@@ -123,10 +123,13 @@ public final class TestUtils {
 				c = c.getSuperclass();
 				ex = e;
 			}
+			catch (IllegalAccessException e) {
+				throw new AssertionError(e);
+			}
 		}
 
 		if (ex != null) {
-			throw ex;
+			throw new AssertionError(ex);
 		}
 
 		return null;

@@ -60,9 +60,11 @@ public class SystemOutRule extends ExternalResource {
 	@Override
 	public void after() {
 		try {
+			out.reset();
 			out.flush();
 		}
 		catch (IOException ex) {
+			ex.printStackTrace();
 			// No worries
 		}
 

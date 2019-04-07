@@ -102,6 +102,7 @@
 
     <!-- Runtime Dependencies -->
     <slf4j.version>1.7.25</slf4j.version>
+    <log4j.version>2.11.2</log4j.version>
     <junit.version>4.12</junit.version>
     <jupiter.version>5.4.1</jupiter.version>
     <dbunit.version>2.5.4</dbunit.version>
@@ -262,6 +263,19 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j.version}</version>
       <optional>true</optional>
     </dependency>
 

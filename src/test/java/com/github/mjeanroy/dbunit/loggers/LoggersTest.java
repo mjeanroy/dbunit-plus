@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LoggersTest {
 
 	@Test
-	public void it_should_create_logger() throws Exception {
+	public void it_should_create_logger() {
 		Logger log = Loggers.getLogger(LoggersTest.class);
 		assertThat(log).isExactlyInstanceOf(Slf4jLogger.class);
 

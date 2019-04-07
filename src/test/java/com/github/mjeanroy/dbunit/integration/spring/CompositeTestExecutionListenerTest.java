@@ -55,7 +55,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_create_listener() throws Exception {
+	public void it_should_create_listener() {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");
 		final TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");

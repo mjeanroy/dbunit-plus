@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TransactionalDbUnitTestExecutionListenerTest {
 
 	@Test
-	public void it_should_create_listener() throws Exception {
+	public void it_should_create_listener() {
 		final TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
 
 		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");

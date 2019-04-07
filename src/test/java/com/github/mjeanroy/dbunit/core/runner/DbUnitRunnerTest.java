@@ -24,17 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
-
-import javax.sql.DataSource;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
@@ -47,6 +36,17 @@ import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.ClassRule;
 import org.junit.Test;
+
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 
 public class DbUnitRunnerTest {
 
@@ -71,7 +71,7 @@ public class DbUnitRunnerTest {
 	}
 
 	@Test
-	public void it_should_create_runner_and_not_fail_if_data_set_cannot_be_found() throws Exception {
+	public void it_should_create_runner_and_not_fail_if_data_set_cannot_be_found() {
 		final Class<WithoutDataSet> klass = WithoutDataSet.class;
 		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
 		final DbUnitRunner runner = new DbUnitRunner(klass, factory);
@@ -85,7 +85,7 @@ public class DbUnitRunnerTest {
 	}
 
 	@Test
-	public void it_should_create_runner_with_data_source() throws Exception {
+	public void it_should_create_runner_with_data_source() {
 		final Class<WithDataSet> klass = WithDataSet.class;
 		final DataSource dataSource = mock(DataSource.class);
 		final DbUnitRunner runner = new DbUnitRunner(klass, dataSource);
