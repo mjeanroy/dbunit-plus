@@ -26,7 +26,7 @@
 
 <Configuration status="INFO" strict="true" name="XMLConfigTest" packages="org.apache.logging.log4j.test">
   <Appenders>
-    <Appender type="Console" name="STDOUT" target="SYSTEM_OUT" immediateFlush="true">
+    <Appender type="Console" name="STDOUT" target="SYSTEM_OUT" follow="true">
       <Layout type="PatternLayout" pattern="%d %p %C{1.} [%t] %m%n"/>
     </Appender>
   </Appenders>

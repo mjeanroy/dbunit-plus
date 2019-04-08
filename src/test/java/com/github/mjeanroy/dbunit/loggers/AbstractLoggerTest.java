@@ -26,15 +26,15 @@ package com.github.mjeanroy.dbunit.loggers;
 
 import com.github.mjeanroy.dbunit.tests.junit4.SystemOutRule;
 import org.junit.Before;
-import org.junit.ClassRule;
+import org.junit.Rule;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractLoggerTest {
 
-	@ClassRule
-	public static SystemOutRule systemOutRule = new SystemOutRule();
+	@Rule
+	public SystemOutRule systemOutRule = new SystemOutRule();
 
 	private Logger log;
 

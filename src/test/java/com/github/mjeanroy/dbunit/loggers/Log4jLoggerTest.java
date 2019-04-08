@@ -29,7 +29,6 @@ import org.junit.Ignore;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 
-@Ignore("Need to understand why it fails with mvn")
 public class Log4jLoggerTest extends AbstractLoggerTest {
 
 	@Override
