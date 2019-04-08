@@ -118,7 +118,7 @@
     <guava.version>27.1-android</guava.version>
 
     <!-- Test Dependencies -->
-    <assertj.version>2.9.1</assertj.version>
+    <assertj.version>3.12.2</assertj.version>
     <mockito.version>2.26.0</mockito.version>
     <logback.version>1.2.3</logback.version>
     <wiremock.version>2.22.0</wiremock.version>
