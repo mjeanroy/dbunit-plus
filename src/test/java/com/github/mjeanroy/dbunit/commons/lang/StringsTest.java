@@ -24,28 +24,28 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StringsTest {
+class StringsTest {
 
 	@Test
-	public void it_should_check_if_string_is_empty() {
+	void it_should_check_if_string_is_empty() {
 		assertThat(Strings.isEmpty(null)).isTrue();
 		assertThat(Strings.isEmpty("")).isTrue();
 		assertThat(Strings.isEmpty("foo")).isFalse();
 	}
 
 	@Test
-	public void it_should_check_if_string_is_not_empty() {
+	void it_should_check_if_string_is_not_empty() {
 		assertThat(Strings.isNotEmpty("foo")).isTrue();
 		assertThat(Strings.isNotEmpty("")).isFalse();
 		assertThat(Strings.isNotEmpty(null)).isFalse();
 	}
 
 	@Test
-	public void it_should_check_if_string_is_blank() {
+	void it_should_check_if_string_is_blank() {
 		assertThat(Strings.isBlank(null)).isTrue();
 		assertThat(Strings.isBlank("")).isTrue();
 		assertThat(Strings.isBlank("   ")).isTrue();

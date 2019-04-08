@@ -30,17 +30,17 @@ import org.dbunit.database.DefaultMetadataHandler;
 import org.dbunit.database.IMetadataHandler;
 import org.dbunit.ext.db2.Db2MetadataHandler;
 import org.dbunit.ext.mysql.MySqlMetadataHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class DbUnitMetadataHandlerInterceptorTest {
+class DbUnitMetadataHandlerInterceptorTest {
 
 	private static final String PROPERTY_NAME = "http://www.dbunit.org/properties/metadataHandler";
 
 	@Test
-	public void it_should_set_property() {
+	void it_should_set_property() {
 		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class);
 		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
 		final DatabaseConfig config = new DatabaseConfig();
@@ -50,7 +50,7 @@ public class DbUnitMetadataHandlerInterceptorTest {
 	}
 
 	@Test
-	public void it_should_instantiate_class_and_set_property() {
+	void it_should_instantiate_class_and_set_property() {
 		final Class<DefaultMetadataHandler> metadataHandlerClass = DefaultMetadataHandler.class;
 		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
 		final DatabaseConfig config = new DatabaseConfig();
@@ -60,7 +60,7 @@ public class DbUnitMetadataHandlerInterceptorTest {
 	}
 
 	@Test
-	public void it_should_set_mysql_metadata_handler_property() {
+	void it_should_set_mysql_metadata_handler_property() {
 		final Class<MySqlMetadataHandler> metadataHandlerClass = MySqlMetadataHandler.class;
 		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
 		final DatabaseConfig config = new DatabaseConfig();
@@ -70,7 +70,7 @@ public class DbUnitMetadataHandlerInterceptorTest {
 	}
 
 	@Test
-	public void it_should_set_db2_metadata_handler_property() {
+	void it_should_set_db2_metadata_handler_property() {
 		final Class<Db2MetadataHandler> metadataHandlerClass = Db2MetadataHandler.class;
 		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
 		final DatabaseConfig config = new DatabaseConfig();
@@ -80,12 +80,12 @@ public class DbUnitMetadataHandlerInterceptorTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(DbUnitMetadataHandlerInterceptor.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class, "MockMetadataHandler");
 		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
 		assertThat(interceptor.toString()).isEqualTo(

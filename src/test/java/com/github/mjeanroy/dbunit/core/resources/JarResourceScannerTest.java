@@ -32,94 +32,77 @@ import java.util.Collection;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotValidException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.assertj.core.api.iterable.Extractor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class JarResourceScannerTest extends AbstractResourceScannerTest {
+class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	private JarResourceScanner scanner;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		scanner = JarResourceScanner.getInstance();
 	}
 
 	@Test
-	public void it_should_scan_sub_resources() {
+	void it_should_scan_sub_resources() {
 		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset/xml").setDirectory().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.hasSize(2)
 			.are(isInstanceOf(ClasspathResource.class))
-			.extracting(new Extractor<Resource, String>() {
-				@Override
-				public String extract(Resource resource) {
-					return resource.getFilename();
-				}
-			})
+			.extracting(Resource::getFilename)
 			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
-	public void it_should_scan_sub_resources_with_trailing_slashes() {
+	void it_should_scan_sub_resources_with_trailing_slashes() {
 		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset/xml/").setDirectory().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.hasSize(2)
 			.are(isInstanceOf(ClasspathResource.class))
-			.extracting(new Extractor<Resource, String>() {
-				@Override
-				public String extract(Resource resource) {
-					return resource.getFilename();
-				}
-			})
+			.extracting(Resource::getFilename)
 			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
-	public void it_should_not_scan_recursively() {
+	void it_should_not_scan_recursively() {
 		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset").setDirectory().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.hasSize(1)
 			.are(isInstanceOf(ClasspathResource.class))
-			.extracting(new Extractor<Resource, String>() {
-				@Override
-				public String extract(Resource resource) {
-					return resource.getFilename();
-				}
-			})
+			.extracting(Resource::getFilename)
 			.containsOnly("xml");
 	}
 
 	@Test
-	public void it_should_returns_empty_list_without_directory() {
+	void it_should_returns_empty_list_without_directory() {
 		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset/xml/users.xml").setFile().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 		assertThat(resources).isNotNull().isEmpty();
 	}
 
 	@Test
-	public void it_should_fail_if_resource_does_not_resides_in_an_external_file() {
+	void it_should_fail_if_resource_does_not_resides_in_an_external_file() {
 		final String path = "/dataset/xml";
 		final Resource resource = new ResourceMockBuilder().fromClasspath(path).build();
 
-		assertThatThrownBy(scan(scanner, resource))
+		assertThatThrownBy(() -> scanner.scan(resource))
 			.isExactlyInstanceOf(ResourceNotValidException.class)
 			.hasMessage(String.format("Resource <%s> does not seems to resides in an external JAR file", path));
 	}
 
 	@Test
-	public void it_should_fail_if_resource_does_not_resides_in_a_jar() {
+	void it_should_fail_if_resource_does_not_resides_in_a_jar() {
 		final String path = "file:/tmp/dataset.zip!/dataset/foo.xml";
 		final Resource resource = new ResourceMockBuilder().setPath(path).setDirectory().setExists(true).build();
 
-		assertThatThrownBy(scan(scanner, resource))
+		assertThatThrownBy(() -> scanner.scan(resource))
 			.isExactlyInstanceOf(ResourceNotValidException.class)
 			.hasMessage(String.format("Resource <%s> does not seems to resides in an external JAR file", path));
 	}
@@ -127,14 +110,5 @@ public class JarResourceScannerTest extends AbstractResourceScannerTest {
 	@Override
 	ResourceScanner getScanner() {
 		return scanner;
-	}
-
-	private static ThrowingCallable scan(final ResourceScanner scanner, final Resource resource) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				scanner.scan(resource);
-			}
-		};
 	}
 }

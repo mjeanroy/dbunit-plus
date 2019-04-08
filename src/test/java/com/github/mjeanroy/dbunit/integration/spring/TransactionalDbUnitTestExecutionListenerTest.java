@@ -24,17 +24,17 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class TransactionalDbUnitTestExecutionListenerTest {
+class TransactionalDbUnitTestExecutionListenerTest {
 
 	@Test
-	public void it_should_create_listener() {
+	void it_should_create_listener() {
 		final TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
 
 		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");

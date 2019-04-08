@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -36,10 +36,10 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SqlLineVisitorTest {
+class SqlLineVisitorTest {
 
 	@Test
-	public void it_should_handle_character() {
+	void it_should_handle_character() {
 		SqlScriptParserContext ctx = mock(SqlScriptParserContext.class);
 		SqlScriptParserConfiguration configuration = mock(SqlScriptParserConfiguration.class);
 		SqlLineVisitor visitor = new SqlLineVisitor(ctx, configuration);
@@ -47,13 +47,9 @@ public class SqlLineVisitorTest {
 		String line = "DROP TABLE foo;";
 		SqlQueryState state = mock(SqlQueryState.class);
 		when(ctx.getState()).thenReturn(state);
-		when(state.handleToken(anyString(), anyInt(), same(ctx), same(configuration))).thenAnswer(new Answer<Integer>() {
-			@Override
-			public Integer answer(InvocationOnMock invocationOnMock) throws Throwable {
-				return (Integer) invocationOnMock.getArguments()[1];
-			}
-		});
-
+		when(state.handleToken(anyString(), anyInt(), same(ctx), same(configuration))).thenAnswer((Answer<Integer>) invocationOnMock ->
+			(Integer) invocationOnMock.getArguments()[1]
+		);
 
 		visitor.visit(line);
 

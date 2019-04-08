@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ExceptionsTest {
+class ExceptionsTest {
 
 	@Test
-	public void launderThrowable_should_return_runtime_exception() {
+	void launderThrowable_should_return_runtime_exception() {
 		RuntimeException ex = new RuntimeException();
 		try {
 			Exceptions.launderThrowable(ex);
@@ -42,7 +42,7 @@ public class ExceptionsTest {
 	}
 
 	@Test
-	public void launderThrowable_should_return_errors() {
+	void launderThrowable_should_return_errors() {
 		Error ex = new Error();
 		try {
 			Exceptions.launderThrowable(ex);
@@ -53,7 +53,7 @@ public class ExceptionsTest {
 	}
 
 	@Test
-	public void launderThrowable_should_wrap_unchecked_exceptions() {
+	void launderThrowable_should_wrap_unchecked_exceptions() {
 		Exception ex = new Exception();
 		try {
 			Exceptions.launderThrowable(ex);

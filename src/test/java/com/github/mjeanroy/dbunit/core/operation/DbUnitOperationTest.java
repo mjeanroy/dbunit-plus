@@ -25,49 +25,49 @@
 package com.github.mjeanroy.dbunit.core.operation;
 
 import org.dbunit.operation.DatabaseOperation;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitOperationTest {
+class DbUnitOperationTest {
 
 	@Test
-	public void it_should_clean_insert() {
+	void it_should_clean_insert() {
 		assertThat(DbUnitOperation.CLEAN_INSERT.getOperation()).isSameAs(DatabaseOperation.CLEAN_INSERT);
 	}
 
 	@Test
-	public void it_should_delete() {
+	void it_should_delete() {
 		assertThat(DbUnitOperation.DELETE.getOperation()).isSameAs(DatabaseOperation.DELETE);
 	}
 
 	@Test
-	public void it_should_delete_all() {
+	void it_should_delete_all() {
 		assertThat(DbUnitOperation.DELETE_ALL.getOperation()).isSameAs(DatabaseOperation.DELETE_ALL);
 	}
 
 	@Test
-	public void it_should_refresh() {
+	void it_should_refresh() {
 		assertThat(DbUnitOperation.REFRESH.getOperation()).isSameAs(DatabaseOperation.REFRESH);
 	}
 
 	@Test
-	public void it_should_insert() {
+	void it_should_insert() {
 		assertThat(DbUnitOperation.INSERT.getOperation()).isSameAs(DatabaseOperation.INSERT);
 	}
 
 	@Test
-	public void it_should_update() {
+	void it_should_update() {
 		assertThat(DbUnitOperation.UPDATE.getOperation()).isSameAs(DatabaseOperation.UPDATE);
 	}
 
 	@Test
-	public void it_should_truncate_table() {
+	void it_should_truncate_table() {
 		assertThat(DbUnitOperation.TRUNCATE_TABLE.getOperation()).isSameAs(DatabaseOperation.TRUNCATE_TABLE);
 	}
 
 	@Test
-	public void it_should_do_nothing() {
+	void it_should_do_nothing() {
 		assertThat(DbUnitOperation.NONE.getOperation()).isSameAs(DatabaseOperation.NONE);
 	}
 }

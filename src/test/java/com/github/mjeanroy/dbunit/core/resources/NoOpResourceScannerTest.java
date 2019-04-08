@@ -25,24 +25,24 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NoOpResourceScannerTest extends AbstractResourceScannerTest {
+class NoOpResourceScannerTest extends AbstractResourceScannerTest {
 
 	private NoOpResourceScanner scanner;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		scanner = NoOpResourceScanner.getInstance();
 	}
 
 	@Test
-	public void it_should_return_empty_collection() {
+	void it_should_return_empty_collection() {
 		Resource resource = new ResourceMockBuilder()
 			.setDirectory()
 			.build();

@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -33,10 +33,10 @@ import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicat
 import static com.github.mjeanroy.dbunit.commons.reflection.MemberStaticPredicate.methodStaticPredicate;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MemberStaticPredicateTest {
+class MemberStaticPredicateTest {
 
 	@Test
-	public void it_should_check_if_field_is_static() throws Exception {
+	void it_should_check_if_field_is_static() throws Exception {
 		Class<Foo> klass = Foo.class;
 		Field f1 = klass.getField("bar");
 		Field f2 = klass.getField("quix");
@@ -46,7 +46,7 @@ public class MemberStaticPredicateTest {
 	}
 
 	@Test
-	public void it_should_check_if_method_is_static() throws Exception {
+	void it_should_check_if_method_is_static() throws Exception {
 		Class<Foo> klass = Foo.class;
 		Method m1 = klass.getMethod("m1");
 		Method m2 = klass.getMethod("m2");

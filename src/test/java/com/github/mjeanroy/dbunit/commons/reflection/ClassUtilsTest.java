@@ -29,51 +29,41 @@ import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass1;
 import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass2;
 import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass3;
 import com.github.mjeanroy.dbunit.exception.ClassInstantiationException;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class ClassUtilsTest {
+class ClassUtilsTest {
 
 	@Test
-	public void it_should_check_if_class_is_available() {
+	void it_should_check_if_class_is_available() {
 		assertThat(ClassUtils.isPresent("com.github.mjeanroy.dbunit.commons.reflection.ClassUtilsTest")).isTrue();
 		assertThat(ClassUtils.isPresent("com.foo.Bar")).isFalse();
 	}
 
 	@Test
-	public void it_should_instantiate_class() {
+	void it_should_instantiate_class() {
 		final Klass1 o = ClassUtils.instantiate(Klass1.class);
 		assertThat(o).isNotNull();
 	}
 
 	@Test
-	public void it_should_instantiate_class_with_default_constructor() {
+	void it_should_instantiate_class_with_default_constructor() {
 		final Klass0 o = ClassUtils.instantiate(Klass0.class);
 		assertThat(o).isNotNull();
 	}
 
 	@Test
-	public void it_should_instantiate_class_with_private_default_constructor() {
+	void it_should_instantiate_class_with_private_default_constructor() {
 		final Klass3 o = ClassUtils.instantiate(Klass3.class);
 		assertThat(o).isNotNull();
 	}
 
 	@Test
-	public void it_should_fail_to_instantiate_class_without_empty_constructor() {
-		assertThatThrownBy(instantiate(Klass2.class))
+	void it_should_fail_to_instantiate_class_without_empty_constructor() {
+		assertThatThrownBy(() -> ClassUtils.instantiate(Klass2.class))
 			.isExactlyInstanceOf(ClassInstantiationException.class)
 			.hasMessage("Cannot instantiate class com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass2 because it does not have empty public constructor");
-	}
-
-	private static ThrowingCallable instantiate(final Class<?> klass) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				ClassUtils.instantiate(klass);
-			}
-		};
 	}
 }

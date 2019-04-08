@@ -38,60 +38,54 @@ import java.util.Collection;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.assertj.core.api.Condition;
-import org.assertj.core.api.iterable.Extractor;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
 
-public class FileResourceTest {
-
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder();
+class FileResourceTest {
 
 	@Test
-	public void it_should_return_true_if_file_exists() {
+	void it_should_return_true_if_file_exists() {
 		final File file = getTestResource("/dataset/json/users.json");
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.exists()).isTrue();
 	}
 
 	@Test
-	public void it_should_return_false_if_file_does_not_exists() {
+	void it_should_return_false_if_file_does_not_exists() {
 		final File file = new File("/dataset/json/fake.json");
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.exists()).isFalse();
 	}
 
 	@Test
-	public void it_should_return_get_file_name() {
+	void it_should_return_get_file_name() {
 		final File file = getTestResource("/dataset/json/users.json");
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.getFilename()).isEqualTo("users.json");
 	}
 
 	@Test
-	public void it_should_return_false_if_not_directory() {
+	void it_should_return_false_if_not_directory() {
 		final File file = getTestResource("/dataset/json/users.json");
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.isDirectory()).isFalse();
 	}
 
 	@Test
-	public void it_should_return_true_if_directory() {
+	void it_should_return_true_if_directory() {
 		final File file = getTestResource("/dataset/json");
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.isDirectory()).isTrue();
 	}
 
 	@Test
-	public void it_should_return_get_file_handler() {
+	void it_should_return_get_file_handler() {
 		final File file = getTestResource("/dataset/json/users.json");
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.toFile()).isEqualTo(file);
 	}
 
 	@Test
-	public void it_should_get_file_input_stream() throws Exception {
+	void it_should_get_file_input_stream() throws Exception {
 		final String path = "/dataset/json/users.json";
 		final File file = getTestResource(path);
 		final FileResource resource = new FileResource(file);
@@ -105,7 +99,7 @@ public class FileResourceTest {
 	}
 
 	@Test
-	public void it_should_scan_for_sub_resources() {
+	void it_should_scan_for_sub_resources() {
 		final File folder = getTestResource("/dataset/xml");
 		final FileResource resource = new FileResource(folder);
 		final Collection<Resource> subResources = resource.listResources();
@@ -118,17 +112,12 @@ public class FileResourceTest {
 					return value instanceof FileResource;
 				}
 			})
-			.extracting(new Extractor<Resource, String>() {
-				@Override
-				public String extract(Resource resource) {
-					return resource.getFilename();
-				}
-			})
+			.extracting(Resource::getFilename)
 			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
-	public void it_should_scan_for_sub_resources_and_return_empty_list_without_directory() {
+	void it_should_scan_for_sub_resources_and_return_empty_list_without_directory() {
 		final File folder = getTestResource("/dataset/xml/users.xml");
 		final FileResource resource = new FileResource(folder);
 		final Collection<Resource> subResources = resource.listResources();
@@ -136,7 +125,7 @@ public class FileResourceTest {
 	}
 
 	@Test
-	public void it_should_scan_for_sub_resources_and_return_list_of_sub_directory() {
+	void it_should_scan_for_sub_resources_and_return_list_of_sub_directory() {
 		final File folder = getTestResource("/dataset");
 		final FileResource resource = new FileResource(folder);
 		final Collection<Resource> subResources = resource.listResources();
@@ -153,7 +142,7 @@ public class FileResourceTest {
 	}
 
 	@Test
-	public void it_should_implement_equals() {
+	void it_should_implement_equals() {
 		EqualsVerifier.forClass(FileResource.class)
 			.withNonnullFields("file")
 			.withIgnoredFields("scanner")
@@ -162,7 +151,7 @@ public class FileResourceTest {
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final File f1 = getTestResource("/dataset/xml/users.xml");
 		final FileResource r1 = new FileResource(f1);
 

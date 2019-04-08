@@ -35,19 +35,19 @@ import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class DirectoryDataSetTest {
+class DirectoryDataSetTest {
 
 	@Test
-	public void it_should_create_directory_dataset() throws Exception {
+	void it_should_create_directory_dataset() throws Exception {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
 		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 		assertThat(dataSet.getResource()).isEqualTo(resource);
 	}
 
 	@Test
-	public void it_should_return_table_names() throws Exception {
+	void it_should_return_table_names() throws Exception {
 		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFilename("users.xml").build();
 		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFilename("movies.xml").build();
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
@@ -59,7 +59,7 @@ public class DirectoryDataSetTest {
 	}
 
 	@Test
-	public void it_should_get_table() throws Exception {
+	void it_should_get_table() throws Exception {
 		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
 		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
@@ -75,7 +75,7 @@ public class DirectoryDataSetTest {
 	}
 
 	@Test
-	public void it_should_get_table_metadata() throws Exception {
+	void it_should_get_table_metadata() throws Exception {
 		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
 		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
@@ -99,7 +99,7 @@ public class DirectoryDataSetTest {
 	}
 
 	@Test
-	public void it_should_iterate_over_tables() throws Exception {
+	void it_should_iterate_over_tables() throws Exception {
 		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
 		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
@@ -119,7 +119,7 @@ public class DirectoryDataSetTest {
 	}
 
 	@Test
-	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
+	void it_should_iterate_over_tables_in_reverse_order() throws Exception {
 		final Resource r1 = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").setFile().setFilename("users.xml").build();
 		final Resource r2 = new ResourceMockBuilder().fromClasspath("/dataset/xml/movies.xml").setFile().setFilename("movies.xml").build();
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().addSubResources(r1, r2).build();
@@ -139,7 +139,7 @@ public class DirectoryDataSetTest {
 	}
 
 	@Test
-	public void it_should_check_for_case_insensitive_names() throws Exception {
+	void it_should_check_for_case_insensitive_names() throws Exception {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
 		final DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
 		final DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());
@@ -149,7 +149,7 @@ public class DirectoryDataSetTest {
 	}
 
 	@Test
-	public void it_should_implement_to_string() throws Exception {
+	void it_should_implement_to_string() throws Exception {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
 		final DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
 		assertThat(ds.toString()).isEqualTo(String.format("DirectoryDataSet{resource: %s}", resource.toString()));

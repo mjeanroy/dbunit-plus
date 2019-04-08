@@ -27,8 +27,7 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -40,10 +39,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class JdbcDataSourceConnectionFactoryTest {
+class JdbcDataSourceConnectionFactoryTest {
 
 	@Test
-	public void it_should_create_connection() throws Exception {
+	void it_should_create_connection() throws Exception {
 		final DataSource dataSource = mock(DataSource.class);
 		final Connection connection = mock(Connection.class);
 
@@ -60,25 +59,25 @@ public class JdbcDataSourceConnectionFactoryTest {
 	}
 
 	@Test
-	public void it_should_fail_if_connection_cannot_be_loaded() throws Exception {
+	void it_should_fail_if_connection_cannot_be_loaded() throws Exception {
 		final DataSource dataSource = mock(DataSource.class);
 		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
 
 		when(dataSource.getConnection()).thenThrow(new SQLException());
 
-		assertThatThrownBy(getConnection(factory))
+		assertThatThrownBy(factory::getConnection)
 			.isExactlyInstanceOf(JdbcException.class);
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(JdbcDataSourceConnectionFactory.class)
 			.suppress(Warning.STRICT_INHERITANCE)
 			.verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final DataSource dataSource = mock(DataSource.class);
 		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
 		assertThat(factory.toString()).isEqualTo(
@@ -86,14 +85,5 @@ public class JdbcDataSourceConnectionFactoryTest {
 				"dataSource: " + dataSource.toString() +
 			"}"
 		);
-	}
-
-	private static ThrowingCallable getConnection(final JdbcDataSourceConnectionFactory factory) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				factory.getConnection();
-			}
-		};
 	}
 }

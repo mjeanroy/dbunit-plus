@@ -27,12 +27,12 @@ package com.github.mjeanroy.dbunit.core.runner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class SqlScriptMapperTest {
+class SqlScriptMapperTest {
 
 	@Test
-	public void it_should_create_script_from_input_path() {
+	void it_should_create_script_from_input_path() {
 		final SqlScriptParserConfiguration configuration = SqlScriptParserConfiguration.defaultConfiguration();
 		final SqlScriptMapper mapper = SqlScriptMapper.getInstance(configuration);
 		final SqlScript sqlScript = mapper.apply("/sql/data.sql");

@@ -25,15 +25,15 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class ReplacementsMapperTest {
+class ReplacementsMapperTest {
 
 	@Test
-	public void it_should_add_replacement_from_field() throws Exception {
+	void it_should_add_replacement_from_field() throws Exception {
 		final ReplacementsMapper mapper = ReplacementsMapper.getInstance();
 		final Replacements replacements = mapper.apply(TestClass.class.getDeclaredField("replacements"));
 
@@ -46,7 +46,7 @@ public class ReplacementsMapperTest {
 	}
 
 	@Test
-	public void it_should_add_replacement_from_method() throws Exception {
+	void it_should_add_replacement_from_method() throws Exception {
 		final ReplacementsMapper mapper = ReplacementsMapper.getInstance();
 		final Replacements replacements = mapper.apply(TestClass.class.getDeclaredMethod("replacementsFunction"));
 

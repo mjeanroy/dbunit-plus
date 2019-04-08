@@ -51,7 +51,7 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -60,10 +60,10 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class DbUnitAnnotationsParserTest {
+class DbUnitAnnotationsParserTest {
 
 	@Test
-	public void it_should_read_dataset_from_annotation() {
+	void it_should_read_dataset_from_annotation() {
 		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		final DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
@@ -72,7 +72,7 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_read_dataset_from_annotations() {
+	void it_should_read_dataset_from_annotations() {
 		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		final DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(singletonList(annotation), null);
@@ -81,7 +81,7 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_read_connection_factory_from_annotation() {
+	void it_should_read_connection_factory_from_annotation() {
 		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
 		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
 		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
@@ -90,7 +90,7 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_extract_sql_scripts_from_annotation() {
+	void it_should_extract_sql_scripts_from_annotation() {
 		final Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
 		final DbUnitInit annotation = testClass.getAnnotation(DbUnitInit.class);
 		final List<SqlScript> sqlScripts = DbUnitAnnotationsParser.extractSqlScript(annotation);
@@ -108,7 +108,7 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
+	void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
 		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		final DbUnitLiquibase annotation = testClass.getAnnotation(DbUnitLiquibase.class);
 		final List<LiquibaseChangeLog> liquibaseChangeLogs = DbUnitAnnotationsParser.extractLiquibaseChangeLogs(annotation);
@@ -118,7 +118,7 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_read_replacements_from_providers() {
+	void it_should_read_replacements_from_providers() {
 		final DbUnitReplacements annotation = WithReplacementsProvidersDataSet.class.getAnnotation(DbUnitReplacements.class);
 		final List<DbUnitReplacements> annotations = singletonList(annotation);
 		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
@@ -135,14 +135,14 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_not_try_to_read_replacements_without_providers() {
+	void it_should_not_try_to_read_replacements_without_providers() {
 		final List<DbUnitReplacements> annotations = emptyList();
 		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
 		assertThat(replacements).isEmpty();
 	}
 
 	@Test
-	public void it_should_read_interceptor() {
+	void it_should_read_interceptor() {
 		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
 		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);

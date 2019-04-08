@@ -31,12 +31,12 @@ import static org.mockito.Mockito.verify;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.yaml.YamlParser;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class YamlDataSetBuilderTest {
+class YamlDataSetBuilderTest {
 
 	@Test
-	public void it_should_create_default_data_set_with_file() throws Exception {
+	void it_should_create_default_data_set_with_file() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSetBuilder(resource).build();
 
@@ -45,7 +45,7 @@ public class YamlDataSetBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_custom_data_set() throws Exception {
+	void it_should_create_custom_data_set() throws Exception {
 		final Resource resource = createResource();
 		final YamlParser parser = mock(YamlParser.class);
 		final YamlDataSet dataSet = new YamlDataSetBuilder()

@@ -38,13 +38,13 @@ import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.YamlException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.ThrowableAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
 
-public class SnakeYamlParserTest {
+class SnakeYamlParserTest {
 
 	@Test
-	public void it_should_parse_file() {
+	void it_should_parse_file() {
 		final SnakeYamlParser parser = new SnakeYamlParser();
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
 		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
@@ -72,24 +72,15 @@ public class SnakeYamlParserTest {
 	}
 
 	@Test
-	public void it_should_wrap_yml_parse_exception() {
+	void it_should_wrap_yml_parse_exception() {
 		final String malformedYaml = "foo: id: 1";
 		final byte[] bytes = malformedYaml.getBytes(Charset.defaultCharset());
 		final InputStream stream = new ByteArrayInputStream(bytes);
 		final Resource resource = new ResourceMockBuilder().withReader(stream).build();
 		final SnakeYamlParser parser = new SnakeYamlParser();
 
-		assertThatThrownBy(parse(parser, resource))
+		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(YamlException.class)
 			.hasCauseInstanceOf(MarkedYAMLException.class);
-	}
-
-	private static ThrowableAssert.ThrowingCallable parse(final SnakeYamlParser parser, final Resource resource) {
-		return new ThrowableAssert.ThrowingCallable() {
-			@Override
-			public void call() {
-				parser.parse(resource);
-			}
-		};
 	}
 }

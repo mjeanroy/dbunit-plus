@@ -31,21 +31,20 @@ import java.util.Collection;
 
 import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.assertj.core.api.iterable.Extractor;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class FileResourceScannerTest extends AbstractResourceScannerTest {
+class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	private FileResourceScanner scanner;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		scanner = FileResourceScanner.getInstance();
 	}
 
 	@Test
-	public void it_should_return_list_of_files() {
+	void it_should_return_list_of_files() {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
@@ -54,17 +53,12 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 			.isNotEmpty()
 			.hasSize(2)
 			.are(InstanceOfCondition.isInstanceOf(FileResource.class))
-			.extracting(new Extractor<Resource, String>() {
-				@Override
-				public String extract(Resource resource) {
-					return resource.getFilename();
-				}
-			})
+			.extracting(Resource::getFilename)
 			.containsOnly("users.xml", "movies.xml");
 	}
 
 	@Test
-	public void it_should_return_empty_list_without_directory() {
+	void it_should_return_empty_list_without_directory() {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
@@ -74,7 +68,7 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 	}
 
 	@Test
-	public void it_should_not_scan_recursively() {
+	void it_should_not_scan_recursively() {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset").build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
@@ -82,12 +76,7 @@ public class FileResourceScannerTest extends AbstractResourceScannerTest {
 			.isNotNull()
 			.isNotEmpty()
 			.are(isInstanceOf(FileResource.class))
-			.extracting(new Extractor<Resource, String>() {
-				@Override
-				public String extract(Resource resource) {
-					return resource.getFilename();
-				}
-			})
+			.extracting(Resource::getFilename)
 			.containsOnly(
 				"xml",
 				"yaml",

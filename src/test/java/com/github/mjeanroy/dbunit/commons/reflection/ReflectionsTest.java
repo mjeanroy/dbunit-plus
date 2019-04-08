@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -32,10 +32,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ReflectionsTest {
+class ReflectionsTest {
 
 	@Test
-	public void it_should_get_static_fields() {
+	void it_should_get_static_fields() {
 		List<Field> fields = Reflections.findStaticFields(TestClass.class);
 		assertThat(fields)
 			.isNotNull()
@@ -46,7 +46,7 @@ public class ReflectionsTest {
 	}
 
 	@Test
-	public void it_should_get_static_methods() {
+	void it_should_get_static_methods() {
 		List<Method> fields = Reflections.findStaticMethods(TestClass.class);
 		assertThat(fields)
 			.isNotNull()

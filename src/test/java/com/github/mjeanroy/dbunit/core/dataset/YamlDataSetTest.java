@@ -39,26 +39,25 @@ import com.github.mjeanroy.dbunit.exception.YamlException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.yaml.YamlParser;
 import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("SameParameterValue")
-public class YamlDataSetTest {
+class YamlDataSetTest {
 
 	private YamlParser parser;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		parser = YamlParserFactory.createDefault();
 	}
 
 	@Test
-	public void it_should_wrap_yaml_exception_to_data_set_exception() {
+	void it_should_wrap_yaml_exception_to_data_set_exception() {
 		parser = mock(YamlParser.class);
 
 		final IOException ioEx = new IOException();
@@ -67,13 +66,13 @@ public class YamlDataSetTest {
 
 		when(parser.parse(any(Resource.class))).thenThrow(ex);
 
-		assertThatThrownBy(newYamlDataset(resource, false, parser))
+		assertThatThrownBy(() -> new YamlDataSet(resource, false, parser))
 			.isExactlyInstanceOf(DataSetException.class)
 			.hasCause(ex);
 	}
 
 	@Test
-	public void it_should_create_yamL_dataset() throws Exception {
+	void it_should_create_yamL_dataset() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		final String[] tableNames = dataSet.getTableNames();
@@ -85,7 +84,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_get_table() throws Exception {
+	void it_should_get_table() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		final ITable table = dataSet.getTable("users");
@@ -95,7 +94,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_get_table_metadata() throws Exception {
+	void it_should_get_table_metadata() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		final ITableMetaData metaData = dataSet.getTableMetaData("users");
@@ -110,7 +109,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_get_table_data() throws Exception {
+	void it_should_get_table_data() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		final ITable table = dataSet.getTable("users");
@@ -121,7 +120,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_iterate_over_tables() throws Exception {
+	void it_should_iterate_over_tables() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		final ITableIterator it = dataSet.iterator();
@@ -138,7 +137,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_iterate_over_tables_in_reverse_order() throws Exception {
+	void it_should_iterate_over_tables_in_reverse_order() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		final ITableIterator it = dataSet.reverseIterator();
@@ -155,7 +154,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_check_for_case_insensitive_names() throws Exception {
+	void it_should_check_for_case_insensitive_names() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet d1 = new YamlDataSet(resource, false, parser);
 		final YamlDataSet d2 = new YamlDataSet(resource, true, parser);
@@ -165,7 +164,7 @@ public class YamlDataSetTest {
 	}
 
 	@Test
-	public void it_should_get_resource() throws Exception {
+	void it_should_get_resource() throws Exception {
 		final Resource resource = createResource();
 		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		assertThat(dataSet.getResource()).isSameAs(resource);
@@ -173,14 +172,5 @@ public class YamlDataSetTest {
 
 	private static Resource createResource() {
 		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
-	}
-
-	private static ThrowingCallable newYamlDataset(final Resource resource, final boolean caseInsensitiveTableNames, final YamlParser parser) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				new YamlDataSet(resource, caseInsensitiveTableNames, parser);
-			}
-		};
 	}
 }

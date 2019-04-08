@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JdbcDriverTest {
+class JdbcDriverTest {
 
 	@Test
-	public void it_should_match_mysql_driver() {
+	void it_should_match_mysql_driver() {
 		String url = "jdbc:mysql://localhost/";
 		assertThat(JdbcDriver.MYSQL.match(url)).isTrue();
 		assertThat(JdbcDriver.POSTGRESQL.match(url)).isFalse();
@@ -42,7 +42,7 @@ public class JdbcDriverTest {
 	}
 
 	@Test
-	public void it_should_match_postgresql_driver() {
+	void it_should_match_postgresql_driver() {
 		String url = "jdbc:postgresql:testdb";
 		assertThat(JdbcDriver.POSTGRESQL.match(url)).isTrue();
 		assertThat(JdbcDriver.MYSQL.match(url)).isFalse();
@@ -53,7 +53,7 @@ public class JdbcDriverTest {
 	}
 
 	@Test
-	public void it_should_match_oracle_driver() {
+	void it_should_match_oracle_driver() {
 		String url = "jdbc:oracle:thin:@//localhost:1521/orcl";
 		assertThat(JdbcDriver.ORACLE.match(url)).isTrue();
 		assertThat(JdbcDriver.POSTGRESQL.match(url)).isFalse();
@@ -64,7 +64,7 @@ public class JdbcDriverTest {
 	}
 
 	@Test
-	public void it_should_match_mssql_driver() {
+	void it_should_match_mssql_driver() {
 		String url = "jdbc:sqlserver://localhost:1433;";
 		assertThat(JdbcDriver.MSSQL.match(url)).isTrue();
 		assertThat(JdbcDriver.ORACLE.match(url)).isFalse();
@@ -75,7 +75,7 @@ public class JdbcDriverTest {
 	}
 
 	@Test
-	public void it_should_match_hsqldb_driver() {
+	void it_should_match_hsqldb_driver() {
 		String url = "jdbc:hsqldb:mem:testdb";
 		assertThat(JdbcDriver.HSQLDB.match(url)).isTrue();
 		assertThat(JdbcDriver.MSSQL.match(url)).isFalse();
@@ -86,7 +86,7 @@ public class JdbcDriverTest {
 	}
 
 	@Test
-	public void it_should_match_h2_driver() {
+	void it_should_match_h2_driver() {
 		String url = "jdbc:h2:~/test";
 		assertThat(JdbcDriver.H2.match(url)).isTrue();
 		assertThat(JdbcDriver.HSQLDB.match(url)).isFalse();

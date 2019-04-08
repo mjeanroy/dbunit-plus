@@ -25,24 +25,24 @@
 package com.github.mjeanroy.dbunit.commons.lang;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("SameParameterValue")
-public class PreConditionsTest {
+class PreConditionsTest {
 
 	@Test
-	public void it_should_throw_null_pointer_exception() {
+	void it_should_throw_null_pointer_exception() {
 		final String message = "should not be null";
-		assertThatThrownBy(notNull(null, message))
+		assertThatThrownBy(() -> PreConditions.notNull(null, message))
 			.isExactlyInstanceOf(NullPointerException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_throw_null_pointer_exception_and_return_value() {
+	void it_should_not_throw_null_pointer_exception_and_return_value() {
 		final String message = "should not be null";
 		final String value = "value";
 		final String result = PreConditions.notNull(value, message);
@@ -51,31 +51,31 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_throw_null_pointer_exception_if_value_is_null() {
+	void it_should_throw_null_pointer_exception_if_value_is_null() {
 		final String message = "should not be blank";
-		assertThatThrownBy(notBlank(null, message))
+		assertThatThrownBy(() -> PreConditions.notBlank(null, message))
 			.isExactlyInstanceOf(NullPointerException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_throw_illegal_argument_exception_if_value_is_empty() {
+	void it_should_throw_illegal_argument_exception_if_value_is_empty() {
 		final String message = "should not be blank";
-		assertThatThrownBy(notBlank("", message))
+		assertThatThrownBy(() -> PreConditions.notBlank("", message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_throw_illegal_argument_exception_if_value_is_blank() {
+	void it_should_throw_illegal_argument_exception_if_value_is_blank() {
 		final String message = "should not be blank";
-		assertThatThrownBy(notBlank("   ", message))
+		assertThatThrownBy(() -> PreConditions.notBlank("   ", message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_throw_exception_and_return_value_if_value_is_not_blank() {
+	void it_should_not_throw_exception_and_return_value_if_value_is_not_blank() {
 		final String message = "should not be null";
 		final String value = "value";
 		final String result = PreConditions.notBlank(value, message);
@@ -84,15 +84,15 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void it_should_throw_illegal_argument_exception_if_character_is_blank() {
+	void it_should_throw_illegal_argument_exception_if_character_is_blank() {
 		final String message = "should not be blank";
-		assertThatThrownBy(notBlank(' ', message))
+		assertThatThrownBy(() -> PreConditions.notBlank(' ', message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void it_should_not_throw_exception_and_return_value_if_character_is_not_blank() {
+	void it_should_not_throw_exception_and_return_value_if_character_is_not_blank() {
 		final String message = "should not be null";
 		final char value = ';';
 		final char result = PreConditions.notBlank(value, message);
@@ -101,39 +101,39 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void startsWith_should_throw_null_pointer_exception_if_value_is_null() {
+	void startsWith_should_throw_null_pointer_exception_if_value_is_null() {
 		final String message = "should not be blank";
-		assertThatThrownBy(startsWith(null, "prefix", message))
+		assertThatThrownBy(() -> PreConditions.startsWith(null, "prefix", message))
 			.isExactlyInstanceOf(NullPointerException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void startsWith_should_throw_illegal_argument_exception_if_value_is_empty() {
+	void startsWith_should_throw_illegal_argument_exception_if_value_is_empty() {
 		final String message = "should not be blank";
-		assertThatThrownBy(startsWith("", "prefix", message))
+		assertThatThrownBy(() -> PreConditions.startsWith("", "prefix", message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void startsWith_should_throw_illegal_argument_exception_if_value_is_blank() {
+	void startsWith_should_throw_illegal_argument_exception_if_value_is_blank() {
 		final String message = "should not be blank";
-		assertThatThrownBy(startsWith("   ", "prefix", message))
+		assertThatThrownBy(() -> PreConditions.startsWith("   ", "prefix", message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void startsWith_should_throw_illegal_argument_exception_if_value_does_not_start_with_prefix() {
+	void startsWith_should_throw_illegal_argument_exception_if_value_does_not_start_with_prefix() {
 		final String message = "should not be blank";
-		assertThatThrownBy(startsWith("foo:bar", "prefix", message))
+		assertThatThrownBy(() -> PreConditions.startsWith("foo:bar", "prefix", message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
 	}
 
 	@Test
-	public void startsWith_should_not_throw_exception_and_return_value_if_value_start_with_prefix() {
+	void startsWith_should_not_throw_exception_and_return_value_if_value_start_with_prefix() {
 		final String message = "should not be null";
 		final String value = "prefix:value";
 		final String result = PreConditions.startsWith(value, "prefix", message);
@@ -142,61 +142,16 @@ public class PreConditionsTest {
 	}
 
 	@Test
-	public void checkArgument_should_not_throw_exception_with_true() {
+	void checkArgument_should_not_throw_exception_with_true() {
 		final String message = "should not be null";
 		PreConditions.checkArgument(true, message);
 	}
 
 	@Test
-	public void checkArgument_should_throw_exception_with_false() {
+	void checkArgument_should_throw_exception_with_false() {
 		final String message = "should be thrown";
-		assertThatThrownBy(checkArgument(false, message))
+		assertThatThrownBy(() -> PreConditions.checkArgument(false, message))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage(message);
-	}
-
-	private static ThrowingCallable checkArgument(final boolean condition, final String message) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.checkArgument(condition, message);
-			}
-		};
-	}
-
-	private static ThrowingCallable startsWith(final String value, final String prefix, final String message) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.startsWith(value, prefix, message);
-			}
-		};
-	}
-
-	private static ThrowingCallable notBlank(final char value, final String message) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notBlank(value, message);
-			}
-		};
-	}
-
-	private static ThrowingCallable notBlank(final String value, final String message) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notBlank(value, message);
-			}
-		};
-	}
-
-	private static ThrowingCallable notNull(final Object value, final String message) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				PreConditions.notNull(value, message);
-			}
-		};
 	}
 }

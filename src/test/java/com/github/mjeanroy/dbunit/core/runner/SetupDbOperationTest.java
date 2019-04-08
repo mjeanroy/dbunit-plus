@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithoutDataSet;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.operation.DatabaseOperation;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
@@ -38,10 +38,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class SetupDbOperationTest {
+class SetupDbOperationTest {
 
 	@Test
-	public void it_should_set_operations_and_trigger_setup() throws Exception {
+	void it_should_set_operations_and_trigger_setup() throws Exception {
 		SetupDbOperation op = SetupDbOperation.getInstance();
 
 		Class<WithDataSet> testClass = WithDataSet.class;
@@ -56,7 +56,7 @@ public class SetupDbOperationTest {
 	}
 
 	@Test
-	public void it_should_not_set_operations_but_trigger_setup() throws Exception {
+	void it_should_not_set_operations_but_trigger_setup() throws Exception {
 		SetupDbOperation op = SetupDbOperation.getInstance();
 
 		Class<WithoutDataSet> testClass = WithoutDataSet.class;

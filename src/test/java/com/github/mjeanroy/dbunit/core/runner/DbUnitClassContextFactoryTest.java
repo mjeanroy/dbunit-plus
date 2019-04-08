@@ -41,15 +41,15 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
 import org.dbunit.dataset.CompositeDataSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class DbUnitClassContextFactoryTest {
+class DbUnitClassContextFactoryTest {
 
 	@Test
-	public void it_should_read_dataset_from_class_context() {
+	void it_should_read_dataset_from_class_context() {
 		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
@@ -58,7 +58,7 @@ public class DbUnitClassContextFactoryTest {
 	}
 
 	@Test
-	public void it_should_read_connection_factory_from_class_context() {
+	void it_should_read_connection_factory_from_class_context() {
 		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
@@ -67,7 +67,7 @@ public class DbUnitClassContextFactoryTest {
 	}
 
 	@Test
-	public void it_should_extract_sql_scripts_from_class_context() {
+	void it_should_extract_sql_scripts_from_class_context() {
 		final Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
@@ -85,7 +85,7 @@ public class DbUnitClassContextFactoryTest {
 	}
 
 	@Test
-	public void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
+	void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
 		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
@@ -95,7 +95,7 @@ public class DbUnitClassContextFactoryTest {
 	}
 
 	@Test
-	public void it_should_read_replacements_from_providers() {
+	void it_should_read_replacements_from_providers() {
 		final Class<WithReplacementsProvidersDataSet> testClass = WithReplacementsProvidersDataSet.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
@@ -111,7 +111,7 @@ public class DbUnitClassContextFactoryTest {
 	}
 
 	@Test
-	public void it_should_read_interceptor() {
+	void it_should_read_interceptor() {
 		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 

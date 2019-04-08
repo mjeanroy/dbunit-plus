@@ -25,8 +25,8 @@
 package com.github.mjeanroy.dbunit.integration.spring;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.springframework.test.context.TestContext;
 import org.springframework.test.context.TestExecutionListener;
@@ -41,21 +41,21 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
-public class CompositeTestExecutionListenerTest {
+class CompositeTestExecutionListenerTest {
 
 	private TestContext ctx;
 	private TestExecutionListener listener1;
 	private TestExecutionListener listener2;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		ctx = mock(TestContext.class);
 		listener1 = mock(TestExecutionListener.class);
 		listener2 = mock(TestExecutionListener.class);
 	}
 
 	@Test
-	public void it_should_create_listener() {
+	void it_should_create_listener() {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");
 		final TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
@@ -74,7 +74,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_prepare_instances() throws Exception {
+	void it_should_prepare_instances() throws Exception {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.prepareTestInstance(ctx);
@@ -85,7 +85,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_execute_before_test_class() throws Exception {
+	void it_should_execute_before_test_class() throws Exception {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestClass(ctx);
@@ -96,7 +96,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_execute_before_test_method() throws Exception {
+	void it_should_execute_before_test_method() throws Exception {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestMethod(ctx);
@@ -107,7 +107,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_execute_after_test_class() throws Exception {
+	void it_should_execute_after_test_class() throws Exception {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestClass(ctx);
@@ -118,7 +118,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_execute_after_test_method() throws Exception {
+	void it_should_execute_after_test_method() throws Exception {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestMethod(ctx);
@@ -129,7 +129,7 @@ public class CompositeTestExecutionListenerTest {
 	}
 
 	@Test
-	public void it_should_return_last_exception() throws Exception {
+	void it_should_return_last_exception() throws Exception {
 		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 		final Exception ex1 = new IOException();
 		final Exception ex2 = new IOException();
@@ -137,15 +137,6 @@ public class CompositeTestExecutionListenerTest {
 		doThrow(ex1).when(listener1).prepareTestInstance(ctx);
 		doThrow(ex2).when(listener2).prepareTestInstance(ctx);
 
-		assertThatThrownBy(prepareTestInstance(listener, ctx)).isSameAs(ex2);
-	}
-
-	private static ThrowingCallable prepareTestInstance(final CompositeTestExecutionListener listener, final TestContext ctx) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				listener.prepareTestInstance(ctx);
-			}
-		};
+		assertThatThrownBy(() -> listener.prepareTestInstance(ctx)).isSameAs(ex2);
 	}
 }

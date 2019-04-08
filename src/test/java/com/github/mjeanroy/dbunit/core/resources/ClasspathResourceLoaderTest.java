@@ -29,34 +29,34 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("SameParameterValue")
-public class ClasspathResourceLoaderTest {
+class ClasspathResourceLoaderTest {
 
 	private ClasspathResourceLoader loader;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		loader = ClasspathResourceLoader.getInstance();
 	}
 
 	@Test
-	public void it_should_match_these_prefixes() {
+	void it_should_match_these_prefixes() {
 		assertThat(loader.match("classpath:/users.txt")).isTrue();
 		assertThat(loader.match("CLASSPATH:/users.txt")).isTrue();
 	}
 
 	@Test
-	public void it_should_not_match_these_prefixes() {
+	void it_should_not_match_these_prefixes() {
 		assertThat(loader.match("classpath/users.txt")).isFalse();
 		assertThat(loader.match("CLASSPATH/users.txt")).isFalse();
 		assertThat(loader.match("/users.txt")).isFalse();
 	}
 
 	@Test
-	public void it_should_load_resource() {
+	void it_should_load_resource() {
 		final String path = "classpath:/dataset/json/users.json";
 		final Resource resource = loader.load(path);
 		assertThat(resource).isNotNull();
@@ -65,19 +65,10 @@ public class ClasspathResourceLoaderTest {
 	}
 
 	@Test
-	public void it_should_not_load_unknown_resource() {
+	void it_should_not_load_unknown_resource() {
 		final String path = "classpath:/fake/unknown.json";
-		assertThatThrownBy(load(loader, path))
+		assertThatThrownBy(() -> loader.load(path))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", path));
-	}
-
-	private static ThrowingCallable load(final ClasspathResourceLoader loader, final String path) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				loader.load(path);
-			}
-		};
 	}
 }

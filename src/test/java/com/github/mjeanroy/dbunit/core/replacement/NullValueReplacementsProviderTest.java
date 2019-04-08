@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class NullValueReplacementsProviderTest {
+class NullValueReplacementsProviderTest {
 
 	@Test
-	public void it_should_add_null_replacement() {
+	void it_should_add_null_replacement() {
 		final NullValueReplacementsProvider provider = new NullValueReplacementsProvider();
 		final Replacements replacements = provider.create();
 		assertThat(replacements).isNotNull();

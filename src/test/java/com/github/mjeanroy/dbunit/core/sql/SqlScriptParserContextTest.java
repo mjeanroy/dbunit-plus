@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SqlScriptParserContextTest {
+class SqlScriptParserContextTest {
 
 	@Test
-	public void it_should_create_default_context() {
+	void it_should_create_default_context() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 		assertThat(ctx.getState()).isEqualTo(SqlQueryState.DEFAULT);
 		assertThat(ctx.getOpenQuote()).isNull();
@@ -39,7 +39,7 @@ public class SqlScriptParserContextTest {
 	}
 
 	@Test
-	public void it_should_start_and_stop_varchar_token() {
+	void it_should_start_and_stop_varchar_token() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		ctx.startVarchar('\'');
@@ -54,7 +54,7 @@ public class SqlScriptParserContextTest {
 	}
 
 	@Test
-	public void it_should_start_and_stop_block_comment() {
+	void it_should_start_and_stop_block_comment() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		ctx.startBlockComment();
@@ -69,7 +69,7 @@ public class SqlScriptParserContextTest {
 	}
 
 	@Test
-	public void it_should_start_and_stop_escaping_token() {
+	void it_should_start_and_stop_escaping_token() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		ctx.startEscaping();
@@ -84,7 +84,7 @@ public class SqlScriptParserContextTest {
 	}
 
 	@Test
-	public void it_should_append_character_and_flush_query() {
+	void it_should_append_character_and_flush_query() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		String query = "DROP TABLE foo;";
@@ -103,7 +103,7 @@ public class SqlScriptParserContextTest {
 	}
 
 	@Test
-	public void it_should_not_append_empty_query() {
+	void it_should_not_append_empty_query() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		String query = "DROP TABLE foo;";
@@ -127,7 +127,7 @@ public class SqlScriptParserContextTest {
 	}
 
 	@Test
-	public void it_should_trim_queries() {
+	void it_should_trim_queries() {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
 		String query = "  DROP TABLE foo;  ";

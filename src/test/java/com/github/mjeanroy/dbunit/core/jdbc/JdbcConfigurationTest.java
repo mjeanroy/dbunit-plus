@@ -26,15 +26,15 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JdbcConfigurationTest {
+class JdbcConfigurationTest {
 
 	@Test
-	public void it_should_create_configuration() {
+	void it_should_create_configuration() {
 		String url = "jdbc:hsqldb:mem:database/testdb";
 		String user = "SA";
 		String password = "";
@@ -48,7 +48,7 @@ public class JdbcConfigurationTest {
 	}
 
 	@Test
-	public void it_should_display_configuration() {
+	void it_should_display_configuration() {
 		String url = "jdbc:hsqldb:mem:database/testdb";
 		String user = "SA";
 		String password = "";
@@ -66,7 +66,7 @@ public class JdbcConfigurationTest {
 	}
 
 	@Test
-	public void it_should_implement_equals() {
+	void it_should_implement_equals() {
 		EqualsVerifier.forClass(JdbcConfiguration.class)
 			.suppress(Warning.STRICT_INHERITANCE)
 			.verify();

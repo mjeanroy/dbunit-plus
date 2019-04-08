@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-public class DefaultCacheTest extends AbstractCacheTest {
+class DefaultCacheTest extends AbstractCacheTest {
 
 	@Override
 	Cache<String, String> createCache(CacheLoader<String, String> loader) {

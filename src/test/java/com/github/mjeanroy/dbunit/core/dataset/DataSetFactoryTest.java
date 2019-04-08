@@ -37,17 +37,12 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
 
-public class DataSetFactoryTest {
-
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder();
+class DataSetFactoryTest {
 
 	@Test
-	public void it_should_create_xml_data_set() throws Exception {
+	void it_should_create_xml_data_set() throws Exception {
 		final Resource resource = new ResourceMockBuilder()
 			.setFilename("users.xml")
 			.fromClasspath("/dataset/xml/users.xml")
@@ -64,7 +59,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
+	void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
 		final String path = "/dataset/xml/users.xml";
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
@@ -77,7 +72,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
+	void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
 		final String path = "classpath:/dataset/xml/users.xml";
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
@@ -90,7 +85,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
+	void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
 		final File file = getTestResource("/dataset/xml/users.xml");
 		final String path = "file:" + file.getAbsolutePath();
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
@@ -104,7 +99,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_data_set_from_array_of_path() throws Exception {
+	void it_should_create_data_set_from_array_of_path() throws Exception {
 		final String[] path = new String[]{
 			"classpath:/dataset/xml/users.xml",
 			"classpath:/dataset/xml/movies.xml"
@@ -121,7 +116,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_directory_data_set() throws Exception {
+	void it_should_create_directory_data_set() throws Exception {
 		final Resource resource = new ResourceMockBuilder()
 			.setFilename("xml")
 			.setDirectory()
@@ -134,7 +129,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_json_data_set() throws Exception {
+	void it_should_create_json_data_set() throws Exception {
 		final Resource resource = new ResourceMockBuilder()
 			.setFilename("users.json")
 			.fromClasspath("/dataset/json/users.json")
@@ -146,14 +141,14 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_csv_data_set() throws Exception {
+	void it_should_create_csv_data_set() throws Exception {
 		final Resource resource = new ResourceMockBuilder().setFilename("users.csv").fromClasspath("/dataset/csv/users.csv").build();
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
 	}
 
 	@Test
-	public void it_should_merge_dataset() throws Exception {
+	void it_should_merge_dataset() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
@@ -173,7 +168,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_dataset_from_collection_of_datasets() throws Exception {
+	void it_should_create_dataset_from_collection_of_datasets() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
@@ -193,7 +188,7 @@ public class DataSetFactoryTest {
 	}
 
 	@Test
-	public void it_should_create_dataset_from_array_of_datasets() throws Exception {
+	void it_should_create_dataset_from_array_of_datasets() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));

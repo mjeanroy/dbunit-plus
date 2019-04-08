@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class JsonParserFactoryTest {
+class JsonParserFactoryTest {
 
 	@Test
-	public void it_should_create_jackson2_parser_by_default() {
+	void it_should_create_jackson2_parser_by_default() {
 		JsonParser parser = JsonParserFactory.createDefault();
 		assertThat(parser).isExactlyInstanceOf(Jackson2Parser.class);
 	}

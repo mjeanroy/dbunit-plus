@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 import java.util.List;
@@ -33,10 +33,10 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class NowValueReplacementsProviderTest {
+class NowValueReplacementsProviderTest {
 
 	@Test
-	public void it_should_add_replacements_for_now() {
+	void it_should_add_replacements_for_now() {
 		final NowValueReplacementsProvider provider = new NowValueReplacementsProvider();
 		final Replacements replacements = provider.create();
 		assertThat(replacements).isNotNull();

@@ -25,14 +25,14 @@
 package com.github.mjeanroy.dbunit.cache;
 
 import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CacheFactoryTest {
+class CacheFactoryTest {
 
 	@Test
-	public void it_should_return_guava_cache() {
+	void it_should_return_guava_cache() {
 		CacheLoader<String, String> loader = new CacheLoaderMockBuilder<String, String>().build();
 		Cache<String, String> cache = CacheFactory.newCache(loader);
 		assertThat(cache).isExactlyInstanceOf(GuavaCache.class);

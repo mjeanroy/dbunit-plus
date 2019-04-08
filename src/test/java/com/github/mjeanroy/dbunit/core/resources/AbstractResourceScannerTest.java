@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.resources;
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 
@@ -35,10 +35,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
-public abstract class AbstractResourceScannerTest {
+abstract class AbstractResourceScannerTest {
 
 	@Test
-	public void it_should_fail_if_resource_does_not_exist() {
+	void it_should_fail_if_resource_does_not_exist() {
 		final ResourceScanner scanner = getScanner();
 		final String path = "/dataset/fake.xml";
 		final Resource resource = new ResourceMockBuilder()
@@ -46,13 +46,13 @@ public abstract class AbstractResourceScannerTest {
 			.setExists(false)
 			.build();
 
-		assertThatThrownBy(scan(scanner, resource))
+		assertThatThrownBy(() -> scanner.scan(resource))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", path));
 	}
 
 	@Test
-	public void it_should_returns_empty_list_without_directory() {
+	void it_should_returns_empty_list_without_directory() {
 		final String path = "/dataset/xml/foo.xml";
 		final Resource resource = new ResourceMockBuilder()
 			.setPath(path)
@@ -68,13 +68,4 @@ public abstract class AbstractResourceScannerTest {
 	}
 
 	abstract ResourceScanner getScanner();
-
-	private static ThrowingCallable scan(final ResourceScanner scanner, final Resource resource) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				scanner.scan(resource);
-			}
-		};
-	}
 }

@@ -27,8 +27,7 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 
@@ -37,10 +36,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class JdbcDefaultConnectionFactoryTest {
+class JdbcDefaultConnectionFactoryTest {
 
 	@Test
-	public void it_should_create_connection() throws Exception {
+	void it_should_create_connection() throws Exception {
 		final String url = "jdbc:hsqldb:mem:database/testdb";
 		final String user = "SA";
 		final String password = "";
@@ -58,7 +57,7 @@ public class JdbcDefaultConnectionFactoryTest {
 	}
 
 	@Test
-	public void it_should_fail_if_connection_cannot_be_loaded() {
+	void it_should_fail_if_connection_cannot_be_loaded() {
 		final String url = "jdbc:custom:file:database/testdb";
 		final String user = "SA";
 		final String password = "";
@@ -70,20 +69,20 @@ public class JdbcDefaultConnectionFactoryTest {
 
 		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
 
-		assertThatThrownBy(getConnection(factory))
+		assertThatThrownBy(factory::getConnection)
 			.isExactlyInstanceOf(JdbcException.class)
 			.hasMessage("com.github.mjeanroy.dbunit.exception.JdbcException: Cannot load JDBC driver for: jdbc:custom:file:database/testdb");
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(JdbcDefaultConnectionFactory.class)
 			.suppress(Warning.STRICT_INHERITANCE)
 			.verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final JdbcConfiguration configuration = JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "");
 		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
 		assertThat(factory.toString()).isEqualTo(
@@ -95,14 +94,5 @@ public class JdbcDefaultConnectionFactoryTest {
 				"}" +
 			"}"
 		);
-	}
-
-	private static ThrowingCallable getConnection(final JdbcDefaultConnectionFactory factory) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				factory.getConnection();
-			}
-		};
 	}
 }

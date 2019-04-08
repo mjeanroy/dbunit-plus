@@ -40,23 +40,23 @@ import java.util.List;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
-public class SqlScriptParserTest {
+class SqlScriptParserTest {
 
 	private static final String BR = System.getProperty("line.separator");
 
 	private SqlScriptParserConfiguration configuration;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		configuration = SqlScriptParserConfiguration.defaultConfiguration();
 	}
 
 	@Test
-	public void it_should_parse_simple_query() {
+	void it_should_parse_simple_query() {
 		final String query = "DROP TABLE users;";
 		final InputStream reader = createStream(query);
 		final List<String> queries = SqlScriptParser.parseScript(reader, configuration);
@@ -64,7 +64,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_simple_query_without_end_delimiter() {
+	void it_should_parse_simple_query_without_end_delimiter() {
 		final String query = "DROP TABLE users";
 		final InputStream stringReader = createStream(query);
 		final List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
@@ -72,7 +72,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_two_simple_query() {
+	void it_should_parse_two_simple_query() {
 		final String q1 = "DROP TABLE users;";
 		final String q2 = "DROP TABLE movies;";
 		final String query = q1 + BR + q2 + BR;
@@ -82,7 +82,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_add_escaping_character() {
+	void it_should_add_escaping_character() {
 		final String query = "SELECT * FROM users WHERE title = 'John\\'s file';";
 		final InputStream stream = createStream(query);
 		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
@@ -90,7 +90,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_query_and_comment_line() {
+	void it_should_parse_query_and_comment_line() {
 		final String q1 = "DROP TABLE users;";
 		final String q2 = "DROP TABLE movies;";
 		final String query = join(asList(
@@ -112,7 +112,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_query_and_block_comment() {
+	void it_should_parse_query_and_block_comment() {
 		final String q1 = "DROP TABLE users;";
 		final String q2 = "DROP TABLE movies;";
 		final String query = join(asList(
@@ -138,7 +138,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_query_with_varchar_values() {
+	void it_should_parse_query_with_varchar_values() {
 		final String q1 = "UPDATE users SET name = 'Hello -- John';";
 		final String q2 = "UPDATE users SET name = 'Hello /* John */';";
 		final String query = join(asList(
@@ -158,7 +158,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_query_with_quote_escaping() {
+	void it_should_parse_query_with_quote_escaping() {
 		final String query = "UPDATE users SET name = 'John''s Name';";
 		final InputStream stream = createStream(query);
 		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
@@ -166,7 +166,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_file() {
+	void it_should_parse_file() {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
 		final List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
@@ -179,7 +179,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_file_path() {
+	void it_should_parse_file_path() {
 		final String script = "/sql/init.sql";
 		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
 		assertThat(queries).hasSize(4).containsExactly(
@@ -191,7 +191,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_parse_file_path_classpath() {
+	void it_should_parse_file_path_classpath() {
 		final String script = "classpath:/sql/init.sql";
 		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
 		assertThat(queries).hasSize(4).containsExactly(
@@ -203,7 +203,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_execute_sql_file() throws Exception {
+	void it_should_execute_sql_file() throws Exception {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
 		final Connection connection = mock(Connection.class);
 		final PreparedStatement statement = mock(PreparedStatement.class);
@@ -224,7 +224,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_execute_sql_file_path() throws Exception {
+	void it_should_execute_sql_file_path() throws Exception {
 		final String script = "/sql/init.sql";
 		final Connection connection = mock(Connection.class);
 		final PreparedStatement statement = mock(PreparedStatement.class);
@@ -245,7 +245,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_execute_sql_file_path_from_classpath() throws Exception {
+	void it_should_execute_sql_file_path_from_classpath() throws Exception {
 		final String script = "classpath:/sql/init.sql";
 		final Connection connection = mock(Connection.class);
 		final PreparedStatement statement = mock(PreparedStatement.class);
@@ -266,7 +266,7 @@ public class SqlScriptParserTest {
 	}
 
 	@Test
-	public void it_should_execute_all_queries() throws Exception {
+	void it_should_execute_all_queries() throws Exception {
 		final String q1 = "UPDATE users SET name = 'Hello -- John';";
 		final String q2 = "UPDATE users SET name = 'Hello /* John */';";
 		final String query = join(asList(
@@ -301,11 +301,6 @@ public class SqlScriptParserTest {
 	}
 
 	private static String join(List<String> lines) {
-		StringBuilder sb = new StringBuilder();
-		for (String current : lines) {
-			sb.append(current).append(BR);
-		}
-
-		return sb.toString();
+		return String.join(BR, lines);
 	}
 }

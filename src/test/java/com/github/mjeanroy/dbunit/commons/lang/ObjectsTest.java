@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ObjectsTest {
+class ObjectsTest {
 
 	@Test
-	public void it_should_return_first_non_null_value() {
+	void it_should_return_first_non_null_value() {
 		assertThat((String) Objects.firstNonNull(null, null)).isNull();
 		assertThat(Objects.firstNonNull("foo", null)).isEqualTo("foo");
 		assertThat(Objects.firstNonNull(null, "foo")).isEqualTo("foo");

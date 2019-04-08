@@ -25,26 +25,26 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class LiquibaseChangeLogTest {
+class LiquibaseChangeLogTest {
 
 	@Test
-	public void it_should_create_changelog() {
+	void it_should_create_changelog() {
 		final String path = "/hsqldb/master-changelog.xml";
 		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
 		assertThat(changeLog.getChangeLog()).isEqualTo(path);
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(LiquibaseChangeLog.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final String path = "/hsqldb/master-changelog.xml";
 		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
 		assertThat(changeLog.toString()).isEqualTo(

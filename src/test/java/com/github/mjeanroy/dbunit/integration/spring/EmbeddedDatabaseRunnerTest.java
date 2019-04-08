@@ -24,30 +24,30 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class EmbeddedDatabaseRunnerTest {
+class EmbeddedDatabaseRunnerTest {
 
 	@Test
-	public void it_should_create_runner() {
+	void it_should_create_runner() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
 		assertThat(runner.getDb()).isSameAs(db);
 	}
 
 	@Test
-	public void it_should_create_default_runner() {
+	void it_should_create_default_runner() {
 		final EmbeddedDatabaseRunner rule = new EmbeddedDatabaseRunner();
 		assertThat(rule.getDb()).isNotNull();
 	}
 
 	@Test
-	public void it_should_shutdown_db_after_test() {
+	void it_should_shutdown_db_after_test() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
 		runner.after();
@@ -55,7 +55,7 @@ public class EmbeddedDatabaseRunnerTest {
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class, "MockEmbeddedDatabase");
 		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
 		assertThat(runner.toString()).isEqualTo(

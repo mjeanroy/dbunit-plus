@@ -24,28 +24,28 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResourceScannerFactoryTest {
+class ResourceScannerFactoryTest {
 
 	@Test
-	public void it_should_get_file_scanner() {
+	void it_should_get_file_scanner() {
 		assertThat(ResourceScannerFactory.fileScanner())
 			.isNotNull()
 			.isExactlyInstanceOf(FileResourceScanner.class);
 	}
 
 	@Test
-	public void it_should_get_jar_scanner() {
+	void it_should_get_jar_scanner() {
 		assertThat(ResourceScannerFactory.jarScanner())
 			.isNotNull()
 			.isExactlyInstanceOf(JarResourceScanner.class);
 	}
 
 	@Test
-	public void it_should_get_no_op_scanner() {
+	void it_should_get_no_op_scanner() {
 		assertThat(ResourceScannerFactory.noOpScanner())
 			.isNotNull()
 			.isExactlyInstanceOf(NoOpResourceScanner.class);

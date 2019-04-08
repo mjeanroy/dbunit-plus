@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,10 +34,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class AnnotationsTest {
+class AnnotationsTest {
 
 	@Test
-	public void it_should_find_annotation_on_class() {
+	void it_should_find_annotation_on_class() {
 		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
@@ -46,7 +46,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_meta_annotation() {
+	void it_should_find_annotation_on_meta_annotation() {
 		final Class<TestClassMetaAnnotated> klass = TestClassMetaAnnotated.class;
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
@@ -55,7 +55,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_interface() {
+	void it_should_find_annotation_on_interface() {
 		final Class<TestClassAnnotatedOnInterface> klass = TestClassAnnotatedOnInterface.class;
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
@@ -64,7 +64,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_super_class() {
+	void it_should_find_annotation_on_super_class() {
 		final Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
@@ -73,7 +73,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_class_if_method_is_not_annotated() throws Exception {
+	void it_should_find_annotation_on_class_if_method_is_not_annotated() throws Exception {
 		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
 		final Method method = klass.getMethod("method1");
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
@@ -83,7 +83,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_super_class_if_method_is_not_annotated() throws Exception {
+	void it_should_find_annotation_on_super_class_if_method_is_not_annotated() throws Exception {
 		final Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
 		final Method method = klass.getMethod("method1");
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
@@ -93,7 +93,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_method() throws Exception {
+	void it_should_find_annotation_on_method() throws Exception {
 		final Method method = TestClassAnnotation.class.getDeclaredMethod("method2");
 		final TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
 
@@ -102,7 +102,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_not_find_annotation_on_method() throws Exception {
+	void it_should_not_find_annotation_on_method() throws Exception {
 		final Method method = TestClassWithoutAnnotation.class.getMethod("method1");
 		final TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
 
@@ -110,7 +110,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_directly_on_method() throws Exception {
+	void it_should_find_annotation_directly_on_method() throws Exception {
 		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
 		final Method method = klass.getDeclaredMethod("method2");
 		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
@@ -120,7 +120,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_not_find_annotation_nor_on_method_nor_on_class() throws Exception {
+	void it_should_not_find_annotation_nor_on_method_nor_on_class() throws Exception {
 		final Class<TestClassWithoutAnnotation> klass = TestClassWithoutAnnotation.class;
 		final Method method = klass.getMethod("method1");
 		final TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
@@ -129,7 +129,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_static_fields_annotated_including_meta_annotation() {
+	void it_should_find_static_fields_annotated_including_meta_annotation() {
 		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
 		final List<Field> fields = Annotations.findStaticFieldAnnotatedWith(klass, TestAnnotation.class);
 
@@ -140,7 +140,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_static_methods_annotated_including_meta_annotation() {
+	void it_should_find_static_methods_annotated_including_meta_annotation() {
 		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
 		final List<Method> methods = Annotations.findStaticMethodAnnotatedWith(klass, TestAnnotation.class);
 
@@ -151,7 +151,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_all_annotation_starting_from_class() {
+	void it_should_find_all_annotation_starting_from_class() {
 		final Class<TestClassWithMultipleAnnotations> klass = TestClassWithMultipleAnnotations.class;
 		final List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
 
@@ -163,7 +163,7 @@ public class AnnotationsTest {
 	}
 
 	@Test
-	public void it_should_find_annotation_on_outer_class() {
+	void it_should_find_annotation_on_outer_class() {
 		final Class<TestClassWithInnerClass.InnerClass> klass = TestClassWithInnerClass.InnerClass.class;
 		final List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
 

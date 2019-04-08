@@ -25,16 +25,16 @@
 package com.github.mjeanroy.dbunit.cache;
 
 import com.github.mjeanroy.dbunit.tests.builders.CacheLoaderMockBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public abstract class AbstractCacheTest {
+abstract class AbstractCacheTest {
 
 	@Test
-	public void it_should_put_value_in_cache() throws Exception {
+	void it_should_put_value_in_cache() throws Exception {
 		String key = "foo";
 		String value = "bar";
 
@@ -57,7 +57,7 @@ public abstract class AbstractCacheTest {
 	}
 
 	@Test
-	public void it_should_clear_cache() throws Exception {
+	void it_should_clear_cache() {
 		String key = "foo";
 		String value = "bar";
 

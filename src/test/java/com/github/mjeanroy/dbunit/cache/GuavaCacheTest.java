@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-public class GuavaCacheTest extends AbstractCacheTest {
+class GuavaCacheTest extends AbstractCacheTest {
 
 	@Override
 	Cache<String, String> createCache(CacheLoader<String, String> loader) {

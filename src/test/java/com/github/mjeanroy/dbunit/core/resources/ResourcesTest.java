@@ -26,31 +26,31 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ResourcesTest {
+class ResourcesTest {
 
 	@Test
-	public void it_should_check_for_jar_url() {
+	void it_should_check_for_jar_url() {
 		assertThat(Resources.isJarURL(url("jar"))).isTrue();
 		assertThat(Resources.isJarURL(url("file"))).isFalse();
 		assertThat(Resources.isJarURL(url("http"))).isFalse();
 	}
 
 	@Test
-	public void it_should_check_for_file_url() {
+	void it_should_check_for_file_url() {
 		assertThat(Resources.isFileURL(url("file"))).isTrue();
 		assertThat(Resources.isFileURL(url("jar"))).isFalse();
 		assertThat(Resources.isFileURL(url("http"))).isFalse();
 	}
 
 	@Test
-	public void it_should_scan_for_resources() {
+	void it_should_scan_for_resources() {
 		Resource r1 = new ResourceMockBuilder().setFile().build();
 		Resource r2 = new ResourceMockBuilder().setFile().build();
 		Resource resource = new ResourceMockBuilder()
@@ -67,7 +67,7 @@ public class ResourcesTest {
 	}
 
 	@Test
-	public void it_should_scan_recursively_for_resources() {
+	void it_should_scan_recursively_for_resources() {
 		Resource r1 = new ResourceMockBuilder().setFile().build();
 		Resource r2 = new ResourceMockBuilder().setFile().build();
 		Resource dir1 = new ResourceMockBuilder().setDirectory().addSubResources(r1, r2).build();
@@ -87,9 +87,7 @@ public class ResourcesTest {
 			.containsOnly(r1, r2, r3);
 	}
 
-	private URL url(String protocol) {
-		return new UrlBuilder()
-			.setProtocol(protocol)
-			.build();
+	private static URL url(String protocol) {
+		return new UrlBuilder().setProtocol(protocol).build();
 	}
 }

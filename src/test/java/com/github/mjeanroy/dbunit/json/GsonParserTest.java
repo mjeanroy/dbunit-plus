@@ -33,12 +33,12 @@ import java.util.Map;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.google.gson.Gson;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class GsonParserTest {
+class GsonParserTest {
 
 	@Test
-	public void it_should_parse_file() {
+	void it_should_parse_file() {
 		final Gson gson = new Gson();
 		final GsonParser parser = new GsonParser(gson);
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();

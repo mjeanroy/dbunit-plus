@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -32,10 +32,10 @@ import java.lang.reflect.Field;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MemberAnnotatedWithPredicateTest {
+class MemberAnnotatedWithPredicateTest {
 
 	@Test
-	public void it_should_check_if_field_is_annotated_with_annotation() throws Exception {
+	void it_should_check_if_field_is_annotated_with_annotation() throws Exception {
 		MemberAnnotatedWithPredicate<Field, CustomAnnotation> predicate = new MemberAnnotatedWithPredicate<>(CustomAnnotation.class);
 		Class<TestClass> klass = TestClass.class;
 		Field f1 = klass.getField("f1");

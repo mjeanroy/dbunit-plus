@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ToStringBuilderTest {
+class ToStringBuilderTest {
 
 	@Test
-	public void it_should_create_final_string() {
+	void it_should_create_final_string() {
 		String value = ToStringBuilder.create(getClass())
 			.append("field1", "foo")
 			.append("field2", 'T')
@@ -50,7 +50,7 @@ public class ToStringBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_final_string_without_fields() {
+	void it_should_create_final_string_without_fields() {
 		String value = ToStringBuilder.create(getClass()).build();
 		assertThat(value).isEqualTo("ToStringBuilderTest{}");
 	}

@@ -26,16 +26,16 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.database.DatabaseConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitFetchSizeInterceptorTest {
+class DbUnitFetchSizeInterceptorTest {
 
 	private static final String PROPERTY_NAME = "http://www.dbunit.org/properties/fetchSize";
 
 	@Test
-	public void it_should_activate_property() {
+	void it_should_activate_property() {
 		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
 		final DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
@@ -44,12 +44,12 @@ public class DbUnitFetchSizeInterceptorTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(DbUnitFetchSizeInterceptor.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
 		assertThat(interceptor.toString()).isEqualTo(
 			"DbUnitFetchSizeInterceptor{" +

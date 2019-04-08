@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.replacement;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,10 +36,10 @@ import java.util.Map.Entry;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-public class ReplacementsTest {
+class ReplacementsTest {
 
 	@Test
-	public void it_should_build_replacement_with_byte_value() {
+	void it_should_build_replacement_with_byte_value() {
 		final String key = "foo";
 		final byte value = 0;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -49,7 +49,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_short_value() {
+	void it_should_build_replacement_with_short_value() {
 		final String key = "foo";
 		final short value = 1;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -59,7 +59,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_int_value() {
+	void it_should_build_replacement_with_int_value() {
 		final String key = "foo";
 		final int value = 1;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -69,7 +69,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_long_value() {
+	void it_should_build_replacement_with_long_value() {
 		final String key = "foo";
 		final long value = 1;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -79,7 +79,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_float_value() {
+	void it_should_build_replacement_with_float_value() {
 		final String key = "foo";
 		final float value = 1;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -89,7 +89,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_double_value() {
+	void it_should_build_replacement_with_double_value() {
 		final String key = "foo";
 		final double value = 1D;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -99,7 +99,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_char_value() {
+	void it_should_build_replacement_with_char_value() {
 		final String key = "foo";
 		final char value = 'a';
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -109,7 +109,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_boolean_value() {
+	void it_should_build_replacement_with_boolean_value() {
 		final String key = "foo";
 		final boolean value = true;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -119,7 +119,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_big_decimal_value() {
+	void it_should_build_replacement_with_big_decimal_value() {
 		final String key = "foo";
 		final BigDecimal value = BigDecimal.TEN;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -129,7 +129,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_big_integer_value() {
+	void it_should_build_replacement_with_big_integer_value() {
 		final String key = "foo";
 		final BigInteger value = BigInteger.ONE;
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -139,7 +139,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_date_value() {
+	void it_should_build_replacement_with_date_value() {
 		final String key = "foo";
 		final Date value = new Date();
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -149,7 +149,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_string_value() {
+	void it_should_build_replacement_with_string_value() {
 		final String key = "foo";
 		final String value = "bar";
 		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
@@ -159,7 +159,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_replacement_with_null_value() {
+	void it_should_build_replacement_with_null_value() {
 		final String key = "foo";
 		final Replacements r1 = Replacements.builder().addReplacement(key).build();
 		final Replacements r2 = Replacements.builder().put(key).build();
@@ -168,7 +168,7 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_build_immutable_replacement_object() {
+	void it_should_build_immutable_replacement_object() {
 		final Replacements.Builder builder = Replacements.builder()
 			.addReplacement("foo", "foo")
 			.addReplacement("bar", "bar");
@@ -201,14 +201,14 @@ public class ReplacementsTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(Replacements.class)
 			.suppress(Warning.STRICT_INHERITANCE)
 			.verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final Replacements replacements = Replacements.builder()
 			.addReplacement("foo", "bar")
 			.put("bar", 10)

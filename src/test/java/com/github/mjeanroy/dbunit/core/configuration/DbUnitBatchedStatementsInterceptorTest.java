@@ -26,16 +26,16 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.database.DatabaseConfig;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitBatchedStatementsInterceptorTest {
+class DbUnitBatchedStatementsInterceptorTest {
 
 	private static final String PROPERTY_NAME = "http://www.dbunit.org/features/batchedStatements";
 
 	@Test
-	public void it_should_activate_property_by_default() {
+	void it_should_activate_property_by_default() {
 		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor();
 		final DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
@@ -44,7 +44,7 @@ public class DbUnitBatchedStatementsInterceptorTest {
 	}
 
 	@Test
-	public void it_should_activate_property() {
+	void it_should_activate_property() {
 		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
 		final DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
@@ -53,7 +53,7 @@ public class DbUnitBatchedStatementsInterceptorTest {
 	}
 
 	@Test
-	public void it_should_not_activate_property() {
+	void it_should_not_activate_property() {
 		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(false);
 		final DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
@@ -62,12 +62,12 @@ public class DbUnitBatchedStatementsInterceptorTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(DbUnitBatchedStatementsInterceptor.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
 		assertThat(interceptor.toString()).isEqualTo(
 			"DbUnitBatchedStatementsInterceptor{" +

@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class YamlParserFactoryTest {
+class YamlParserFactoryTest {
 
 	@Test
-	public void it_should_create_jackson_yaml_parser_by_default() {
+	void it_should_create_jackson_yaml_parser_by_default() {
 		YamlParser parser = YamlParserFactory.createDefault();
 		assertThat(parser).isExactlyInstanceOf(JacksonYamlParser.class);
 	}

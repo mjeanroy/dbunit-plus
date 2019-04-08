@@ -34,14 +34,14 @@ import static org.mockito.Mockito.when;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class DirectoryDataSetBuilderTest {
+class DirectoryDataSetBuilderTest {
 
 	@Test
-	public void it_should_create_default_directory_dataset() throws Exception {
+	void it_should_create_default_directory_dataset() throws Exception {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
 		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
 
@@ -51,7 +51,7 @@ public class DirectoryDataSetBuilderTest {
 	}
 
 	@Test
-	public void it_should_create_directory_dataset() throws Exception {
+	void it_should_create_directory_dataset() throws Exception {
 		final Resource r1 = new ResourceMockBuilder()
 			.fromClasspath("/dataset/xml/users.xml")
 			.setFile()
@@ -72,13 +72,10 @@ public class DirectoryDataSetBuilderTest {
 
 		final ResourceComparator comparator = mock(ResourceComparator.class);
 
-		when(comparator.compare(any(Resource.class), any(Resource.class))).thenAnswer(new Answer<Integer>() {
-			@Override
-			public Integer answer(InvocationOnMock invocationOnMock) {
-				Resource f1 = (Resource) invocationOnMock.getArguments()[0];
-				Resource f2 = (Resource) invocationOnMock.getArguments()[1];
-				return f2.getPath().compareTo(f1.getPath());
-			}
+		when(comparator.compare(any(Resource.class), any(Resource.class))).thenAnswer((Answer<Integer>) invocationOnMock -> {
+			Resource f1 = (Resource) invocationOnMock.getArguments()[0];
+			Resource f2 = (Resource) invocationOnMock.getArguments()[1];
+			return f2.getPath().compareTo(f1.getPath());
 		});
 
 		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder()

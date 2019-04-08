@@ -26,14 +26,14 @@ package com.github.mjeanroy.dbunit.core.sql;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SqlScriptParserConfigurationTest {
+class SqlScriptParserConfigurationTest {
 
 	@Test
-	public void it_should_create_default_configuration() {
+	void it_should_create_default_configuration() {
 		SqlScriptParserConfiguration configuration = SqlScriptParserConfiguration.defaultConfiguration();
 		assertThat(configuration).isNotNull();
 		assertThat(configuration.getDelimiter()).isEqualTo(';');
@@ -43,7 +43,7 @@ public class SqlScriptParserConfigurationTest {
 	}
 
 	@Test
-	public void it_should_create_custom_configuration() {
+	void it_should_create_custom_configuration() {
 		char delimiter = '|';
 		String lineComment = "//";
 		String startBlockComment = "/**";
@@ -64,14 +64,14 @@ public class SqlScriptParserConfigurationTest {
 	}
 
 	@Test
-	public void it_should_implement_equals() {
+	void it_should_implement_equals() {
 		EqualsVerifier.forClass(SqlScriptParserConfiguration.class)
 			.suppress(Warning.STRICT_INHERITANCE)
 			.verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		SqlScriptParserConfiguration c1 = SqlScriptParserConfiguration.builder().build();
 		assertThat(c1.toString()).isEqualTo(
 			"SqlScriptParserConfiguration{" +

@@ -25,17 +25,17 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SqlScriptTest {
+class SqlScriptTest {
 
 	@Test
-	public void it_should_create_sql_script() {
+	void it_should_create_sql_script() {
 		final List<String> queries = asList(
 			"INSERT INTO users(name) VALUES('John Doe');",
 			"INSERT INTO users(name) VALUES('Jane Doe');"
@@ -47,12 +47,12 @@ public class SqlScriptTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(SqlScript.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final List<String> queries = asList(
 			"INSERT INTO users(name) VALUES('John Doe');",
 			"INSERT INTO users(name) VALUES('Jane Doe');"

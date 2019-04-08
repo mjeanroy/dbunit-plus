@@ -24,7 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
@@ -32,55 +32,55 @@ import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
 import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class FilesTest {
+class FilesTest {
 
 	@Test
-	public void it_should_extract_filename_from_path() {
+	void it_should_extract_filename_from_path() {
 		String path = "/dataset/foo.json";
 		String fileName = Files.extractFilename(path);
 		assertThat(fileName).isEqualTo("foo.json");
 	}
 
 	@Test
-	public void it_should_extract_filename_from_path_with_trailing_slash() {
+	void it_should_extract_filename_from_path_with_trailing_slash() {
 		String path = "/dataset/";
 		String fileName = Files.extractFilename(path);
 		assertThat(fileName).isEqualTo("dataset");
 	}
 
 	@Test
-	public void it_should_extract_filename_from_file() {
+	void it_should_extract_filename_from_file() {
 		String path = "foo.json";
 		String fileName = Files.extractFilename(path);
 		assertThat(fileName).isEqualTo("foo.json");
 	}
 
 	@Test
-	public void it_should_extract_filename_from_null_with_null() {
+	void it_should_extract_filename_from_null_with_null() {
 		assertThat(Files.extractFilename(null)).isNull();
 	}
 
 	@Test
-	public void it_should_get_file_extension() {
+	void it_should_get_file_extension() {
 		String path = "foo.json";
 		String ext = Files.extractExtension(path);
 		assertThat(ext).isEqualTo("json");
 	}
 
 	@Test
-	public void it_should_get_empty_file_extension() {
+	void it_should_get_empty_file_extension() {
 		String path = "foo";
 		String ext = Files.extractExtension(path);
 		assertThat(ext).isNotNull().isEmpty();
 	}
 
 	@Test
-	public void it_should_get_null_extension_with_null() {
+	void it_should_get_null_extension_with_null() {
 		assertThat(Files.extractExtension(null)).isNull();
 	}
 
 	@Test
-	public void it_should_add_trailing_separator() {
+	void it_should_add_trailing_separator() {
 		assertThat(ensureTrailingSeparator(null)).isNull();
 		assertThat(ensureTrailingSeparator("")).isEqualTo("");
 		assertThat(ensureTrailingSeparator("/tmp")).isEqualTo("/tmp/");
@@ -88,7 +88,7 @@ public class FilesTest {
 	}
 
 	@Test
-	public void it_should_add_root_separator() {
+	void it_should_add_root_separator() {
 		assertThat(ensureRootSeparator(null)).isNull();
 		assertThat(ensureRootSeparator("")).isEqualTo("");
 		assertThat(ensureRootSeparator("/tmp")).isEqualTo("/tmp");
@@ -96,7 +96,7 @@ public class FilesTest {
 	}
 
 	@Test
-	public void it_should_check_if_path_is_the_root() {
+	void it_should_check_if_path_is_the_root() {
 		assertThat(isRootPath(null)).isFalse();
 		assertThat(isRootPath("")).isFalse();
 		assertThat(isRootPath("/")).isTrue();
@@ -104,7 +104,7 @@ public class FilesTest {
 	}
 
 	@Test
-	public void it_should_extract_paths() {
+	void it_should_extract_paths() {
 		assertThat(extractPaths("/tmp/foo")).containsExactly("tmp", "foo");
 		assertThat(extractPaths("/tmp")).containsExactly("tmp");
 		assertThat(extractPaths("/tmp/")).containsExactly("tmp");

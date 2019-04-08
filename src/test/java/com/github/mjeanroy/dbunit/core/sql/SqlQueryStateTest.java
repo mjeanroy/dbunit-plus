@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -34,14 +34,14 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class SqlQueryStateTest {
+class SqlQueryStateTest {
 
 	private SqlScriptParserContext ctx;
 
 	private SqlScriptParserConfiguration configuration;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		configuration = mock(SqlScriptParserConfiguration.class);
 		when(configuration.getDelimiter()).thenReturn(';');
 		when(configuration.getStartBlockComment()).thenReturn("/*");
@@ -52,7 +52,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_escape_value() {
+	void it_should_escape_value() {
 		int position = 0;
 		String line = "SELECT * FROM WHERE name = 'John'";
 
@@ -64,7 +64,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_add_varchar_value() {
+	void it_should_add_varchar_value() {
 		String line = "SELECT * FROM WHERE name = 'John'";
 		int position = line.indexOf("John");
 		when(ctx.getOpenQuote()).thenReturn('\'');
@@ -78,7 +78,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_append_escape_token() {
+	void it_should_append_escape_token() {
 		String line = "SELECT * FROM WHERE name = \"John \\'s\"; /* Comment */";
 		int position = line.indexOf("\\");
 
@@ -91,7 +91,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_escape_doubly_single_quote() {
+	void it_should_escape_doubly_single_quote() {
 		String line = "SELECT * FROM WHERE name = 'John ''s'; /* Comment */";
 		int firstQuotePosition = line.indexOf("'");
 		int position = line.indexOf("'", firstQuotePosition + 1);
@@ -105,7 +105,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_add_varchar_value_and_stop_varchar() {
+	void it_should_add_varchar_value_and_stop_varchar() {
 		String line = "SELECT * FROM WHERE name = 'John'";
 		int position = line.lastIndexOf("'");
 		when(ctx.getOpenQuote()).thenReturn('\'');
@@ -119,7 +119,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_add_varchar_value_and_do_not_stop_varchar_if_open_quote_does_not_match() {
+	void it_should_add_varchar_value_and_do_not_stop_varchar_if_open_quote_does_not_match() {
 		String line = "SELECT * FROM WHERE name = \"John 's\"";
 		int position = line.lastIndexOf("'");
 		when(ctx.getOpenQuote()).thenReturn('"');
@@ -133,7 +133,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_ignore_character_if_it_is_not_the_end_of_block_comment() {
+	void it_should_ignore_character_if_it_is_not_the_end_of_block_comment() {
 		String line = "SELECT * FROM WHERE name = \"John 's\"; /* Comment */";
 		int position = line.indexOf("Comment");
 
@@ -144,7 +144,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_stop_block_comment() {
+	void it_should_stop_block_comment() {
 		String line = "SELECT * FROM WHERE name = \"John 's\"; /* Comment */";
 		int position = line.indexOf("*/");
 
@@ -156,7 +156,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_detect_line_comment() {
+	void it_should_detect_line_comment() {
 		String line = "SELECT * FROM WHERE name = \"John 's\"; -- Comment";
 		int position = line.indexOf("--");
 
@@ -167,7 +167,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_detect_block_comment() {
+	void it_should_detect_block_comment() {
 		String line = "SELECT * FROM WHERE name = \"John 's\"; /* Comment */";
 		int position = line.indexOf("/*");
 
@@ -179,7 +179,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_open_varchar_with_double_quotes() {
+	void it_should_open_varchar_with_double_quotes() {
 		String line = "SELECT * FROM WHERE name = \"John \\'s\"; /* Comment */";
 		int position = line.indexOf("\"");
 
@@ -192,7 +192,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_open_varchar_with_single_quotes() {
+	void it_should_open_varchar_with_single_quotes() {
 		String line = "SELECT * FROM WHERE name = 'John'; /* Comment */";
 		int position = line.indexOf("'");
 
@@ -205,7 +205,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_flush_query_with_delimiter() {
+	void it_should_flush_query_with_delimiter() {
 		String line = "SELECT * FROM WHERE name = 'John'; /* Comment */";
 		int position = line.indexOf(";");
 
@@ -218,7 +218,7 @@ public class SqlQueryStateTest {
 	}
 
 	@Test
-	public void it_should_append_simple_character() {
+	void it_should_append_simple_character() {
 		String line = "SELECT * FROM WHERE name = 'John'; /* Comment */";
 		int position = line.indexOf("WHERE");
 

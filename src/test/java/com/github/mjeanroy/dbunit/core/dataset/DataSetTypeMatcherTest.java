@@ -26,17 +26,17 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DataSetTypeMatcherTest {
+class DataSetTypeMatcherTest {
 
 	@Test
-	public void it_should_match_given_file() {
+	void it_should_match_given_file() {
 		DataSetType type1 = mock(DataSetType.class);
 		DataSetType type2 = mock(DataSetType.class);
 

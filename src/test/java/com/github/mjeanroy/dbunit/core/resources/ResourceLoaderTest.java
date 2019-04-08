@@ -27,27 +27,23 @@ package com.github.mjeanroy.dbunit.core.resources;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-public class ResourceLoaderTest {
-
-	@Rule
-	public TemporaryFolder tmp = new TemporaryFolder();
+class ResourceLoaderTest {
 
 	@Test
-	public void it_should_find_classpath_loader() {
+	void it_should_find_classpath_loader() {
 		final String path = "classpath:/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.CLASSPATH);
 	}
 
 	@Test
-	public void it_should_load_file_from_classpath() {
+	void it_should_load_file_from_classpath() {
 		final Resource resource = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/users.xml");
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(FileResource.class);
@@ -55,7 +51,7 @@ public class ResourceLoaderTest {
 	}
 
 	@Test
-	public void it_should_load_file_from_a_jar() {
+	void it_should_load_file_from_a_jar() {
 		final Resource resource = ResourceLoader.CLASSPATH.load("classpath:/jar/dataset/xml/users.xml");
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(ClasspathResource.class);
@@ -63,23 +59,23 @@ public class ResourceLoaderTest {
 	}
 
 	@Test
-	public void it_should_fail_if_file_does_not_exist_in_classpath() {
+	void it_should_fail_if_file_does_not_exist_in_classpath() {
 		final String resource = "classpath:/dataset/xml/unknown.xml";
-		assertThatThrownBy(load(ResourceLoader.CLASSPATH, resource))
+		assertThatThrownBy(() -> ResourceLoader.CLASSPATH.load(resource))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", resource));
 	}
 
 	@Test
-	public void it_should_find_file_system_loader() {
+	void it_should_find_file_system_loader() {
 		final String path = "file:/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.FILE_SYSTEM);
 	}
 
 	@Test
-	public void it_should_load_file_from_file_system() throws Exception {
-		final File tmpFile = tmp.newFile("users.xml");
-		final String path = tmpFile.getAbsolutePath();
+	void it_should_load_file_from_file_system(@TempDir Path tmp) throws Exception {
+		final Path tmpFile = Files.createFile(tmp.resolve("users.xml"));
+		final String path = tmpFile.toAbsolutePath().toString();
 		final Resource resource = ResourceLoader.FILE_SYSTEM.load("file:" + path);
 
 		assertThat(resource).isNotNull();
@@ -87,31 +83,22 @@ public class ResourceLoaderTest {
 	}
 
 	@Test
-	public void it_should_fail_if_file_does_not_exist_in_file_system() {
+	void it_should_fail_if_file_does_not_exist_in_file_system() {
 		final String resource = "file:/dataset/xml/unknown.xml";
-		assertThatThrownBy(load(ResourceLoader.FILE_SYSTEM, resource))
+		assertThatThrownBy(() -> ResourceLoader.FILE_SYSTEM.load(resource))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", resource));
 	}
 
 	@Test
-	public void it_should_find_url_loader() {
+	void it_should_find_url_loader() {
 		final String path = "http://foo.com/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
 	}
 
 	@Test
-	public void it_should_find_url_loader_with_https() {
+	void it_should_find_url_loader_with_https() {
 		final String path = "https://foo.com/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
-	}
-
-	private static ThrowingCallable load(final ResourceLoader loader, final String resource) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				loader.load(resource);
-			}
-		};
 	}
 }

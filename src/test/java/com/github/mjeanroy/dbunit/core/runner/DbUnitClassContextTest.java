@@ -32,7 +32,7 @@ import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.IDataSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
@@ -41,10 +41,10 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-public class DbUnitClassContextTest {
+class DbUnitClassContextTest {
 
 	@Test
-	public void it_should_create_class_context() {
+	void it_should_create_class_context() {
 		final IDataSet dataSet = new DefaultDataSet();
 
 		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
@@ -83,12 +83,12 @@ public class DbUnitClassContextTest {
 	}
 
 	@Test
-	public void it_should_implement_equals_hash_code() {
+	void it_should_implement_equals_hash_code() {
 		EqualsVerifier.forClass(DbUnitClassContext.class).verify();
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string() {
 		final IDataSet dataSet = mock(IDataSet.class, "MockDataSet");
 
 		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(

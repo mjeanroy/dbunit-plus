@@ -38,16 +38,15 @@ import java.util.Map;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class Jackson1ParserTest {
+class Jackson1ParserTest {
 
 	@Test
-	public void it_should_parse_file() {
+	void it_should_parse_file() {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Jackson1Parser parser = new Jackson1Parser(mapper);
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
@@ -78,7 +77,7 @@ public class Jackson1ParserTest {
 	}
 
 	@Test
-	public void it_should_wrap_json_parse_exception() {
+	void it_should_wrap_json_parse_exception() {
 		final String malformedJson = "{test: test}";
 		final byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		final InputStream stream = new ByteArrayInputStream(bytes);
@@ -89,13 +88,13 @@ public class Jackson1ParserTest {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Jackson1Parser parser = new Jackson1Parser(mapper);
 
-		assertThatThrownBy(parse(parser, resource))
+		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
 			.hasCauseExactlyInstanceOf(JsonParseException.class);
 	}
 
 	@Test
-	public void it_should_wrap_json_mapping_exception() {
+	void it_should_wrap_json_mapping_exception() {
 		final String json = "[\"test\"]";
 		final byte[] bytes = json.getBytes(Charset.defaultCharset());
 		final InputStream stream = new ByteArrayInputStream(bytes);
@@ -106,13 +105,13 @@ public class Jackson1ParserTest {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Jackson1Parser parser = new Jackson1Parser(mapper);
 
-		assertThatThrownBy(parse(parser, resource))
+		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
 			.hasCauseExactlyInstanceOf(JsonMappingException.class);
 	}
 
 	@Test
-	public void it_should_wrap_io_exception() {
+	void it_should_wrap_io_exception() {
 		final String malformedJson = "";
 		final byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		final InputStream stream = new ByteArrayInputStream(bytes);
@@ -124,17 +123,8 @@ public class Jackson1ParserTest {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Jackson1Parser parser = new Jackson1Parser(mapper);
 
-		assertThatThrownBy(parse(parser, resource))
+		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
 			.hasCauseInstanceOf(IOException.class);
-	}
-
-	private static ThrowingCallable parse(final Jackson1Parser parser, final Resource resource) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				parser.parse(resource);
-			}
-		};
 	}
 }
