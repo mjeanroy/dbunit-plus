@@ -30,116 +30,115 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeExtensionContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeParameterContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeStore;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
 import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest.Lifecycle.BEFORE_EACH;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitExtensionTest {
-
-	@Rule
-	public HsqldbRule hsqldb = new HsqldbRule();
+@HsqldbTest(lifecycle = BEFORE_EACH)
+class DbUnitExtensionTest {
 
 	@Test
-	public void it_should_initialize_dbunit_runner_before_all_tests() {
+	void it_should_initialize_dbunit_runner_before_all_tests(EmbeddedDatabase db) throws Exception {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = null;
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyState(extensionContext, 0);
+		verifyState(db, extensionContext, 0);
 	}
 
 	@Test
-	public void it_should_populate_db_using_dbunit_runner_before_each_tests() {
+	void it_should_populate_db_using_dbunit_runner_before_each_tests(EmbeddedDatabase db) throws Exception {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method");
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyState(extensionContext, 0);
+		verifyState(db, extensionContext, 0);
 
 		extension.beforeEach(extensionContext);
-		verifyState(extensionContext, 2);
+		verifyState(db, extensionContext, 2);
 	}
 
 	@Test
-	public void it_should_populate_db_and_clean_it_after_each_test() {
+	void it_should_populate_db_and_clean_it_after_each_test(EmbeddedDatabase db) throws Exception {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method");
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyState(extensionContext, 0);
+		verifyState(db, extensionContext, 0);
 
 		extension.beforeEach(extensionContext);
-		verifyState(extensionContext, 2);
+		verifyState(db, extensionContext, 2);
 
 		extension.afterEach(extensionContext);
-		verifyEmptyStore(extensionContext);
+		verifyEmptyStore(db, extensionContext);
 	}
 
 	@Test
-	public void it_clean_store_after_all_tests() {
+	void it_clean_store_after_all_tests(EmbeddedDatabase db) throws Exception {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method");
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyState(extensionContext, 0);
+		verifyState(db, extensionContext, 0);
 
 		extension.beforeEach(extensionContext);
-		verifyState(extensionContext, 2);
+		verifyState(db, extensionContext, 2);
 
 		extension.afterEach(extensionContext);
-		verifyEmptyStore(extensionContext);
+		verifyEmptyStore(db, extensionContext);
 
 		extension.afterAll(extensionContext);
-		verifyEmptyStore(extensionContext);
+		verifyEmptyStore(db, extensionContext);
 	}
 
 	@Test
-	public void it_should_initialize_dbunit_and_populate_db_before_each_test_when_use_as_instance_field() {
+	void it_should_initialize_dbunit_and_populate_db_before_each_test_when_use_as_instance_field(EmbeddedDatabase db) throws Exception {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method");
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeEach(extensionContext);
-		verifyState(extensionContext, 2);
+		verifyState(db, extensionContext, 2);
 	}
 
 	@Test
-	public void it_should_clean_db_and_store_after_each_test_when_use_as_instance_field() {
+	void it_should_clean_db_and_store_after_each_test_when_use_as_instance_field(EmbeddedDatabase db) throws Exception {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method");
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeEach(extensionContext);
-		verifyState(extensionContext, 2);
+		verifyState(db, extensionContext, 2);
 
 		extension.afterEach(extensionContext);
-		verifyEmptyStore(extensionContext);
+		verifyEmptyStore(db, extensionContext);
 	}
 
 	@Test
-	public void it_should_resolve_connection_parameter() {
+	void it_should_resolve_connection_parameter() {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method_with_connection_parameter", Connection.class);
@@ -158,7 +157,7 @@ public class DbUnitExtensionTest {
 	}
 
 	@Test
-	public void it_should_resolve_specific_jdbc_connection_parameter() {
+	void it_should_resolve_specific_jdbc_connection_parameter() {
 		final DbUnitExtension extension = new DbUnitExtension();
 		final TestFixtures testInstance = new TestFixtures();
 		final Method testMethod = lookupMethod(TestFixtures.class, "test_method_with_jdbc_connection_parameter", JDBCConnection.class);
@@ -176,21 +175,21 @@ public class DbUnitExtensionTest {
 		verifyData(connection, 2);
 	}
 
-	private void verifyState(FakeExtensionContext extensionContext, int expectedRows) {
+	private void verifyState(EmbeddedDatabase db, FakeExtensionContext extensionContext, int expectedRows) throws Exception {
 		final FakeStore store = extensionContext.getSingleStore();
 		final DbUnitRunner dbUnitExtensionContext = store.get(extensionContext.getRequiredTestClass(), DbUnitRunner.class);
 		assertThat(dbUnitExtensionContext).isNotNull();
-		verifyData(hsqldb.getConnection(), expectedRows);
+		verifyData(db.getConnection(), expectedRows);
 	}
 
 	private void verifyData(Connection connection, int expectedRows) {
 		assertThat(countUsers(connection)).isEqualTo(expectedRows);
 	}
 
-	private void verifyEmptyStore(FakeExtensionContext extensionContext) {
+	private void verifyEmptyStore(EmbeddedDatabase db, FakeExtensionContext extensionContext) throws Exception {
 		final FakeStore store = extensionContext.getSingleStore();
 		assertThat(store.size()).isEqualTo(0);
-		assertThat(countUsers(hsqldb.getConnection())).isEqualTo(0);
+		assertThat(countUsers(db.getConnection())).isEqualTo(0);
 	}
 
 	@SuppressWarnings("unused")

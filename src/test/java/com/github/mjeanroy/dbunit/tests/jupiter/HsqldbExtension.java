@@ -25,24 +25,30 @@
 package com.github.mjeanroy.dbunit.tests.jupiter;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.lang.reflect.Parameter;
+import java.util.Optional;
+
+import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 /**
  * A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
  * before all/after all tests.
  */
-public class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, ParameterResolver {
+class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
 	/**
 	 * The internal namespace.
@@ -56,26 +62,30 @@ public class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, Par
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		final EmbeddedDatabase db = new EmbeddedDatabaseBuilder()
-			.setType(EmbeddedDatabaseType.HSQL)
-			.generateUniqueName(false)
-			.addScript("classpath:/sql/init.sql")
-			.setName("testdb")
-			.build();
-
-		getStore(context).put(DB_KEY, db);
+		HsqldbTest.Lifecycle lifecycle = getLifecycle(context);
+		if (lifecycle == HsqldbTest.Lifecycle.BEFORE_ALL) {
+			initialize(context);
+		}
 	}
 
 	@Override
 	public void afterAll(ExtensionContext context) {
-		final Store store = getStore(context);
-		final EmbeddedDatabase db = store.get(DB_KEY, EmbeddedDatabase.class);
+		shutdown(context);
+	}
 
-		try {
-			db.shutdown();
+	@Override
+	public void beforeEach(ExtensionContext context) {
+		HsqldbTest.Lifecycle lifecycle = getLifecycle(context);
+		if (lifecycle == HsqldbTest.Lifecycle.BEFORE_EACH) {
+			initialize(context);
 		}
-		finally {
-			store.remove(DB_KEY);
+	}
+
+	@Override
+	public void afterEach(ExtensionContext context) {
+		HsqldbTest.Lifecycle lifecycle = getLifecycle(context);
+		if (lifecycle == HsqldbTest.Lifecycle.BEFORE_EACH) {
+			shutdown(context);
 		}
 	}
 
@@ -89,6 +99,44 @@ public class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, Par
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
 		return getStore(extensionContext).get(DB_KEY);
+	}
+
+	private void initialize(ExtensionContext context) {
+		Optional<HsqldbTest> annotation = findAnnotation(context.getRequiredTestClass(), HsqldbTest.class);
+		String dbName = annotation.map(HsqldbTest::db).orElse("testdb");
+		boolean runInit = annotation.map(HsqldbTest::initScript).orElse(true);
+
+		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder()
+			.setType(EmbeddedDatabaseType.HSQL)
+			.generateUniqueName(false)
+			.setName(dbName);
+
+		if (runInit) {
+			builder.addScript("classpath:/sql/init.sql");
+		}
+
+		EmbeddedDatabase db = builder.build();
+
+		getStore(context).put(DB_KEY, db);
+	}
+
+	private void shutdown(ExtensionContext context) {
+		final Store store = getStore(context);
+		final EmbeddedDatabase db = store.get(DB_KEY, EmbeddedDatabase.class);
+		if (db != null) {
+			try {
+				db.shutdown();
+			}
+			finally {
+				store.remove(DB_KEY);
+			}
+		}
+	}
+
+	private static HsqldbTest.Lifecycle getLifecycle(ExtensionContext context) {
+		return AnnotationUtils.findAnnotation(context.getRequiredTestClass(), HsqldbTest.class)
+			.map(HsqldbTest::lifecycle)
+			.orElse(HsqldbTest.Lifecycle.BEFORE_ALL);
 	}
 
 	/**

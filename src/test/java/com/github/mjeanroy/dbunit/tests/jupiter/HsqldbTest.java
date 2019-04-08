@@ -22,22 +22,45 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.loggers;
+package com.github.mjeanroy.dbunit.tests.jupiter;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static org.assertj.core.api.Assertions.assertThat;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-class LoggersTest {
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Target(ElementType.TYPE)
+@ExtendWith(HsqldbExtension.class)
+public @interface HsqldbTest {
 
-	@Test
-	void it_should_create_logger() {
-		Logger log = Loggers.getLogger(LoggersTest.class);
-		assertThat(log).isExactlyInstanceOf(Slf4jLogger.class);
+	/**
+	 * Check if initialization script shoud be run or not.
+	 *
+	 * @return The flag to know if initialization script should be run.
+	 */
+	boolean initScript() default true;
 
-		org.slf4j.Logger slf4j = readPrivate(log, "log");
-		assertThat(slf4j).isNotNull();
-		assertThat(slf4j.getName()).isEqualTo(LoggersTest.class.getName());
+	/**
+	 * Database name.
+	 *
+	 * @return The database name.
+	 */
+	String db() default "testdb";
+
+	/**
+	 * The embedded database lifecycle.
+	 *
+	 * @return Lifecycke.
+	 */
+	Lifecycle lifecycle() default Lifecycle.BEFORE_ALL;
+
+	enum Lifecycle {
+		BEFORE_EACH,
+		BEFORE_ALL
 	}
 }

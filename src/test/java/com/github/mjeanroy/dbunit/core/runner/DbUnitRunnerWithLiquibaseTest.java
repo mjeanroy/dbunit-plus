@@ -25,9 +25,9 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import org.junit.ClassRule;
-import org.junit.Test;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -36,16 +36,14 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitRunnerWithLiquibaseTest {
-
-	@ClassRule
-	public static HsqldbRule hsqldb = new HsqldbRule(false);
+@HsqldbTest(initScript = false)
+class DbUnitRunnerWithLiquibaseTest {
 
 	@Test
-	public void it_should_execute_sql_script_and_load_data_set() throws Exception {
+	void it_should_execute_sql_script_and_load_data_set(EmbeddedDatabase db) throws Exception {
 		final Class<WithDataSetAndLiquibase> klass = WithDataSetAndLiquibase.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, hsqldb.getDb());
-		final Connection connection = hsqldb.getConnection();
+		final DbUnitRunner runner = new DbUnitRunner(klass, db);
+		final Connection connection = db.getConnection();
 
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();

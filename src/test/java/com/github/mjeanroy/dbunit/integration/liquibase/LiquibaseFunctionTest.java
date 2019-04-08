@@ -25,12 +25,11 @@
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import java.sql.Connection;
 
@@ -42,34 +41,29 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class LiquibaseFunctionTest {
-
-	@Rule
-	public HsqldbRule hsqldb = new HsqldbRule(false);
+@HsqldbTest(initScript = false)
+class LiquibaseFunctionTest {
 
 	private JdbcConnectionFactory factory;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp(EmbeddedDatabase db) {
 		factory = mock(JdbcConnectionFactory.class);
 
-		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
-			@Override
-			public Connection answer(InvocationOnMock invocationOnMock) {
-				return hsqldb.getConnection();
-			}
-		});
+		when(factory.getConnection()).thenAnswer((Answer<Connection>) invocationOnMock ->
+			db.getConnection()
+		);
 	}
 
 	@Test
-	public void it_should_load_liquibase_changelogs() {
+	void it_should_load_liquibase_changelogs(EmbeddedDatabase db) throws Exception {
 		final String changeLog = "/liquibase/changelog.xml";
 		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 
 		liquibaseUpdater.update();
 
-		assertThat(countUsers(hsqldb.getConnection())).isZero();
-		assertThat(countMovies(hsqldb.getConnection())).isZero();
+		assertThat(countUsers(db.getConnection())).isZero();
+		assertThat(countMovies(db.getConnection())).isZero();
 		verify(factory, atLeastOnce()).getConnection();
 	}
 }

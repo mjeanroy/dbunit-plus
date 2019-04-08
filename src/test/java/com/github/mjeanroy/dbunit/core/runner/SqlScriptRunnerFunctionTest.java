@@ -26,13 +26,11 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.mockito.invocation.InvocationOnMock;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -48,28 +46,23 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SameParameterValue")
-public class SqlScriptRunnerFunctionTest {
-
-	@ClassRule
-	public static HsqldbRule hsqldb = new HsqldbRule(true);
+@HsqldbTest
+class SqlScriptRunnerFunctionTest {
 
 	private SqlScript sqlScript;
 	private JdbcConnectionFactory factory;
 
-	@Before
-	public void setUp() {
-		initFactory();
+	@BeforeEach
+	void setUp(EmbeddedDatabase db) {
+		initFactory(db);
 		initSqlScript();
 	}
 
-	private void initFactory() {
+	private void initFactory(EmbeddedDatabase db) {
 		factory = mock(JdbcConnectionFactory.class);
-		when(factory.getConnection()).thenAnswer(new Answer<Connection>() {
-			@Override
-			public Connection answer(InvocationOnMock invocationOnMock) {
-				return hsqldb.getConnection();
-			}
-		});
+		when(factory.getConnection()).thenAnswer((Answer<Connection>) invocationOnMock ->
+			db.getConnection()
+		);
 	}
 
 	private void initSqlScript() {
@@ -84,9 +77,9 @@ public class SqlScriptRunnerFunctionTest {
 	}
 
 	@Test
-	public void it_should_load_script() {
+	void it_should_load_script(EmbeddedDatabase db) throws Exception {
 		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
-		final Connection connection = hsqldb.getConnection();
+		final Connection connection = db.getConnection();
 
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
@@ -100,23 +93,14 @@ public class SqlScriptRunnerFunctionTest {
 	}
 
 	@Test
-	public void it_should_wrap_sql_exception() throws Exception {
+	void it_should_wrap_sql_exception() throws Exception {
 		final Connection connection = mock(Connection.class);
 		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
 
 		when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Fail Test"));
 		when(factory.getConnection()).thenReturn(connection);
 
-		assertThatThrownBy(applyFunction(func, sqlScript)).isExactlyInstanceOf(DbUnitException.class);
+		assertThatThrownBy(() -> func.apply(sqlScript)).isExactlyInstanceOf(DbUnitException.class);
 		verify(connection).close();
-	}
-
-	private static ThrowingCallable applyFunction(final SqlScriptRunnerFunction func, final SqlScript script) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				func.apply(script);
-			}
-		};
 	}
 }

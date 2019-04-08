@@ -28,9 +28,8 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbExtension;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.sql.Connection;
@@ -39,9 +38,9 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(HsqldbExtension.class)
 @DbUnitTest
 @DbUnitHsqldbConnection
+@HsqldbTest
 class DbUnitRegisterExtensionITest {
 
 	@RegisterExtension

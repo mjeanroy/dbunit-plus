@@ -94,12 +94,4 @@ public class HsqldbRule extends ExternalResource {
 	public String getUrl() {
 		return "jdbc:hsqldb:mem:" + dbName;
 	}
-
-	public String getUser() {
-		return "SA";
-	}
-
-	public String getPassword() {
-		return "";
-	}
 }

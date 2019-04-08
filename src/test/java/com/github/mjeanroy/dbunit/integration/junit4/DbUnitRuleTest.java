@@ -31,15 +31,13 @@ import com.github.mjeanroy.dbunit.tests.db.EmbeddedDatabaseConnectionFactory;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunnerWithoutConfiguration;
-import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import java.sql.Connection;
 
@@ -56,74 +54,72 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
 @SuppressWarnings("SameParameterValue")
-public class DbUnitRuleTest {
+@HsqldbTest
+class DbUnitRuleTest {
 
-	@ClassRule
-	public static HsqldbRule hsqldb = new HsqldbRule();
-
-	@Before
-	public void setup() {
-		final Connection connection = hsqldb.getConnection();
+	@BeforeEach
+	void setup(EmbeddedDatabase db) throws Exception {
+		final Connection connection = db.getConnection();
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
-	public void it_should_load_rule_by_scanning_test_class() throws Throwable {
+	void it_should_load_rule_by_scanning_test_class(EmbeddedDatabase db) throws Throwable {
 		final DbUnitRule rule = createRule();
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDbUnitConnection.class, "test1");
 
-		applyAndVerifyRule(rule, statement, description, 2, 3);
+		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
-	public void it_should_load_rule_with_configuration() throws Throwable {
-		final JdbcConfiguration config = newJdbcConfiguration(hsqldb.getUrl(), hsqldb.getUser(), hsqldb.getPassword());
+	void it_should_load_rule_with_configuration(EmbeddedDatabase db) throws Throwable {
+		final JdbcConfiguration config = newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "sa", "");
 		final DbUnitRule rule = createRule(config);
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method1");
 
-		applyAndVerifyRule(rule, statement, description, 2, 3);
+		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
-	public void it_should_load_database_for_class_test() throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(hsqldb.getDb());
+	void it_should_load_database_for_class_test(EmbeddedDatabase db) throws Throwable {
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method1");
 
-		applyAndVerifyRule(rule, statement, description, 2, 3);
+		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
-	public void it_should_load_database_for_class_rule() throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(hsqldb.getDb());
+	void it_should_load_database_for_class_rule(EmbeddedDatabase db) throws Throwable {
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
 		final Description description = createSuiteDescription(WithDataSet.class);
 
-		applyAndVerifyRule(rule, statement, description, 2, 3);
+		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
-	public void it_should_load_database_for_method_test() throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(hsqldb.getDb());
+	void it_should_load_database_for_method_test(EmbeddedDatabase db) throws Throwable {
+		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
 		final DbUnitRule rule = createRule(factory);
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method2");
 
-		applyAndVerifyRule(rule, statement, description, 2, 0);
+		applyAndVerifyRule(db, rule, statement, description, 2, 0);
 	}
 
 	@Test
-	public void it_should_fail_if_rule_is_built_without_parameter_and_without_annotation() {
+	void it_should_fail_if_rule_is_built_without_parameter_and_without_annotation(EmbeddedDatabase db) {
 		final DbUnitRule rule = createRule();
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithRunnerWithoutConfiguration.class, "test1");
 
-		assertThatThrownBy(loadRule(rule, statement, description))
+		assertThatThrownBy(() -> applyAndVerifyRule(db, rule, statement, description, 0, 0))
 			.isExactlyInstanceOf(DbUnitException.class)
 			.hasMessage("Cannot find database configuration, please annotate your class with @DbUnitConnection");
 	}
@@ -140,36 +136,22 @@ public class DbUnitRuleTest {
 		return new DbUnitRule(factory);
 	}
 
-	private static void applyAndVerifyRule(DbUnitRule rule, Statement statement, Description description, final int expectedCountUsers, final int expectedCountMovies) throws Throwable {
+	private static void applyAndVerifyRule(EmbeddedDatabase db, DbUnitRule rule, Statement statement, Description description, final int expectedCountUsers, final int expectedCountMovies) throws Throwable {
 		final Statement result = rule.apply(statement, description);
 
 		assertThat(result).isNotNull();
 		verifyZeroInteractions(statement);
 
-		doAnswer(statementAnswer(expectedCountUsers, expectedCountMovies)).when(statement).evaluate();
+		Answer<Void> answer = invocation -> {
+			Connection connection = db.getConnection();
+			assertThat(countUsers(connection)).isEqualTo(expectedCountUsers);
+			assertThat(countMovies(connection)).isEqualTo(expectedCountMovies);
+			return null;
+		};
+
+		doAnswer(answer).when(statement).evaluate();
 
 		result.evaluate();
 		verify(statement).evaluate();
-	}
-
-	private static Answer<Void> statementAnswer(final int expectedFoo, final int expectedBar) {
-		return new Answer<Void>() {
-			@Override
-			public Void answer(InvocationOnMock invocation) {
-				final Connection connection = hsqldb.getConnection();
-				assertThat(countUsers(connection)).isEqualTo(expectedFoo);
-				assertThat(countMovies(connection)).isEqualTo(expectedBar);
-				return null;
-			}
-		};
-	}
-
-	private static ThrowingCallable loadRule(final DbUnitRule rule, final Statement statement, final Description description) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() throws Throwable {
-				applyAndVerifyRule(rule, statement, description, 0, 0);
-			}
-		};
 	}
 }
