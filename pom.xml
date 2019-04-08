@@ -456,8 +456,8 @@
         <version>${maven-compiler-plugin.version}</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <source>8</source>
-          <target>8</target>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
           <testSource>${maven.compiler.testSource}</testSource>
           <testTarget>${maven.compiler.testTarget}</testTarget>
           <fork>true</fork>
