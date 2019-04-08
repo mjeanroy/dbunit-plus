@@ -24,10 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SqlScriptMapperTest {
 

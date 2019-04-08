@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.integration.spring.junit4.EmbeddedDatabaseRule;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class EmbeddedDatabaseClassRuleITest {
 

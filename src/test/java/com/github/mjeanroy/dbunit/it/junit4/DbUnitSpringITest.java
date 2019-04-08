@@ -24,13 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.spring.DbUnitSpring;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
@@ -40,6 +33,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestSpringConfiguration.class)

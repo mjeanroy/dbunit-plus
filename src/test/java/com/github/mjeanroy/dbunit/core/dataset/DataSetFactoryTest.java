@@ -24,12 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.io.File;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.CompositeDataSet;
@@ -38,6 +32,12 @@ import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DataSetFactoryTest {
 

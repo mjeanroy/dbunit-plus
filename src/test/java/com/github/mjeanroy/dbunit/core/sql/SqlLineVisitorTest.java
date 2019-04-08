@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.core.sql;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import static org.mockito.ArgumentMatchers.anyInt;

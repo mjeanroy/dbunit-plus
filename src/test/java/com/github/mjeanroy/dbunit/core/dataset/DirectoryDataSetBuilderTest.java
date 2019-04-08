@@ -24,19 +24,18 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
+import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.Answer;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
-import org.junit.jupiter.api.Test;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 class DirectoryDataSetBuilderTest {
 

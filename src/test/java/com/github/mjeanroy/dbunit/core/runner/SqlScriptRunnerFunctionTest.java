@@ -24,19 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
@@ -46,6 +33,19 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SameParameterValue")
 public class SqlScriptRunnerFunctionTest {

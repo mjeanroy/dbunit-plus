@@ -25,7 +25,6 @@
 package com.github.mjeanroy.dbunit.loggers;
 
 import org.apache.logging.log4j.Level;
-import org.junit.Ignore;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 

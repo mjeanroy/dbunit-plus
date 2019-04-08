@@ -24,14 +24,14 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class JsonDataSetBuilderTest {
 

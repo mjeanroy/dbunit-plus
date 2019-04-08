@@ -24,19 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -46,6 +33,19 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("SameParameterValue")
 public class UrlResourceTest {

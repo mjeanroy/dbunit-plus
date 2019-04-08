@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ResourceLoaderTest {
 

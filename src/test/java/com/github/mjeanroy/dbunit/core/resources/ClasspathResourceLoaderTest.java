@@ -24,13 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("SameParameterValue")
 class ClasspathResourceLoaderTest {

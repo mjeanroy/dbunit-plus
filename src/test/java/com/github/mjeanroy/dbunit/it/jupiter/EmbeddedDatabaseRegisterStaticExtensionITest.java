@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.jupiter.EmbeddedDatabaseExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @EmbeddedDatabaseConfiguration(scripts = {
 	"classpath:/sql/init.sql",

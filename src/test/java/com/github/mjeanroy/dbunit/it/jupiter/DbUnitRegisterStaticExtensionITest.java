@@ -24,12 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
@@ -40,6 +34,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(HsqldbExtension.class)
 @DbUnitTest

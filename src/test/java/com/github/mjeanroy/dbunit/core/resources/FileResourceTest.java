@@ -24,21 +24,21 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static org.assertj.core.api.Assertions.assertThat;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Collection;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
-import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.Test;
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FileResourceTest {
 

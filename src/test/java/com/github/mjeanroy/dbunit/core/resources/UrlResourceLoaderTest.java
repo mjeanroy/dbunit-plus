@@ -24,16 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import java.net.URL;
-
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -42,6 +32,16 @@ import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.net.URL;
+
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class UrlResourceLoaderTest {
 

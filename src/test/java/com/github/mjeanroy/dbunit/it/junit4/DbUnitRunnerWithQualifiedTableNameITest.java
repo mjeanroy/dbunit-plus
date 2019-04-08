@@ -24,10 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
@@ -39,6 +35,10 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(DbUnitJunitRunner.class)

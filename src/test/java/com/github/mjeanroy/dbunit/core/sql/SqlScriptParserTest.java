@@ -24,12 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-import static java.util.Arrays.asList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -38,11 +37,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class SqlScriptParserTest {
 

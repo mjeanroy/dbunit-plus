@@ -24,12 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.junit4.DbUnitJunitRunner;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitDefaultDataSet;
@@ -41,6 +35,12 @@ import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(DbUnitJunitRunner.class)
 @DbUnitHsqldbConnection

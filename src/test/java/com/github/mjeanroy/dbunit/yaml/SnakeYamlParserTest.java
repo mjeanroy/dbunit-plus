@@ -24,9 +24,11 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.data.MapEntry.entry;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.exception.YamlException;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.jupiter.api.Test;
+import org.yaml.snakeyaml.error.MarkedYAMLException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -34,12 +36,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.YamlException;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.assertj.core.api.ThrowableAssert;
-import org.junit.jupiter.api.Test;
-import org.yaml.snakeyaml.error.MarkedYAMLException;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.data.MapEntry.entry;
 
 class SnakeYamlParserTest {
 

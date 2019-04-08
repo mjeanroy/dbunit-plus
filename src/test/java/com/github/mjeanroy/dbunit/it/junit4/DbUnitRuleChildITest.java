@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Test;
 
 import java.sql.Connection;
 
-import org.junit.Test;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DbUnitRuleChildITest extends DbUnitRuleITest {
 

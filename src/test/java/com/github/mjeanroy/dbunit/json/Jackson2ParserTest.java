@@ -24,9 +24,13 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.data.MapEntry.entry;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -35,13 +39,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.data.MapEntry.entry;
 
 class Jackson2ParserTest {
 

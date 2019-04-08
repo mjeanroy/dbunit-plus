@@ -24,17 +24,17 @@
 
 package com.github.mjeanroy.dbunit.it.junit4;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseConfiguration;
 import com.github.mjeanroy.dbunit.integration.spring.junit4.DbUnitEmbeddedDatabaseRule;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import org.junit.ClassRule;
 import org.junit.Test;
+
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitTest
 @EmbeddedDatabaseConfiguration(scripts = "classpath:/sql/init.sql")

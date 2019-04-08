@@ -24,16 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.json.JsonParser;
@@ -45,6 +35,16 @@ import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SameParameterValue")
 class JsonDataSetTest {

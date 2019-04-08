@@ -24,16 +24,16 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.data.MapEntry.entry;
-
-import java.util.List;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.data.MapEntry.entry;
 
 class GsonParserTest {
 

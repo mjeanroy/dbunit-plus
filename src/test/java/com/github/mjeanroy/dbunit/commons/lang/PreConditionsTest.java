@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

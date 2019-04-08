@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;

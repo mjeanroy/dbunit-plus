@@ -24,15 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
+
+import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class FileResourceScannerTest extends AbstractResourceScannerTest {
 

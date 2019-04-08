@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;

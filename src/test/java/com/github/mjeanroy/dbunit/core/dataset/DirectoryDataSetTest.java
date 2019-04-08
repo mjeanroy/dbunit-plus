@@ -24,11 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
@@ -36,6 +31,11 @@ import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class DirectoryDataSetTest {
 

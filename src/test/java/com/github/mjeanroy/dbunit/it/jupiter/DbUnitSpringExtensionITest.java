@@ -24,13 +24,6 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
-import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.spring.DbUnitSpring;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
@@ -40,6 +33,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestSpringConfiguration.class)

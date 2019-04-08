@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
