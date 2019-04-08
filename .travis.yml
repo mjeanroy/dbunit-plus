@@ -31,6 +31,5 @@ jdk:
   - openjdk10
   - oraclejdk9
   - oraclejdk8
-  - openjdk7
 os:
   - linux

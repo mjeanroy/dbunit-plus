@@ -76,7 +76,7 @@
 
     <!-- Settings -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.7</java.version>
+    <java.version>1.8</java.version>
     <java.source.version>${java.version}</java.source.version>
     <java.target.version>${java.version}</java.target.version>
     <maven.compiler.source>${java.source.version}</maven.compiler.source>
@@ -126,58 +126,6 @@
   </properties>
 
   <profiles>
-    <!-- Use some old version for dependencies to ensure jdk7 compatibility on travis -->
-    <!-- This is not perfect, but it allows tests with latest dependency versions (as long as the public API does not change) -->
-    <profile>
-      <id>jdk7</id>
-      <activation>
-        <jdk>1.7</jdk>
-      </activation>
-      <properties>
-        <hsqldb.version>2.3.6</hsqldb.version>
-        <spring.version>4.3.17.RELEASE</spring.version>
-      </properties>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${maven-compiler-plugin.version}</version>
-            <configuration>
-              <excludes>
-                <exclude>com/github/mjeanroy/dbunit/**/jupiter/*</exclude>
-              </excludes>
-              <testExcludes>
-                <testExclude>com/github/mjeanroy/dbunit/**/jupiter/*</testExclude>
-              </testExcludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>jdk7+</id>
-      <activation>
-        <jdk>(1.7,)</jdk>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>org.junit.jupiter</groupId>
-          <artifactId>junit-jupiter-engine</artifactId>
-          <version>${jupiter.version}</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-          <version>${jupiter.version}</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-
     <!-- Profile activated with mvn release tasks -->
     <profile>
       <id>release</id>
@@ -367,6 +315,18 @@
       <optional>true</optional>
     </dependency>
 
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.vintage</groupId>
+      <artifactId>junit-vintage-engine</artifactId>
+      <version>${jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
