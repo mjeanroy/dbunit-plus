@@ -26,6 +26,9 @@ package com.github.mjeanroy.dbunit.loggers;
 
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
+import java.util.Iterator;
+import java.util.ServiceLoader;
+
 /**
  * Logger factory.
  */
@@ -36,6 +39,18 @@ public final class Loggers {
 
 	private static final String LOG4J_CLASS = "org.apache.logging.log4j.Logger";
 	private static final boolean LOG4J_AVAILABLE = ClassUtils.isPresent(LOG4J_CLASS);
+
+	/**
+	 * The custom logger provider provided using the Service Provider Interface.
+	 */
+	private static final LoggerProvider loggerProvider;
+
+	static {
+		// First, discover using the ServiceProvider API.
+		ServiceLoader<LoggerProvider> loggerProviders = ServiceLoader.load(LoggerProvider.class);
+		Iterator<LoggerProvider> it = loggerProviders.iterator();
+		loggerProvider = it.hasNext() ? it.next() : null;
+	}
 
 	// Ensure non instantiation.
 	private Loggers() {
@@ -48,6 +63,12 @@ public final class Loggers {
 	 * @return The logger.
 	 */
 	public static Logger getLogger(Class<?> klass) {
+		// First, discover using the ServiceProvider API.
+		if (loggerProvider != null) {
+			return loggerProvider.getLogger(klass);
+		}
+
+		// Then, use classpath detection.
 		if (SLF4J_AVAILABLE) {
 			return new Slf4jLogger(klass);
 		}
