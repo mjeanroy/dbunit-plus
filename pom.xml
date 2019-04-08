@@ -101,7 +101,7 @@
     <versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 
     <!-- Runtime Dependencies -->
-    <slf4j.version>1.7.25</slf4j.version>
+    <slf4j.version>1.7.26</slf4j.version>
     <log4j.version>2.11.2</log4j.version>
     <junit.version>4.12</junit.version>
     <jupiter.version>5.4.1</jupiter.version>
