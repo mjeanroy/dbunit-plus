@@ -26,15 +26,11 @@ package com.github.mjeanroy.dbunit.commons.reflection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.filter;
-import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticFields;
-import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.findStaticMethods;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -196,32 +192,6 @@ public final class Annotations {
 		}
 
 		return results;
-	}
-
-	/**
-	 * Get all static fields annotated with given annotation.
-	 *
-	 * @param klass Class to analyze.
-	 * @param annotation Annotation to look for.
-	 * @param <T> Type of annotation.
-	 * @return List of fields annotated with given annotation.
-	 */
-	public static <T extends Annotation> List<Field> findStaticFieldAnnotatedWith(Class<?> klass, Class<T> annotation) {
-		List<Field> fields = findStaticFields(klass);
-		return filter(fields, new MemberAnnotatedWithPredicate<Field, T>(annotation));
-	}
-
-	/**
-	 * Get all static fields annotated with given annotation.
-	 *
-	 * @param klass Class to analyze.
-	 * @param annotation Annotation to look for.
-	 * @param <T> Type of annotation.
-	 * @return List of fields annotated with given annotation.
-	 */
-	public static <T extends Annotation> List<Method> findStaticMethodAnnotatedWith(Class<?> klass, Class<T> annotation) {
-		final List<Method> fields = findStaticMethods(klass);
-		return filter(fields, new MemberAnnotatedWithPredicate<Method, T>(annotation));
 	}
 
 	/**

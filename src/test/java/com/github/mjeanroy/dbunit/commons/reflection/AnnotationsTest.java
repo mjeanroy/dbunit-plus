@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -126,28 +125,6 @@ class AnnotationsTest {
 		final TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
 
 		assertThat(annotation).isNull();
-	}
-
-	@Test
-	void it_should_find_static_fields_annotated_including_meta_annotation() {
-		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		final List<Field> fields = Annotations.findStaticFieldAnnotatedWith(klass, TestAnnotation.class);
-
-		assertThat(fields)
-			.hasSize(2)
-			.extracting("name")
-			.containsOnly("i1", "i3");
-	}
-
-	@Test
-	void it_should_find_static_methods_annotated_including_meta_annotation() {
-		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		final List<Method> methods = Annotations.findStaticMethodAnnotatedWith(klass, TestAnnotation.class);
-
-		assertThat(methods)
-			.hasSize(2)
-			.extracting("name")
-			.containsOnly("m1", "m3");
 	}
 
 	@Test

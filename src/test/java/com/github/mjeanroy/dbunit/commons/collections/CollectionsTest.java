@@ -145,29 +145,6 @@ class CollectionsTest {
 		verify(predicate).apply(5);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Test
-	void it_should_filter_list() {
-		final Predicate<Integer> predicate = mock(Predicate.class);
-
-		when(predicate.apply(anyInt())).thenAnswer((Answer<Boolean>) invocationOnMock ->
-			((Integer) invocationOnMock.getArguments()[0]) % 2 == 0
-		);
-
-		final List<Integer> result = Collections.filter(asList(1, 2, 3), predicate);
-
-		assertThat(result)
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsOnly(2);
-
-		verify(predicate).apply(1);
-		verify(predicate).apply(2);
-		verify(predicate).apply(3);
-	}
-
-	@SuppressWarnings("unchecked")
 	@Test
 	void it_should_get_keys_of_all_map() {
 		final Map<String, Integer> map1 = new LinkedHashMap<>();

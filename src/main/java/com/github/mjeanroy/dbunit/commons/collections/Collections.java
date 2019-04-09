@@ -106,17 +106,6 @@ public final class Collections {
 		return null;
 	}
 
-	public static <T> List<T> filter(List<T> inputs, Predicate<T> predicate) {
-		List<T> outputs = new ArrayList<>(inputs.size());
-		for (T input : inputs) {
-			if (predicate.apply(input)) {
-				outputs.add(input);
-			}
-		}
-
-		return outputs;
-	}
-
 	/**
 	 * Get a set of all keys found in a collection of {@link Map}.
 	 *
