@@ -24,12 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.find;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static java.util.Arrays.asList;
-
-import java.util.Collection;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.core.resources.ResourceLoader;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -38,6 +32,11 @@ import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
+
+import java.util.Arrays;
+import java.util.Collection;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Factory to create instance of {@link IDataSet}.
@@ -180,13 +179,11 @@ public final class DataSetFactory {
 	 * @throws DataSetException If file type cannot be extracted.
 	 */
 	private static DataSetType extractFileType(Resource resource) throws DataSetException {
-		DataSetType type = find(asList(DataSetType.values()), new DataSetTypeMatcher(resource));
-
-		// Cannot extract type of file.
-		if (type == null) {
-			throw new DataSetException("Cannot extract type of resource '" + resource + "'");
-		}
-
-		return type;
+		return Arrays.stream(DataSetType.values())
+			.filter(input -> input.match(resource))
+			.findFirst()
+			.orElseThrow(() ->
+				new DataSetException("Cannot extract type of resource '" + resource + "'")
+			);
 	}
 }

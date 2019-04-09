@@ -24,48 +24,40 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Mapper;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParser;
-import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
-
-import java.util.List;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.integration.liquibase.LiquibaseUpdater;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
- * An SQL Script, containing a list of queries.
+ * Function to execute liquibase update scripts against SQL connection.
  */
-final class SqlScriptMapper implements Mapper<String, SqlScript> {
+class LiquibaseChangeLogExecutor {
 
 	/**
-	 * Get {@link SqlScriptMapper} instance.
+	 * Class Logger.
+	 */
+	private static final Logger log = Loggers.getLogger(LiquibaseChangeLogExecutor.class);
+
+	/**
+	 * Factory to get new {@link java.sql.Connection} before executing liquibase change sets.
+	 */
+	private final JdbcConnectionFactory factory;
+
+	/**
+	 * Create function.
 	 *
-	 * @param configuration The parser configuration.
-	 * @return The instance.
-	 * @throws NullPointerException If {@code configuration} is {@code null}.
+	 * @param factory Connection factory.
 	 */
-	static SqlScriptMapper getInstance(SqlScriptParserConfiguration configuration) {
-		return new SqlScriptMapper(configuration);
+	LiquibaseChangeLogExecutor(JdbcConnectionFactory factory) {
+		this.factory = notNull(factory, "JDBC Connection factory must not be null");
 	}
 
-	/**
-	 * The parser configuration.
-	 */
-	private final SqlScriptParserConfiguration configuration;
-
-	/**
-	 * Map SQL Script path to an SQL Script.
-	 *.
-	 * @param configuration The parsing configuration.
-	 * @throws NullPointerException If {@code configuration} is {@code null}.
-	 */
-	private SqlScriptMapper(SqlScriptParserConfiguration configuration) {
-		this.configuration = notNull(configuration, "Configuration must not be null");
-	}
-
-	@Override
-	public SqlScript apply(String input) {
-		List<String> queries = SqlScriptParser.parseScript(input, configuration);
-		return new SqlScript(queries);
+	void execute(LiquibaseChangeLog changeLog) {
+		log.debug("Running liquibase updater against: {}", changeLog);
+		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog.getChangeLog(), factory);
+		liquibaseUpdater.update();
 	}
 }

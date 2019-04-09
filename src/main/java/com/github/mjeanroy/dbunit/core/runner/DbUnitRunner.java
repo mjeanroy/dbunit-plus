@@ -279,9 +279,9 @@ public class DbUnitRunner {
 	 * @param factory The JDBC Connection Factory.
 	 */
 	private void runSqlScript(JdbcConnectionFactory factory) {
-		SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
+		SqlScriptExecutor executor = new SqlScriptExecutor(factory);
 		ctx.getInitScripts().forEach(
-			func::apply
+			executor::execute
 		);
 	}
 
@@ -293,9 +293,9 @@ public class DbUnitRunner {
 	 * @param factory The JDBC Connection Factory.
 	 */
 	private void runLiquibase(JdbcConnectionFactory factory) {
-		LiquibaseChangeLogUpdaterFunction func = new LiquibaseChangeLogUpdaterFunction(factory);
+		LiquibaseChangeLogExecutor executor = new LiquibaseChangeLogExecutor(factory);
 		ctx.getLiquibaseChangeLogs().forEach(
-			func::apply
+			executor::execute
 		);
 	}
 

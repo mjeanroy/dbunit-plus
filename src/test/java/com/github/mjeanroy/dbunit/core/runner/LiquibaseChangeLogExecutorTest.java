@@ -24,19 +24,40 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.Answer;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
+import java.sql.Connection;
+
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-class LiquibaseChangeLogMapperTest {
+@HsqldbTest(initScript = false)
+class LiquibaseChangeLogExecutorTest {
 
 	@Test
-	void it_should_create_changelog_from_input() {
-		final String input = "/hsqldb/master-changelog.xml";
-		final LiquibaseChangeLogMapper mapper = LiquibaseChangeLogMapper.getInstance();
-		final LiquibaseChangeLog changeLog = mapper.apply(input);
+	void it_should_load_liquibase_change_logs(EmbeddedDatabase db) throws Exception {
+		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
+		final LiquibaseChangeLogExecutor executor = new LiquibaseChangeLogExecutor(factory);
+		final String path = "/liquibase/changelog.xml";
+		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
 
-		assertThat(changeLog).isNotNull();
-		assertThat(changeLog.getChangeLog()).isEqualTo(input);
+		when(factory.getConnection()).thenAnswer((Answer<Connection>) invocationOnMock ->
+			db.getConnection()
+		);
+
+		executor.execute(changeLog);
+
+		final Connection connection = db.getConnection();
+		assertThat(countUsers(connection)).isZero();
+		assertThat(countMovies(connection)).isZero();
+		verify(factory).getConnection();
 	}
 }

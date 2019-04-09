@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Mapper;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -54,13 +53,13 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
+import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.parseScript;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -156,10 +155,13 @@ final class DbUnitAnnotationsParser {
 			return emptyList();
 		}
 
-		char delimiter = annotation.delimiter();
-		SqlScriptParserConfiguration configuration = SqlScriptParserConfiguration.builder().setDelimiter(delimiter).build();
-		SqlScriptMapper mapper = SqlScriptMapper.getInstance(configuration);
-		return map(annotation.sql(), mapper);
+		final char delimiter = annotation.delimiter();
+		final SqlScriptParserConfiguration configuration = SqlScriptParserConfiguration.builder().setDelimiter(delimiter).build();
+		final String[] sql = annotation.sql();
+		return Arrays.stream(sql)
+			.map(input -> parseScript(input, configuration))
+			.map(SqlScript::new)
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -173,8 +175,9 @@ final class DbUnitAnnotationsParser {
 			return emptyList();
 		}
 
-		LiquibaseChangeLogMapper mapper = LiquibaseChangeLogMapper.getInstance();
-		return map(annotation.value(), mapper);
+		return Arrays.stream(annotation.value())
+			.map(LiquibaseChangeLog::new)
+			.collect(Collectors.toList());
 	}
 
 	/**
@@ -196,31 +199,6 @@ final class DbUnitAnnotationsParser {
 	}
 
 	/**
-	 * Find replacements objects from given fields and/or methods.
-	 *
-	 * @param fields Given fields.
-	 * @param methods Given methods.
-	 * @return The replacements values.
-	 */
-	static List<Replacements> extractReplacements(List<Field> fields, List<Method> methods) {
-		if (fields.isEmpty() && methods.isEmpty()) {
-			return emptyList();
-		}
-
-		List<Replacements> replacements = new ArrayList<>(fields.size() + methods.size());
-
-		for (Field field : fields) {
-			replacements.add(ReplacementsMapper.getInstance().apply(field));
-		}
-
-		for (Method method : methods) {
-			replacements.add(ReplacementsMapper.getInstance().apply(method));
-		}
-
-		return replacements;
-	}
-
-	/**
 	 * Extract replacements from given providers configuration.
 	 *
 	 * @param annotations The replacements configuration.
@@ -234,12 +212,13 @@ final class DbUnitAnnotationsParser {
 		List<Replacements> replacements = new ArrayList<>();
 
 		for (DbUnitReplacements annotation : annotations) {
-			replacements.addAll(map(annotation.providers(), new Mapper<Class<? extends ReplacementsProvider>, Replacements>() {
-				@Override
-				public Replacements apply(Class<? extends ReplacementsProvider> input) {
-					return ClassUtils.instantiate(input).create();
-				}
-			}));
+			Class<? extends ReplacementsProvider>[] providers = annotation.providers();
+			List<Replacements> additionalReplacements = Arrays.stream(providers)
+				.map(ClassUtils::instantiate)
+				.map(ReplacementsProvider::create)
+				.collect(Collectors.toList());
+
+			replacements.addAll(additionalReplacements);
 
 			if (!annotation.inherit()) {
 				break;
@@ -262,7 +241,7 @@ final class DbUnitAnnotationsParser {
 		}
 
 		List<DbUnitConfigInterceptor> defaultInterceptors = asList(
-			(DbUnitConfigInterceptor) new DbUnitAllowEmptyFieldsInterceptor(annotation.allowEmptyFields()),
+			new DbUnitAllowEmptyFieldsInterceptor(annotation.allowEmptyFields()),
 			new DbUnitQualifiedTableNamesInterceptor(annotation.qualifiedTableNames()),
 			new DbUnitCaseSensitiveTableNamesInterceptor(annotation.allowEmptyFields()),
 			new DbUnitBatchedStatementsInterceptor(annotation.allowEmptyFields()),
@@ -278,12 +257,9 @@ final class DbUnitAnnotationsParser {
 			return defaultInterceptors;
 		}
 
-		List<DbUnitConfigInterceptor> customInterceptors = map(interceptorClasses, new Mapper<Class<? extends DbUnitConfigInterceptor>, DbUnitConfigInterceptor>() {
-			@Override
-			public DbUnitConfigInterceptor apply(Class<? extends DbUnitConfigInterceptor> input) {
-				return ClassUtils.instantiate(input);
-			}
-		});
+		List<DbUnitConfigInterceptor> customInterceptors = Arrays.stream(interceptorClasses)
+			.map(ClassUtils::instantiate)
+			.collect(Collectors.toList());
 
 		List<DbUnitConfigInterceptor> interceptors = new ArrayList<>(customInterceptors.size() + defaultInterceptors.size());
 		interceptors.addAll(defaultInterceptors);

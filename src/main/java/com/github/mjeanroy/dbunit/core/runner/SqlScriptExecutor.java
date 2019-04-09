@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.collections.Function;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -45,12 +44,12 @@ import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeQueries
  * If an {@link SQLException} occurs, it will be wrapped into an instance
  * of {@link DbUnitException} exception.
  */
-class SqlScriptRunnerFunction implements Function<SqlScript> {
+class SqlScriptExecutor {
 
 	/**
 	 * Class Logger.
 	 */
-	private static final Logger log = Loggers.getLogger(SqlScriptRunnerFunction.class);
+	private static final Logger log = Loggers.getLogger(SqlScriptExecutor.class);
 
 	/**
 	 * Factory to get new {@link Connection} before executing SQL scripts.
@@ -63,12 +62,11 @@ class SqlScriptRunnerFunction implements Function<SqlScript> {
 	 * @param factory Connection factory.
 	 * @throws NullPointerException If {@code factory} is {@code null}.
 	 */
-	SqlScriptRunnerFunction(JdbcConnectionFactory factory) {
+	SqlScriptExecutor(JdbcConnectionFactory factory) {
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 	}
 
-	@Override
-	public void apply(SqlScript script) {
+	void execute(SqlScript script) {
 		Connection connection = factory.getConnection();
 		try {
 			executeQueries(connection, script.getQueries());

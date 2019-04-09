@@ -42,7 +42,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.first;
 import static com.github.mjeanroy.dbunit.commons.io.Files.DEFAULT_CHARSET;
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
@@ -141,7 +140,7 @@ class JarResourceScanner extends AbstractResourceScanner implements ResourceScan
 
 				if (!isEmpty(entry) && !isRootPath(entry)) {
 					List<String> paths = extractPaths(entry);
-					String subEntry = paths.size() > 1 ? first(paths) : entry;
+					String subEntry = paths.size() > 1 ? paths.get(0) : entry;
 					String fullEntry = dirPath + subEntry;
 					String key = ensureTrailingSeparator(fullEntry);
 

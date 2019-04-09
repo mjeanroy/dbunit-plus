@@ -78,13 +78,13 @@ class SqlScriptRunnerFunctionTest {
 
 	@Test
 	void it_should_load_script(EmbeddedDatabase db) throws Exception {
-		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
+		final SqlScriptExecutor executor = new SqlScriptExecutor(factory);
 		final Connection connection = db.getConnection();
 
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 
-		func.apply(sqlScript);
+		executor.execute(sqlScript);
 
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
@@ -95,12 +95,12 @@ class SqlScriptRunnerFunctionTest {
 	@Test
 	void it_should_wrap_sql_exception() throws Exception {
 		final Connection connection = mock(Connection.class);
-		final SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
+		final SqlScriptExecutor executor = new SqlScriptExecutor(factory);
 
 		when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Fail Test"));
 		when(factory.getConnection()).thenReturn(connection);
 
-		assertThatThrownBy(() -> func.apply(sqlScript)).isExactlyInstanceOf(DbUnitException.class);
+		assertThatThrownBy(() -> executor.execute(sqlScript)).isExactlyInstanceOf(DbUnitException.class);
 		verify(connection).close();
 	}
 }

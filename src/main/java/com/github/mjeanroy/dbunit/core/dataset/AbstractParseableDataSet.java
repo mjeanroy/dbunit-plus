@@ -24,15 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.keys;
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.map;
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.AbstractParserException;
@@ -46,6 +37,17 @@ import org.dbunit.dataset.DefaultTableIterator;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
+import org.dbunit.dataset.datatype.DataType;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
  * Implementation of {@link IDataSet} with a parseable (JSON or YAML for example) file as input.
@@ -138,8 +140,13 @@ abstract class AbstractParseableDataSet extends AbstractDataSet implements IData
 
 			// Create table.
 			log.trace("Extract columns");
-			Set<Column> columns = map(keys(rows), ColumnMapper.getInstance());
-			DefaultTable dbUnitTable = new DefaultTable(tableName, columns.toArray(new Column[columns.size()]));
+			Set<Column> columns = rows.stream()
+				.map(Map::keySet)
+				.flatMap(Collection::stream)
+				.map(columnName -> new Column(columnName, DataType.UNKNOWN))
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+
+			DefaultTable dbUnitTable = new DefaultTable(tableName, columns.toArray(new Column[0]));
 			log.trace("Table created, found columns: {}", columns);
 
 			// Fill Row.
