@@ -49,19 +49,6 @@ class CollectionsTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	void it_should_iterate_over_collection() {
-		final List<Integer> list = asList(1, 2, 3);
-		final Function<Integer> func = mock(Function.class);
-
-		Collections.forEach(list, func);
-
-		verify(func).apply(1);
-		verify(func).apply(2);
-		verify(func).apply(3);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
 	void it_should_map_set_to_another_set() {
 		final Set<Integer> set = new LinkedHashSet<>();
 		set.add(1);

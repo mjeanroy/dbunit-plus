@@ -77,19 +77,6 @@ public final class Collections {
 	}
 
 	/**
-	 * Apply function to each element of a collection.
-	 *
-	 * @param inputs Collection of inputs.
-	 * @param func Function to apply.
-	 * @param <T> Type of input.
-	 */
-	public static <T> void forEach(Iterable<T> inputs, Function<T> func) {
-		for (T input : inputs) {
-			func.apply(input);
-		}
-	}
-
-	/**
 	 * Find first value matching predicate.
 	 *
 	 * @param inputs Set of inputs.

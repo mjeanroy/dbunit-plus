@@ -50,7 +50,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.mjeanroy.dbunit.commons.collections.Collections.forEach;
 import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
@@ -280,7 +279,10 @@ public class DbUnitRunner {
 	 * @param factory The JDBC Connection Factory.
 	 */
 	private void runSqlScript(JdbcConnectionFactory factory) {
-		forEach(ctx.getInitScripts(), new SqlScriptRunnerFunction(factory));
+		SqlScriptRunnerFunction func = new SqlScriptRunnerFunction(factory);
+		ctx.getInitScripts().forEach(
+			func::apply
+		);
 	}
 
 	/**
@@ -291,7 +293,10 @@ public class DbUnitRunner {
 	 * @param factory The JDBC Connection Factory.
 	 */
 	private void runLiquibase(JdbcConnectionFactory factory) {
-		forEach(ctx.getLiquibaseChangeLogs(), new LiquibaseChangeLogUpdaterFunction(factory));
+		LiquibaseChangeLogUpdaterFunction func = new LiquibaseChangeLogUpdaterFunction(factory);
+		ctx.getLiquibaseChangeLogs().forEach(
+			func::apply
+		);
 	}
 
 	/**
