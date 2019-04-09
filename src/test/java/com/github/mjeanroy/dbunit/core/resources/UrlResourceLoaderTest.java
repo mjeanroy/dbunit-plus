@@ -28,7 +28,6 @@ import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -97,7 +96,7 @@ public class UrlResourceLoaderTest {
 		final String path = "/dataset/json/fake.json";
 		final URL url = url(path);
 
-		assertThatThrownBy(load(loader, url.toString()))
+		assertThatThrownBy(() -> loader.load(url.toString()))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", url.toString()));
 	}
@@ -109,14 +108,5 @@ public class UrlResourceLoaderTest {
 			.setPort(port)
 			.setPath(path)
 			.build();
-	}
-
-	private static ThrowingCallable load(final UrlResourceLoader loader, final String url) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				loader.load(url);
-			}
-		};
 	}
 }

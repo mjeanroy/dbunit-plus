@@ -69,52 +69,37 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void beforeTestClass(final TestContext testContext) throws Exception {
-		execute(listeners, new ListenerFunction() {
-			@Override
-			public void apply(TestExecutionListener input) throws Exception {
-				input.beforeTestClass(testContext);
-			}
-		});
+		execute(listeners, input ->
+			input.beforeTestClass(testContext)
+		);
 	}
 
 	@Override
 	public void prepareTestInstance(final TestContext testContext) throws Exception {
-		execute(listeners, new ListenerFunction() {
-			@Override
-			public void apply(TestExecutionListener listener) throws Exception {
-				listener.prepareTestInstance(testContext);
-			}
-		});
+		execute(listeners, listener ->
+			listener.prepareTestInstance(testContext)
+		);
 	}
 
 	@Override
 	public void beforeTestMethod(final TestContext testContext) throws Exception {
-		execute(listeners, new ListenerFunction() {
-			@Override
-			public void apply(TestExecutionListener listener) throws Exception {
-				listener.beforeTestMethod(testContext);
-			}
-		});
+		execute(listeners, listener ->
+			listener.beforeTestMethod(testContext)
+		);
 	}
 
 	@Override
 	public void afterTestMethod(final TestContext testContext) throws Exception {
-		execute(reverseListeners, new ListenerFunction() {
-			@Override
-			public void apply(TestExecutionListener listener) throws Exception {
-				listener.afterTestMethod(testContext);
-			}
-		});
+		execute(reverseListeners, listener ->
+			listener.afterTestMethod(testContext)
+		);
 	}
 
 	@Override
 	public void afterTestClass(final TestContext testContext) throws Exception {
-		execute(reverseListeners, new ListenerFunction() {
-			@Override
-			public void apply(TestExecutionListener listener) throws Exception {
-				listener.afterTestClass(testContext);
-			}
-		});
+		execute(reverseListeners, listener ->
+			listener.afterTestClass(testContext)
+		);
 	}
 
 	private void execute(TestExecutionListener[] listeners, ListenerFunction func) throws Exception {

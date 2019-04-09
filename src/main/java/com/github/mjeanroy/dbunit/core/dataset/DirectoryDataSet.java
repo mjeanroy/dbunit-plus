@@ -41,7 +41,6 @@ import java.util.List;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgument;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
-import static java.util.Collections.sort;
 
 /**
  * Directory dataSet.
@@ -77,7 +76,7 @@ public class DirectoryDataSet implements IDataSet {
 
 		// Sort alphabetically
 		List<Resource> resources = new ArrayList<>(subResources);
-		sort(resources, comparator);
+		resources.sort(comparator);
 
 		IDataSet[] dataSets = new IDataSet[resources.size()];
 		int i = 0;

@@ -29,7 +29,6 @@ import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -69,7 +68,6 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 		assertThat(rule.getConnection()).isNull();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Test
 	public void it_should_start_database_and_load_data_set() throws Throwable {
 		final Statement statement = mock(Statement.class);
@@ -87,15 +85,14 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 		verify(statement, never()).evaluate();
 		verify(db, never()).shutdown();
 
-		doAnswer(new Answer() {
-			@Override
-			public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
-				final Connection connection = db.getConnection();
-				assertThat(countUsers(connection)).isEqualTo(2);
-				assertThat(countMovies(connection)).isEqualTo(3);
-				return null;
-			}
-		}).when(statement).evaluate();
+		Answer answer = invocationOnMock -> {
+			final Connection connection = db.getConnection();
+			assertThat(countUsers(connection)).isEqualTo(2);
+			assertThat(countMovies(connection)).isEqualTo(3);
+			return null;
+		};
+
+		doAnswer(answer).when(statement).evaluate();
 
 		result.evaluate();
 

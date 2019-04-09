@@ -24,11 +24,7 @@
 
 package com.github.mjeanroy.dbunit.tests.db;
 
-import com.github.mjeanroy.dbunit.tests.db.JdbcQueries.ResultSetMapper;
-
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 
@@ -70,16 +66,13 @@ public final class TestDbUtils {
 	 */
 	public static Movie findMovie(Connection connection, long id) {
 		String query = "SELECT * FROM movies WHERE id = " + id;
-		return JdbcQueries.findOne(connection, query, (ResultSetMapper<Movie>) new ResultSetMapper<Movie>() {
-			@Override
-			public Movie map(ResultSet rs) throws SQLException {
-				return new Movie(
-					rs.getLong("id"),
-					rs.getString("title"),
-					rs.getString("synopsys")
-				);
-			}
-		});
+		return JdbcQueries.findOne(connection, query, rs ->
+			new Movie(
+				rs.getLong("id"),
+				rs.getString("title"),
+				rs.getString("synopsys")
+			)
+		);
 	}
 
 	/**

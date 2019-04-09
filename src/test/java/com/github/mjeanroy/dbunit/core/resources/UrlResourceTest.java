@@ -29,7 +29,6 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -105,7 +104,7 @@ public class UrlResourceTest {
 		final URL url = url(path);
 		final UrlResource resource = new UrlResource(url);
 
-		assertThatThrownBy(toFile(resource))
+		assertThatThrownBy(resource::toFile)
 			.isExactlyInstanceOf(UnsupportedOperationException.class)
 			.hasMessage(String.format("Resource %s cannot be resolved to absolute file path because it does not reside in the file system", url.toString()));
 	}
@@ -172,14 +171,5 @@ public class UrlResourceTest {
 			.setPort(port)
 			.setPath(path)
 			.build();
-	}
-
-	private static ThrowingCallable toFile(final UrlResource resource) {
-		return new ThrowingCallable() {
-			@Override
-			public void call() {
-				resource.toFile();
-			}
-		};
 	}
 }
