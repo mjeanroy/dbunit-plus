@@ -136,7 +136,7 @@ public final class Annotations {
 	 * @param <T> Type of annotation.
 	 * @return Annotation if found, {@code null} otherwise.
 	 */
-	static <T extends Annotation> List<T> findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
+	private static <T extends Annotation> List<T> findAnnotationOn(AnnotatedElement element, Class<T> annotationClass) {
 		final List<T> results = new ArrayList<>();
 
 		if (element == null) {
