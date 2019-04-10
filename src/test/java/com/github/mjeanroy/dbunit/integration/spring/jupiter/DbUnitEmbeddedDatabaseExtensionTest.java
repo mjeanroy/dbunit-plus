@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeExtensionContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeParameterContext;
 import org.hsqldb.jdbc.JDBCConnection;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -45,10 +45,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
-public class DbUnitEmbeddedDatabaseExtensionTest {
+class DbUnitEmbeddedDatabaseExtensionTest {
 
 	@Test
-	public void it_should_start_database_and_load_data_set() throws Exception {
+	void it_should_start_database_and_load_data_set() throws Exception {
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/init.sql")
@@ -67,7 +67,7 @@ public class DbUnitEmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_stop_database_and_remove_data_set_after_each_test() throws Exception {
+	void it_should_stop_database_and_remove_data_set_after_each_test() throws Exception {
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/init.sql")
@@ -91,7 +91,7 @@ public class DbUnitEmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_resolve_connection_parameter() {
+	void it_should_resolve_connection_parameter() {
 		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/init.sql")
@@ -113,7 +113,7 @@ public class DbUnitEmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_resolve_specific_jdbc_connection_parameter() {
+	void it_should_resolve_specific_jdbc_connection_parameter() {
 		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension();
 		final FixtureClass testInstance = new FixtureClass();
 		final Method testMethod = lookupMethod(FixtureClass.class, "test_method_with_jdbc_connection_parameter", JDBCConnection.class);
@@ -131,7 +131,7 @@ public class DbUnitEmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_support_embedded_database_parameter_injection() {
+	void it_should_support_embedded_database_parameter_injection() {
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/init.sql")

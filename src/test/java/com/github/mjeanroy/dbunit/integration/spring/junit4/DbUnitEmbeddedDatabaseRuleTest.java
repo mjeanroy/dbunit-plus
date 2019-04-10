@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 import org.mockito.InOrder;
@@ -48,10 +48,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DbUnitEmbeddedDatabaseRuleTest {
+class DbUnitEmbeddedDatabaseRuleTest {
 
 	@Test
-	public void it_should_create_rule_with_database() throws Exception {
+	void it_should_create_rule_with_database() throws Exception {
 		final Connection connection = mock(Connection.class);
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		when(db.getConnection()).thenReturn(connection);
@@ -62,14 +62,14 @@ public class DbUnitEmbeddedDatabaseRuleTest {
 	}
 
 	@Test
-	public void it_should_create_rule_with_default_database() {
+	void it_should_create_rule_with_default_database() {
 		final DbUnitEmbeddedDatabaseRule rule = createRule();
 		assertThat(rule.getDb()).isNull();
 		assertThat(rule.getConnection()).isNull();
 	}
 
 	@Test
-	public void it_should_start_database_and_load_data_set() throws Throwable {
+	void it_should_start_database_and_load_data_set() throws Throwable {
 		final Statement statement = mock(Statement.class);
 		final Description description = createTestDescription(WithDataSet.class, "method1");
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()

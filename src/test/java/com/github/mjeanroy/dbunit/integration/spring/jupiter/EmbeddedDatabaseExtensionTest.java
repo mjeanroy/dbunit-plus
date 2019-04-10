@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.integration.spring.EmbeddedDatabaseRunner;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeExtensionContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeParameterContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeStore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
@@ -42,10 +42,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-public class EmbeddedDatabaseExtensionTest {
+class EmbeddedDatabaseExtensionTest {
 
 	@Test
-	public void it_should_start_default_embedded_database_before_all_tests_and_after_all_tests() {
+	void it_should_start_default_embedded_database_before_all_tests_and_after_all_tests() {
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension();
 		final FixtureClass testInstance = new FixtureClass();
 		final Method testMethod = null;
@@ -59,7 +59,7 @@ public class EmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_start_custom_embedded_database_before_all_tests_and_after_all_tests() {
+	void it_should_start_custom_embedded_database_before_all_tests_and_after_all_tests() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
@@ -76,7 +76,7 @@ public class EmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_start_custom_embedded_database_before_each_tests_and_after_each_tests() {
+	void it_should_start_custom_embedded_database_before_each_tests_and_after_each_tests() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
@@ -93,7 +93,7 @@ public class EmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_not_start_custom_embedded_database_before_each_tests_and_after_each_tests_when_used_as_static() {
+	void it_should_not_start_custom_embedded_database_before_each_tests_and_after_each_tests_when_used_as_static() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();
@@ -115,7 +115,7 @@ public class EmbeddedDatabaseExtensionTest {
 	}
 
 	@Test
-	public void it_should_support_embedded_database_parameter_injection() {
+	void it_should_support_embedded_database_parameter_injection() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
 		final FixtureClass testInstance = new FixtureClass();

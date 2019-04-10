@@ -24,30 +24,30 @@
 
 package com.github.mjeanroy.dbunit.integration.spring.junit4;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-public class EmbeddedDatabaseRuleTest {
+class EmbeddedDatabaseRuleTest {
 
 	@Test
-	public void it_should_create_rule() {
+	void it_should_create_rule() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseRule rule = createRule(db);
 		assertThat(rule.getDb()).isSameAs(db);
 	}
 
 	@Test
-	public void it_should_create_default_rule() {
+	void it_should_create_default_rule() {
 		final EmbeddedDatabaseRule rule = createRule();
 		assertThat(rule.getDb()).isNotNull();
 	}
 
 	@Test
-	public void it_should_shutdown_db_after_test() {
+	void it_should_shutdown_db_after_test() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		final EmbeddedDatabaseRule rule = createRule(db);
 		rule.after();

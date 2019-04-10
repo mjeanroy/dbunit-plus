@@ -26,15 +26,15 @@ package com.github.mjeanroy.dbunit.integration.junit4;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.WithRunner;
 import org.assertj.core.api.Condition;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.rules.TestRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DbUnitJunitRunnerTest {
+class DbUnitJunitRunnerTest {
 
 	@Test
-	public void it_should_create_runner() throws Exception {
+	void it_should_create_runner() throws Exception {
 		final DbUnitJunitRunner runner = new DbUnitJunitRunner(WithRunner.class);
 		assertThat(runner.getTestRules(new WithRunner()))
 			.isNotNull()
