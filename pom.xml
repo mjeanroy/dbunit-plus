@@ -122,7 +122,7 @@
     <mockito.version>2.26.0</mockito.version>
     <logback.version>1.2.3</logback.version>
     <wiremock.version>2.22.0</wiremock.version>
-    <equalsverifier.version>2.5.2</equalsverifier.version>
+    <equalsverifier.version>3.1.8</equalsverifier.version>
   </properties>
 
   <profiles>
