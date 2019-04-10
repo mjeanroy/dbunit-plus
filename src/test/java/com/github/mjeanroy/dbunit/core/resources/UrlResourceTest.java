@@ -25,13 +25,12 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
+import com.github.mjeanroy.dbunit.tests.jupiter.WireMockTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -42,25 +41,15 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("SameParameterValue")
-public class UrlResourceTest {
-
-	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort(), false);
-
-	private int port;
-
-	@Before
-	public void setUp() {
-		port = wireMockRule.port();
-	}
+@WireMockTest
+class UrlResourceTest {
 
 	@Test
-	public void it_should_return_true_if_file_exists() {
+	void it_should_return_true_if_file_exists(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
 		final String dataset = readTestResource(path);
 		stubFor(WireMock.get(urlEqualTo(path))
@@ -69,39 +58,39 @@ public class UrlResourceTest {
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset.trim())));
 
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.exists()).isTrue();
 	}
 
 	@Test
-	public void it_should_return_false_if_file_does_not_exists() {
-		final String path = "/dataset/json/users.json";
-		final URL url = url(path);
+	void it_should_return_false_if_file_does_not_exists(WireMockServer srv) {
+		final String path = "/dataset/json/fake-file.json";
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.exists()).isFalse();
 	}
 
 	@Test
-	public void it_should_return_get_file_name() {
+	void it_should_return_get_file_name(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.getFilename()).isEqualTo("users.json");
 	}
 
 	@Test
-	public void it_should_return_false_if_not_directory() {
+	void it_should_return_false_if_not_directory(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 		assertThat(resource.isDirectory()).isFalse();
 	}
 
 	@Test
-	public void it_should_return_get_file_handler() {
+	void it_should_return_get_file_handler(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 
 		assertThatThrownBy(resource::toFile)
@@ -110,7 +99,7 @@ public class UrlResourceTest {
 	}
 
 	@Test
-	public void it_should_get_input_stream() throws Exception {
+	void it_should_get_input_stream(WireMockServer srv) throws Exception {
 		final String path = "/dataset/json/users.json";
 		final String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
@@ -119,7 +108,7 @@ public class UrlResourceTest {
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset)));
 
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 		final InputStream stream = resource.openStream();
 		final String result = readStream(stream).trim();
@@ -128,7 +117,7 @@ public class UrlResourceTest {
 	}
 
 	@Test
-	public void it_should_return_empty_sub_resources() {
+	void it_should_return_empty_sub_resources(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
 		final String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
@@ -137,7 +126,7 @@ public class UrlResourceTest {
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset)));
 
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource resource = new UrlResource(url);
 		final Collection<Resource> subResources = resource.listResources();
 
@@ -147,7 +136,7 @@ public class UrlResourceTest {
 	}
 
 	@Test
-	public void it_should_implement_equals() {
+	void it_should_implement_equals() {
 		EqualsVerifier.forClass(UrlResource.class)
 			.withNonnullFields("url")
 			.withIgnoredFields("scanner")
@@ -156,15 +145,19 @@ public class UrlResourceTest {
 	}
 
 	@Test
-	public void it_should_implement_to_string() {
+	void it_should_implement_to_string(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final UrlResource r1 = new UrlResource(url);
 
-		assertThat(r1.toString()).isEqualTo(String.format("UrlResource{url: %s}", url.toString()));
+		assertThat(r1.toString()).isEqualTo(
+			"UrlResource{" +
+				"url: " + url.toString() +
+			"}"
+		);
 	}
 
-	private URL url(String path) {
+	private static URL url(int port, String path) {
 		return new UrlBuilder()
 			.setProtocol("http")
 			.setHost("localhost")

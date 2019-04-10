@@ -26,11 +26,11 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 import com.github.mjeanroy.dbunit.tests.builders.UrlBuilder;
+import com.github.mjeanroy.dbunit.tests.jupiter.WireMockTest;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
@@ -38,27 +38,21 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class UrlResourceLoaderTest {
-
-	@Rule
-	public WireMockRule wireMockRule = new WireMockRule(wireMockConfig().dynamicPort(), false);
-
-	private int port;
+@WireMockTest
+class UrlResourceLoaderTest {
 
 	private UrlResourceLoader loader;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		loader = UrlResourceLoader.getInstance();
-		port = wireMockRule.port();
 	}
 
 	@Test
-	public void it_should_match_these_prefixes() {
+	void it_should_match_these_prefixes() {
 		assertThat(loader.match("http:/users.txt")).isTrue();
 		assertThat(loader.match("HTTP:/users.txt")).isTrue();
 		assertThat(loader.match("https:/users.txt")).isTrue();
@@ -66,14 +60,14 @@ public class UrlResourceLoaderTest {
 	}
 
 	@Test
-	public void it_should_not_match_these_prefixes() {
+	void it_should_not_match_these_prefixes() {
 		assertThat(loader.match("http/users.txt")).isFalse();
 		assertThat(loader.match("https/users.txt")).isFalse();
 		assertThat(loader.match("/users.txt")).isFalse();
 	}
 
 	@Test
-	public void it_should_load_resource() {
+	void it_should_load_resource(WireMockServer srv) {
 		final String path = "/dataset/json/users.json";
 		final String dataset = readTestResource(path);
 
@@ -83,7 +77,7 @@ public class UrlResourceLoaderTest {
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset.trim())));
 
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 		final Resource resource = loader.load(url.toString());
 
 		assertThat(resource).isNotNull();
@@ -92,16 +86,16 @@ public class UrlResourceLoaderTest {
 	}
 
 	@Test
-	public void it_should_not_load_unknown_resource() {
+	void it_should_not_load_unknown_resource(WireMockServer srv) {
 		final String path = "/dataset/json/fake.json";
-		final URL url = url(path);
+		final URL url = url(srv.port(), path);
 
 		assertThatThrownBy(() -> loader.load(url.toString()))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", url.toString()));
 	}
 
-	private URL url(String path) {
+	private static URL url(int port, String path) {
 		return new UrlBuilder()
 			.setProtocol("http")
 			.setHost("localhost")
