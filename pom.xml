@@ -104,7 +104,7 @@
     <slf4j.version>1.7.26</slf4j.version>
     <log4j.version>2.11.2</log4j.version>
     <junit.version>4.12</junit.version>
-    <jupiter.version>5.4.1</jupiter.version>
+    <jupiter.version>5.4.2</jupiter.version>
     <dbunit.version>2.6.0</dbunit.version>
     <jackson1.version>1.9.13</jackson1.version>
     <jackson.version>2.9.8</jackson.version>
@@ -118,11 +118,11 @@
     <guava.version>27.1-android</guava.version>
 
     <!-- Test Dependencies -->
-    <assertj.version>2.9.1</assertj.version>
+    <assertj.version>3.12.2</assertj.version>
     <mockito.version>2.26.0</mockito.version>
     <logback.version>1.2.3</logback.version>
     <wiremock.version>2.22.0</wiremock.version>
-    <equalsverifier.version>2.5.2</equalsverifier.version>
+    <equalsverifier.version>3.1.8</equalsverifier.version>
   </properties>
 
   <profiles>
