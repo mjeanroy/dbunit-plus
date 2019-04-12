@@ -22,23 +22,23 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.loggers;
+package com.github.mjeanroy.dbunit.tests.jupiter;
 
-import org.apache.logging.log4j.Level;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
-import static java.util.Objects.requireNonNull;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-class Log4jLoggerTest extends AbstractLoggerTest {
-
-	@Override
-	Logger createLogger() {
-		Log4jLogger log = new Log4jLogger(getClass());
-
-		org.apache.logging.log4j.core.Logger log4j = requireNonNull(readPrivate(log, "log"));
-		log4j.setAdditive(true);
-		log4j.setLevel(Level.TRACE);
-
-		return log;
-	}
+/**
+ * An annotation to capture {@code System.out} stream during test, and allow to retrieve what
+ * has been printed by injecting {@link CaptureSystemOut} into tests.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@ExtendWith(CaptureSystemOutExtension.class)
+@Documented
+public @interface CaptureSystemOutTest {
 }

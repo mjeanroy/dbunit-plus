@@ -22,61 +22,35 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.junit4;
-
-import org.junit.rules.ExternalResource;
+package com.github.mjeanroy.dbunit.tests.jupiter;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 
 /**
- * Catch System.out logging and store in a buffer.
+ * A wrapper around out stream, that allow to retrieve it as a string.
  */
-public class SystemOutRule extends ExternalResource {
+public class CaptureSystemOut {
 
 	/**
-	 * Original out stream.
-	 * Will be initialized before each tests.
-	 * Will be restored after each tests.
+	 * The out stream.
 	 */
-	private PrintStream originalOut;
+	private final ByteArrayOutputStream out;
 
 	/**
-	 * Custom out stream.
-	 * Will be initialized before each tests.
-	 * Will be flushed after each tests.
+	 * Create the out stream wrapper.
+	 *
+	 * @param out The out stream.
 	 */
-	private ByteArrayOutputStream out;
-
-	@Override
-	public void before() {
-		originalOut = System.out;
-		out = new ByteArrayOutputStream();
-
-		System.setOut(new PrintStream(out));
+	CaptureSystemOut(ByteArrayOutputStream out) {
+		this.out = out;
 	}
 
-	@Override
-	public void after() {
-		try {
-			out.reset();
-			out.flush();
-		}
-		catch (IOException ex) {
-			ex.printStackTrace();
-			// No worries
-		}
-
-		// Restore original out stream
-		System.setOut(originalOut);
-	}
-
+	/**
+	 * Get out stream as a string.
+	 *
+	 * @return The out string.
+	 */
 	public String getOut() {
-		if (out == null) {
-			return null;
-		}
-
 		return out.toString();
 	}
 }

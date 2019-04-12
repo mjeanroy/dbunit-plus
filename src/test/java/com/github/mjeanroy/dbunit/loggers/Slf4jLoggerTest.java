@@ -27,14 +27,15 @@ package com.github.mjeanroy.dbunit.loggers;
 import ch.qos.logback.classic.Level;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
+import static java.util.Objects.requireNonNull;
 
-public class Slf4jLoggerTest extends AbstractLoggerTest {
+class Slf4jLoggerTest extends AbstractLoggerTest {
 
 	@Override
 	Logger createLogger() {
 		Slf4jLogger log = new Slf4jLogger(getClass());
 
-		ch.qos.logback.classic.Logger logback = readPrivate(log, "log");
+		ch.qos.logback.classic.Logger logback = requireNonNull(readPrivate(log, "log"));
 		logback.setLevel(Level.TRACE);
 		logback.setAdditive(true);
 
