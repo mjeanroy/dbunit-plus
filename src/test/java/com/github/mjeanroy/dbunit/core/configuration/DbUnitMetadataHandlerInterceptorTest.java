@@ -88,7 +88,7 @@ class DbUnitMetadataHandlerInterceptorTest {
 	void it_should_implement_to_string() {
 		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class, "MockMetadataHandler");
 		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitMetadataHandlerInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/metadataHandler\", " +
 				"value: MockMetadataHandler" +

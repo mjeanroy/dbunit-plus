@@ -55,14 +55,13 @@ class JdbcConfigurationTest {
 
 		JdbcConfiguration configuration = newJdbcConfiguration(url, user, password);
 
-		assertThat(configuration.toString())
-			.isEqualTo(
-				"JdbcConfiguration{" +
-					"url: \"jdbc:hsqldb:mem:database/testdb\", " +
-					"user: \"SA\", " +
-					"password: \"\"" +
-				"}"
-			);
+		assertThat(configuration).hasToString(
+			"JdbcConfiguration{" +
+				"url: \"jdbc:hsqldb:mem:database/testdb\", " +
+				"user: \"SA\", " +
+				"password: \"\"" +
+			"}"
+		);
 	}
 
 	@Test

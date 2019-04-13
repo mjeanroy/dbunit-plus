@@ -69,7 +69,7 @@ class DbUnitAllowEmptyFieldsInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(true);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitAllowEmptyFieldsInterceptor{" +
 				"property: \"http://www.dbunit.org/features/allowEmptyFields\", " +
 				"value: true" +

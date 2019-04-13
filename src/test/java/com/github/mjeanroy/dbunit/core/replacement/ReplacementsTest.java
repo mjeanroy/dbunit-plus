@@ -214,7 +214,7 @@ class ReplacementsTest {
 			.put("bar", 10)
 			.build();
 
-		assertThat(replacements.toString()).isEqualTo(
+		assertThat(replacements).hasToString(
 			"Replacements{" +
 				"replacements: {" +
 					"foo=bar, " +

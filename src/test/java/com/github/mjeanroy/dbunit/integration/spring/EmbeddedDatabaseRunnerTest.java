@@ -58,7 +58,7 @@ class EmbeddedDatabaseRunnerTest {
 	void it_should_implement_to_string() {
 		final EmbeddedDatabase db = mock(EmbeddedDatabase.class, "MockEmbeddedDatabase");
 		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
-		assertThat(runner.toString()).isEqualTo(
+		assertThat(runner).hasToString(
 			"EmbeddedDatabaseRunner{" +
 				"db: MockEmbeddedDatabase" +
 			"}"

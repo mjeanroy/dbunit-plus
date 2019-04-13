@@ -69,7 +69,7 @@ class DbUnitBatchedStatementsInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitBatchedStatementsInterceptor{" +
 				"property: \"http://www.dbunit.org/features/batchedStatements\", " +
 				"value: true" +

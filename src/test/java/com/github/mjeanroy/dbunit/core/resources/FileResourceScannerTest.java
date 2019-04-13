@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-import com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,7 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 			.isNotNull()
 			.isNotEmpty()
 			.hasSize(2)
-			.are(InstanceOfCondition.isInstanceOf(FileResource.class))
+			.are(isInstanceOf(FileResource.class))
 			.extracting(Resource::getFilename)
 			.containsOnly("users.xml", "movies.xml");
 	}

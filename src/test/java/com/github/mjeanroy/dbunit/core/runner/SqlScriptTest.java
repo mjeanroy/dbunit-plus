@@ -60,7 +60,7 @@ class SqlScriptTest {
 
 		final SqlScript sqlScript = new SqlScript(queries);
 
-		assertThat(sqlScript.toString()).isEqualTo(
+		assertThat(sqlScript).hasToString(
 			"SqlScript{" +
 				"queries: [" +
 					"INSERT INTO users(name) VALUES('John Doe');, " +

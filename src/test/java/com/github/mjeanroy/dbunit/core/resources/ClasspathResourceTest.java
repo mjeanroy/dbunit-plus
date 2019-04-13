@@ -163,12 +163,16 @@ class ClasspathResourceTest {
 	}
 
 	@Test
-	void it_should_implement_to_string() {
-		final String path = "/jar/dataset/xml/users.xml";
-		final URL url = url(path);
+	void it_should_implement_to_string() throws Exception {
+		final String path = "jar:file:/dbunit-dataset-0.1.0.jar!/jar/dataset/xml/users.xml";
+		final URL url = new URL(path);
 		final ClasspathResource r1 = new ClasspathResource(url);
 
-		assertThat(r1.toString()).isEqualTo(String.format("ClasspathResource{url: %s}", url.toString()));
+		assertThat(r1).hasToString(
+			"ClasspathResource{" +
+				"url: jar:file:/dbunit-dataset-0.1.0.jar!/jar/dataset/xml/users.xml" +
+			"}"
+		);
 	}
 
 	private URL url(String path) {

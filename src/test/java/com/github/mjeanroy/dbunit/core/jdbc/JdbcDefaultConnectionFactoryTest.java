@@ -85,7 +85,7 @@ class JdbcDefaultConnectionFactoryTest {
 	void it_should_implement_to_string() {
 		final JdbcConfiguration configuration = JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "");
 		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
-		assertThat(factory.toString()).isEqualTo(
+		assertThat(factory).hasToString(
 			"JdbcDefaultConnectionFactory{" +
 				"configuration: JdbcConfiguration{" +
 					"url: \"jdbc:hsqldb:mem:testdb\", " +

@@ -121,7 +121,7 @@ class DbUnitClassContextTest {
 			interceptors
 		);
 
-		assertThat(ctx.toString()).isEqualTo(
+		assertThat(ctx).hasToString(
 			"DbUnitClassContext{" +
 				"dataSet: MockDataSet, " +
 

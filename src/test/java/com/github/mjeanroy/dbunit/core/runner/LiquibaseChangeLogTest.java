@@ -47,7 +47,7 @@ class LiquibaseChangeLogTest {
 	void it_should_implement_to_string() {
 		final String path = "/hsqldb/master-changelog.xml";
 		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
-		assertThat(changeLog.toString()).isEqualTo(
+		assertThat(changeLog).hasToString(
 			"LiquibaseChangeLog{" +
 				"changeLog: \"/hsqldb/master-changelog.xml\"" +
 			"}"

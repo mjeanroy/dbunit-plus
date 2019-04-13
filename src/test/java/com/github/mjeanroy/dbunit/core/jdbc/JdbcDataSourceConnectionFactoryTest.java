@@ -78,11 +78,11 @@ class JdbcDataSourceConnectionFactoryTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DataSource dataSource = mock(DataSource.class);
+		final DataSource dataSource = mock(DataSource.class, "MockDataSource");
 		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		assertThat(factory.toString()).isEqualTo(
+		assertThat(factory).hasToString(
 			"JdbcDataSourceConnectionFactory{" +
-				"dataSource: " + dataSource.toString() +
+				"dataSource: MockDataSource" +
 			"}"
 		);
 	}

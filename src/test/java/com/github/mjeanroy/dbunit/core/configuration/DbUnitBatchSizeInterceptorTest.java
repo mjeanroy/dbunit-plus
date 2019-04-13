@@ -51,7 +51,7 @@ class DbUnitBatchSizeInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitBatchSizeInterceptor interceptor = new DbUnitBatchSizeInterceptor(200);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitBatchSizeInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/batchSize\", " +
 				"value: 200" +

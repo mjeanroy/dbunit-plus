@@ -73,7 +73,7 @@ class SqlScriptParserConfigurationTest {
 	@Test
 	void it_should_implement_to_string() {
 		SqlScriptParserConfiguration c1 = SqlScriptParserConfiguration.builder().build();
-		assertThat(c1.toString()).isEqualTo(
+		assertThat(c1).hasToString(
 			"SqlScriptParserConfiguration{" +
 				"delimiter: ';', " +
 				"lineComment: \"--\", " +

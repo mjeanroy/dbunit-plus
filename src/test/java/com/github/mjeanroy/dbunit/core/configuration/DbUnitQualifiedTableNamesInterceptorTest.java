@@ -69,7 +69,7 @@ class DbUnitQualifiedTableNamesInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(true);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitQualifiedTableNamesInterceptor{" +
 				"property: \"http://www.dbunit.org/features/qualifiedTableNames\", " +
 				"value: true" +

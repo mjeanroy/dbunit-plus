@@ -51,7 +51,7 @@ class DbUnitFetchSizeInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitFetchSizeInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/fetchSize\", " +
 				"value: 200" +

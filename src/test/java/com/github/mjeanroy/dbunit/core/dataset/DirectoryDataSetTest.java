@@ -152,6 +152,10 @@ class DirectoryDataSetTest {
 	void it_should_implement_to_string() throws Exception {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
 		final DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
-		assertThat(ds.toString()).isEqualTo(String.format("DirectoryDataSet{resource: %s}", resource.toString()));
+		assertThat(ds).hasToString(
+			"DirectoryDataSet{" +
+				"resource: MockResource" +
+			"}"
+		);
 	}
 }

@@ -69,7 +69,7 @@ class DbUnitCaseSensitiveTableNamesInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(true);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitCaseSensitiveTableNamesInterceptor{" +
 				"property: \"http://www.dbunit.org/features/caseSensitiveTableNames\", " +
 				"value: true" +

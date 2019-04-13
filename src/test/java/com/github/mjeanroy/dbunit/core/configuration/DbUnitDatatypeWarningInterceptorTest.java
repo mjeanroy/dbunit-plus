@@ -69,7 +69,7 @@ class DbUnitDatatypeWarningInterceptorTest {
 	@Test
 	void it_should_implement_to_string() {
 		final DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(false);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitDatatypeWarningInterceptor{" +
 				"property: \"http://www.dbunit.org/features/datatypeWarning\", " +
 				"value: false" +

@@ -201,7 +201,7 @@ public class ResourceMockBuilder {
 	 */
 	public Resource build() {
 		try {
-			Resource resource = mock(Resource.class);
+			Resource resource = mock(Resource.class, "MockResource");
 			when(resource.openStream()).thenAnswer(streamAnswer(readerFactory));
 			when(resource.getFilename()).thenReturn(filename);
 			when(resource.getPath()).thenReturn(path);

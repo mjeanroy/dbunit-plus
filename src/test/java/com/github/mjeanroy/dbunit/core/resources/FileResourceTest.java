@@ -106,12 +106,7 @@ class FileResourceTest {
 
 		assertThat(subResources)
 			.hasSize(2)
-			.are(new Condition<Resource>() {
-				@Override
-				public boolean matches(Resource value) {
-					return value instanceof FileResource;
-				}
-			})
+			.are(isInstanceOf(FileResource.class))
 			.extracting(Resource::getFilename)
 			.containsOnly("users.xml", "movies.xml");
 	}
@@ -152,9 +147,13 @@ class FileResourceTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final File f1 = getTestResource("/dataset/xml/users.xml");
+		final File f1 = new File("/dataset/xml/users.xml");
 		final FileResource r1 = new FileResource(f1);
 
-		assertThat(r1.toString()).isEqualTo(String.format("FileResource{file: %s}", f1.toString()));
+		assertThat(r1).hasToString(
+			"FileResource{" +
+				"file: /dataset/xml/users.xml" +
+			"}"
+		);
 	}
 }

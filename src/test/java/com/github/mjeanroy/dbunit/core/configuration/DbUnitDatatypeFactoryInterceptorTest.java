@@ -110,7 +110,7 @@ class DbUnitDatatypeFactoryInterceptorTest {
 	void it_should_implement_to_string() {
 		final IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class, "MockDatatypeFactory");
 		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
-		assertThat(interceptor.toString()).isEqualTo(
+		assertThat(interceptor).hasToString(
 			"DbUnitDatatypeFactoryInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/datatypeFactory\", " +
 				"value: MockDatatypeFactory" +

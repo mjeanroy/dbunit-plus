@@ -145,14 +145,14 @@ class UrlResourceTest {
 	}
 
 	@Test
-	void it_should_implement_to_string(WireMockServer srv) {
+	void it_should_implement_to_string() {
 		final String path = "/dataset/json/users.json";
-		final URL url = url(srv.port(), path);
+		final URL url = url(8080, path);
 		final UrlResource r1 = new UrlResource(url);
 
-		assertThat(r1.toString()).isEqualTo(
+		assertThat(r1).hasToString(
 			"UrlResource{" +
-				"url: " + url.toString() +
+				"url: http://localhost:8080/dataset/json/users.json" +
 			"}"
 		);
 	}
