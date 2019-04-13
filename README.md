@@ -13,10 +13,13 @@ Simple library to add lot of new features to DbUnit library:
 <dependency>
     <groupId>com.github.mjeanroy</groupId>
     <artifactId>dbunit-plus</artifactId>
-    <version>0.1.1</version>
+    <version>[VERSION]</version>
     <scope>test</scope>
 </dependency>
 ```
+
+**Important**: If you can't upgrade to Java 8 (or more), please use version 1.X.X, otherwise use version 2.X.X (no new features will be added
+to 1.X.X releases, but note that only bug fixes will be backported).
 
 ## Basics
 
