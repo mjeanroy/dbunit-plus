@@ -152,7 +152,7 @@ class FileResourceTest {
 
 		assertThat(r1).hasToString(
 			"FileResource{" +
-				"file: /dataset/xml/users.xml" +
+				"file: " + f1.toString() +
 			"}"
 		);
 	}
