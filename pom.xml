@@ -29,7 +29,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.mjeanroy</groupId>
   <artifactId>dbunit-plus</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>dbunit-plus</name>
   <description>DbUnit extension (provide simple integration with JUnit, Spring and Liquibase).</description>
   <packaging>jar</packaging>
@@ -55,7 +55,7 @@
     <connection>scm:git:git@github.com:mjeanroy/dbunit-plus.git</connection>
     <developerConnection>scm:git:git@github.com:mjeanroy/dbunit-plus.git</developerConnection>
     <url>https://github.com/mjeanroy/dbunit-plus</url>
-    <tag>dbunit-plus-1.0.0</tag>
+    <tag>dbunit-plus-1.0.1</tag>
   </scm>
 
   <distributionManagement>
