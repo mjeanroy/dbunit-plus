@@ -87,14 +87,14 @@ public @interface DbUnitConfig {
 	 *
 	 * @return The interceptor class.
 	 */
-	Class<? extends DbUnitConfigInterceptor>[] value();
+	Class<? extends DbUnitConfigInterceptor>[] value() default {};
 
 	/**
 	 * Enable or disable case sensitive table names.
 	 * If enabled, Dbunit handles all table names in a case sensitive way, default is {@code false}.
 	 *
 	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	boolean caseSensitiveTableNames() default false;
 
@@ -103,7 +103,7 @@ public @interface DbUnitConfig {
 	 * If enabled, Dbunit access tables with names fully qualified by schema using this format: {@code "SCHEMA.TABLE"}.
 	 *
 	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	boolean qualifiedTableNames() default false;
 
@@ -111,7 +111,7 @@ public @interface DbUnitConfig {
 	 * Enable or disable usage of JDBC batched statement by DbUnit, default is {@code false}.
 	 *
 	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	boolean batchedStatements() default false;
 
@@ -119,7 +119,7 @@ public @interface DbUnitConfig {
 	 * Enable or disable empty fields in dataset.
 	 *
 	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	boolean allowEmptyFields() default false;
 
@@ -127,7 +127,7 @@ public @interface DbUnitConfig {
 	 * Enable or disable the warning message displayed when DbUnit encounter an unsupported data type.
 	 *
 	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	boolean datatypeWarning() default true;
 
@@ -135,7 +135,7 @@ public @interface DbUnitConfig {
 	 * Integer object giving the statement fetch size for loading data into a result set table.
 	 *
 	 * @return The fetch size.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	int fetchSize() default 100;
 
@@ -143,7 +143,7 @@ public @interface DbUnitConfig {
 	 * Integer object giving the size of batch updates.
 	 *
 	 * @return The batch size.
-	 * @see <a href="http://www.dbunit.org/properties.html"><http://www.dbunit.org/properties.html/a>
+	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
 	 */
 	int batchSize() default 100;
 
