@@ -29,7 +29,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.github.mjeanroy</groupId>
   <artifactId>dbunit-plus</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <name>dbunit-plus</name>
   <description>DbUnit extension (provide simple integration with JUnit, Spring and Liquibase).</description>
   <packaging>jar</packaging>
