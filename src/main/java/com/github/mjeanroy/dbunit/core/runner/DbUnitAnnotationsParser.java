@@ -51,8 +51,10 @@ import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
+import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -261,16 +263,26 @@ final class DbUnitAnnotationsParser {
 			return emptyList();
 		}
 
+		boolean allowEmptyFields = annotation.allowEmptyFields();
+		boolean qualifiedTableNames = annotation.qualifiedTableNames();
+		boolean caseSensitiveTableNames = annotation.caseSensitiveTableNames();
+		boolean batchedStatements = annotation.batchedStatements();
+		boolean datatypeWarning = annotation.datatypeWarning();
+		Class<? extends IDataTypeFactory> dataTypeFactoryClass = annotation.datatypeFactory();
+		int fetchSize = annotation.fetchSize();
+		int batchSize = annotation.batchSize();
+		Class<? extends IMetadataHandler> metadataHandlerClass = annotation.metadataHandler();
+
 		List<DbUnitConfigInterceptor> defaultInterceptors = asList(
-			(DbUnitConfigInterceptor) new DbUnitAllowEmptyFieldsInterceptor(annotation.allowEmptyFields()),
-			new DbUnitQualifiedTableNamesInterceptor(annotation.qualifiedTableNames()),
-			new DbUnitCaseSensitiveTableNamesInterceptor(annotation.allowEmptyFields()),
-			new DbUnitBatchedStatementsInterceptor(annotation.allowEmptyFields()),
-			new DbUnitDatatypeWarningInterceptor(annotation.allowEmptyFields()),
-			new DbUnitDatatypeFactoryInterceptor(annotation.datatypeFactory()),
-			new DbUnitFetchSizeInterceptor(annotation.fetchSize()),
-			new DbUnitBatchSizeInterceptor(annotation.batchSize()),
-			new DbUnitMetadataHandlerInterceptor(annotation.metadataHandler())
+			(DbUnitConfigInterceptor) new DbUnitAllowEmptyFieldsInterceptor(allowEmptyFields),
+			new DbUnitQualifiedTableNamesInterceptor(qualifiedTableNames),
+			new DbUnitCaseSensitiveTableNamesInterceptor(caseSensitiveTableNames),
+			new DbUnitBatchedStatementsInterceptor(batchedStatements),
+			new DbUnitDatatypeWarningInterceptor(datatypeWarning),
+			new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass),
+			new DbUnitFetchSizeInterceptor(fetchSize),
+			new DbUnitBatchSizeInterceptor(batchSize),
+			new DbUnitMetadataHandlerInterceptor(metadataHandlerClass)
 		);
 
 		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();

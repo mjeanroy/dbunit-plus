@@ -49,8 +49,15 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
+import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.DefaultMetadataHandler;
+import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
+import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
+import org.dbunit.dataset.datatype.IDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlMetadataHandler;
 import org.junit.Test;
 
 import java.util.List;
@@ -142,7 +149,7 @@ public class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
-	public void it_should_read_interceptor() {
+	public void it_should_read_interceptors() {
 		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
 		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
@@ -162,5 +169,135 @@ public class DbUnitAnnotationsParserTest {
 
 		// The custom one, must be the last.
 		assertThat(interceptors.get(9)).isExactlyInstanceOf(QualifiedTableNameConfigurationInterceptor.class);
+	}
+
+	@Test
+	public void it_should_read_interceptor_with_default_interceptors() {
+		final Class<TestClassWithDefaultDbUnitConfig> testClass = TestClassWithDefaultDbUnitConfig.class;
+		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
+
+		// Default ones.
+		assertThat(interceptors).hasSize(9);
+		assertThat(interceptors.get(0)).isExactlyInstanceOf(DbUnitAllowEmptyFieldsInterceptor.class);
+		assertThat(interceptors.get(1)).isExactlyInstanceOf(DbUnitQualifiedTableNamesInterceptor.class);
+		assertThat(interceptors.get(2)).isExactlyInstanceOf(DbUnitCaseSensitiveTableNamesInterceptor.class);
+		assertThat(interceptors.get(3)).isExactlyInstanceOf(DbUnitBatchedStatementsInterceptor.class);
+		assertThat(interceptors.get(4)).isExactlyInstanceOf(DbUnitDatatypeWarningInterceptor.class);
+		assertThat(interceptors.get(5)).isExactlyInstanceOf(DbUnitDatatypeFactoryInterceptor.class);
+		assertThat(interceptors.get(6)).isExactlyInstanceOf(DbUnitFetchSizeInterceptor.class);
+		assertThat(interceptors.get(7)).isExactlyInstanceOf(DbUnitBatchSizeInterceptor.class);
+		assertThat(interceptors.get(8)).isExactlyInstanceOf(DbUnitMetadataHandlerInterceptor.class);
+
+		final boolean allowEmptyFields = false;
+		final boolean qualifiedTableNames = false;
+		final boolean caseSensitiveTableNames = false;
+		final boolean batchedStatements = false;
+		final boolean datatypeWarning = true;
+		final Class<DefaultDataTypeFactory> datatypeFactory = DefaultDataTypeFactory.class;
+		final int fetchSize = 100;
+		final int batchSize = 100;
+		final Class<DefaultMetadataHandler> metadataHandler = DefaultMetadataHandler.class;
+
+		verifyInterceptors(
+				interceptors,
+				allowEmptyFields,
+				qualifiedTableNames,
+				caseSensitiveTableNames,
+				batchedStatements,
+				datatypeWarning,
+				datatypeFactory,
+				fetchSize,
+				batchSize,
+				metadataHandler
+		);
+	}
+
+	@Test
+	public void it_should_read_interceptor_with_appropriate_values() {
+		final Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
+		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
+
+		// Default ones.
+		assertThat(interceptors).hasSize(9);
+		assertThat(interceptors.get(0)).isExactlyInstanceOf(DbUnitAllowEmptyFieldsInterceptor.class);
+		assertThat(interceptors.get(1)).isExactlyInstanceOf(DbUnitQualifiedTableNamesInterceptor.class);
+		assertThat(interceptors.get(2)).isExactlyInstanceOf(DbUnitCaseSensitiveTableNamesInterceptor.class);
+		assertThat(interceptors.get(3)).isExactlyInstanceOf(DbUnitBatchedStatementsInterceptor.class);
+		assertThat(interceptors.get(4)).isExactlyInstanceOf(DbUnitDatatypeWarningInterceptor.class);
+		assertThat(interceptors.get(5)).isExactlyInstanceOf(DbUnitDatatypeFactoryInterceptor.class);
+		assertThat(interceptors.get(6)).isExactlyInstanceOf(DbUnitFetchSizeInterceptor.class);
+		assertThat(interceptors.get(7)).isExactlyInstanceOf(DbUnitBatchSizeInterceptor.class);
+		assertThat(interceptors.get(8)).isExactlyInstanceOf(DbUnitMetadataHandlerInterceptor.class);
+
+		final boolean allowEmptyFields = true;
+		final boolean qualifiedTableNames = true;
+		final boolean caseSensitiveTableNames = true;
+		final boolean batchedStatements = true;
+		final boolean datatypeWarning = false;
+		final Class<MySqlDataTypeFactory> datatypeFactory = MySqlDataTypeFactory.class;
+		final int fetchSize = 50;
+		final int batchSize = 20;
+		final Class<MySqlMetadataHandler> metadataHandler = MySqlMetadataHandler.class;
+
+		verifyInterceptors(
+				interceptors,
+				allowEmptyFields,
+				qualifiedTableNames,
+				caseSensitiveTableNames,
+				batchedStatements,
+				datatypeWarning,
+				datatypeFactory,
+				fetchSize,
+				batchSize,
+				metadataHandler
+		);
+	}
+
+	private static void verifyInterceptors(
+			List<DbUnitConfigInterceptor> interceptors,
+			boolean allowEmptyFields,
+			boolean qualifiedTableNames,
+			boolean caseSensitiveTableNames,
+			boolean batchedStatements,
+			boolean datatypeWarning,
+			Class<? extends IDataTypeFactory> datatypeFactory,
+			int fetchSize,
+			int batchSize,
+			Class<? extends IMetadataHandler> metadataHandler) {
+
+		DatabaseConfig config = new DatabaseConfig();
+		for (DbUnitConfigInterceptor interceptor : interceptors) {
+			interceptor.applyConfiguration(config);
+		}
+
+		assertThat(config.getProperty(DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS)).isEqualTo(allowEmptyFields);
+		assertThat(config.getProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES)).isEqualTo(qualifiedTableNames);
+		assertThat(config.getProperty(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES)).isEqualTo(caseSensitiveTableNames);
+		assertThat(config.getProperty(DatabaseConfig.FEATURE_BATCHED_STATEMENTS)).isEqualTo(batchedStatements);
+		assertThat(config.getProperty(DatabaseConfig.FEATURE_DATATYPE_WARNING)).isEqualTo(datatypeWarning);
+		assertThat(config.getProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY)).isInstanceOf(datatypeFactory);
+		assertThat(config.getProperty(DatabaseConfig.PROPERTY_FETCH_SIZE)).isEqualTo(fetchSize);
+		assertThat(config.getProperty(DatabaseConfig.PROPERTY_BATCH_SIZE)).isEqualTo(batchSize);
+		assertThat(config.getProperty(DatabaseConfig.PROPERTY_METADATA_HANDLER)).isInstanceOf(metadataHandler);
+	}
+
+	@DbUnitConfig(
+			caseSensitiveTableNames = true,
+			qualifiedTableNames = true,
+			batchedStatements = true,
+			allowEmptyFields = true,
+			datatypeWarning = false,
+			fetchSize = 50,
+			batchSize = 20,
+			datatypeFactory = MySqlDataTypeFactory.class,
+			metadataHandler = MySqlMetadataHandler.class
+	)
+	private static class TestClassWithCustomDbUnitConfig {
+	}
+
+	@DbUnitConfig
+	private static class TestClassWithDefaultDbUnitConfig {
 	}
 }
