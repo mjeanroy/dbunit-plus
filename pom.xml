@@ -117,7 +117,7 @@
 
     <!-- Test Dependencies -->
     <assertj.version>3.15.0</assertj.version>
-    <mockito.version>3.3.0</mockito.version>
+    <mockito.version>3.3.3</mockito.version>
     <logback.version>1.2.3</logback.version>
     <wiremock.version>2.26.3</wiremock.version>
     <equalsverifier.version>3.1.12</equalsverifier.version>
