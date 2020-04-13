@@ -104,7 +104,7 @@
     <slf4j.version>1.7.30</slf4j.version>
     <log4j.version>2.13.1</log4j.version>
     <junit.version>4.13</junit.version>
-    <jupiter.version>5.6.1</jupiter.version>
+    <jupiter.version>5.6.2</jupiter.version>
     <dbunit.version>2.7.0</dbunit.version>
     <jackson1.version>1.9.13</jackson1.version>
     <jackson.version>2.10.3</jackson.version>
