@@ -104,7 +104,6 @@ public class LiquibaseUpdater {
 			log.debug("Use resource accessor: {}", resourceAccessor);
 
 			Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
-			liquibase.setIgnoreClasspathPrefix(true);
 			liquibase.update(new Contexts("dbunit", "test"));
 		}
 		catch (LiquibaseException ex) {
