@@ -120,7 +120,7 @@
     <mockito.version>3.5.10</mockito.version>
     <logback.version>1.2.3</logback.version>
     <wiremock.version>2.27.2</wiremock.version>
-    <equalsverifier.version>3.4.2</equalsverifier.version>
+    <equalsverifier.version>3.4.3</equalsverifier.version>
   </properties>
 
   <profiles>
