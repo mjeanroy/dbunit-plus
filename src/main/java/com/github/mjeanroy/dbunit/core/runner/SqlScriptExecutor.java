@@ -32,7 +32,6 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeQueries;
 
@@ -67,16 +66,12 @@ class SqlScriptExecutor {
 	}
 
 	void execute(SqlScript script) {
-		Connection connection = factory.getConnection();
-		try {
+		try (Connection connection = factory.getConnection()) {
 			executeQueries(connection, script.getQueries());
 		}
 		catch (SQLException ex) {
 			log.error(ex.getMessage(), ex);
 			throw new DbUnitException(ex);
-		}
-		finally {
-			closeQuietly(connection);
 		}
 	}
 }

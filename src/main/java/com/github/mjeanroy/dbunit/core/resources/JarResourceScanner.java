@@ -47,7 +47,6 @@ import static com.github.mjeanroy.dbunit.commons.io.Files.ensureRootSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.ensureTrailingSeparator;
 import static com.github.mjeanroy.dbunit.commons.io.Files.extractPaths;
 import static com.github.mjeanroy.dbunit.commons.io.Files.isRootPath;
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeSafely;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 import static com.github.mjeanroy.dbunit.exception.ResourceNotValidException.invalidJarException;
 import static java.util.Collections.unmodifiableSet;
@@ -172,9 +171,7 @@ class JarResourceScanner extends AbstractResourceScanner {
 		public Set<String> load(String jarPath) throws Exception {
 			log.debug("Scanning: {}", jarPath);
 
-			JarFile jar = null;
-			try {
-				jar = new JarFile(jarPath);
+			try (JarFile jar = new JarFile(jarPath)) {
 				Enumeration<JarEntry> jarEntries = jar.entries();
 				Set<String> results = new LinkedHashSet<>();
 
@@ -187,9 +184,6 @@ class JarResourceScanner extends AbstractResourceScanner {
 				}
 
 				return unmodifiableSet(results);
-			}
-			finally {
-				closeSafely(jar);
 			}
 		}
 	}

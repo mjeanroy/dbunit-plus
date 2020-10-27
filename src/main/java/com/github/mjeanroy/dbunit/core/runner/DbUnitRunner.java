@@ -50,7 +50,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 /**
@@ -183,10 +182,9 @@ public class DbUnitRunner {
 			return;
 		}
 
-		Connection connection = factory.getConnection();
 		IDatabaseConnection dbConnection = null;
 
-		try {
+		try (Connection connection = factory.getConnection()) {
 			log.trace(" 1- Get SQL connection");
 			dbConnection = new DatabaseConnection(connection);
 
@@ -235,8 +233,6 @@ public class DbUnitRunner {
 					log.warn(ex.getMessage());
 				}
 			}
-
-			closeQuietly(connection);
 		}
 	}
 

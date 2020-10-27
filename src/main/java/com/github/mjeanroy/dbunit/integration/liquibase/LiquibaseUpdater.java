@@ -34,8 +34,6 @@ import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
@@ -44,7 +42,6 @@ import liquibase.resource.ResourceAccessor;
 import java.io.File;
 import java.sql.Connection;
 
-import static com.github.mjeanroy.dbunit.commons.io.Io.closeQuietly;
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
@@ -94,33 +91,32 @@ public class LiquibaseUpdater {
 	 * @throws DbUnitException If an error occurred while running update.
 	 */
 	public void update() {
-		final Connection connection = factory.getConnection();
-		final DatabaseConnection db = new JdbcConnection(connection);
-
-		try {
-			final String changeLogFullPath = getChangeLogFullPath();
-			final ResourceAccessor resourceAccessor = createResourceAccessor();
-			log.debug("Run liquibase update from: {}", changeLogFullPath);
-			log.debug("Use resource accessor: {}", resourceAccessor);
-
-			Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
-			liquibase.update(new Contexts("dbunit", "test"));
+		try (Connection connection = factory.getConnection()) {
+			runLiquibaseUpdate(connection);
 		}
-		catch (LiquibaseException ex) {
+		catch (DbUnitException ex) {
+			throw ex;
+		}
+		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			throw new DbUnitException(ex);
 		}
-		finally {
-			log.trace("Close SQL connection");
-			closeQuietly(connection);
+	}
 
-			try {
-				db.close();
-			}
-			catch (DatabaseException ex) {
-				// No Worries.
-				log.warn(ex.getMessage());
-			}
+	private void runLiquibaseUpdate(Connection connection) {
+		final DatabaseConnection db = new JdbcConnection(connection);
+		final String changeLogFullPath = getChangeLogFullPath();
+		final ResourceAccessor resourceAccessor = createResourceAccessor();
+
+		log.debug("Run liquibase update from: {}", changeLogFullPath);
+		log.debug("Use resource accessor: {}", resourceAccessor);
+
+		try (Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db)) {
+			liquibase.update(new Contexts("dbunit", "test"));
+		}
+		catch (Exception ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
 		}
 	}
 
