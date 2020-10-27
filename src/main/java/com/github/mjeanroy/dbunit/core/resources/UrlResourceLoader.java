@@ -29,7 +29,7 @@ import java.net.URL;
 /**
  * Load {@link Resource} from URL.
  */
-class UrlResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
+class UrlResourceLoader extends AbstractResourceLoaderStrategy {
 
 	/**
 	 * Each resource may match this prefix, for example:

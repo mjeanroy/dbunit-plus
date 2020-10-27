@@ -29,7 +29,7 @@ import java.io.File;
 /**
  * Load {@link Resource} from the file system.
  */
-class FileResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
+class FileResourceLoader extends AbstractResourceLoaderStrategy {
 
 	/**
 	 * Each resource must match this prefix, for example:

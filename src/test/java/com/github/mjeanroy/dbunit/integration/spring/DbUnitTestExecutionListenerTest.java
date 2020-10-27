@@ -52,13 +52,12 @@ class DbUnitTestExecutionListenerTest {
 
 	private static final String DBUNIT_RUNNER_KEY = "DBUNIT_RUNNER";
 
-	@SuppressWarnings({"unchecked"})
 	@Test
 	void it_should_prepare_test_and_initialize_runner(EmbeddedDatabase db) throws Exception {
 		final TestContext ctx = mock(TestContext.class);
 
-		final Class testClass = WithDataSet.class;
-		when(ctx.getTestClass()).thenReturn(testClass);
+		final Class<WithDataSet> testClass = WithDataSet.class;
+		when(ctx.getTestClass()).thenAnswer(invocation -> testClass);
 
 		final ApplicationContext appContext = mock(ApplicationContext.class);
 		when(appContext.getBean(DataSource.class)).thenReturn(db);
@@ -134,13 +133,12 @@ class DbUnitTestExecutionListenerTest {
 			.hasMessage("DbUnit runner is missing, attribute DBUNIT_RUNNER may have been removed from TestContext instance");
 	}
 
-	@SuppressWarnings("unchecked")
 	private TestSetup setupTest(DbUnitRunner runner) throws Exception {
 		final TestContext ctx = mock(TestContext.class);
-		final Class klass = WithDataSet.class;
+		final Class<WithDataSet> klass = WithDataSet.class;
 		final Method method = klass.getMethod("method1");
 
-		when(ctx.getTestClass()).thenReturn(klass);
+		when(ctx.getTestClass()).thenAnswer(invocation -> klass);
 		when(ctx.getTestMethod()).thenReturn(method);
 		when(ctx.getAttribute(DBUNIT_RUNNER_KEY)).thenReturn(runner);
 

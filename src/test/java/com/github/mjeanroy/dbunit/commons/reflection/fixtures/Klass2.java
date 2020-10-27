@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.commons.reflection.fixtures;
 
+@SuppressWarnings("unused")
 public class Klass2 {
 	private final int id;
 

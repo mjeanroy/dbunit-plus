@@ -64,7 +64,7 @@ import static java.util.Collections.unmodifiableSet;
  *   <li>{@code file:/dataset/foo.xml} is <strong>not</strong> a valid path.</li>
  * </ul>
  */
-class JarResourceScanner extends AbstractResourceScanner implements ResourceScanner {
+class JarResourceScanner extends AbstractResourceScanner {
 
 	/**
 	 * Class Logger.

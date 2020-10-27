@@ -35,7 +35,7 @@ import com.google.gson.Gson;
 /**
  * Json Parser using Google {@link Gson} as internal implementation.
  */
-class GsonParser extends AbstractJsonParser implements JsonParser {
+class GsonParser extends AbstractJsonParser {
 
 	/**
 	 * Internal parser.

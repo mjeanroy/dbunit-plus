@@ -37,7 +37,7 @@ import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.f
 /**
  * Implementation of {@link Resource} backed by a given {@link File} handler.
  */
-class FileResource extends AbstractResource implements Resource {
+class FileResource extends AbstractResource {
 
 	/**
 	 * The file.

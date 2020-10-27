@@ -46,7 +46,7 @@ import static com.github.mjeanroy.dbunit.core.resources.Resources.isJarURL;
 /**
  * Implementation of {@link Resource} backed by a resource available in the classpath.
  */
-class ClasspathResource extends AbstractResource implements Resource {
+class ClasspathResource extends AbstractResource {
 
 	/**
 	 * Class logger.

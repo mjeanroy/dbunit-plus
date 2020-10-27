@@ -33,7 +33,7 @@ import static com.github.mjeanroy.dbunit.core.resources.Resources.toFile;
 /**
  * Load {@link Resource} from the classpath.
  */
-class ClasspathResourceLoader extends AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
+class ClasspathResourceLoader extends AbstractResourceLoaderStrategy {
 
 	/**
 	 * Each resource must match this prefix, for example:

@@ -35,7 +35,7 @@ import java.util.Objects;
  * Implementation of {@link JdbcConnectionFactory} to produce instance
  * of {@link Connection} from {@link JdbcConfiguration}.
  */
-public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
+public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory {
 
 	/**
 	 * JDBC Configuration.

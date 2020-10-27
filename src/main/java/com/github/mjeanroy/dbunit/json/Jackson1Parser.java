@@ -35,7 +35,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 /**
  * Json Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
  */
-class Jackson1Parser extends AbstractJsonParser implements JsonParser {
+class Jackson1Parser extends AbstractJsonParser {
 
 	/**
 	 * Internal Jackson 1 Mapper.

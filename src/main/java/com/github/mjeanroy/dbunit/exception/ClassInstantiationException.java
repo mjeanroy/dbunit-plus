@@ -33,6 +33,7 @@ package com.github.mjeanroy.dbunit.exception;
  *   <li>Etc.</li>
  * </ul>
  */
+@SuppressWarnings("serial")
 public class ClassInstantiationException extends AbstractReflectionException {
 
 	/**

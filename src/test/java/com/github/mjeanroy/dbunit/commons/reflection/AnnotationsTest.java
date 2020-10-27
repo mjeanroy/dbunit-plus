@@ -213,6 +213,7 @@ class AnnotationsTest {
 	private class TestClassWithMultipleAnnotations extends TestClassAnnotation implements InterfaceAnnotated {
 	}
 
+	@SuppressWarnings("unused")
 	private static class TestClassWithoutAnnotation {
 		public void method1() {
 		}

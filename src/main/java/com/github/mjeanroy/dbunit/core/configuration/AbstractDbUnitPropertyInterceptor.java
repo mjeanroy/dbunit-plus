@@ -67,7 +67,7 @@ abstract class AbstractDbUnitPropertyInterceptor<T> implements DbUnitConfigInter
 		}
 
 		if (o instanceof AbstractDbUnitPropertyInterceptor) {
-			AbstractDbUnitPropertyInterceptor i = (AbstractDbUnitPropertyInterceptor) o;
+			AbstractDbUnitPropertyInterceptor<?> i = (AbstractDbUnitPropertyInterceptor<?>) o;
 			return Objects.equals(property, i.property) && Objects.equals(value, i.value);
 		}
 

@@ -42,7 +42,7 @@ import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.n
 /**
  * Implementation of {@link Resource} backed by {@link URL} instance.
  */
-class UrlResource extends AbstractResource implements Resource {
+class UrlResource extends AbstractResource {
 
 	/**
 	 * Class logger.

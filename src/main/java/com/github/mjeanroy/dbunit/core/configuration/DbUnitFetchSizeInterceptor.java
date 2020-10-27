@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#PROPERTY_FETCH_SIZE
  */
-public final class DbUnitFetchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> implements DbUnitConfigInterceptor {
+public final class DbUnitFetchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> {
 
 	/**
 	 * Create the interceptor.

@@ -30,8 +30,8 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 class SqlQueryStateTest {
@@ -140,7 +140,7 @@ class SqlQueryStateTest {
 		int nextPosition = SqlQueryState.BLOCK_COMMENT.handleToken(line, position, ctx, configuration);
 
 		assertThat(nextPosition).isEqualTo(position);
-		verifyZeroInteractions(ctx);
+		verifyNoInteractions(ctx);
 	}
 
 	@Test
@@ -163,7 +163,7 @@ class SqlQueryStateTest {
 		int nextPosition = SqlQueryState.DEFAULT.handleToken(line, position, ctx, configuration);
 
 		assertThat(nextPosition).isEqualTo(line.length() + 1);
-		verifyZeroInteractions(ctx);
+		verifyNoInteractions(ctx);
 	}
 
 	@Test

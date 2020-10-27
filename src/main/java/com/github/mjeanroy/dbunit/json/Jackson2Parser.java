@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Json Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
  */
-class Jackson2Parser extends AbstractJsonParser implements JsonParser {
+class Jackson2Parser extends AbstractJsonParser {
 
 	/**
 	 * Internal Jackson2 Mapper.

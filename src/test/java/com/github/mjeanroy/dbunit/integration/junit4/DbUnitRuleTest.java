@@ -51,7 +51,7 @@ import static org.junit.runner.Description.createTestDescription;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @SuppressWarnings("SameParameterValue")
 @HsqldbTest
@@ -140,7 +140,7 @@ class DbUnitRuleTest {
 		final Statement result = rule.apply(statement, description);
 
 		assertThat(result).isNotNull();
-		verifyZeroInteractions(statement);
+		verifyNoInteractions(statement);
 
 		Answer<Void> answer = invocation -> {
 			Connection connection = db.getConnection();

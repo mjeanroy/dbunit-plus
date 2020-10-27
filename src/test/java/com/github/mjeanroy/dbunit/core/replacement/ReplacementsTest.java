@@ -224,13 +224,13 @@ class ReplacementsTest {
 		);
 	}
 
-	private static void verify(Replacements r1, Replacements r2, Replacements r3, Entry entry) {
+	private static void verify(Replacements r1, Replacements r2, Replacements r3, Entry<String, Object> entry) {
 		verify(r1, entry);
 		verify(r2, entry);
 		verify(r3, entry);
 	}
 
-	private static void verify(Replacements replacements, Entry entry) {
+	private static void verify(Replacements replacements, Entry<String, Object> entry) {
 		assertThat(replacements).isNotNull();
 		assertThat(replacements.getReplacements()).hasSize(1).containsOnly(entry);
 	}

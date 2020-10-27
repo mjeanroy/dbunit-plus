@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#PROPERTY_BATCH_SIZE
  */
-public final class DbUnitBatchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> implements DbUnitConfigInterceptor {
+public final class DbUnitBatchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> {
 
 	/**
 	 * Create the interceptor.

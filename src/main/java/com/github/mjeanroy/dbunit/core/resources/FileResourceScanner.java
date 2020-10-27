@@ -43,7 +43,7 @@ import static java.util.Collections.emptyList;
  * Note that the method {@link Resource#toFile()} <strong>must</strong> return a
  * valid {@link File} instance.
  */
-class FileResourceScanner extends AbstractResourceScanner implements ResourceScanner {
+class FileResourceScanner extends AbstractResourceScanner {
 
 	/**
 	 * Class logger.

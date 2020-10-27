@@ -174,8 +174,4 @@ class ClasspathResourceTest {
 			"}"
 		);
 	}
-
-	private URL url(String path) {
-		return getClass().getResource(path);
-	}
 }

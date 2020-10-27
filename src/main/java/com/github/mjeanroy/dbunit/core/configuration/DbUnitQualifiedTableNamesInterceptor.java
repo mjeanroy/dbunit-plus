@@ -31,7 +31,7 @@ import org.dbunit.database.DatabaseConfig;
  *
  * @see DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES
  */
-public final class DbUnitQualifiedTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> implements DbUnitConfigInterceptor {
+public final class DbUnitQualifiedTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> {
 
 	/**
 	 * Create the interceptor, the feature is enabled by default.

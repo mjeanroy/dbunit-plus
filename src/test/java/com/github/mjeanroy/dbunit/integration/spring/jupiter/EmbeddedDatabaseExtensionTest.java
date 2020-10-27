@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 class EmbeddedDatabaseExtensionTest {
 
@@ -68,7 +68,7 @@ class EmbeddedDatabaseExtensionTest {
 
 		extension.beforeAll(extensionContext);
 		verifyStore(extensionContext, true);
-		verifyZeroInteractions(db);
+		verifyNoInteractions(db);
 
 		extension.afterAll(extensionContext);
 		verifyEmptyStore(extensionContext);
@@ -85,7 +85,7 @@ class EmbeddedDatabaseExtensionTest {
 
 		extension.beforeEach(extensionContext);
 		verifyStore(extensionContext, false);
-		verifyZeroInteractions(db);
+		verifyNoInteractions(db);
 
 		extension.afterEach(extensionContext);
 		verifyEmptyStore(extensionContext);
@@ -103,11 +103,11 @@ class EmbeddedDatabaseExtensionTest {
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
 		verifyStore(extensionContext, true);
-		verifyZeroInteractions(db);
+		verifyNoInteractions(db);
 
 		extension.afterEach(extensionContext);
 		verifyStore(extensionContext, true);
-		verifyZeroInteractions(db);
+		verifyNoInteractions(db);
 
 		extension.afterAll(extensionContext);
 		verifyEmptyStore(extensionContext);

@@ -49,7 +49,7 @@ import org.dbunit.dataset.IDataSet;
  *   }
  * </code></pre>
  */
-public class JsonDataSet extends AbstractParseableDataSet implements IDataSet {
+public class JsonDataSet extends AbstractParseableDataSet {
 
 	/**
 	 * Create JSON DataSet.

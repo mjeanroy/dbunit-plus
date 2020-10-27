@@ -52,7 +52,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 /**
  * Implementation of {@link IDataSet} with a parseable (JSON or YAML for example) file as input.
  */
-abstract class AbstractParseableDataSet extends AbstractDataSet implements IDataSet {
+abstract class AbstractParseableDataSet extends AbstractDataSet {
 
 	/**
 	 * Class Logger.

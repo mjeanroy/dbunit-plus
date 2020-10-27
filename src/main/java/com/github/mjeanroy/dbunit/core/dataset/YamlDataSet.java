@@ -47,7 +47,7 @@ import org.dbunit.dataset.IDataSet;
  *       col2: "value"
  * </code></pre>
  */
-public class YamlDataSet extends AbstractParseableDataSet implements IDataSet {
+public class YamlDataSet extends AbstractParseableDataSet {
 
 	/**
 	 * Create JSON DataSet.

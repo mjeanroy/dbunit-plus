@@ -31,7 +31,7 @@ import static java.util.Collections.emptyList;
 /**
  * Implementation of {@link ResourceScanner} that <strong>always</strong> returns an empty list.
  */
-class NoOpResourceScanner extends AbstractResourceScanner implements ResourceScanner {
+class NoOpResourceScanner extends AbstractResourceScanner {
 
 	/**
 	 * Singleton instance.

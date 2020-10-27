@@ -33,7 +33,7 @@ import org.dbunit.dataset.datatype.IDataTypeFactory;
  *
  * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
  */
-public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> implements DbUnitConfigInterceptor {
+public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> {
 
 	/**
 	 * Create the interceptor.

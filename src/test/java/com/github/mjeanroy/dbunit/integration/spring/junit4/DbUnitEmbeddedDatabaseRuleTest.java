@@ -85,7 +85,7 @@ class DbUnitEmbeddedDatabaseRuleTest {
 		verify(statement, never()).evaluate();
 		verify(db, never()).shutdown();
 
-		Answer answer = invocationOnMock -> {
+		Answer<?> answer = invocationOnMock -> {
 			final Connection connection = db.getConnection();
 			assertThat(countUsers(connection)).isEqualTo(2);
 			assertThat(countMovies(connection)).isEqualTo(3);

@@ -33,7 +33,7 @@ import org.dbunit.database.IMetadataHandler;
  *
  * @see DatabaseConfig#PROPERTY_METADATA_HANDLER
  */
-public final class DbUnitMetadataHandlerInterceptor extends AbstractDbUnitPropertyInterceptor<IMetadataHandler> implements DbUnitConfigInterceptor {
+public final class DbUnitMetadataHandlerInterceptor extends AbstractDbUnitPropertyInterceptor<IMetadataHandler> {
 
 	/**
 	 * Create the interceptor.
