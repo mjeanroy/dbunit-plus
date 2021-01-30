@@ -35,10 +35,12 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -170,36 +172,21 @@ class SqlScriptParserTest {
 		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
 		final List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
-		assertThat(queries).hasSize(4).containsExactly(
-			"DROP TABLE IF EXISTS users;",
-			"DROP TABLE IF EXISTS movies;",
-			"CREATE TABLE users (id INT, name varchar(100));",
-			"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
-		);
+		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_parse_file_path() {
 		final String script = "/sql/init.sql";
 		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
-		assertThat(queries).hasSize(4).containsExactly(
-			"DROP TABLE IF EXISTS users;",
-			"DROP TABLE IF EXISTS movies;",
-			"CREATE TABLE users (id INT, name varchar(100));",
-			"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
-		);
+		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_parse_file_path_classpath() {
 		final String script = "classpath:/sql/init.sql";
 		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
-		assertThat(queries).hasSize(4).containsExactly(
-			"DROP TABLE IF EXISTS users;",
-			"DROP TABLE IF EXISTS movies;",
-			"CREATE TABLE users (id INT, name varchar(100));",
-			"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
-		);
+		verifyParsedQueries(queries);
 	}
 
 	@Test
@@ -212,15 +199,7 @@ class SqlScriptParserTest {
 
 		SqlScriptParser.executeScript(connection, resource, configuration);
 
-		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT, name varchar(100));");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));");
-		inOrder.verify(statement).execute();
+		verifyExecutedQueries(connection, statement);
 	}
 
 	@Test
@@ -233,15 +212,7 @@ class SqlScriptParserTest {
 
 		SqlScriptParser.executeScript(connection, script, configuration);
 
-		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT, name varchar(100));");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));");
-		inOrder.verify(statement).execute();
+		verifyExecutedQueries(connection, statement);
 	}
 
 	@Test
@@ -254,15 +225,7 @@ class SqlScriptParserTest {
 
 		SqlScriptParser.executeScript(connection, script, configuration);
 
-		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT, name varchar(100));");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));");
-		inOrder.verify(statement).execute();
+		verifyExecutedQueries(connection, statement);
 	}
 
 	@Test
@@ -294,6 +257,29 @@ class SqlScriptParserTest {
 		inOrder.verify(statement).execute();
 		inOrder.verify(connection).prepareStatement(q2);
 		inOrder.verify(statement).execute();
+		inOrder.verifyNoMoreInteractions();
+	}
+
+	private static void verifyParsedQueries(List<String> queries) {
+		assertThat(queries).isNotEmpty().containsExactly(
+				"DROP TABLE IF EXISTS users;",
+				"DROP TABLE IF EXISTS movies;",
+				"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
+				"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
+		);
+	}
+
+	private static void verifyExecutedQueries(Connection connection, PreparedStatement statement) throws SQLException {
+		InOrder inOrder = inOrder(connection, statement);
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));");
+		inOrder.verify(statement).execute();
+		inOrder.verifyNoMoreInteractions();
 	}
 
 	private static InputStream createStream(String query) {

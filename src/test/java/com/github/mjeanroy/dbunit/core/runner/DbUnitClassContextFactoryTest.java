@@ -79,8 +79,8 @@ class DbUnitClassContextFactoryTest {
 			.containsOnly(
 				"DROP TABLE IF EXISTS users;",
 				"DROP TABLE IF EXISTS movies;",
-				"CREATE TABLE users (id INT, name varchar(100));",
-				"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
+				"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
+				"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
 			);
 	}
 

@@ -103,15 +103,12 @@ class DbUnitAnnotationsParserTest {
 		final List<SqlScript> sqlScripts = DbUnitAnnotationsParser.extractSqlScript(annotation);
 
 		assertThat(sqlScripts).isNotEmpty().hasSize(1);
-		assertThat(sqlScripts.get(0).getQueries())
-			.isNotEmpty()
-			.hasSize(4)
-			.containsOnly(
-				"DROP TABLE IF EXISTS users;",
-				"DROP TABLE IF EXISTS movies;",
-				"CREATE TABLE users (id INT, name varchar(100));",
-				"CREATE TABLE movies (id INT, title varchar(100), synopsys varchar(200));"
-			);
+		assertThat(sqlScripts.get(0).getQueries()).isNotEmpty().containsExactly(
+			"DROP TABLE IF EXISTS users;",
+			"DROP TABLE IF EXISTS movies;",
+			"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
+			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
+		);
 	}
 
 	@Test
