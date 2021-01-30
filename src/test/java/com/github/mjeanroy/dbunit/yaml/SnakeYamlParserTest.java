@@ -36,6 +36,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.MapEntry.entry;
@@ -45,7 +46,7 @@ class SnakeYamlParserTest {
 	@Test
 	void it_should_parse_file() {
 		final SnakeYamlParser parser = new SnakeYamlParser();
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
 		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables).hasSize(1).containsKey("users");

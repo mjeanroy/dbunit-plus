@@ -29,6 +29,7 @@ import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.yaml.YamlParser;
 import org.junit.jupiter.api.Test;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -61,6 +62,6 @@ class YamlDataSetBuilderTest {
 	}
 
 	private static Resource createResource() {
-		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
+		return new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
 	}
 }

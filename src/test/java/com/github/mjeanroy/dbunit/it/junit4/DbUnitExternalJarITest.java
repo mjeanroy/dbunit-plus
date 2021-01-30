@@ -38,9 +38,10 @@ import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JAR_XML_DATASET;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DbUnitDataSet("/jar/dataset/xml")
+@DbUnitDataSet(JAR_XML_DATASET)
 @DbUnitInit(sql = "classpath:/sql/init.sql")
 @DbUnitOperations
 public class DbUnitExternalJarITest {

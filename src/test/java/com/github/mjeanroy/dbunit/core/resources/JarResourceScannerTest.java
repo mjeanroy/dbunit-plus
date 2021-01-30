@@ -32,6 +32,10 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 
 import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JAR_DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JAR_USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JAR_XML_DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -46,7 +50,7 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_scan_sub_resources() {
-		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset/xml").setDirectory().build();
+		final Resource resource = new ResourceMockBuilder().fromJar(JAR_XML_DATASET).setDirectory().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
@@ -58,7 +62,7 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_scan_sub_resources_with_trailing_slashes() {
-		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset/xml/").setDirectory().build();
+		final Resource resource = new ResourceMockBuilder().fromJar(JAR_XML_DATASET + "/").setDirectory().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
@@ -70,7 +74,7 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_not_scan_recursively() {
-		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset").setDirectory().build();
+		final Resource resource = new ResourceMockBuilder().fromJar(JAR_DATASET).setDirectory().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
@@ -82,14 +86,14 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_returns_empty_list_without_directory() {
-		final Resource resource = new ResourceMockBuilder().fromJar("/jar/dataset/xml/users.xml").setFile().build();
+		final Resource resource = new ResourceMockBuilder().fromJar(JAR_USERS_XML).setFile().build();
 		final Collection<Resource> resources = scanner.scan(resource);
 		assertThat(resources).isNotNull().isEmpty();
 	}
 
 	@Test
 	void it_should_fail_if_resource_does_not_resides_in_an_external_file() {
-		final String path = "/dataset/xml";
+		final String path = XML_DATASET;
 		final Resource resource = new ResourceMockBuilder().fromClasspath(path).build();
 
 		assertThatThrownBy(() -> scanner.scan(resource))

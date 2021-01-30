@@ -29,6 +29,7 @@ import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.jupiter.api.Test;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -62,6 +63,6 @@ class JsonDataSetBuilderTest {
 	}
 
 	private static Resource createResource() {
-		return new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		return new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 	}
 }

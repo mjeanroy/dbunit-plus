@@ -35,6 +35,13 @@ import java.io.InputStream;
 import java.util.Collection;
 
 import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JSON_DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML_FILENAME;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML_FILENAME;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readStream;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
@@ -44,7 +51,7 @@ class FileResourceTest {
 
 	@Test
 	void it_should_return_true_if_file_exists() {
-		final File file = getTestResource("/dataset/json/users.json");
+		final File file = getTestResource(USERS_JSON);
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.exists()).isTrue();
 	}
@@ -58,35 +65,35 @@ class FileResourceTest {
 
 	@Test
 	void it_should_return_get_file_name() {
-		final File file = getTestResource("/dataset/json/users.json");
+		final File file = getTestResource(USERS_JSON);
 		final FileResource resource = new FileResource(file);
-		assertThat(resource.getFilename()).isEqualTo("users.json");
+		assertThat(resource.getFilename()).isEqualTo("01-users.json");
 	}
 
 	@Test
 	void it_should_return_false_if_not_directory() {
-		final File file = getTestResource("/dataset/json/users.json");
+		final File file = getTestResource(USERS_JSON);
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.isDirectory()).isFalse();
 	}
 
 	@Test
 	void it_should_return_true_if_directory() {
-		final File file = getTestResource("/dataset/json");
+		final File file = getTestResource(JSON_DATASET);
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.isDirectory()).isTrue();
 	}
 
 	@Test
 	void it_should_return_get_file_handler() {
-		final File file = getTestResource("/dataset/json/users.json");
+		final File file = getTestResource(USERS_JSON);
 		final FileResource resource = new FileResource(file);
 		assertThat(resource.toFile()).isEqualTo(file);
 	}
 
 	@Test
 	void it_should_get_file_input_stream() throws Exception {
-		final String path = "/dataset/json/users.json";
+		final String path = USERS_JSON;
 		final File file = getTestResource(path);
 		final FileResource resource = new FileResource(file);
 		final InputStream stream = resource.openStream();
@@ -100,7 +107,7 @@ class FileResourceTest {
 
 	@Test
 	void it_should_scan_for_sub_resources() {
-		final File folder = getTestResource("/dataset/xml");
+		final File folder = getTestResource(XML_DATASET);
 		final FileResource resource = new FileResource(folder);
 		final Collection<Resource> subResources = resource.listResources();
 
@@ -108,12 +115,15 @@ class FileResourceTest {
 			.hasSize(2)
 			.are(isInstanceOf(FileResource.class))
 			.extracting(Resource::getFilename)
-			.containsOnly("users.xml", "movies.xml");
+			.containsExactlyInAnyOrder(
+					USERS_XML_FILENAME,
+					MOVIES_XML_FILENAME
+			);
 	}
 
 	@Test
 	void it_should_scan_for_sub_resources_and_return_empty_list_without_directory() {
-		final File folder = getTestResource("/dataset/xml/users.xml");
+		final File folder = getTestResource(USERS_XML);
 		final FileResource resource = new FileResource(folder);
 		final Collection<Resource> subResources = resource.listResources();
 		assertThat(subResources).isNotNull().isEmpty();
@@ -121,7 +131,7 @@ class FileResourceTest {
 
 	@Test
 	void it_should_scan_for_sub_resources_and_return_list_of_sub_directory() {
-		final File folder = getTestResource("/dataset");
+		final File folder = getTestResource(DATASET);
 		final FileResource resource = new FileResource(folder);
 		final Collection<Resource> subResources = resource.listResources();
 
@@ -147,7 +157,7 @@ class FileResourceTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final File f1 = new File("/dataset/xml/users.xml");
+		final File f1 = new File(USERS_XML);
 		final FileResource r1 = new FileResource(f1);
 
 		assertThat(r1).hasToString(

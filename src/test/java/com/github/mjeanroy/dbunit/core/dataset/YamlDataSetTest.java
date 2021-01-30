@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -171,6 +172,6 @@ class YamlDataSetTest {
 	}
 
 	private static Resource createResource() {
-		return new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
+		return new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
 	}
 }

@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readTestResource;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -68,7 +69,7 @@ class UrlResourceLoaderTest {
 
 	@Test
 	void it_should_load_resource(WireMockServer srv) {
-		final String path = "/dataset/json/users.json";
+		final String path = USERS_JSON;
 		final String dataset = readTestResource(path);
 
 		stubFor(WireMock.get(urlEqualTo(path))
@@ -82,7 +83,7 @@ class UrlResourceLoaderTest {
 
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
-		assertThat(resource.getFilename()).isEqualTo("users.json");
+		assertThat(resource.getFilename()).isEqualTo("01-users.json");
 	}
 
 	@Test

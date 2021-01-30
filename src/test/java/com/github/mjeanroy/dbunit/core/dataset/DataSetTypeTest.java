@@ -31,6 +31,11 @@ import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.jupiter.api.Test;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_CSV;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DataSetTypeTest {
@@ -50,7 +55,7 @@ class DataSetTypeTest {
 
 	@Test
 	void it_should_create_yaml_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/yaml/users.yml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
 		final IDataSet dataSet = DataSetType.YAML.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(YamlDataSet.class);
 	}
@@ -66,7 +71,7 @@ class DataSetTypeTest {
 
 	@Test
 	void it_should_create_json_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final IDataSet dataSet = DataSetType.JSON.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(JsonDataSet.class);
 	}
@@ -82,7 +87,7 @@ class DataSetTypeTest {
 
 	@Test
 	void it_should_create_xml_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
 		final IDataSet dataSet = DataSetType.XML.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 	}
@@ -98,7 +103,7 @@ class DataSetTypeTest {
 
 	@Test
 	void it_should_create_csv_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/csv/users.csv").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_CSV).build();
 		final IDataSet dataSet = DataSetType.CSV.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
 	}
@@ -111,7 +116,7 @@ class DataSetTypeTest {
 
 	@Test
 	void it_should_create_directory_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
 		final IDataSet dataSet = DataSetType.DIRECTORY.create(resource);
 		assertThat(dataSet).isExactlyInstanceOf(DirectoryDataSet.class);
 	}

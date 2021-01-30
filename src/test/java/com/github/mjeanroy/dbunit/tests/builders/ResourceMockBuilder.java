@@ -101,6 +101,7 @@ public class ResourceMockBuilder {
 		this.path = path;
 		this.directory = file.isDirectory();
 		this.exists = file.exists();
+		this.filename = file.getName();
 		return this;
 	}
 

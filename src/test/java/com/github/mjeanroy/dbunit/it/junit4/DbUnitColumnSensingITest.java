@@ -30,6 +30,7 @@ import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.db.TestDbUtils.Movie;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
+import com.github.mjeanroy.dbunit.tests.utils.TestDatasets;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,9 @@ import org.junit.runner.RunWith;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.findMovie;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JSON_DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.YAML_DATASET;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(DbUnitJunitRunner.class)
@@ -48,19 +52,19 @@ public class DbUnitColumnSensingITest {
 	public static HsqldbRule hsqldb = new HsqldbRule();
 
 	@Test
-	@DbUnitDataSet("/dataset/xml")
+	@DbUnitDataSet(XML_DATASET)
 	public void it_should_work_with_xml() {
 		verify();
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/yaml")
+	@DbUnitDataSet(YAML_DATASET)
 	public void it_should_work_with_yaml() {
 		verify();
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/json")
+	@DbUnitDataSet(JSON_DATASET)
 	public void it_should_work_with_json() {
 		verify();
 	}

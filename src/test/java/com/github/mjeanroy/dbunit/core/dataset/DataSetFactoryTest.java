@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.tests.utils.TestDatasets;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
@@ -35,6 +36,15 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_CSV;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.moviesXmlAsStream;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.usersXmlAsStream;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,76 +53,51 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_xml_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder()
-			.setFilename("users.xml")
-			.fromClasspath("/dataset/xml/users.xml")
-			.build();
-
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsOnly("users");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
 	}
 
 	@Test
 	void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
-		final String path = "/dataset/xml/users.xml";
-		final IDataSet dataSet = DataSetFactory.createDataSet(path);
-
+		final IDataSet dataSet = DataSetFactory.createDataSet(USERS_XML);
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsOnly("users");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
 	}
 
 	@Test
 	void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
-		final String path = "classpath:/dataset/xml/users.xml";
-		final IDataSet dataSet = DataSetFactory.createDataSet(path);
-
+		final IDataSet dataSet = DataSetFactory.createDataSet(USERS_XML);
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsOnly("users");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
 	}
 
 	@Test
 	void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
-		final File file = getTestResource("/dataset/xml/users.xml");
+		final File file = getTestResource(USERS_XML);
 		final String path = "file:" + file.getAbsolutePath();
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(1)
-			.containsOnly("users");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
 	}
 
 	@Test
 	void it_should_create_data_set_from_array_of_path() throws Exception {
 		final String[] path = new String[]{
-			"classpath:/dataset/xml/users.xml",
-			"classpath:/dataset/xml/movies.xml"
+			CLASSPATH_USERS_XML,
+			CLASSPATH_MOVIES_XML
 		};
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(path);
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsOnly("users", "movies");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
+			"users",
+			"movies"
+		);
 	}
 
 	@Test
@@ -120,7 +105,7 @@ class DataSetFactoryTest {
 		final Resource resource = new ResourceMockBuilder()
 			.setFilename("xml")
 			.setDirectory()
-			.fromClasspath("/dataset/xml")
+			.fromClasspath(XML_DATASET)
 			.build();
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
@@ -130,11 +115,7 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_json_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder()
-			.setFilename("users.json")
-			.fromClasspath("/dataset/json/users.json")
-			.build();
-
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet).isExactlyInstanceOf(JsonDataSet.class);
@@ -142,7 +123,7 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_csv_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().setFilename("users.csv").fromClasspath("/dataset/csv/users.csv").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_CSV).build();
 		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
 		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
 	}
@@ -151,51 +132,49 @@ class DataSetFactoryTest {
 	void it_should_merge_dataset() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
+			.build(usersXmlAsStream());
 
 		final IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/movies.xml"));
+			.build(moviesXmlAsStream());
 
 		final IDataSet dataSet = DataSetFactory.mergeDataSet(first, second);
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsOnly("users", "movies");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
+			"users",
+			"movies"
+		);
 	}
 
 	@Test
 	void it_should_create_dataset_from_collection_of_datasets() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
+			.build(usersXmlAsStream());
 
 		final IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/movies.xml"));
+			.build(moviesXmlAsStream());
 
 		final IDataSet dataSet = DataSetFactory.createDataSet(asList(first, second));
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsOnly("users", "movies");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
+			"users",
+			"movies"
+		);
 	}
 
 	@Test
 	void it_should_create_dataset_from_array_of_datasets() throws Exception {
 		final IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/users.xml"));
+			.build(usersXmlAsStream());
 
 		final IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
-			.build(getClass().getResourceAsStream("/dataset/xml/movies.xml"));
+			.build(moviesXmlAsStream());
 
 		final IDataSet[] inputs = new IDataSet[]{
 			first,
@@ -205,10 +184,9 @@ class DataSetFactoryTest {
 		final IDataSet dataSet = DataSetFactory.createDataSet(inputs);
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
-		assertThat(dataSet.getTableNames())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
-			.containsOnly("users", "movies");
+		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
+			"users",
+			"movies"
+		);
 	}
 }

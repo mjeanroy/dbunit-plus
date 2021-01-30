@@ -33,10 +33,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@DbUnitDataSet(value = "/dataset/xml/users.xml")
+@DbUnitDataSet(value = USERS_XML)
 public @interface DbUnitUsersDataSet {
 }

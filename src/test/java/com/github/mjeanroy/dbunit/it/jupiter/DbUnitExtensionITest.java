@@ -37,6 +37,7 @@ import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(DbUnitExtension.class)
@@ -58,7 +59,7 @@ class DbUnitExtensionITest {
 	}
 
 	@Test
-	@DbUnitDataSet("/dataset/xml/users.xml")
+	@DbUnitDataSet(USERS_XML)
 	void test2(Connection connection) {
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(0);

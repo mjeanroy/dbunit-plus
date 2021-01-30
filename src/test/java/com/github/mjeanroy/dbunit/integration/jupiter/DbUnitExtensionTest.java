@@ -44,6 +44,7 @@ import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest.Lifecycle.BEFORE_EACH;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -194,7 +195,7 @@ class DbUnitExtensionTest {
 
 	@SuppressWarnings("unused")
 	@DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
-	@DbUnitDataSet("/dataset/xml")
+	@DbUnitDataSet(XML_DATASET)
 	@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 	@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 	private static class TestFixtures {

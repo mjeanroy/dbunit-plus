@@ -30,6 +30,9 @@ import com.github.mjeanroy.dbunit.tests.utils.ResourceComparator;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -41,7 +44,7 @@ class DirectoryDataSetBuilderTest {
 
 	@Test
 	void it_should_create_default_directory_dataset() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").setDirectory().build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
 		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
@@ -52,19 +55,17 @@ class DirectoryDataSetBuilderTest {
 	@Test
 	void it_should_create_directory_dataset() throws Exception {
 		final Resource r1 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/users.xml")
+			.fromClasspath(USERS_XML)
 			.setFile()
-			.setFilename("foo.xml")
 			.build();
 
 		final Resource r2 = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml/movies.xml")
+			.fromClasspath(MOVIES_XML)
 			.setFile()
-			.setFilename("movies.xml")
 			.build();
 
 		final Resource directory = new ResourceMockBuilder()
-			.fromClasspath("/dataset/xml")
+			.fromClasspath(XML_DATASET)
 			.addSubResources(r1, r2)
 			.setDirectory()
 			.build();

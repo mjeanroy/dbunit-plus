@@ -29,7 +29,10 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-@DbUnitDataSet("/dataset/xml")
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
+
+@DbUnitDataSet(XML_DATASET)
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
 public class WithDataSet {
@@ -37,7 +40,7 @@ public class WithDataSet {
 	public void method1() {
 	}
 
-	@DbUnitDataSet("/dataset/xml/users.xml")
+	@DbUnitDataSet(USERS_XML)
 	public void method2() {
 	}
 

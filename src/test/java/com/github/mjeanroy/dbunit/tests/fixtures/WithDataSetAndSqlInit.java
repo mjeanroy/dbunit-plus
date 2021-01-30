@@ -30,7 +30,9 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-@DbUnitDataSet("/dataset/xml")
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
+
+@DbUnitDataSet(XML_DATASET)
 @DbUnitInit(sql = "/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)

@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,7 +63,7 @@ class JsonDataSetTest {
 
 		final IOException ioEx = new IOException();
 		final JsonException ex = new JsonException(ioEx);
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 
 		when(parser.parse(any(Resource.class))).thenThrow(ex);
 
@@ -73,7 +74,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_create_json_dataset() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		final String[] tableNames = dataSet.getTableNames();
 
@@ -85,7 +86,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_table() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		final ITable table = dataSet.getTable("users");
 
@@ -95,7 +96,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_table_metadata() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		final ITableMetaData metaData = dataSet.getTableMetaData("users");
 
@@ -109,7 +110,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_table_data() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		final ITable table = dataSet.getTable("users");
 
@@ -120,7 +121,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		final ITableIterator it = dataSet.iterator();
 		final List<ITable> tables = new ArrayList<>();
@@ -138,7 +139,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		final ITableIterator it = dataSet.reverseIterator();
 		final List<ITable> tables = new ArrayList<>();
@@ -155,7 +156,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_check_for_case_insensitive_names() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet d1 = new JsonDataSet(resource, false, parser);
 		final JsonDataSet d2 = new JsonDataSet(resource, true, parser);
 
@@ -165,7 +166,7 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_resource() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		assertThat(dataSet.getResource()).isSameAs(resource);
 	}

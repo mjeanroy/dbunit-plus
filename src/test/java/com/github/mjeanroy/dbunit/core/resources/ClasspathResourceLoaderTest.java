@@ -25,9 +25,12 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
+import com.github.mjeanroy.dbunit.tests.utils.TestDatasets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_USERS_JSON;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -56,11 +59,10 @@ class ClasspathResourceLoaderTest {
 
 	@Test
 	void it_should_load_resource() {
-		final String path = "classpath:/dataset/json/users.json";
-		final Resource resource = loader.load(path);
+		final Resource resource = loader.load(CLASSPATH_USERS_JSON);
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
-		assertThat(resource.getFilename()).isEqualTo("users.json");
+		assertThat(resource.getFilename()).isEqualTo("01-users.json");
 	}
 
 	@Test

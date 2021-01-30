@@ -31,6 +31,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 
 import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.DATASET;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML_FILENAME;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML_FILENAME;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FileResourceScannerTest extends AbstractResourceScannerTest {
@@ -44,21 +49,22 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_return_list_of_files() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
-			.isNotNull()
 			.isNotEmpty()
-			.hasSize(2)
 			.are(isInstanceOf(FileResource.class))
 			.extracting(Resource::getFilename)
-			.containsOnly("users.xml", "movies.xml");
+			.containsExactlyInAnyOrder(
+					USERS_XML_FILENAME,
+					MOVIES_XML_FILENAME
+			);
 	}
 
 	@Test
 	void it_should_return_empty_list_without_directory() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/xml/users.xml").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
@@ -68,7 +74,7 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_not_scan_recursively() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(DATASET).build();
 		final Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)

@@ -31,6 +31,8 @@ import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_USERS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_JAR_USERS_XML;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -44,7 +46,7 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_load_file_from_classpath() {
-		final Resource resource = ResourceLoader.CLASSPATH.load("classpath:/dataset/xml/users.xml");
+		final Resource resource = ResourceLoader.CLASSPATH.load(CLASSPATH_USERS_XML);
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(FileResource.class);
 		assertThat(resource.exists()).isTrue();
@@ -52,7 +54,7 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_load_file_from_a_jar() {
-		final Resource resource = ResourceLoader.CLASSPATH.load("classpath:/jar/dataset/xml/users.xml");
+		final Resource resource = ResourceLoader.CLASSPATH.load(CLASSPATH_JAR_USERS_XML);
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(ClasspathResource.class);
 		assertThat(resource.exists()).isTrue();

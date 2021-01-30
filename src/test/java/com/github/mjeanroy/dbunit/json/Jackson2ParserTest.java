@@ -39,6 +39,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.MapEntry.entry;
@@ -49,7 +50,7 @@ class Jackson2ParserTest {
 	void it_should_parse_file() {
 		final ObjectMapper mapper = new ObjectMapper();
 		final Jackson2Parser parser = new Jackson2Parser(mapper);
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/dataset/json/users.json").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)

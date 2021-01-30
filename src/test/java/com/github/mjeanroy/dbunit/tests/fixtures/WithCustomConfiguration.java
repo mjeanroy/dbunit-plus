@@ -32,6 +32,8 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import org.dbunit.database.DatabaseConfig;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
+
 @DbUnitDataSet("/dataset/qualified-table-names")
 @DbUnitConfig(WithCustomConfiguration.QualifiedTableNameConfigurationInterceptor.class)
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
@@ -41,7 +43,7 @@ public class WithCustomConfiguration {
 	public void method1() {
 	}
 
-	@DbUnitDataSet("/dataset/xml/users.xml")
+	@DbUnitDataSet(USERS_XML)
 	@DbUnitConfig(WithCustomConfiguration.NoOpConfiguration.class)
 	public void method2() {
 	}

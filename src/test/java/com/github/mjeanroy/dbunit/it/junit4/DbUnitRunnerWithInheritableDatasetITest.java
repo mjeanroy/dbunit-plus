@@ -39,6 +39,7 @@ import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(DbUnitJunitRunner.class)
@@ -65,7 +66,7 @@ public class DbUnitRunnerWithInheritableDatasetITest {
 	}
 
 	@Test
-	@DbUnitDataSet(value = "/dataset/xml/movies.xml", inherit = true)
+	@DbUnitDataSet(value = MOVIES_XML, inherit = true)
 	public void test2() {
 		final Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
