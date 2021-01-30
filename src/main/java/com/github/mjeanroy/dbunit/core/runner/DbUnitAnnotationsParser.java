@@ -138,7 +138,7 @@ final class DbUnitAnnotationsParser {
 
 		try {
 			final IDataSet dataSet = DataSetFactory.createDataSet(dataSets);
-			return !inheritable || parentDataSet == null ? dataSet : DataSetFactory.mergeDataSet(dataSet, parentDataSet);
+			return !inheritable || parentDataSet == null ? dataSet : DataSetFactory.mergeDataSet(parentDataSet, dataSet);
 		}
 		catch (DataSetException ex) {
 			log.error(ex.getMessage(), ex);

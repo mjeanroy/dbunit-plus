@@ -56,6 +56,7 @@ public final class TestDatasets {
 	public static final String CLASSPATH_MOVIES_XML = CLASSPATH_PREFIX + MOVIES_XML;
 
 	public static final String USERS_MOVIES_XML_FILENAME = "03-users-movies.xml";
+	public static final String USERS_MOVIES_XML = XML_DATASET + "/" + USERS_MOVIES_XML_FILENAME;
 
 	public static final String USERS_YAML = YAML_DATASET + "/01-users.yml";
 	public static final String USERS_JSON = JSON_DATASET + "/01-users.json";

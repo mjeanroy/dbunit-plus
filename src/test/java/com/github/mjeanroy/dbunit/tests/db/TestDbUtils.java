@@ -58,6 +58,16 @@ public final class TestDbUtils {
 	}
 
 	/**
+	 * Count number of rows in `users_movies` table.
+	 *
+	 * @param connection The SQL Connection to use.
+	 * @return The number of rows in table.
+	 */
+	public static long countUsersMovies(Connection connection) {
+		return countFrom(connection, "users_movies");
+	}
+
+	/**
 	 * Find movie in database.
 	 *
 	 * @param connection The database connection.
