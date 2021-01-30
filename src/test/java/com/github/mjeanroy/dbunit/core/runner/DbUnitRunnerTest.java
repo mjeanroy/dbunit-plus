@@ -62,9 +62,11 @@ class DbUnitRunnerTest {
 		final DbUnitClassContext ctx = readPrivate(runner, "ctx");
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getDataSet()).isNotNull();
-		assertThat(ctx.getDataSet().getTableNames())
-			.hasSize(2)
-			.contains("users", "movies");
+		assertThat(ctx.getDataSet().getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
+			"users",
+			"movies",
+			"users_movies"
+		);
 	}
 
 	@Test

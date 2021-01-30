@@ -39,6 +39,7 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.DATASET;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JSON_DATASET;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML_FILENAME;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_MOVIES_XML_FILENAME;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML_FILENAME;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
@@ -112,12 +113,13 @@ class FileResourceTest {
 		final Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
-			.hasSize(2)
+			.isNotEmpty()
 			.are(isInstanceOf(FileResource.class))
 			.extracting(Resource::getFilename)
 			.containsExactlyInAnyOrder(
 					USERS_XML_FILENAME,
-					MOVIES_XML_FILENAME
+					MOVIES_XML_FILENAME,
+					USERS_MOVIES_XML_FILENAME
 			);
 	}
 
