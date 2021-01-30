@@ -262,22 +262,28 @@ class SqlScriptParserTest {
 
 	private static void verifyParsedQueries(List<String> queries) {
 		assertThat(queries).isNotEmpty().containsExactly(
-				"DROP TABLE IF EXISTS users;",
-				"DROP TABLE IF EXISTS movies;",
+				"DROP TABLE IF EXISTS users CASCADE;",
+				"DROP TABLE IF EXISTS movies CASCADE;",
+				"DROP TABLE IF EXISTS users_movies CASCADE;",
 				"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
-				"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
+				"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));",
+				"CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);"
 		);
 	}
 
 	private static void verifyExecutedQueries(Connection connection, PreparedStatement statement) throws SQLException {
 		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users CASCADE;");
 		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies CASCADE;");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users_movies CASCADE;");
 		inOrder.verify(statement).execute();
 		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));");
 		inOrder.verify(statement).execute();
 		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));");
+		inOrder.verify(statement).execute();
+		inOrder.verify(connection).prepareStatement("CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);");
 		inOrder.verify(statement).execute();
 		inOrder.verifyNoMoreInteractions();
 	}

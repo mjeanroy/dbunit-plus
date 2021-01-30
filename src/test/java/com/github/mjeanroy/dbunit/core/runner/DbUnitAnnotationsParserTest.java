@@ -104,10 +104,12 @@ class DbUnitAnnotationsParserTest {
 
 		assertThat(sqlScripts).isNotEmpty().hasSize(1);
 		assertThat(sqlScripts.get(0).getQueries()).isNotEmpty().containsExactly(
-			"DROP TABLE IF EXISTS users;",
-			"DROP TABLE IF EXISTS movies;",
+			"DROP TABLE IF EXISTS users CASCADE;",
+			"DROP TABLE IF EXISTS movies CASCADE;",
+			"DROP TABLE IF EXISTS users_movies CASCADE;",
 			"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
-			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
+			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));",
+			"CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);"
 		);
 	}
 
