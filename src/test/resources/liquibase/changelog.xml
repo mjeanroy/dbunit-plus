@@ -29,5 +29,6 @@
 
   <include file="changesets/01-create-users.xml" relativeToChangelogFile="true"/>
   <include file="changesets/02-create-movies.xml" relativeToChangelogFile="true"/>
+	<include file="changesets/03-create-users-movies.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
