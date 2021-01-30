@@ -46,8 +46,8 @@ import java.lang.reflect.Parameter;
 /**
  * A JUnit Jupiter extension that can be used to start/stop an embedded database.
  *
- * <p />
- * <p />
+ * <br>
+ * <br>
  *
  * Note that this extension can be used with:
  *
@@ -74,8 +74,8 @@ import java.lang.reflect.Parameter;
  *
  * This extension will also allow injection of {@link EmbeddedDatabase} into test methods.
  *
- * <p />
- * <p />
+ * <br>
+ * <br>
  *
  * Here is an example using the {@link RegisterExtension} annotation:
  *

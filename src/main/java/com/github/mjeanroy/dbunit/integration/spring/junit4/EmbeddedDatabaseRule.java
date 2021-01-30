@@ -34,7 +34,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 /**
  * A JUnit 4 {@link Rule} that can be used to start/stop embedded database.
  *
- * <p/>
+ * <br>
  *
  * Note that:
  *

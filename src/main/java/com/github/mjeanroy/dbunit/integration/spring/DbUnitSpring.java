@@ -40,8 +40,8 @@ import java.lang.annotation.Target;
 /**
  * A meta-annotation to automatically integrate Spring with DbUnit.
  *
- * <p />
- * <p />
+ * <br>
+ * <br>
  *
  * Following listeners are automatically added to test execution context:
  *

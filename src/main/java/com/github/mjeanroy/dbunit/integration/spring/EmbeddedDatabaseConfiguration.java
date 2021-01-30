@@ -44,6 +44,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	/**
 	 * Specify whether a unique identifier should be generated and used as the database name.
 	 *
+	 * @return {@code true} to automatically generate a unique database name, {@code false} otherwise.
 	 * @see EmbeddedDatabaseBuilder#generateUniqueName(boolean)
 	 */
 	boolean generateUniqueName() default false;
@@ -52,6 +53,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	 * Set the name of the embedded database.
 	 * Defaults to spring {@link EmbeddedDatabaseFactory#DEFAULT_DATABASE_NAME}.
 	 *
+	 * @return The database name.
 	 * @see EmbeddedDatabaseBuilder#setName(String)
 	 */
 	String databaseName() default EmbeddedDatabaseFactory.DEFAULT_DATABASE_NAME;
@@ -60,6 +62,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	 * Set the type of embedded database.
 	 * Use the same defaults as spring: {@link EmbeddedDatabaseType#HSQL}.
 	 *
+	 * @return The {@link EmbeddedDatabaseType} to use.
 	 * @see EmbeddedDatabaseBuilder#setType(EmbeddedDatabaseType)
 	 */
 	EmbeddedDatabaseType databaseType() default EmbeddedDatabaseType.HSQL;
@@ -67,6 +70,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	/**
 	 * Add default SQL scripts to execute to populate the database.
 	 *
+	 * @return Add default SQL script (managed by {@link org.springframework.jdbc.datasource.embedded.EmbeddedDatabase}).
 	 * @see EmbeddedDatabaseBuilder#addDefaultScripts()
 	 */
 	boolean defaultScripts() default false;
@@ -74,6 +78,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	/**
 	 * Add SQL scripts to execute to initialize or populate the database.
 	 *
+	 * @return All the SQL scripts to execute.
 	 * @see EmbeddedDatabaseBuilder#addScript(String)
 	 * @see EmbeddedDatabaseBuilder#addScripts(String...)
 	 */
@@ -83,6 +88,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	 * Specify that all failures which occur while executing SQL scripts should
 	 * be logged but should not cause a failure, defaults to {@code false}.
 	 *
+	 * @return {@code true} to continue in case of errors, {@code false} otherwise.
 	 * @see EmbeddedDatabaseBuilder#continueOnError(boolean)
 	 */
 	boolean continueOnError() default false;
@@ -93,6 +99,7 @@ public @interface EmbeddedDatabaseConfiguration {
 	 * {@code IF EXISTS} clause in a {@code DROP} statement.
 	 * The default is {@code false}
 	 *
+	 * @return {@code true} if errors in {@code DROP} statement should be ignored, {@code false} otherwise.
 	 * @see EmbeddedDatabaseBuilder#ignoreFailedDrops(boolean)
 	 */
 	boolean ignoreFailedDrops() default false;
