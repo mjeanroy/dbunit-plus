@@ -111,7 +111,8 @@ public class LiquibaseUpdater {
 		log.debug("Run liquibase update from: {}", changeLogFullPath);
 		log.debug("Use resource accessor: {}", resourceAccessor);
 
-		try (Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db)) {
+		try {
+			Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
 			liquibase.update(new Contexts("dbunit", "test"));
 		}
 		catch (Exception ex) {
@@ -127,9 +128,27 @@ public class LiquibaseUpdater {
 		return file.getAbsolutePath();
 	}
 
-	private ResourceAccessor createResourceAccessor() {
-		FileSystemResourceAccessor fileSystemResourceAccessor = new CustomFileSystemResourceAccessor();
-		ClassLoaderResourceAccessor classLoaderResourceAccessor = new ClassLoaderResourceAccessor(getClass().getClassLoader());
-		return new CompositeResourceAccessor(fileSystemResourceAccessor, classLoaderResourceAccessor);
+	private static ResourceAccessor createResourceAccessor() {
+		return new CompositeResourceAccessor(
+			fileSystemResourceAccessor(),
+			classLoaderResourceAccessor()
+		);
+	}
+
+	private static FileSystemResourceAccessor fileSystemResourceAccessor() {
+		try {
+			return new FileSystemResourceAccessor();
+		}
+		catch (IllegalArgumentException ex) {
+			if (ex.getMessage().equals("URI is not hierarchical")) {
+				log.error("That looks like a bug with liquibase 3.6.1 or 3.6.2, it should have been fixed with liquibase >= 3.6.3 (see https://liquibase.jira.com/browse/CORE-3262), please upgrade...");
+			}
+
+			throw ex;
+		}
+	}
+
+	private static ClassLoaderResourceAccessor classLoaderResourceAccessor() {
+		return new ClassLoaderResourceAccessor(Thread.currentThread().getContextClassLoader());
 	}
 }
