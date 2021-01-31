@@ -135,9 +135,10 @@ public class LiquibaseUpdater {
 		);
 	}
 
+	@SuppressWarnings("deprecation")
 	private static FileSystemResourceAccessor fileSystemResourceAccessor() {
 		try {
-			return new FileSystemResourceAccessor();
+			return new FileSystemResourceAccessor("/");
 		}
 		catch (IllegalArgumentException ex) {
 			if (ex.getMessage().equals("URI is not hierarchical")) {
