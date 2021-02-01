@@ -40,6 +40,7 @@ import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
@@ -111,13 +112,27 @@ public class LiquibaseUpdater {
 		log.debug("Run liquibase update from: {}", changeLogFullPath);
 		log.debug("Use resource accessor: {}", resourceAccessor);
 
+		Liquibase liquibase = null;
+
 		try {
-			Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
+			liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
 			liquibase.update(new Contexts("dbunit", "test"));
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
 			throw new DbUnitException(ex);
+		}
+		finally {
+			// Liquibase < 3.7 is not autocloseable.
+			// noinspection ConstantConditions
+			if (liquibase instanceof AutoCloseable) {
+				try {
+					((AutoCloseable) liquibase).close();
+				}
+				catch (Exception ex) {
+					log.error(ex.getMessage(), ex);
+				}
+			}
 		}
 	}
 
