@@ -121,6 +121,7 @@
     <logback.version>1.2.3</logback.version>
     <wiremock.version>2.27.2</wiremock.version>
     <equalsverifier.version>3.5.2</equalsverifier.version>
+    <liquibase-slf4j.version>4.0.0</liquibase-slf4j.version>
   </properties>
 
   <profiles>
@@ -359,6 +360,12 @@
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier</artifactId>
       <version>${equalsverifier.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.mattbertolini</groupId>
+      <artifactId>liquibase-slf4j</artifactId>
+      <version>${liquibase-slf4j.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
