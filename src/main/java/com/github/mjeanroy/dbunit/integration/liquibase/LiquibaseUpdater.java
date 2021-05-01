@@ -40,7 +40,6 @@ import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;

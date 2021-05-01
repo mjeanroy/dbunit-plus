@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.tests.utils.TestDatasets;
 import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
@@ -38,7 +37,6 @@ import java.io.File;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_MOVIES_XML;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_USERS_XML;
-import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_CSV;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;

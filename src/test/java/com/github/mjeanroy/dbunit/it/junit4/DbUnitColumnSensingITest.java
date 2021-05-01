@@ -30,7 +30,6 @@ import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.tests.db.TestDbUtils.Movie;
 import com.github.mjeanroy.dbunit.tests.junit4.HsqldbRule;
-import com.github.mjeanroy.dbunit.tests.utils.TestDatasets;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;

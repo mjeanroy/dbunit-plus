@@ -25,12 +25,10 @@
 package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
-import com.github.mjeanroy.dbunit.tests.utils.TestDatasets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_USERS_JSON;
-import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
