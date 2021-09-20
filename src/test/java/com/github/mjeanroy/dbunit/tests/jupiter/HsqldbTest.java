@@ -50,7 +50,7 @@ public @interface HsqldbTest {
 	 *
 	 * @return The database name.
 	 */
-	String db() default "testdb";
+	String db();
 
 	/**
 	 * The embedded database lifecycle.

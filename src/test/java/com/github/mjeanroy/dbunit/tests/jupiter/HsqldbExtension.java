@@ -40,6 +40,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.lang.reflect.Parameter;
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
@@ -102,8 +103,9 @@ class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEach
 	}
 
 	private void initialize(ExtensionContext context) {
-		Optional<HsqldbTest> annotation = findAnnotation(context.getRequiredTestClass(), HsqldbTest.class);
-		String dbName = annotation.map(HsqldbTest::db).orElse("testdb");
+		Class<?> testClass = context.getRequiredTestClass();
+		Optional<HsqldbTest> annotation = findAnnotation(testClass, HsqldbTest.class);
+		String dbName = annotation.map(HsqldbTest::db).orElse(testClass.getSimpleName().toLowerCase(Locale.ROOT));
 		boolean runInit = annotation.map(HsqldbTest::initScript).orElse(true);
 
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder()
