@@ -215,8 +215,8 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	 */
 	private void tearDownRunner(ExtensionContext context, boolean staticMode) {
 		final Store store = getStore(context);
-		final boolean isStaticMode = store.get(STATIC_MODE_KEY, Boolean.class);
-		if (isStaticMode == staticMode) {
+		final Boolean isStaticMode = store.get(STATIC_MODE_KEY, Boolean.class);
+		if (isStaticMode != null && isStaticMode == staticMode) {
 			final EmbeddedDatabaseRunner runner = store.get(RUNNER_KEY, EmbeddedDatabaseRunner.class);
 
 			try {
