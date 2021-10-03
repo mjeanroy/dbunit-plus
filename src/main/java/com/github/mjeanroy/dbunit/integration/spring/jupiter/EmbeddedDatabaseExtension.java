@@ -126,14 +126,9 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	private static final Namespace NAMESPACE = Namespace.create(EmbeddedDatabaseExtension.class.getName());
 
 	/**
-	 * The key that will identify that the extension has already been registered.
-	 */
-	private static final String REGISTERED = "registered";
-
-	/**
 	 * The key that will identify the used mode of the extension.
 	 */
-	private static final String STATIC_MODE_KEY = "static";
+	private static final String EXECUTION_MODE_KEY = "executionMode";
 
 	/**
 	 * The key that will identify the initialized embedded database runner.
@@ -163,22 +158,22 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		setupRunner(context, true);
+		setupRunner(context, ExecutionMode.PER_CLASS);
 	}
 
 	@Override
 	public void afterAll(ExtensionContext context) {
-		tearDownRunner(context, true);
+		tearDownRunner(context, ExecutionMode.PER_CLASS);
 	}
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		setupRunner(context, false);
+		setupRunner(context, ExecutionMode.PER_METHOD);
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) {
-		tearDownRunner(context, false);
+		tearDownRunner(context, ExecutionMode.PER_METHOD);
 	}
 
 	@Override
@@ -197,17 +192,17 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	 * Setup and run initialization of the {@link EmbeddedDatabaseRunner}.
 	 *
 	 * @param context The test extension context.
-	 * @param staticMode The mode in which the extension has been configured (as a {@code "static"} extension or not).
+	 * @param executionMode The mode in which the extension has been configured.
 	 */
-	private void setupRunner(ExtensionContext context, boolean staticMode) {
+	private void setupRunner(ExtensionContext context, ExecutionMode executionMode) {
 		final Store store = getStore(context);
-		final Boolean currentStaticMode = store.get(STATIC_MODE_KEY, Boolean.class);
-		if (currentStaticMode == null) {
+		final ExecutionMode registeredExecutionMode = store.get(EXECUTION_MODE_KEY, ExecutionMode.class);
+		if (registeredExecutionMode == null) {
 			final EmbeddedDatabaseRunner runner = dbRunner == null ? createRunner(context) : dbRunner;
 
 			runner.before();
 
-			store.put(STATIC_MODE_KEY, staticMode);
+			store.put(EXECUTION_MODE_KEY, executionMode);
 			store.put(RUNNER_KEY, runner);
 		}
 	}
@@ -216,19 +211,19 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	 * Setup and run tear down operations of the {@link EmbeddedDatabaseRunner}.
 	 *
 	 * @param context The test extension context.
-	 * @param staticMode The mode in which the extension has been configured (as a {@code "static"} extension or not).
+	 * @param executionMode The mode in which the extension has been configured.
 	 */
-	private void tearDownRunner(ExtensionContext context, boolean staticMode) {
+	private void tearDownRunner(ExtensionContext context, ExecutionMode executionMode) {
 		final Store store = getStore(context);
-		final Boolean isStaticMode = store.get(STATIC_MODE_KEY, Boolean.class);
-		if (isStaticMode != null && isStaticMode == staticMode) {
+		final ExecutionMode registeredExecutionMode = store.get(EXECUTION_MODE_KEY, ExecutionMode.class);
+		if (registeredExecutionMode == executionMode) {
 			final EmbeddedDatabaseRunner runner = store.get(RUNNER_KEY, EmbeddedDatabaseRunner.class);
 
 			try {
 				runner.after();
 			}
 			finally {
-				store.remove(STATIC_MODE_KEY);
+				store.remove(EXECUTION_MODE_KEY);
 				store.remove(RUNNER_KEY);
 			}
 		}
@@ -244,12 +239,6 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 		final Store store = getStore(context);
 		final EmbeddedDatabaseRunner runner = store.get(RUNNER_KEY, EmbeddedDatabaseRunner.class);
 		return runner == null ? null : runner.getDb();
-	}
-
-	boolean isRegistered(ExtensionContext context) {
-		final Store store = getStore(context);
-		final Boolean registered = store.get(REGISTERED, Boolean.class);
-		return registered != null;
 	}
 
 	/**
@@ -271,5 +260,10 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	 */
 	private static EmbeddedDatabaseRunner createRunner(ExtensionContext context) {
 		return new EmbeddedDatabaseRunner(context.getRequiredTestClass());
+	}
+
+	private enum ExecutionMode {
+		PER_CLASS,
+		PER_METHOD
 	}
 }

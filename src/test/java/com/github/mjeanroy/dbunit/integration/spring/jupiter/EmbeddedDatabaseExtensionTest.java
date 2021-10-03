@@ -44,6 +44,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 
 class EmbeddedDatabaseExtensionTest {
 
+	private static final String EXECUTION_MODE_PER_CLASS = "PER_CLASS";
+	private static final String EXECUTION_MODE_PER_METHOD = "PER_METHOD";
+
 	@Test
 	void it_should_start_default_embedded_database_before_all_tests_and_after_all_tests() {
 		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension();
@@ -52,7 +55,7 @@ class EmbeddedDatabaseExtensionTest {
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyStore(extensionContext, true);
+		verifyStore(extensionContext, EXECUTION_MODE_PER_CLASS);
 
 		extension.afterAll(extensionContext);
 		verifyEmptyStore(extensionContext);
@@ -67,7 +70,7 @@ class EmbeddedDatabaseExtensionTest {
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
-		verifyStore(extensionContext, true);
+		verifyStore(extensionContext, EXECUTION_MODE_PER_CLASS);
 		verifyNoInteractions(db);
 
 		extension.afterAll(extensionContext);
@@ -84,7 +87,7 @@ class EmbeddedDatabaseExtensionTest {
 		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeEach(extensionContext);
-		verifyStore(extensionContext, false);
+		verifyStore(extensionContext, EXECUTION_MODE_PER_METHOD);
 		verifyNoInteractions(db);
 
 		extension.afterEach(extensionContext);
@@ -102,11 +105,11 @@ class EmbeddedDatabaseExtensionTest {
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
-		verifyStore(extensionContext, true);
+		verifyStore(extensionContext, EXECUTION_MODE_PER_CLASS);
 		verifyNoInteractions(db);
 
 		extension.afterEach(extensionContext);
-		verifyStore(extensionContext, true);
+		verifyStore(extensionContext, EXECUTION_MODE_PER_CLASS);
 		verifyNoInteractions(db);
 
 		extension.afterAll(extensionContext);
@@ -129,11 +132,11 @@ class EmbeddedDatabaseExtensionTest {
 		assertThat(extension.resolveParameter(parameterContext, extensionContext)).isSameAs(db);
 	}
 
-	private static void verifyStore(FakeExtensionContext extensionContext, boolean staticMode) {
+	private static void verifyStore(FakeExtensionContext extensionContext, String executionMode) {
 		FakeStore singleStore = extensionContext.getSingleStore();
 		assertThat(singleStore.isEmpty()).isFalse();
 		assertThat(singleStore.size()).isEqualTo(2);
-		assertThat(singleStore.get("static", Boolean.class)).isNotNull().isEqualTo(staticMode);
+		assertThat(singleStore.get("executionMode")).isNotNull().hasToString(executionMode);
 		assertThat(singleStore.get("runner", EmbeddedDatabaseRunner.class)).isNotNull();
 	}
 
