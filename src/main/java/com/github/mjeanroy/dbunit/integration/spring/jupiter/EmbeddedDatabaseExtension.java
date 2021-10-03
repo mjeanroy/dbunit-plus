@@ -126,6 +126,11 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	private static final Namespace NAMESPACE = Namespace.create(EmbeddedDatabaseExtension.class.getName());
 
 	/**
+	 * The key that will identify that the extension has already been registered.
+	 */
+	private static final String REGISTERED = "registered";
+
+	/**
 	 * The key that will identify the used mode of the extension.
 	 */
 	private static final String STATIC_MODE_KEY = "static";
@@ -197,7 +202,7 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 	private void setupRunner(ExtensionContext context, boolean staticMode) {
 		final Store store = getStore(context);
 		final Boolean currentStaticMode = store.get(STATIC_MODE_KEY, Boolean.class);
-		if (currentStaticMode == null || currentStaticMode == staticMode) {
+		if (currentStaticMode == null) {
 			final EmbeddedDatabaseRunner runner = dbRunner == null ? createRunner(context) : dbRunner;
 
 			runner.before();
@@ -239,6 +244,12 @@ public class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCal
 		final Store store = getStore(context);
 		final EmbeddedDatabaseRunner runner = store.get(RUNNER_KEY, EmbeddedDatabaseRunner.class);
 		return runner == null ? null : runner.getDb();
+	}
+
+	boolean isRegistered(ExtensionContext context) {
+		final Store store = getStore(context);
+		final Boolean registered = store.get(REGISTERED, Boolean.class);
+		return registered != null;
 	}
 
 	/**
