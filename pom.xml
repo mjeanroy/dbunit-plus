@@ -112,7 +112,7 @@
     <snakeyaml.version>1.30</snakeyaml.version>
     <hsqldb.version>2.5.1</hsqldb.version>
     <spring.version>5.3.15</spring.version>
-    <liquibase.version>4.6.2</liquibase.version>
+    <liquibase.version>4.7.0</liquibase.version>
     <guava.version>31.0.1-jre</guava.version>
 
     <!-- Test Dependencies -->
