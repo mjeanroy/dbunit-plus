@@ -24,10 +24,19 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Static Strings Utilities.
  */
 public final class Strings {
+
+	private static final Logger log = Loggers.getLogger(Strings.class);
 
 	// Ensure non instantiation.
 	private Strings() {
@@ -71,5 +80,37 @@ public final class Strings {
 		}
 
 		return true;
+	}
+
+	public static String substitute(String input, String prefix, String suffix, Map<String, String> variables) {
+		if (isEmpty(input)) {
+			return input;
+		}
+
+		if (isBlank(prefix)) {
+			throw new IllegalArgumentException("Prefix cannot be blank");
+		}
+
+		if (isBlank(suffix)) {
+			throw new IllegalArgumentException("Suffix cannot be blank");
+		}
+
+		Pattern pattern = Pattern.compile(
+			Pattern.quote(prefix) + "(.*)" + Pattern.quote(suffix)
+		);
+
+		String output = input;
+		Matcher matcher = pattern.matcher(input);
+		while (matcher.find()) {
+			String name = matcher.group(1).trim();
+			if (!variables.containsKey(name)) {
+				log.warn("Cannot find variable {} inside interpolated string: {}", name, input);
+			}
+
+			String value = variables.getOrDefault(name, "");
+			output = output.replace(matcher.group(), value);
+		}
+
+		return output;
 	}
 }

@@ -26,7 +26,11 @@ package com.github.mjeanroy.dbunit.commons.lang;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class StringsTest {
 
@@ -50,5 +54,107 @@ class StringsTest {
 		assertThat(Strings.isBlank("")).isTrue();
 		assertThat(Strings.isBlank("   ")).isTrue();
 		assertThat(Strings.isBlank("  foobar  ")).isFalse();
+	}
+
+	@Test
+	void it_should_not_substitute_null() {
+		String input = null;
+		String prefix = "${";
+		String suffix = "}";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThat(Strings.substitute(input, prefix, suffix, variables)).isNull();
+	}
+
+	@Test
+	void it_should_not_substitute_empty_string() {
+		String input = "";
+		String prefix = "${";
+		String suffix = "}";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThat(Strings.substitute(input, prefix, suffix, variables)).isEmpty();
+	}
+
+	@Test
+	void it_should_failed_to_substitute_with_null_prefix() {
+		String input = "${name}";
+		String prefix = null;
+		String suffix = "}";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThatThrownBy(() -> Strings.substitute(input, prefix, suffix, variables))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Prefix cannot be blank");
+	}
+
+	@Test
+	void it_should_failed_to_substitute_with_empty_prefix() {
+		String input = "${name}";
+		String prefix = "";
+		String suffix = "}";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThatThrownBy(() -> Strings.substitute(input, prefix, suffix, variables))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Prefix cannot be blank");
+	}
+
+	@Test
+	void it_should_failed_to_substitute_with_blank_prefix() {
+		String input = "${name}";
+		String prefix = "  ";
+		String suffix = "}";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThatThrownBy(() -> Strings.substitute(input, prefix, suffix, variables))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Prefix cannot be blank");
+	}
+
+	@Test
+	void it_should_failed_to_substitute_with_null_suffix() {
+		String input = "${name}";
+		String prefix = "${";
+		String suffix = "";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThatThrownBy(() -> Strings.substitute(input, prefix, suffix, variables))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Suffix cannot be blank");
+	}
+
+	@Test
+	void it_should_failed_to_substitute_with_empty_suffix() {
+		String input = "${name}";
+		String prefix = "${";
+		String suffix = "";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThatThrownBy(() -> Strings.substitute(input, prefix, suffix, variables))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Suffix cannot be blank");
+	}
+
+	@Test
+	void it_should_failed_to_substitute_with_blank_suffix() {
+		String input = "${name}";
+		String prefix = "${";
+		String suffix = "  ";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThatThrownBy(() -> Strings.substitute(input, prefix, suffix, variables))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("Suffix cannot be blank");
+	}
+
+	@Test
+	void it_should_substitute_simple_input() {
+		String input = "${name}";
+		String prefix = "${";
+		String suffix = "}";
+		Map<String, String> variables = Collections.singletonMap("name", "John Doe");
+		assertThat(Strings.substitute(input, prefix, suffix, variables)).isEqualTo("John Doe");
+	}
+
+	@Test
+	void it_should_substitute_unknown_variable_with_empty_string() {
+		String input = "${name}";
+		String prefix = "${";
+		String suffix = "}";
+		Map<String, String> variables = Collections.emptyMap();
+		assertThat(Strings.substitute(input, prefix, suffix, variables)).isEqualTo("");
 	}
 }

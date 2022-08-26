@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.commons.lang.Strings;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -57,7 +58,10 @@ import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
@@ -69,6 +73,9 @@ import static java.util.Collections.emptyList;
  * DbUnit+ parsers.
  */
 final class DbUnitAnnotationsParser {
+
+	private static final String STRING_SUBSTITUTION_PREFIX = "${";
+	private static final String STRING_SUBSTITUTION_SUFFIX = "}";
 
 	/**
 	 * Class Logger.
@@ -193,10 +200,27 @@ final class DbUnitAnnotationsParser {
 			return null;
 		}
 
-		return new JdbcDefaultConnectionFactory(newJdbcConfiguration(
-			annotation.url(),
-			annotation.user(),
-			annotation.password())
+		Map<String, String> env = new HashMap<>(System.getenv());
+		for (String property: System.getProperties().stringPropertyNames()) {
+			env.put(property, System.getProperty(property));
+		}
+
+		Map<String, String> immutableEnv = Collections.unmodifiableMap(env);
+
+		String url = Strings.substitute(
+			annotation.url(), STRING_SUBSTITUTION_PREFIX, STRING_SUBSTITUTION_SUFFIX, immutableEnv
+		);
+
+		String user = Strings.substitute(
+			annotation.user(), STRING_SUBSTITUTION_PREFIX, STRING_SUBSTITUTION_SUFFIX, immutableEnv
+		);
+
+		String password = Strings.substitute(
+			annotation.password(), STRING_SUBSTITUTION_PREFIX, STRING_SUBSTITUTION_SUFFIX, immutableEnv
+		);
+
+		return new JdbcDefaultConnectionFactory(
+			newJdbcConfiguration(url, user, password)
 		);
 	}
 

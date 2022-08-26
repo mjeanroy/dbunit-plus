@@ -97,6 +97,46 @@ class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
+	void it_should_read_connection_factory_from_annotation_and_environment_variable() {
+		try {
+			test_it_should_read_connection_factory_from_annotation_and_environment_variable();
+		}
+		finally {
+			System.clearProperty("DBUNIT_DB_URL");
+			System.clearProperty("DBUNIT_DB_USERNAME");
+			System.clearProperty("DBUNIT_DB_PASSWORD");
+		}
+	}
+
+	private void test_it_should_read_connection_factory_from_annotation_and_environment_variable() {
+		final String url = "jdbc:hsqldb:mem:testdb";
+		final String username = "SA";
+		final String password = "";
+
+		System.setProperty("DBUNIT_DB_URL", url);
+		System.setProperty("DBUNIT_DB_USERNAME", username);
+		System.setProperty("DBUNIT_DB_PASSWORD", password);
+
+		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
+		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
+		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
+		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
+
+		JdbcDefaultConnectionFactory jdbcDefaultConnectionFactory = (JdbcDefaultConnectionFactory) factory;
+		assertThat(jdbcDefaultConnectionFactory)
+			.extracting(
+				"configuration.url",
+				"configuration.user",
+				"configuration.password"
+			)
+			.containsExactly(
+				url,
+				username,
+				password
+			);
+	}
+
+	@Test
 	void it_should_extract_sql_scripts_from_annotation() {
 		final Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
 		final DbUnitInit annotation = testClass.getAnnotation(DbUnitInit.class);
