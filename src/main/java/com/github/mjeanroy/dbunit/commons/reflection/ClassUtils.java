@@ -30,9 +30,10 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.instantiationException;
-import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.missingDefaultConstructor;
+import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.missingConstructor;
 
 /**
  * Static Class Utilities.
@@ -65,15 +66,34 @@ public final class ClassUtils {
 	}
 
 	/**
+	 * Instantiate class using full qualified class name.
+	 *
+	 * @param rawClass Fully qualified class name.
+	 * @param parameters Constructor parameters (null forbidden).
+	 * @return The instantiated object.
+	 */
+	public static Object instantiate(String rawClass, Object... parameters) {
+		try {
+			Class<?> klass = Class.forName(rawClass);
+			return instantiate(klass, parameters);
+		}
+		catch (ClassNotFoundException ex) {
+			throw instantiationException(ex);
+		}
+	}
+
+	/**
 	 * Create new instance of given class using default empty constructor.
 	 *
 	 * @param klass The class.
+	 * @param parameters Constructor parameters (null forbidden).
 	 * @param <T> Instance type.
 	 * @return The new instance.
 	 * @throws ClassInstantiationException If an error occurred while instantiating class.
 	 */
-	public static <T> T instantiate(Class<T> klass) {
-		Constructor<T> ctor = findConstructor(klass);
+	public static <T> T instantiate(Class<T> klass, Object... parameters) {
+		Class<?>[] parameterTypes = toParameterTypes(parameters);
+		Constructor<T> ctor = findConstructor(klass, parameterTypes);
 
 		boolean wasAccessible = true;
 		if (!ctor.isAccessible()) {
@@ -83,7 +103,7 @@ public final class ClassUtils {
 		}
 
 		try {
-			return ctor.newInstance();
+			return ctor.newInstance(parameters);
 		}
 		catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
 			throw instantiationException(klass, ex);
@@ -95,6 +115,18 @@ public final class ClassUtils {
 		}
 	}
 
+	private static Class<?>[] toParameterTypes(Object[] parameters) {
+		Class<?>[] parameterTypes = new Class<?>[parameters.length];
+
+		int i = 0;
+		for (Object parameter : parameters) {
+			parameterTypes[i] = parameter.getClass();
+			++i;
+		}
+
+		return parameterTypes;
+	}
+
 	/**
 	 * Find empty public constructor of given class.
 	 *
@@ -104,15 +136,15 @@ public final class ClassUtils {
 	 * @throws ClassInstantiationException If the empty constructor does not exist.
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> Constructor<T> findConstructor(Class<T> klass) {
+	private static <T> Constructor<T> findConstructor(Class<T> klass, Class<?>[] parameterTypes) {
 		Constructor<T>[] ctors = (Constructor<T>[]) klass.getDeclaredConstructors();
 
 		for (Constructor<T> ctor : ctors) {
-			if (ctor.getParameterTypes().length == 0) {
+			if (Arrays.equals(ctor.getParameterTypes(), parameterTypes)) {
 				return ctor;
 			}
 		}
 
-		throw missingDefaultConstructor(klass);
+		throw missingConstructor(klass);
 	}
 }

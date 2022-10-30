@@ -22,20 +22,11 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.commons.reflection.fixtures;
+package com.github.mjeanroy.dbunit.integration.liquibase;
 
-public class Klass1 {
-	private final String id;
+public class LiquibaseUpdaterException extends RuntimeException {
 
-	public Klass1() {
-		this.id = null;
-	}
-
-	public Klass1(String id) {
-		this.id = id;
-	}
-
-	public String getId() {
-		return id;
+	LiquibaseUpdaterException(Exception cause) {
+		super(cause);
 	}
 }

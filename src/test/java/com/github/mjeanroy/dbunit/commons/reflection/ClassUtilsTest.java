@@ -31,6 +31,8 @@ import com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass3;
 import com.github.mjeanroy.dbunit.exception.ClassInstantiationException;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -46,6 +48,15 @@ class ClassUtilsTest {
 	void it_should_instantiate_class() {
 		final Klass1 o = ClassUtils.instantiate(Klass1.class);
 		assertThat(o).isNotNull();
+		assertThat(o.getId()).isNull();
+	}
+
+	@Test
+	void it_should_instantiate_class_with_parameter() {
+		final String id = UUID.randomUUID().toString();
+		final Klass1 o = ClassUtils.instantiate(Klass1.class, id);
+		assertThat(o).isNotNull();
+		assertThat(o.getId()).isEqualTo(id);
 	}
 
 	@Test
@@ -64,6 +75,6 @@ class ClassUtilsTest {
 	void it_should_fail_to_instantiate_class_without_empty_constructor() {
 		assertThatThrownBy(() -> ClassUtils.instantiate(Klass2.class))
 			.isExactlyInstanceOf(ClassInstantiationException.class)
-			.hasMessage("Cannot instantiate class com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass2 because it does not have empty public constructor");
+			.hasMessage("Cannot instantiate class com.github.mjeanroy.dbunit.commons.reflection.fixtures.Klass2 because it does not have given constructor");
 	}
 }

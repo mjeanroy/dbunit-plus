@@ -78,7 +78,7 @@ public class ClassInstantiationException extends AbstractReflectionException {
 	 * @param klass The class.
 	 * @return The exception.
 	 */
-	public static ClassInstantiationException missingDefaultConstructor(Class<?> klass) {
+	public static ClassInstantiationException missingConstructor(Class<?> klass) {
 		return new ClassInstantiationException(klass, message(klass));
 	}
 
@@ -94,12 +94,22 @@ public class ClassInstantiationException extends AbstractReflectionException {
 	}
 
 	/**
-	 * Create message for {@link #missingDefaultConstructor(Class)} method.
+	 * Create exception with given original cause.
+	 *
+	 * @param cause The original exception.
+	 * @return The exception.
+	 */
+	public static ClassInstantiationException instantiationException(Exception cause) {
+		return new ClassInstantiationException(null, cause);
+	}
+
+	/**
+	 * Create message for {@link #missingConstructor(Class)} method.
 	 *
 	 * @param klass The class.
 	 * @return The error message.
 	 */
 	private static String message(Class<?> klass) {
-		return String.format("Cannot instantiate class %s because it does not have empty public constructor", klass.getName());
+		return String.format("Cannot instantiate class %s because it does not have given constructor", klass.getName());
 	}
 }

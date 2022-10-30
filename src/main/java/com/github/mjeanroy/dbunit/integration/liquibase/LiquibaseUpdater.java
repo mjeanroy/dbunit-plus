@@ -36,15 +36,18 @@ import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
-import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
+import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.isPresent;
 
 /**
  * Run liquibase change sets against SQL connection.
@@ -143,29 +146,58 @@ public class LiquibaseUpdater {
 	}
 
 	private static ResourceAccessor createResourceAccessor() {
+		ResourceAccessor fsResourceAccessor = fileSystemResourceAccessor();
+		ResourceAccessor classLoaderResourceAccessor = classLoaderResourceAccessor();
+		if (fsResourceAccessor == null) {
+			return classLoaderResourceAccessor;
+		}
+
 		return new CompositeResourceAccessor(
-			fileSystemResourceAccessor(),
-			classLoaderResourceAccessor()
+			fsResourceAccessor,
+			classLoaderResourceAccessor
 		);
 	}
 
-	@SuppressWarnings("deprecation")
-	private static FileSystemResourceAccessor fileSystemResourceAccessor() {
+	private static ResourceAccessor fileSystemResourceAccessor() {
+		Map<String, FsResourceAccessInstantiator> rawClasses = new LinkedHashMap<>();
+
+		// Liquibase <= 4.16
+		rawClasses.put("liquibase.resource.FileSystemResourceAccessor", (rawClass, root) ->
+			(ResourceAccessor) instantiate(rawClass, root.getAbsolutePath())
+		);
+
+		// Liquibase >= 4.17
+		rawClasses.put("liquibase.resource.DirectoryResourceAccessor", (rawClass, root) ->
+			(ResourceAccessor) instantiate(rawClass, root)
+		);
+
+		File root = new File("/");
+
 		try {
-			File root = new File("/");
-			String rootPath = root.getAbsolutePath();
-			return new FileSystemResourceAccessor(rootPath);
+			for (Map.Entry<String, FsResourceAccessInstantiator> entry : rawClasses.entrySet()) {
+				String rawClass = entry.getKey();
+				if (isPresent(rawClass)) {
+					return entry.getValue().instantiate(rawClass, root);
+				}
+			}
 		}
-		catch (IllegalArgumentException ex) {
+		catch (Exception ex) {
 			if (ex.getMessage().equals("URI is not hierarchical")) {
 				log.error("That looks like a bug with liquibase 3.6.1 or 3.6.2, it should have been fixed with liquibase >= 3.6.3 (see https://liquibase.jira.com/browse/CORE-3262), please upgrade...");
 			}
 
-			throw ex;
+			throw new LiquibaseUpdaterException(ex);
 		}
+
+		log.warn("Cannot find resource access among: {}", rawClasses);
+		return null;
 	}
 
-	private static ClassLoaderResourceAccessor classLoaderResourceAccessor() {
+	private static ResourceAccessor classLoaderResourceAccessor() {
 		return new ClassLoaderResourceAccessor(Thread.currentThread().getContextClassLoader());
+	}
+
+	private interface FsResourceAccessInstantiator {
+		ResourceAccessor instantiate(String rawClass, File file);
 	}
 }
