@@ -44,6 +44,10 @@ jobs:
         java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: 'maven'
+    - name: java -version
+      run: java -version
+    - name: mvn -version
+      run: mvn -version
     - name: Set up GCS Maven Central mirror
       run: echo "<settings><mirrors><mirror><id>google-maven-central</id><name>GCS Maven Central mirror</name><url>https://maven-central.storage-download.googleapis.com/maven2/</url><mirrorOf>central</mirrorOf></mirror></mirrors></settings>" > ~/.m2/settings.xml
     - name: Build
