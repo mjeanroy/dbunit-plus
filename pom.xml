@@ -101,7 +101,7 @@
     <versions-maven-plugin.version>2.15.0</versions-maven-plugin.version>
 
     <!-- Runtime Dependencies -->
-    <slf4j.version>2.0.6</slf4j.version>
+    <slf4j.version>2.0.7</slf4j.version>
     <log4j.version>2.20.0</log4j.version>
     <junit.version>4.13.2</junit.version>
     <jupiter.version>5.9.2</jupiter.version>
@@ -119,7 +119,7 @@
     <!-- Test Dependencies -->
     <assertj.version>3.24.2</assertj.version>
     <mockito.version>4.11.0</mockito.version>
-    <logback.version>1.3.4</logback.version>
+    <logback.version>1.3.6</logback.version>
     <wiremock.version>2.27.2</wiremock.version>
     <equalsverifier.version>3.14.1</equalsverifier.version>
     <liquibase-slf4j.version>4.1.0</liquibase-slf4j.version>
