@@ -107,7 +107,7 @@
     <jupiter.version>5.9.3</jupiter.version>
     <dbunit.version>2.7.3</dbunit.version>
     <jackson1.version>1.9.13</jackson1.version>
-    <jackson.version>2.14.2</jackson.version>
+    <jackson.version>2.15.1</jackson.version>
     <jackson-dataformat-yaml.version>2.15.0</jackson-dataformat-yaml.version>
     <gson.version>2.10.1</gson.version>
     <snakeyaml.version>2.0</snakeyaml.version>
