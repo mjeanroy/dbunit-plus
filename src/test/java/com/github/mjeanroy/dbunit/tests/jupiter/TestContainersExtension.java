@@ -34,6 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -91,15 +92,7 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 		TestContainersTest annotation = maybeAnnotation.get();
 
 		String image = annotation.image();
-		String username = annotation.username();
-		String password = annotation.password();
-		String databaseName = annotation.databaseName();
-		JdbcDatabaseContainer container = startContainer(
-			image,
-			username,
-			password,
-			databaseName
-		);
+		JdbcDatabaseContainer container = startContainer(image);
 
 		getStore(context).put(CONTAINER_KEY, container);
 
@@ -126,31 +119,18 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static JdbcDatabaseContainer startContainer(
-		String image,
-		String username,
-		String password,
-		String databaseName
-	) {
-		JdbcDatabaseContainer container = getContainer(image, username, password, databaseName);
+	private static JdbcDatabaseContainer startContainer(String image) {
+		JdbcDatabaseContainer container = getContainer(image);
 		container.start();
 		return container;
 	}
 
-	@SuppressWarnings({"resource", "rawtypes"})
-	private static JdbcDatabaseContainer getContainer(
-		String image,
-		String username,
-		String password,
-		String databaseName
-	) {
-		return initContainer(image)
-			.withUsername(username)
-			.withPassword(password)
-			.withDatabaseName(databaseName);
+	@SuppressWarnings("rawtypes")
+	private static JdbcDatabaseContainer getContainer(String image) {
+		return initContainer(image);
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({"rawtypes", "resource"})
 	private static JdbcDatabaseContainer initContainer(String image) {
 		DockerImageName dockerImage = DockerImageName.parse(image);
 		String dbProduct = image.split(":", 2)[0];
@@ -162,6 +142,8 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 				return new PostgreSQLContainer(dockerImage);
 			case "mariadb":
 				return new MariaDBContainer(dockerImage);
+			case "mcr.microsoft.com/mssql/server":
+				return new MSSQLServerContainer(dockerImage).acceptLicense();
 			default:
 				throw new AssertionError("Cannot start container for image: " + image);
 		}
@@ -195,6 +177,7 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 		return PROP_KEY + "." + name;
 	}
 
+	@SuppressWarnings("resource")
 	private static boolean isDockerAvailable() {
 		try {
 			return DockerClientFactory.instance().client() != null;

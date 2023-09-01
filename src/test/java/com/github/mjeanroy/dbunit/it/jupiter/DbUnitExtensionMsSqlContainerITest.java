@@ -22,21 +22,25 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.jupiter;
+package com.github.mjeanroy.dbunit.it.jupiter;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
+import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.sql.Connection;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Target(ElementType.TYPE)
-@ExtendWith(TestContainersExtension.class)
-public @interface TestContainersTest {
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
 
-	String image();
+@TestContainersTest(image = "mcr.microsoft.com/mssql/server")
+@DbUnitTestContainersTest
+class DbUnitExtensionMsSqlContainerITest {
+
+	@Test
+	void test1(Connection connection) {
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
+	}
 }

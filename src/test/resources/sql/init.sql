@@ -25,9 +25,9 @@
 --
 -- Drop tables if it already exist.
 --
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS movies CASCADE;
-DROP TABLE IF EXISTS users_movies CASCADE;
+DROP TABLE IF EXISTS users_movies;
+DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS users;
 
 --
 -- Create tables.
