@@ -22,24 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it.configuration;
+package com.github.mjeanroy.dbunit.tests.jupiter;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Inherited
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.DELETE_ALL)
-public @interface DbUnitOperations {
+@Target(ElementType.TYPE)
+@ExtendWith(TestContainersExtension.class)
+public @interface TestContainersTest {
+
+	String image();
+
+	String username() default "dbunit-plus";
+
+	String password() default "dbunit-plus";
+
+	String databaseName() default "dbunit-plus";
 }

@@ -24,9 +24,10 @@
 
 package com.github.mjeanroy.dbunit.it.configuration;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
+import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -39,7 +40,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.DELETE_ALL)
-public @interface DbUnitOperations {
+@ExtendWith(DbUnitExtension.class)
+@DbUnitTest
+@DbUnitInit(sql = {
+	"classpath:/sql/init.sql",
+})
+@DbUnitConnection(
+	url = "${tc.jdbcUrl}",
+	user = "${tc.username}",
+	password = "${tc.password}"
+)
+public @interface DbUnitTestContainersTest {
 }
