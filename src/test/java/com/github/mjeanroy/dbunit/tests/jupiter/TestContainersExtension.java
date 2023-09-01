@@ -37,6 +37,7 @@ import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -144,6 +145,8 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 				return new MariaDBContainer(dockerImage);
 			case "mcr.microsoft.com/mssql/server":
 				return new MSSQLServerContainer(dockerImage).acceptLicense();
+			case "gvenzl/oracle-xe":
+				return new OracleContainer(dockerImage);
 			default:
 				throw new AssertionError("Cannot start container for image: " + image);
 		}
