@@ -28,23 +28,29 @@ import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 /**
  * Set of Common JDBC Drivers.
  */
 enum JdbcDriver {
 
-	MYSQL("mysql", "com.mysql.jdbc.Driver"),
+	MYSQL("mysql", asList(
+		"com.mysql.cj.jdbc.Driver",
+		"com.mysql.jdbc.Driver"
+	)),
+
 	POSTGRESQL("postgresql", "org.postgresql.Driver"),
 	ORACLE("oracle", "oracle.jdbc.driver.OracleDriver"),
 	MSSQL("sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
 	MARIADB("mariadb", "org.mariadb.jdbc.Driver"),
 	HSQLDB("hsqldb", "org.hsqldb.jdbcDriver"),
 	H2("h2", "org.h2.Driver");
-
-	/**
-	 * Class Logger.
-	 */
-	private static final Logger log = Loggers.getLogger(JdbcDriver.class);
 
 	/**
 	 * JDBC id (visible in JDBC Connection: jdbc:[id]:[connection).
@@ -54,7 +60,7 @@ enum JdbcDriver {
 	/**
 	 * JDBC Driver Name (class to load).
 	 */
-	private final String driverName;
+	private final List<String> driverNames;
 
 	/**
 	 * Create JDBC Driver.
@@ -64,7 +70,18 @@ enum JdbcDriver {
 	 */
 	JdbcDriver(String id, String driverName) {
 		this.id = id;
-		this.driverName = driverName;
+		this.driverNames = singletonList(driverName);
+	}
+
+	/**
+	 * Create JDBC Driver using list of potential drivers.
+	 *
+	 * @param id JDBC id.
+	 * @param driverNames JDBC Driver Names.
+	 */
+	JdbcDriver(String id, Collection<String> driverNames) {
+		this.id = id;
+		this.driverNames = new ArrayList<>(driverNames);
 	}
 
 	/**
@@ -73,12 +90,23 @@ enum JdbcDriver {
 	 * @throws JdbcException If driver cannot be loaded.
 	 */
 	public void loadDriver() {
+		for (String driverName : driverNames) {
+			boolean success = tryDriver(driverName);
+			if (success) {
+				return;
+			}
+		}
+
+		throw new JdbcException("Cannot load " + driverNames.get(0) + " driver, please import appropriate JAR library");
+	}
+
+	private boolean tryDriver(String driverName) {
 		try {
 			Class.forName(driverName);
+			return true;
 		}
 		catch (ClassNotFoundException ex) {
-			log.error(ex.getMessage(), ex);
-			throw new JdbcException("Cannot load " + name() + " driver, please import appropriate JAR library", ex);
+			return false;
 		}
 	}
 
