@@ -123,6 +123,11 @@
     <wiremock.version>2.27.2</wiremock.version>
     <equalsverifier.version>3.15.1</equalsverifier.version>
     <liquibase-slf4j.version>5.0.0</liquibase-slf4j.version>
+    <testcontainers.version>1.19.0</testcontainers.version>
+
+    <postgresql.version>42.6.0</postgresql.version>
+    <mysql.version>8.0.33</mysql.version>
+    <mariadb.version>3.2.0</mariadb.version>
   </properties>
 
   <profiles>
@@ -367,6 +372,49 @@
       <groupId>com.mattbertolini</groupId>
       <artifactId>liquibase-slf4j</artifactId>
       <version>${liquibase-slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>mysql</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>mariadb</artifactId>
+      <version>${testcontainers.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <version>${mariadb.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

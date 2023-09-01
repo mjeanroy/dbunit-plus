@@ -22,24 +22,25 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.it.configuration;
+package com.github.mjeanroy.dbunit.it.jupiter;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
-import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
+import org.junit.jupiter.api.Test;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.sql.Connection;
 
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Inherited
-@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
-@DbUnitTearDown(DbUnitOperation.DELETE_ALL)
-public @interface DbUnitOperations {
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static org.assertj.core.api.Assertions.assertThat;
+
+@TestContainersTest(image = "mariadb:10")
+@DbUnitTestContainersTest
+class DbUnitExtensionMariaDbContainerITest {
+
+	@Test
+	void test1(Connection connection) {
+		assertThat(countUsers(connection)).isEqualTo(2);
+		assertThat(countMovies(connection)).isEqualTo(3);
+	}
 }
