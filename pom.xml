@@ -110,7 +110,7 @@
     <jackson.version>2.15.2</jackson.version>
     <jackson-dataformat-yaml.version>2.15.2</jackson-dataformat-yaml.version>
     <gson.version>2.10.1</gson.version>
-    <snakeyaml.version>2.1</snakeyaml.version>
+    <snakeyaml.version>2.2</snakeyaml.version>
     <hsqldb.version>2.5.1</hsqldb.version>
     <spring.version>5.3.23</spring.version>
     <liquibase.version>4.21.1</liquibase.version>
