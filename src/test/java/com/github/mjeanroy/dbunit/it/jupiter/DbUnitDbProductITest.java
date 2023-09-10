@@ -24,10 +24,15 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
+import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.sql.Connection;
 
@@ -43,6 +48,14 @@ class DbUnitDbProductITest {
 			assertThat(countUsers(connection)).isEqualTo(2);
 			assertThat(countMovies(connection)).isEqualTo(3);
 		}
+	}
+
+	@HsqldbTest
+	@ExtendWith(DbUnitExtension.class)
+	@DbUnitTest
+	@DbUnitHsqldbConnection
+	@Nested
+	class HsqlDB extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = "mysql:5.7")
