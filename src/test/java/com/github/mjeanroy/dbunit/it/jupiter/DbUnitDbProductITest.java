@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.it.jupiter;
 
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
@@ -34,13 +35,37 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestContainersTest(image = "mysql:5.7")
-@DbUnitTestContainersTest
-class DbUnitExtensionMysqlContainerITest {
+class DbUnitDbProductITest {
 
-	@Test
-	void test1(Connection connection) {
-		assertThat(countUsers(connection)).isEqualTo(2);
-		assertThat(countMovies(connection)).isEqualTo(3);
+	private static abstract class AbstractDbUnitDbProductITest {
+		@Test
+		void it_should_init_and_load_default_dataset(Connection connection) {
+			assertThat(countUsers(connection)).isEqualTo(2);
+			assertThat(countMovies(connection)).isEqualTo(3);
+		}
+	}
+
+	@TestContainersTest(image = "mysql:5.7")
+	@DbUnitTestContainersTest
+	@Nested
+	class MySQL57 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = "postgres:12")
+	@DbUnitTestContainersTest
+	@Nested
+	class Postgres12 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = "mariadb:10")
+	@DbUnitTestContainersTest
+	@Nested
+	class MariaDB10 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = "mcr.microsoft.com/mssql/server")
+	@DbUnitTestContainersTest
+	@Nested
+	class MsSQL extends AbstractDbUnitDbProductITest {
 	}
 }
