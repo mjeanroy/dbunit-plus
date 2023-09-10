@@ -82,6 +82,21 @@ public final class Strings {
 		return true;
 	}
 
+	/**
+	 * Trim given input and returns {@code null} if trimmed input is empty.
+	 *
+	 * @param input Input.
+	 * @return Trimmed input, or {@code null}.
+	 */
+	public static String trimToNull(String input) {
+		String trimmedInput = trim(input);
+		return isEmpty(trimmedInput) ? null : trimmedInput;
+	}
+
+	private static String trim(String input) {
+		return input == null ? null : input.trim();
+	}
+
 	public static String substitute(String input, String prefix, String suffix, Map<String, String> variables) {
 		if (isEmpty(input)) {
 			return input;

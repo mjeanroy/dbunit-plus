@@ -182,14 +182,15 @@ public class DbUnitRunner {
 			return;
 		}
 
+		Config config = readConfig(testMethod);
 		IDatabaseConnection dbConnection = null;
 
 		try (Connection connection = factory.getConnection()) {
 			log.trace(" 1- Get SQL connection");
-			dbConnection = new DatabaseConnection(connection);
+			dbConnection = new DatabaseConnection(connection, config.getSchema());
 
 			log.trace(" 2- Try to apply DbUnit connection configuration");
-			List<DbUnitConfigInterceptor> interceptors = readConfig(testMethod);
+			List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 			if (!interceptors.isEmpty()) {
 				for (DbUnitConfigInterceptor interceptor : interceptors) {
 					interceptor.applyConfiguration(dbConnection.getConfig());
@@ -243,9 +244,9 @@ public class DbUnitRunner {
 	 * @return The interceptor, {@code null} if it is not configured.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private List<DbUnitConfigInterceptor> readConfig(Method method) {
+	private Config readConfig(Method method) {
 		DbUnitConfig annotation = Annotations.findAnnotation(method, DbUnitConfig.class);
-		return annotation == null ? ctx.getInterceptors() : DbUnitAnnotationsParser.readConfig(annotation);
+		return annotation == null ? ctx.getConfig() : DbUnitAnnotationsParser.readConfig(annotation);
 	}
 
 	/**

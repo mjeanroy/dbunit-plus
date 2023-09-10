@@ -55,6 +55,11 @@ final class DbUnitClassContext {
 	private final IDataSet dataSet;
 
 	/**
+	 * Global DBUnit configuration.
+	 */
+	private final Config config;
+
+	/**
 	 * The JDBC Connection factory.
 	 */
 	private final JdbcConnectionFactory connectionFactory;
@@ -75,11 +80,6 @@ final class DbUnitClassContext {
 	private final List<Replacements> replacements;
 
 	/**
-	 * The list of DbUnit configuration interceptors.
-	 */
-	private final List<DbUnitConfigInterceptor> interceptors;
-
-	/**
 	 * Create the class context.
 	 *
 	 * @param dataSet The class dataset (may be {@code null}).
@@ -87,22 +87,25 @@ final class DbUnitClassContext {
 	 * @param initScripts The list of initialization scripts to run.
 	 * @param liquibaseChangeLogs The liquibase changelogs.
 	 * @param replacements The list of replacement value.
-	 * @param interceptors The list of DbUnit configuration interceptor.
 	 */
 	DbUnitClassContext(
+		Config config,
 		IDataSet dataSet,
 		JdbcConnectionFactory connectionFactory,
 		List<SqlScript> initScripts,
 		List<LiquibaseChangeLog> liquibaseChangeLogs,
-		List<Replacements> replacements,
-		List<DbUnitConfigInterceptor> interceptors) {
-
+		List<Replacements> replacements
+	) {
+		this.config = config;
 		this.dataSet = dataSet;
 		this.connectionFactory = connectionFactory;
 		this.initScripts = unmodifiableList(new ArrayList<>(initScripts));
 		this.liquibaseChangeLogs = unmodifiableList(new ArrayList<>(liquibaseChangeLogs));
 		this.replacements = unmodifiableList(new ArrayList<>(replacements));
-		this.interceptors = unmodifiableList(new ArrayList<>(interceptors));
+	}
+
+	Config getConfig() {
+		return config;
 	}
 
 	/**
@@ -151,12 +154,21 @@ final class DbUnitClassContext {
 	}
 
 	/**
-	 * Get {@link #interceptors}
+	 * Get database schema to use with {@link org.dbunit.database.DatabaseConnection}
 	 *
-	 * @return {@link #interceptors}
+	 * @return Database schema.
+	 */
+	String getSchema() {
+		return config.getSchema();
+	}
+
+	/**
+	 * Get DBUnit interceptors.
+	 *
+	 * @return DBUnit interceptors.
 	 */
 	List<DbUnitConfigInterceptor> getInterceptors() {
-		return interceptors;
+		return config.getInterceptors();
 	}
 
 	@Override
@@ -168,11 +180,11 @@ final class DbUnitClassContext {
 		if (o instanceof DbUnitClassContext) {
 			DbUnitClassContext ctx = (DbUnitClassContext) o;
 			return Objects.equals(dataSet, ctx.dataSet)
+				&& Objects.equals(config, ctx.config)
 				&& Objects.equals(replacements, ctx.replacements)
 				&& Objects.equals(connectionFactory, ctx.connectionFactory)
 				&& Objects.equals(initScripts, ctx.initScripts)
-				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs)
-				&& Objects.equals(interceptors, ctx.interceptors);
+				&& Objects.equals(liquibaseChangeLogs, ctx.liquibaseChangeLogs);
 		}
 
 		return false;
@@ -182,11 +194,11 @@ final class DbUnitClassContext {
 	public int hashCode() {
 		return Objects.hash(
 			dataSet,
+			config,
 			replacements,
 			connectionFactory,
 			initScripts,
-			liquibaseChangeLogs,
-			interceptors
+			liquibaseChangeLogs
 		);
 	}
 
@@ -194,11 +206,11 @@ final class DbUnitClassContext {
 	public String toString() {
 		return ToStringBuilder.create(getClass())
 			.append("dataSet", dataSet)
+			.append("config", config)
 			.append("connectionFactory", connectionFactory)
 			.append("initScripts", initScripts)
 			.append("liquibaseChangeLogs", liquibaseChangeLogs)
 			.append("replacements", replacements)
-			.append("interceptors", interceptors)
 			.build();
 	}
 }

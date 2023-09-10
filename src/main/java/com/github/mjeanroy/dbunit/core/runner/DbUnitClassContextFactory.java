@@ -31,7 +31,6 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitLiquibase;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitReplacements;
-import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
@@ -77,15 +76,15 @@ final class DbUnitClassContextFactory {
 			final List<SqlScript> initScripts = extractSqlScript(type);
 			final List<LiquibaseChangeLog> liquibaseChangeLogs = extractLiquibaseChangeLogs(type);
 			final List<Replacements> replacements = extractReplacements(type);
-			final List<DbUnitConfigInterceptor> interceptors = readConfig(type);
+			final Config config = readConfig(type);
 
 			return new DbUnitClassContext(
+				config,
 				dataSet,
 				connectionFactory,
 				initScripts,
 				liquibaseChangeLogs,
-				replacements,
-				interceptors
+				replacements
 			);
 		}
 	}
@@ -159,7 +158,7 @@ final class DbUnitClassContextFactory {
 	 * @return The list of interceptors.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	private static List<DbUnitConfigInterceptor> readConfig(Class<?> testClass) {
+	private static Config readConfig(Class<?> testClass) {
 		DbUnitConfig annotation = findAnnotation(testClass, DbUnitConfig.class);
 		return DbUnitAnnotationsParser.readConfig(annotation);
 	}

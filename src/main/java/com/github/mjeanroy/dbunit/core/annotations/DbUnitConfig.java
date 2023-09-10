@@ -83,6 +83,13 @@ import java.lang.annotation.Target;
 public @interface DbUnitConfig {
 
 	/**
+	 * Schema to use with DBUnit Connection.
+	 *
+	 * @return Schema.
+	 */
+	String schema() default "";
+
+	/**
 	 * The interceptor class that will be instantiated and executed before applying DbUnit dataset.
 	 *
 	 * @return The interceptor class.

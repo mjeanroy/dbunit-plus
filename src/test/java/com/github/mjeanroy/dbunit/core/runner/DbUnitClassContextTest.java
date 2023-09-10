@@ -45,6 +45,7 @@ class DbUnitClassContextTest {
 
 	@Test
 	void it_should_create_class_context() {
+		final String schema = null;
 		final IDataSet dataSet = new DefaultDataSet();
 
 		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
@@ -68,15 +69,18 @@ class DbUnitClassContextTest {
 			mock(DbUnitConfigInterceptor.class)
 		);
 
+		final Config config = new Config(schema, interceptors);
+
 		final DbUnitClassContext ctx = new DbUnitClassContext(
+			config,
 			dataSet,
 			connectionFactory,
 			sqlScripts,
 			liquibaseChangeLogs,
-			replacements,
-			interceptors
+			replacements
 		);
 
+		assertThat(ctx.getSchema()).isEqualTo(schema);
 		assertThat(ctx.getDataSet()).isEqualTo(dataSet);
 		assertThat(ctx.getInitScripts()).isEqualTo(sqlScripts);
 		assertThat(ctx.getLiquibaseChangeLogs()).isEqualTo(liquibaseChangeLogs);
@@ -89,6 +93,7 @@ class DbUnitClassContextTest {
 
 	@Test
 	void it_should_implement_to_string() {
+		final String schema = null;
 		final IDataSet dataSet = mock(IDataSet.class, "MockDataSet");
 
 		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
@@ -112,18 +117,25 @@ class DbUnitClassContextTest {
 			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
 		);
 
+		final Config config = new Config(schema, interceptors);
+
 		final DbUnitClassContext ctx = new DbUnitClassContext(
+			config,
 			dataSet,
 			connectionFactory,
 			sqlScripts,
 			liquibaseChangeLogs,
-			replacements,
-			interceptors
+			replacements
 		);
 
 		assertThat(ctx).hasToString(
 			"DbUnitClassContext{" +
 				"dataSet: MockDataSet, " +
+
+				"config: Config{" +
+					"schema: null, " +
+					"interceptors: [MockDbUnitConfigInterceptor]" +
+				"}, " +
 
 				"connectionFactory: JdbcDefaultConnectionFactory{" +
 					"configuration: JdbcConfiguration{" +
@@ -152,10 +164,6 @@ class DbUnitClassContextTest {
 					"Replacements{" +
 						"replacements: {foo=bar}" +
 					"}" +
-				"], " +
-
-				"interceptors: [" +
-					"MockDbUnitConfigInterceptor" +
 				"]" +
 			"}"
 		);

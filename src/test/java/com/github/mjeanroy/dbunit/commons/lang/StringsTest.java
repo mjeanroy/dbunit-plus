@@ -57,6 +57,15 @@ class StringsTest {
 	}
 
 	@Test
+	void it_should_trim_to_null() {
+		assertThat(Strings.trimToNull(null)).isNull();
+		assertThat(Strings.trimToNull("")).isNull();
+		assertThat(Strings.trimToNull("  ")).isNull();
+		assertThat(Strings.trimToNull("foo")).isEqualTo("foo");
+		assertThat(Strings.trimToNull("  foo  ")).isEqualTo("foo");
+	}
+
+	@Test
 	void it_should_not_substitute_null() {
 		String input = null;
 		String prefix = "${";

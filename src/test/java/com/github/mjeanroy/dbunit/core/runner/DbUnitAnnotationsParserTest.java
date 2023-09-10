@@ -191,7 +191,8 @@ class DbUnitAnnotationsParserTest {
 	void it_should_read_interceptor() {
 		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
+		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		final List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 
 		assertThat(interceptors).hasSize(10);
 
@@ -214,7 +215,8 @@ class DbUnitAnnotationsParserTest {
 	void it_should_read_interceptor_with_default_interceptors() {
 		final Class<TestClassWithDefaultDbUnitConfig> testClass = TestClassWithDefaultDbUnitConfig.class;
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
+		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		final List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 
 		// Default ones.
 		assertThat(interceptors).hasSize(9);
@@ -239,16 +241,16 @@ class DbUnitAnnotationsParserTest {
 		final Class<DefaultMetadataHandler> metadataHandler = DefaultMetadataHandler.class;
 
 		verifyInterceptors(
-				interceptors,
-				allowEmptyFields,
-				qualifiedTableNames,
-				caseSensitiveTableNames,
-				batchedStatements,
-				datatypeWarning,
-				datatypeFactory,
-				fetchSize,
-				batchSize,
-				metadataHandler
+			interceptors,
+			allowEmptyFields,
+			qualifiedTableNames,
+			caseSensitiveTableNames,
+			batchedStatements,
+			datatypeWarning,
+			datatypeFactory,
+			fetchSize,
+			batchSize,
+			metadataHandler
 		);
 	}
 
@@ -256,7 +258,8 @@ class DbUnitAnnotationsParserTest {
 	void it_should_read_interceptor_with_appropriate_values() {
 		final Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
 		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final List<DbUnitConfigInterceptor> interceptors = DbUnitAnnotationsParser.readConfig(annotation);
+		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		final List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 
 		// Default ones.
 		assertThat(interceptors).hasSize(9);
@@ -281,30 +284,50 @@ class DbUnitAnnotationsParserTest {
 		final Class<MySqlMetadataHandler> metadataHandler = MySqlMetadataHandler.class;
 
 		verifyInterceptors(
-				interceptors,
-				allowEmptyFields,
-				qualifiedTableNames,
-				caseSensitiveTableNames,
-				batchedStatements,
-				datatypeWarning,
-				datatypeFactory,
-				fetchSize,
-				batchSize,
-				metadataHandler
+			interceptors,
+			allowEmptyFields,
+			qualifiedTableNames,
+			caseSensitiveTableNames,
+			batchedStatements,
+			datatypeWarning,
+			datatypeFactory,
+			fetchSize,
+			batchSize,
+			metadataHandler
 		);
 	}
 
+	@Test
+	void it_should_read_schema() {
+		final Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
+		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		final String schema = config.getSchema();
+
+		assertThat(schema).isEqualTo("public");
+	}
+
+	@Test
+	void it_should_read_schema_with_empty_string() {
+		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
+		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		final String schema = config.getSchema();
+
+		assertThat(schema).isNull();
+	}
+
 	private static void verifyInterceptors(
-			List<DbUnitConfigInterceptor> interceptors,
-			boolean allowEmptyFields,
-			boolean qualifiedTableNames,
-			boolean caseSensitiveTableNames,
-			boolean batchedStatements,
-			boolean datatypeWarning,
-			Class<? extends IDataTypeFactory> datatypeFactory,
-			int fetchSize,
-			int batchSize,
-			Class<? extends IMetadataHandler> metadataHandler) {
+		List<DbUnitConfigInterceptor> interceptors,
+		boolean allowEmptyFields,
+		boolean qualifiedTableNames,
+		boolean caseSensitiveTableNames,
+		boolean batchedStatements,
+		boolean datatypeWarning,
+		Class<? extends IDataTypeFactory> datatypeFactory,
+		int fetchSize,
+		int batchSize,
+		Class<? extends IMetadataHandler> metadataHandler) {
 
 		DatabaseConfig config = new DatabaseConfig();
 		for (DbUnitConfigInterceptor interceptor : interceptors) {
@@ -323,15 +346,16 @@ class DbUnitAnnotationsParserTest {
 	}
 
 	@DbUnitConfig(
-			caseSensitiveTableNames = true,
-			qualifiedTableNames = true,
-			batchedStatements = true,
-			allowEmptyFields = true,
-			datatypeWarning = false,
-			fetchSize = 50,
-			batchSize = 20,
-			datatypeFactory = MySqlDataTypeFactory.class,
-			metadataHandler = MySqlMetadataHandler.class
+		schema = "public",
+		caseSensitiveTableNames = true,
+		qualifiedTableNames = true,
+		batchedStatements = true,
+		allowEmptyFields = true,
+		datatypeWarning = false,
+		fetchSize = 50,
+		batchSize = 20,
+		datatypeFactory = MySqlDataTypeFactory.class,
+		metadataHandler = MySqlMetadataHandler.class
 	)
 	private static class TestClassWithCustomDbUnitConfig {
 	}

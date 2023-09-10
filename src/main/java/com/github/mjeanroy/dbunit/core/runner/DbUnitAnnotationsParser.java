@@ -261,11 +261,12 @@ final class DbUnitAnnotationsParser {
 	 * @return The list of interceptors.
 	 * @throws DbUnitException If instantiating the interceptor failed.
 	 */
-	static List<DbUnitConfigInterceptor> readConfig(DbUnitConfig annotation) {
+	static Config readConfig(DbUnitConfig annotation) {
 		if (annotation == null) {
-			return emptyList();
+			return new Config();
 		}
 
+		String schema = annotation.schema();
 		boolean allowEmptyFields = annotation.allowEmptyFields();
 		boolean qualifiedTableNames = annotation.qualifiedTableNames();
 		boolean caseSensitiveTableNames = annotation.caseSensitiveTableNames();
@@ -290,7 +291,7 @@ final class DbUnitAnnotationsParser {
 
 		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();
 		if (interceptorClasses.length == 0) {
-			return defaultInterceptors;
+			return new Config(schema, defaultInterceptors);
 		}
 
 		List<DbUnitConfigInterceptor> customInterceptors = Arrays.stream(interceptorClasses)
@@ -300,6 +301,7 @@ final class DbUnitAnnotationsParser {
 		List<DbUnitConfigInterceptor> interceptors = new ArrayList<>(customInterceptors.size() + defaultInterceptors.size());
 		interceptors.addAll(defaultInterceptors);
 		interceptors.addAll(customInterceptors);
-		return interceptors;
+		return new Config(schema, interceptors);
 	}
+
 }
