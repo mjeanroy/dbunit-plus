@@ -24,7 +24,9 @@
 
 package com.github.mjeanroy.dbunit.it.jupiter;
 
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
+import com.github.mjeanroy.dbunit.it.configuration.DbUnitH2Connection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
@@ -57,6 +59,15 @@ class DbUnitDbProductITest {
 	@DbUnitHsqldbConnection
 	@Nested
 	class HsqlDB extends AbstractDbUnitDbProductITest {
+	}
+
+	@EmbeddedDatabaseTest(type = Type.H2)
+	@ExtendWith(DbUnitExtension.class)
+	@DbUnitTest
+	@DbUnitConfig(schema = "public")
+	@DbUnitH2Connection
+	@Nested
+	class H2 extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = "mysql:5.7")
