@@ -25,8 +25,6 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.util.ArrayList;
 import java.util.Collection;

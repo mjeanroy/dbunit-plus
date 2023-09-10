@@ -91,6 +91,7 @@ public final class ClassUtils {
 	 * @return The new instance.
 	 * @throws ClassInstantiationException If an error occurred while instantiating class.
 	 */
+	@SuppressWarnings("deprecation")
 	public static <T> T instantiate(Class<T> klass, Object... parameters) {
 		Class<?>[] parameterTypes = toParameterTypes(parameters);
 		Constructor<T> ctor = findConstructor(klass, parameterTypes);

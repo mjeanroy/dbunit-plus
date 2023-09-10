@@ -34,6 +34,7 @@ import liquibase.Contexts;
 import liquibase.Liquibase;
 import liquibase.database.DatabaseConnection;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.ResourceAccessor;
@@ -117,8 +118,11 @@ public class LiquibaseUpdater {
 		Liquibase liquibase = null;
 
 		try {
-			liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
-			liquibase.update(new Contexts("dbunit", "test"));
+			liquibase = liquibaseUpdate(
+				changeLogFullPath,
+				resourceAccessor,
+				db
+			);
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
@@ -136,6 +140,13 @@ public class LiquibaseUpdater {
 				}
 			}
 		}
+	}
+
+	@SuppressWarnings("deprecation")
+	private Liquibase liquibaseUpdate(String changeLogFullPath, ResourceAccessor resourceAccessor, DatabaseConnection db) throws LiquibaseException {
+		Liquibase liquibase = new Liquibase(changeLogFullPath, resourceAccessor, db);
+		liquibase.update(new Contexts("dbunit", "test"));
+		return liquibase;
 	}
 
 	private String getChangeLogFullPath() {
