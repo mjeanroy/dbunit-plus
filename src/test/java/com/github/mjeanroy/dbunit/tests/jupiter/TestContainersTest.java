@@ -39,4 +39,10 @@ import java.lang.annotation.Target;
 public @interface TestContainersTest {
 
 	String image();
+
+	String urlProperty() default "tc.jdbcUrl";
+
+	String usernameProperty() default "tc.username";
+
+	String passwordProperty() default "tc.password";
 }

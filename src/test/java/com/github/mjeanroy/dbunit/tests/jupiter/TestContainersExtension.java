@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -44,7 +45,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 /**
  * A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
@@ -55,10 +55,6 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 	private static final Namespace NAMESPACE = Namespace.create(TestContainersExtension.class);
 	private static final String CONTAINER_KEY = "container";
 	private static final String PROP_KEY = "prop";
-
-	private static final String TC_JDBC_URL = "tc.jdbcUrl";
-	private static final String TC_USERNAME = "tc.username";
-	private static final String TC_PASSWORD = "tc.password";
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
@@ -84,21 +80,28 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 
 	@SuppressWarnings("rawtypes")
 	private void initialize(ExtensionContext context) {
-		Optional<TestContainersTest> maybeAnnotation = findAnnotation(context.getRequiredTestClass(), TestContainersTest.class);
-		if (!maybeAnnotation.isPresent()) {
-			throw new AssertionError("Cannot find @TestContainersTest annotation");
-		}
-
-		TestContainersTest annotation = maybeAnnotation.get();
-
+		TestContainersTest annotation = findAnnotation(context);
 		String image = annotation.image();
 		JdbcDatabaseContainer container = startContainer(image);
 
 		getStore(context).put(CONTAINER_KEY, container);
 
-		storeSystemProperty(context, TC_JDBC_URL, container.getJdbcUrl());
-		storeSystemProperty(context, TC_USERNAME, container.getUsername());
-		storeSystemProperty(context, TC_PASSWORD, container.getPassword());
+		storeSystemProperty(context, annotation.urlProperty(), container.getJdbcUrl());
+		storeSystemProperty(context, annotation.usernameProperty(), container.getUsername());
+		storeSystemProperty(context, annotation.passwordProperty(), container.getPassword());
+	}
+
+	private static TestContainersTest findAnnotation(ExtensionContext context) {
+		Optional<TestContainersTest> maybeAnnotation = AnnotationUtils.findAnnotation(
+			context.getRequiredTestClass(),
+			TestContainersTest.class
+		);
+
+		if (!maybeAnnotation.isPresent()) {
+			throw new AssertionError("Cannot find @TestContainersTest annotation");
+		}
+
+		return maybeAnnotation.get();
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -109,9 +112,10 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 			}
 		}
 
-		resetSystemProperty(context, TC_JDBC_URL);
-		resetSystemProperty(context, TC_USERNAME);
-		resetSystemProperty(context, TC_PASSWORD);
+		TestContainersTest annotation = findAnnotation(context);
+		resetSystemProperty(context, annotation.urlProperty());
+		resetSystemProperty(context, annotation.usernameProperty());
+		resetSystemProperty(context, annotation.passwordProperty());
 	}
 
 	private static Store getStore(ExtensionContext context) {
