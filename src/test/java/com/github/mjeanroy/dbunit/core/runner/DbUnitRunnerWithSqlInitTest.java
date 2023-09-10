@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
@@ -36,7 +36,7 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@HsqldbTest(initScript = false)
+@EmbeddedDatabaseTest(initScript = false)
 class DbUnitRunnerWithSqlInitTest {
 
 	@Test

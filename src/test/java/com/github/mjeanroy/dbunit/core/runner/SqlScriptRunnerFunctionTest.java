@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.stubbing.Answer;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SameParameterValue")
-@HsqldbTest
+@EmbeddedDatabaseTest
 class SqlScriptRunnerFunctionTest {
 
 	private SqlScript sqlScript;

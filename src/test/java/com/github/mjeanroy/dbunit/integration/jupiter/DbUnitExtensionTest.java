@@ -30,10 +30,10 @@ import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
 import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeExtensionContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeParameterContext;
 import com.github.mjeanroy.dbunit.tests.jupiter.FakeStore;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
 import org.hsqldb.jdbc.JDBCConnection;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -43,12 +43,12 @@ import java.lang.reflect.Parameter;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
-import static com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest.Lifecycle.BEFORE_EACH;
+import static com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest.Lifecycle.BEFORE_EACH;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.lookupMethod;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@HsqldbTest(lifecycle = BEFORE_EACH)
+@EmbeddedDatabaseTest(lifecycle = BEFORE_EACH)
 class DbUnitExtensionTest {
 
 	@Test

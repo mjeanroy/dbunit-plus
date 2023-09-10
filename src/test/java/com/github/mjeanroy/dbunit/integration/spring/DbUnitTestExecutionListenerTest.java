@@ -29,7 +29,7 @@ import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.context.ApplicationContext;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@HsqldbTest
+@EmbeddedDatabaseTest
 class DbUnitTestExecutionListenerTest {
 
 	private static final String DBUNIT_RUNNER_KEY = "DBUNIT_RUNNER";

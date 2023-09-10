@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.tests.jupiter;
 
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -35,32 +36,34 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Target(ElementType.TYPE)
-@ExtendWith(HsqldbExtension.class)
-public @interface HsqldbTest {
+@ExtendWith(EmbeddedDatabaseExtension.class)
+public @interface EmbeddedDatabaseTest {
 
-	/**
-	 * Check if initialization script shoud be run or not.
-	 *
-	 * @return The flag to know if initialization script should be run.
-	 */
-	boolean initScript() default true;
+	Type type() default Type.HSQL;
 
-	/**
-	 * Database name.
-	 *
-	 * @return The database name.
-	 */
 	String db() default "testdb";
 
-	/**
-	 * The embedded database lifecycle.
-	 *
-	 * @return Lifecycke.
-	 */
+	boolean initScript() default true;
+
 	Lifecycle lifecycle() default Lifecycle.BEFORE_ALL;
 
 	enum Lifecycle {
 		BEFORE_EACH,
 		BEFORE_ALL
+	}
+
+	enum Type {
+		HSQL(EmbeddedDatabaseType.HSQL),
+		H2(EmbeddedDatabaseType.H2);
+
+		private final EmbeddedDatabaseType type;
+
+		Type(EmbeddedDatabaseType type) {
+			this.type = type;
+		}
+
+		EmbeddedDatabaseType getType() {
+			return type;
+		}
 	}
 }

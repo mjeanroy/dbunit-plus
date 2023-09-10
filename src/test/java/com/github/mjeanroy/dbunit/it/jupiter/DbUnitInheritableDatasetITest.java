@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.it.jupiter;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(DbUnitExtension.class)
 @DbUnitHsqldbConnection
-@HsqldbTest
+@EmbeddedDatabaseTest
 @DbUnitDataSet({
 		USERS_XML,
 		MOVIES_XML,

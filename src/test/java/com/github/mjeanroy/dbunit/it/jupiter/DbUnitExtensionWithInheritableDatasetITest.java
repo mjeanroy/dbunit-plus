@@ -29,7 +29,7 @@ import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitOperations;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitUsersDataSet;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DbUnitUsersDataSet
 @DbUnitOperations
 @DbUnitHsqldbConnection
-@HsqldbTest
+@EmbeddedDatabaseTest
 class DbUnitExtensionWithInheritableDatasetITest {
 
 	@BeforeAll

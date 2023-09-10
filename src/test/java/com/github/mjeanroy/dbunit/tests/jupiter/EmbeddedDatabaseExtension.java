@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.tests.jupiter;
 
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest.Lifecycle;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest.Type;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -37,33 +39,27 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.lang.reflect.Parameter;
 import java.util.Optional;
-
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 /**
  * A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
  * before all/after all tests.
  */
-class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
+class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
 	/**
 	 * The internal namespace.
 	 */
-	private static final Namespace NAMESPACE = Namespace.create(HsqldbExtension.class);
+	private static final Namespace NAMESPACE = Namespace.create(EmbeddedDatabaseExtension.class);
 
-	/**
-	 * The name of the embedded database in the internal namespace.
-	 */
 	private static final String DB_KEY = "db";
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
-		HsqldbTest.Lifecycle lifecycle = getLifecycle(context);
-		if (lifecycle == HsqldbTest.Lifecycle.BEFORE_ALL) {
+		Lifecycle lifecycle = getLifecycle(context);
+		if (lifecycle == Lifecycle.BEFORE_ALL) {
 			initialize(context);
 		}
 	}
@@ -75,16 +71,16 @@ class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEach
 
 	@Override
 	public void beforeEach(ExtensionContext context) {
-		HsqldbTest.Lifecycle lifecycle = getLifecycle(context);
-		if (lifecycle == HsqldbTest.Lifecycle.BEFORE_EACH) {
+		Lifecycle lifecycle = getLifecycle(context);
+		if (lifecycle == Lifecycle.BEFORE_EACH) {
 			initialize(context);
 		}
 	}
 
 	@Override
 	public void afterEach(ExtensionContext context) {
-		HsqldbTest.Lifecycle lifecycle = getLifecycle(context);
-		if (lifecycle == HsqldbTest.Lifecycle.BEFORE_EACH) {
+		Lifecycle lifecycle = getLifecycle(context);
+		if (lifecycle == Lifecycle.BEFORE_EACH) {
 			shutdown(context);
 		}
 	}
@@ -102,16 +98,18 @@ class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEach
 	}
 
 	private void initialize(ExtensionContext context) {
-		Optional<HsqldbTest> annotation = findAnnotation(context.getRequiredTestClass(), HsqldbTest.class);
-		String dbName = annotation.map(HsqldbTest::db).orElse("testdb");
-		boolean runInit = annotation.map(HsqldbTest::initScript).orElse(true);
+		EmbeddedDatabaseTest annotation = findAnnotation(context);
+
+		String dbName = annotation.db();
+		boolean runInitScript = annotation.initScript();
+		Type type = annotation.type();
 
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder()
-			.setType(EmbeddedDatabaseType.HSQL)
+			.setType(type.getType())
 			.generateUniqueName(false)
 			.setName(dbName);
 
-		if (runInit) {
+		if (runInitScript) {
 			builder.addScript("classpath:/sql/init.sql");
 		}
 
@@ -120,7 +118,7 @@ class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEach
 		getStore(context).put(DB_KEY, db);
 	}
 
-	private void shutdown(ExtensionContext context) {
+	private static void shutdown(ExtensionContext context) {
 		final Store store = getStore(context);
 		final EmbeddedDatabase db = store.get(DB_KEY, EmbeddedDatabase.class);
 		if (db != null) {
@@ -133,19 +131,26 @@ class HsqldbExtension implements BeforeAllCallback, AfterAllCallback, BeforeEach
 		}
 	}
 
-	private static HsqldbTest.Lifecycle getLifecycle(ExtensionContext context) {
-		return AnnotationUtils.findAnnotation(context.getRequiredTestClass(), HsqldbTest.class)
-			.map(HsqldbTest::lifecycle)
-			.orElse(HsqldbTest.Lifecycle.BEFORE_ALL);
-	}
-
-	/**
-	 * Get the internal store from the test context.
-	 *
-	 * @param context The test context.
-	 * @return The internal store.
-	 */
 	private static Store getStore(ExtensionContext context) {
 		return context.getStore(NAMESPACE);
+	}
+
+	private static EmbeddedDatabaseTest findAnnotation(ExtensionContext context) {
+		Optional<EmbeddedDatabaseTest> annotation = AnnotationUtils.findAnnotation(
+			context.getRequiredTestClass(),
+			EmbeddedDatabaseTest.class,
+			true
+		);
+
+		if (!annotation.isPresent()) {
+			throw new AssertionError("Cannot find @EmbeddedDatabaseTest annotation");
+		}
+
+		return annotation.get();
+	}
+
+	private static Lifecycle getLifecycle(ExtensionContext context) {
+		EmbeddedDatabaseTest annotation = findAnnotation(context);
+		return annotation.lifecycle();
 	}
 }

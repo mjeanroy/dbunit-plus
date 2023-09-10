@@ -28,7 +28,8 @@ import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTest;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
-import com.github.mjeanroy.dbunit.tests.jupiter.HsqldbTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest.Type;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class DbUnitDbProductITest {
 		}
 	}
 
-	@HsqldbTest
+	@EmbeddedDatabaseTest(type = Type.HSQL)
 	@ExtendWith(DbUnitExtension.class)
 	@DbUnitTest
 	@DbUnitHsqldbConnection
