@@ -51,10 +51,34 @@ class DbUnitDbProductITest {
 	class MySQL57 extends AbstractDbUnitDbProductITest {
 	}
 
+	@TestContainersTest(image = "mysql:8")
+	@DbUnitTestContainersTest
+	@Nested
+	class MySQL8 extends AbstractDbUnitDbProductITest {
+	}
+
 	@TestContainersTest(image = "postgres:12")
 	@DbUnitTestContainersTest
 	@Nested
 	class Postgres12 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = "postgres:13")
+	@DbUnitTestContainersTest
+	@Nested
+	class Postgres13 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = "postgres:14")
+	@DbUnitTestContainersTest
+	@Nested
+	class Postgres14 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = "postgres:15")
+	@DbUnitTestContainersTest
+	@Nested
+	class Postgres15 extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = "mariadb:10")
