@@ -25,7 +25,6 @@
 package com.github.mjeanroy.dbunit.it.configuration;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -42,9 +41,6 @@ import java.lang.annotation.Target;
 @Inherited
 @ExtendWith(DbUnitExtension.class)
 @DbUnitTest
-@DbUnitInit(sql = {
-	"classpath:/sql/init.sql",
-})
 @DbUnitConnection(
 	url = "${tc.jdbcUrl}",
 	user = "${tc.username}",
