@@ -119,4 +119,35 @@ enum JdbcDriver {
 	public boolean match(String url) {
 		return url.startsWith("jdbc:" + id);
 	}
+
+	/**
+	 * Find JDBC driver based on the connection URL.
+	 *
+	 * @param connectionUrl JDBC Connection URL.
+	 * @return The driver, {@code null} if no driver matches.
+	 */
+	private static JdbcDriver findOne(String connectionUrl) {
+		for (JdbcDriver driver : JdbcDriver.values()) {
+			if (driver.match(connectionUrl)) {
+				return driver;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Laad JDBC driver based on the JDBC Connection URL.
+	 * @param connectionUrl JDBC Connection URL.
+	 * @throws JdbcException If no driver matches given connection URL.
+	 */
+	static void loadDriver(String connectionUrl) {
+		JdbcDriver jdbcDriver = findOne(connectionUrl);
+
+		if (jdbcDriver == null) {
+			throw new JdbcException("Cannot load JDBC driver for: " + connectionUrl);
+		}
+
+		jdbcDriver.loadDriver();
+	}
 }

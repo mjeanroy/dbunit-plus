@@ -25,11 +25,12 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
-import com.github.mjeanroy.dbunit.exception.JdbcException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Objects;
+
+import static com.github.mjeanroy.dbunit.core.jdbc.JdbcDriver.loadDriver;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
@@ -56,17 +57,6 @@ public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory 
 	protected Connection createConnection() throws Exception {
 		loadDriver(configuration.getUrl());
 		return DriverManager.getConnection(configuration.getUrl(), configuration.getUser(), configuration.getPassword());
-	}
-
-	private static void loadDriver(String url) {
-		for (JdbcDriver driver : JdbcDriver.values()) {
-			if (driver.match(url)) {
-				driver.loadDriver();
-				return;
-			}
-		}
-
-		throw new JdbcException("Cannot load JDBC driver for: " + url);
 	}
 
 	@Override
