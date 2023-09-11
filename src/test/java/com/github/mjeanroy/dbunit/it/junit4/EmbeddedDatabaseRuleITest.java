@@ -39,7 +39,8 @@ public class EmbeddedDatabaseRuleITest {
 
 	@Rule
 	public EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(new EmbeddedDatabaseBuilder()
-		.addScript("classpath:/sql/init.sql")
+		.addScript("classpath:/sql/drop.sql")
+		.addScript("classpath:/sql/schema.sql")
 		.addScript("classpath:/sql/data.sql")
 		.build());
 

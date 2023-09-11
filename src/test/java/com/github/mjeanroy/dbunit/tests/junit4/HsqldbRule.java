@@ -62,7 +62,8 @@ public class HsqldbRule extends ExternalResource {
 			.setName(dbName);
 
 		if (loadScript) {
-			builder.addScript("classpath:/sql/init.sql");
+			builder.addScript("classpath:/sql/drop.sql");
+			builder.addScript("classpath:/sql/schema.sql");
 		}
 
 		db = builder.build();

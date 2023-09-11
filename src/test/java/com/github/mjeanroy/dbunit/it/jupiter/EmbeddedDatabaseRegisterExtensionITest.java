@@ -37,8 +37,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @EmbeddedDatabaseConfiguration(
 	generateUniqueName = true,
 	scripts = {
-		"classpath:/sql/init.sql",
-		"classpath:/sql/data.sql"
+		"classpath:/sql/drop.sql",
+		"classpath:/sql/schema.sql",
+		"classpath:/sql/data.sql",
 	}
 )
 class EmbeddedDatabaseRegisterExtensionITest {

@@ -110,7 +110,8 @@ class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, 
 			.setName(dbName);
 
 		if (runInitScript) {
-			builder.addScript("classpath:/sql/init.sql");
+			builder.addScript("classpath:/sql/drop.sql");
+			builder.addScript("classpath:/sql/schema.sql");
 		}
 
 		EmbeddedDatabase db = builder.build();

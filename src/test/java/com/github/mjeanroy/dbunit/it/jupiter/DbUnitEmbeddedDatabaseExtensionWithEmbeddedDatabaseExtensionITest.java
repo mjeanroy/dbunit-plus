@@ -40,7 +40,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(EmbeddedDatabaseExtension.class)
 @ExtendWith(DbUnitEmbeddedDatabaseExtension.class)
 @DbUnitTest
-@EmbeddedDatabaseConfiguration(scripts = "classpath:/sql/init.sql")
+@EmbeddedDatabaseConfiguration(scripts = {
+	"classpath:/sql/drop.sql",
+	"classpath:/sql/schema.sql",
+})
 class DbUnitEmbeddedDatabaseExtensionWithEmbeddedDatabaseExtensionITest {
 
 	@Test

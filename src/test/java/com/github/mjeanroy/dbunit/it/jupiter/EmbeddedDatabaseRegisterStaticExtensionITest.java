@@ -35,8 +35,9 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @EmbeddedDatabaseConfiguration(scripts = {
-	"classpath:/sql/init.sql",
-	"classpath:/sql/data.sql"
+	"classpath:/sql/drop.sql",
+	"classpath:/sql/schema.sql",
+	"classpath:/sql/data.sql",
 })
 class EmbeddedDatabaseRegisterStaticExtensionITest {
 

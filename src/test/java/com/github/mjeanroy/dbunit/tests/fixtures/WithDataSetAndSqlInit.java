@@ -33,9 +33,12 @@ import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 
 @DbUnitDataSet(XML_DATASET)
-@DbUnitInit(sql = "/sql/init.sql")
 @DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
 @DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+@DbUnitInit(sql = {
+	"/sql/drop.sql",
+	"/sql/schema.sql",
+})
 public class WithDataSetAndSqlInit {
 
 	public void method1() {

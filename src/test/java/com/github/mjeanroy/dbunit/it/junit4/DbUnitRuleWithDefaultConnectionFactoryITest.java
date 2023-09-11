@@ -42,7 +42,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitTest
 @DbUnitHsqldbConnection
-@DbUnitInit(sql = "classpath:/sql/init.sql")
+@DbUnitInit(sql = {
+	"classpath:/sql/drop.sql",
+	"classpath:/sql/schema.sql",
+})
 public class DbUnitRuleWithDefaultConnectionFactoryITest {
 
 	@ClassRule

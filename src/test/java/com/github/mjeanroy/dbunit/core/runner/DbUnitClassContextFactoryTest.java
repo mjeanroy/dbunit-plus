@@ -72,11 +72,13 @@ class DbUnitClassContextFactoryTest {
 		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
-		assertThat(ctx.getInitScripts()).isNotEmpty().hasSize(1);
+		assertThat(ctx.getInitScripts()).isNotEmpty().hasSize(2);
 		assertThat(ctx.getInitScripts().get(0).getQueries()).isNotEmpty().containsExactly(
 			"DROP TABLE IF EXISTS users_movies;",
 			"DROP TABLE IF EXISTS movies;",
-			"DROP TABLE IF EXISTS users;",
+			"DROP TABLE IF EXISTS users;"
+		);
+		assertThat(ctx.getInitScripts().get(1).getQueries()).isNotEmpty().containsExactly(
 			"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
 			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));",
 			"CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);"

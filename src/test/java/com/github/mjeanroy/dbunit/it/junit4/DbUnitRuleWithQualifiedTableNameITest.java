@@ -44,7 +44,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitConfig(QualifiedTableNameConfiguration.class)
 @DbUnitDataSet("/dataset/qualified-table-names")
-@DbUnitInit(sql = "classpath:/sql/init.sql")
+@DbUnitInit(sql = {
+	"classpath:/sql/drop.sql",
+	"classpath:/sql/schema.sql",
+})
 @DbUnitOperations
 public class DbUnitRuleWithQualifiedTableNameITest {
 

@@ -124,7 +124,7 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 
 	@SuppressWarnings("rawtypes")
 	private static JdbcDatabaseContainer startContainer(String image) {
-		JdbcDatabaseContainer container = getContainer(image).withInitScript("sql/init.sql");
+		JdbcDatabaseContainer container = getContainer(image).withInitScript("sql/schema.sql");
 		container.start();
 		return container;
 	}

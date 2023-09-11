@@ -41,7 +41,10 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitTest
-@DbUnitInit(sql = "classpath:/sql/init.sql")
+@DbUnitInit(sql = {
+	"classpath:/sql/drop.sql",
+	"classpath:/sql/schema.sql",
+})
 public class DbUnitRuleITest {
 
 	@ClassRule

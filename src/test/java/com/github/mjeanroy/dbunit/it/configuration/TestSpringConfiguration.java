@@ -38,7 +38,8 @@ public class TestSpringConfiguration {
 	public DataSource dataSource() {
 		return new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
+			.addScript("classpath:/sql/drop.sql")
+			.addScript("classpath:/sql/schema.sql")
 			.build();
 	}
 }

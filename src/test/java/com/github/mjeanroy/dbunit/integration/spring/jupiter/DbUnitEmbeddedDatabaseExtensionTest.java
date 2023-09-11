@@ -51,7 +51,8 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 	void it_should_start_database_and_load_data_set() throws Exception {
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
+			.addScript("classpath:/sql/drop.sql")
+			.addScript("classpath:/sql/schema.sql")
 			.build());
 
 		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
@@ -70,7 +71,8 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 	void it_should_stop_database_and_remove_data_set_after_each_test() throws Exception {
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
+			.addScript("classpath:/sql/drop.sql")
+			.addScript("classpath:/sql/schema.sql")
 			.build());
 
 		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
@@ -94,7 +96,8 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 	void it_should_resolve_connection_parameter() {
 		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
+			.addScript("classpath:/sql/drop.sql")
+			.addScript("classpath:/sql/schema.sql")
 			.build());
 
 		final FixtureClass testInstance = new FixtureClass();
@@ -134,7 +137,8 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 	void it_should_support_embedded_database_parameter_injection() {
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
+			.addScript("classpath:/sql/drop.sql")
+			.addScript("classpath:/sql/schema.sql")
 			.build());
 
 		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);

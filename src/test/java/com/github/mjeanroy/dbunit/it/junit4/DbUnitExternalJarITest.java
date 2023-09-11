@@ -42,7 +42,10 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.JAR_XML_DATASE
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DbUnitDataSet(JAR_XML_DATASET)
-@DbUnitInit(sql = "classpath:/sql/init.sql")
+@DbUnitInit(sql = {
+	"classpath:/sql/drop.sql",
+	"classpath:/sql/schema.sql",
+})
 @DbUnitOperations
 public class DbUnitExternalJarITest {
 

@@ -74,7 +74,8 @@ class DbUnitEmbeddedDatabaseRuleTest {
 		final Description description = createTestDescription(WithDataSet.class, "method1");
 		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
-			.addScript("classpath:/sql/init.sql")
+			.addScript("classpath:/sql/drop.sql")
+			.addScript("classpath:/sql/schema.sql")
 			.build());
 
 		final DbUnitEmbeddedDatabaseRule rule = createRule(db);

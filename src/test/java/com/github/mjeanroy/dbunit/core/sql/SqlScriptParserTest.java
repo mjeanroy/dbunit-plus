@@ -168,7 +168,7 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
 		final List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
 		verifyParsedQueries(queries);
@@ -176,21 +176,21 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_parse_file_path() {
-		final String script = "/sql/init.sql";
+		final String script = "/sql/schema.sql";
 		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
 		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_parse_file_path_classpath() {
-		final String script = "classpath:/sql/init.sql";
+		final String script = "classpath:/sql/schema.sql";
 		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
 		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_execute_sql_file() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/init.sql").build();
+		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
 		final Connection connection = mock(Connection.class);
 		final PreparedStatement statement = mock(PreparedStatement.class);
 
@@ -203,7 +203,7 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_execute_sql_file_path() throws Exception {
-		final String script = "/sql/init.sql";
+		final String script = "/sql/schema.sql";
 		final Connection connection = mock(Connection.class);
 		final PreparedStatement statement = mock(PreparedStatement.class);
 
@@ -216,7 +216,7 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_execute_sql_file_path_from_classpath() throws Exception {
-		final String script = "classpath:/sql/init.sql";
+		final String script = "classpath:/sql/schema.sql";
 		final Connection connection = mock(Connection.class);
 		final PreparedStatement statement = mock(PreparedStatement.class);
 
@@ -261,9 +261,6 @@ class SqlScriptParserTest {
 
 	private static void verifyParsedQueries(List<String> queries) {
 		assertThat(queries).isNotEmpty().containsExactly(
-				"DROP TABLE IF EXISTS users_movies;",
-				"DROP TABLE IF EXISTS movies;",
-				"DROP TABLE IF EXISTS users;",
 				"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
 				"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));",
 				"CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);"
@@ -272,12 +269,6 @@ class SqlScriptParserTest {
 
 	private static void verifyExecutedQueries(Connection connection, PreparedStatement statement) throws SQLException {
 		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users_movies;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS movies;");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("DROP TABLE IF EXISTS users;");
-		inOrder.verify(statement).execute();
 		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));");
 		inOrder.verify(statement).execute();
 		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));");
