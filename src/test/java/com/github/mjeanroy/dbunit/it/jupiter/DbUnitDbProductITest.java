@@ -35,6 +35,7 @@ import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest.Type;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.sql.Connection;
@@ -116,5 +117,16 @@ class DbUnitDbProductITest {
 	@DbUnitTestContainersTest
 	@Nested
 	class MsSQL extends AbstractDbUnitDbProductITest {
+	}
+
+	@DisabledIfSystemProperty(
+		named = "os.arch",
+		matches = "aarch64",
+		disabledReason = "Oracle Container does not work on Apple M1"
+	)
+	@TestContainersTest(image = "gvenzl/oracle-xe:21")
+	@DbUnitTestContainersTest
+	@Nested
+	class Oracle extends AbstractDbUnitDbProductITest {
 	}
 }

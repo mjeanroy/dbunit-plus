@@ -38,10 +38,15 @@ import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MSSQLServerContainer;
 import org.testcontainers.containers.MariaDBContainer;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
@@ -55,6 +60,19 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 	private static final Namespace NAMESPACE = Namespace.create(TestContainersExtension.class);
 	private static final String CONTAINER_KEY = "container";
 	private static final String PROP_KEY = "prop";
+
+	private static final Map<String, Function<DockerImageName, JdbcDatabaseContainer<?>>> containers;
+
+	static {
+		containers = new HashMap<>();
+		containers.put("mysql", MySQLContainer::new);
+		containers.put("postgres", PostgreSQLContainer::new);
+		containers.put("mariadb", MariaDBContainer::new);
+		containers.put("gvenzl/oracle-xe", OracleContainer::new);
+		containers.put("mcr.microsoft.com/mssql/server", (image) ->
+			new MSSQLServerContainer<>(image).acceptLicense()
+		);
+	}
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
@@ -134,23 +152,20 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 		return initContainer(image);
 	}
 
-	@SuppressWarnings({"rawtypes", "resource"})
+	@SuppressWarnings("rawtypes")
 	private static JdbcDatabaseContainer initContainer(String image) {
 		DockerImageName dockerImage = DockerImageName.parse(image);
-		String dbProduct = image.split(":", 2)[0];
+		String dbProduct = dbProduct(image);
 
-		switch (dbProduct) {
-			case "mysql":
-				return new MySQLContainer(dockerImage);
-			case "postgres":
-				return new PostgreSQLContainer(dockerImage);
-			case "mariadb":
-				return new MariaDBContainer(dockerImage);
-			case "mcr.microsoft.com/mssql/server":
-				return new MSSQLServerContainer(dockerImage).acceptLicense();
-			default:
-				throw new AssertionError("Cannot start container for image: " + image);
+		if (!containers.containsKey(dbProduct)) {
+			throw new AssertionError("Cannot start container for image: " + image);
 		}
+
+		return containers.get(dbProduct).apply(dockerImage);
+	}
+
+	private static String dbProduct(String image) {
+		return image.split(":", 2)[0].toLowerCase(Locale.ROOT);
 	}
 
 	private static void storeSystemProperty(ExtensionContext context, String name, String value) {
