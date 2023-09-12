@@ -42,6 +42,39 @@ class JdbcConfigurationTest {
 		JdbcConfiguration configuration = newJdbcConfiguration(url, user, password);
 
 		assertThat(configuration).isNotNull();
+		assertThat(configuration.getDriver()).isNull();
+		assertThat(configuration.getUrl()).isEqualTo(url);
+		assertThat(configuration.getUser()).isEqualTo(user);
+		assertThat(configuration.getPassword()).isEqualTo(password);
+	}
+
+	@Test
+	void it_should_create_configuration_with_jdbc_driver() {
+		String driver = "org.hsqldb.jdbcDriver";
+		String url = "jdbc:hsqldb:mem:database/testdb";
+		String user = "SA";
+		String password = "";
+
+		JdbcConfiguration configuration = newJdbcConfiguration(driver, url, user, password);
+
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getDriver()).isEqualTo(driver);
+		assertThat(configuration.getUrl()).isEqualTo(url);
+		assertThat(configuration.getUser()).isEqualTo(user);
+		assertThat(configuration.getPassword()).isEqualTo(password);
+	}
+
+	@Test
+	void it_should_create_configuration_with_empty_jdbc_driver() {
+		String driver = "";
+		String url = "jdbc:hsqldb:mem:database/testdb";
+		String user = "SA";
+		String password = "";
+
+		JdbcConfiguration configuration = newJdbcConfiguration(driver, url, user, password);
+
+		assertThat(configuration).isNotNull();
+		assertThat(configuration.getDriver()).isNull();
 		assertThat(configuration.getUrl()).isEqualTo(url);
 		assertThat(configuration.getUser()).isEqualTo(user);
 		assertThat(configuration.getPassword()).isEqualTo(password);
@@ -57,6 +90,7 @@ class JdbcConfigurationTest {
 
 		assertThat(configuration).hasToString(
 			"JdbcConfiguration{" +
+				"driver: null, " +
 				"url: \"jdbc:hsqldb:mem:database/testdb\", " +
 				"user: \"SA\", " +
 				"password: \"\"" +

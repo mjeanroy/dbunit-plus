@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
-import com.github.mjeanroy.dbunit.commons.lang.Strings;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -58,24 +57,25 @@ import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.substitute;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.parseScript;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * DbUnit+ parsers.
  */
 final class DbUnitAnnotationsParser {
 
-	private static final String STRING_SUBSTITUTION_PREFIX = "${";
-	private static final String STRING_SUBSTITUTION_SUFFIX = "}";
+	private static final String SUBSTITUTION_PREFIX = "${";
+	private static final String SUBSTITUTION_SUFFIX = "}";
 
 	/**
 	 * Class Logger.
@@ -200,28 +200,46 @@ final class DbUnitAnnotationsParser {
 			return null;
 		}
 
+		Map<String, String> env = buildEnv();
+
+		String driver = evaluate(annotation.driver(), env);
+		String url = evaluate(annotation.url(), env);
+		String user = evaluate(annotation.user(), env);
+		String password = evaluate(annotation.password(), env);
+
+		return new JdbcDefaultConnectionFactory(
+			newJdbcConfiguration(driver, url, user, password)
+		);
+	}
+
+	/**
+	 * Evaluate given input against given environment: if the string contains a "substituted string",
+	 * it will be replaced with value provided in given environment.
+	 *
+	 * Note: a substituted string, is a string surrounded by {@link #SUBSTITUTION_PREFIX} and {@link #SUBSTITUTION_SUFFIX}.
+	 *
+	 * @param value Value to evaluate.
+	 * @param env Environment.
+	 * @return The evaluated string.
+	 */
+	private static String evaluate(String value, Map<String, String> env) {
+		return substitute(value, SUBSTITUTION_PREFIX, SUBSTITUTION_SUFFIX, env);
+	}
+
+	/**
+	 * Build environment, based on environment variables and system properties.
+	 * Note that system properties takes precedence over environment variables.
+	 *
+	 * @return Environment.
+	 */
+	private static Map<String, String> buildEnv() {
 		Map<String, String> env = new HashMap<>(System.getenv());
+
 		for (String property: System.getProperties().stringPropertyNames()) {
 			env.put(property, System.getProperty(property));
 		}
 
-		Map<String, String> immutableEnv = Collections.unmodifiableMap(env);
-
-		String url = Strings.substitute(
-			annotation.url(), STRING_SUBSTITUTION_PREFIX, STRING_SUBSTITUTION_SUFFIX, immutableEnv
-		);
-
-		String user = Strings.substitute(
-			annotation.user(), STRING_SUBSTITUTION_PREFIX, STRING_SUBSTITUTION_SUFFIX, immutableEnv
-		);
-
-		String password = Strings.substitute(
-			annotation.password(), STRING_SUBSTITUTION_PREFIX, STRING_SUBSTITUTION_SUFFIX, immutableEnv
-		);
-
-		return new JdbcDefaultConnectionFactory(
-			newJdbcConfiguration(url, user, password)
-		);
+		return unmodifiableMap(env);
 	}
 
 	/**

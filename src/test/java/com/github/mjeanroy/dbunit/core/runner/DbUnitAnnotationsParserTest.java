@@ -40,6 +40,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitDatatypeWarningInterc
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitFetchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitMetadataHandlerInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
@@ -48,6 +49,7 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration.Qualifi
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnectionAndDriver;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DefaultMetadataHandler;
@@ -62,6 +64,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.readPrivate;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,6 +97,29 @@ class DbUnitAnnotationsParserTest {
 		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
 
 		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
+
+		JdbcConfiguration jdbcConfiguration = readPrivate(factory, "configuration");
+		assertThat(jdbcConfiguration).isNotNull();
+		assertThat(jdbcConfiguration.getDriver()).isNull();
+		assertThat(jdbcConfiguration.getUrl()).isEqualTo("jdbc:hsqldb:mem:testdb");
+		assertThat(jdbcConfiguration.getUser()).isEqualTo("SA");
+		assertThat(jdbcConfiguration.getPassword()).isEqualTo("");
+	}
+
+	@Test
+	void it_should_read_connection_factory_with_jdbc_driver_from_annotation() {
+		final Class<WithDbUnitConnectionAndDriver> testClass = WithDbUnitConnectionAndDriver.class;
+		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
+		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
+
+		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
+
+		JdbcConfiguration jdbcConfiguration = readPrivate(factory, "configuration");
+		assertThat(jdbcConfiguration).isNotNull();
+		assertThat(jdbcConfiguration.getDriver()).isEqualTo("org.hsqldb.jdbcDriver");
+		assertThat(jdbcConfiguration.getUrl()).isEqualTo("jdbc:hsqldb:mem:testdb");
+		assertThat(jdbcConfiguration.getUser()).isEqualTo("SA");
+		assertThat(jdbcConfiguration.getPassword()).isEqualTo("");
 	}
 
 	@Test

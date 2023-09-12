@@ -58,7 +58,7 @@ enum JdbcDriver {
 	/**
 	 * JDBC Driver Name (class to load).
 	 */
-	private final List<String> driverNames;
+	private final List<String> driverClassNames;
 
 	/**
 	 * Create JDBC Driver.
@@ -68,7 +68,7 @@ enum JdbcDriver {
 	 */
 	JdbcDriver(String id, String driverName) {
 		this.id = id;
-		this.driverNames = singletonList(driverName);
+		this.driverClassNames = singletonList(driverName);
 	}
 
 	/**
@@ -79,7 +79,7 @@ enum JdbcDriver {
 	 */
 	JdbcDriver(String id, Collection<String> driverNames) {
 		this.id = id;
-		this.driverNames = new ArrayList<>(driverNames);
+		this.driverClassNames = new ArrayList<>(driverNames);
 	}
 
 	/**
@@ -88,22 +88,24 @@ enum JdbcDriver {
 	 * @throws JdbcException If driver cannot be loaded.
 	 */
 	public void loadDriver() {
-		for (String driverName : driverNames) {
-			boolean success = tryDriver(driverName);
+		for (String driverClassName : driverClassNames) {
+			boolean success = tryDriver(driverClassName);
 			if (success) {
 				return;
 			}
 		}
 
-		throw new JdbcException("Cannot load " + driverNames.get(0) + " driver, please import appropriate JAR library");
+		throw new JdbcException(
+			"Cannot load " + driverClassNames.get(0) + " driver, please import appropriate JAR library"
+		);
 	}
 
 	private boolean tryDriver(String driverName) {
 		try {
-			Class.forName(driverName);
+			JdbcUtils.loadDriver(driverName);
 			return true;
 		}
-		catch (ClassNotFoundException ex) {
+		catch (Exception ex) {
 			return false;
 		}
 	}
@@ -137,7 +139,8 @@ enum JdbcDriver {
 	}
 
 	/**
-	 * Laad JDBC driver based on the JDBC Connection URL.
+	 * Load JDBC driver based on the JDBC Connection URL.
+	 *
 	 * @param connectionUrl JDBC Connection URL.
 	 * @throws JdbcException If no driver matches given connection URL.
 	 */

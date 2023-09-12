@@ -30,7 +30,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Objects;
 
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcDriver.loadDriver;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 
 /**
  * Implementation of {@link JdbcConnectionFactory} to produce instance
@@ -55,8 +55,19 @@ public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory 
 
 	@Override
 	protected Connection createConnection() throws Exception {
-		loadDriver(configuration.getUrl());
+		loadJdbcDriver();
 		return DriverManager.getConnection(configuration.getUrl(), configuration.getUser(), configuration.getPassword());
+	}
+
+	private void loadJdbcDriver() {
+		String driverClassName = configuration.getDriver();
+
+		if (isEmpty(driverClassName)) {
+			JdbcDriver.loadDriver(configuration.getUrl());
+		}
+		else {
+			JdbcUtils.loadDriver(driverClassName);
+		}
 	}
 
 	@Override

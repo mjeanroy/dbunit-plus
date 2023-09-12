@@ -88,6 +88,7 @@ class JdbcDefaultConnectionFactoryTest {
 		assertThat(factory).hasToString(
 			"JdbcDefaultConnectionFactory{" +
 				"configuration: JdbcConfiguration{" +
+					"driver: null, " +
 					"url: \"jdbc:hsqldb:mem:testdb\", " +
 					"user: \"SA\", " +
 					"password: \"\"" +

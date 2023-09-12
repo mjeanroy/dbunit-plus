@@ -22,52 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.annotations;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-/**
- * Set the DBUnit connection configuration.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-@Target({
-	ElementType.TYPE,
-})
-public @interface DbUnitConnection {
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.XML_DATASET;
 
-	/**
-	 * Database driver to use: default is the empty string and the driver will automatically
-	 * be selected, based on the connection URL.
-	 *
-	 * @return Database driver.
-	 */
-	String driver() default "";
+@DbUnitDataSet(XML_DATASET)
+@DbUnitConnection(
+	driver = "org.hsqldb.jdbcDriver",
+	url = "jdbc:hsqldb:mem:testdb",
+	user = "SA",
+	password = ""
+)
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+public class WithDbUnitConnectionAndDriver {
 
-	/**
-	 * Get JDBC Connection URL.
-	 *
-	 * @return Connection URL.
-	 */
-	String url();
-
-	/**
-	 * Get JDBC user name.
-	 *
-	 * @return User.
-	 */
-	String user();
-
-	/**
-	 * Get JDBC password.
-	 *
-	 * @return Password.
-	 */
-	String password();
+	public void test1() {
+	}
 }

@@ -31,6 +31,7 @@ import java.util.Objects;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.startsWith;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 
 /**
  * JDBC Configuration, defined by:
@@ -53,8 +54,28 @@ public class JdbcConfiguration {
 	 * @throws IllegalArgumentException If {@code url} or {@code user} are blank.
 	 */
 	public static JdbcConfiguration newJdbcConfiguration(String url, String user, String password) {
-		return new JdbcConfiguration(url, user, password);
+		return newJdbcConfiguration(null, url, user, password);
 	}
+
+	/**
+	 * Create JDBC Configuration object.
+	 *
+	 * @param driver JDBC Driver.
+	 * @param url JDBC Connection URL.
+	 * @param user JDBC Connection User.
+	 * @param password JDBC Connection Password.
+	 * @return JDBC Connection Configuration.
+	 * @throws NullPointerException If {@code url}, {@code user} or {@code password} are null.
+	 * @throws IllegalArgumentException If {@code url} or {@code user} are blank.
+	 */
+	public static JdbcConfiguration newJdbcConfiguration(String driver, String url, String user, String password) {
+		return new JdbcConfiguration(driver, url, user, password);
+	}
+
+	/**
+	 * JDBC Driver.
+	 */
+	private final String driver;
 
 	/**
 	 * JDBC Connection URL.
@@ -75,16 +96,32 @@ public class JdbcConfiguration {
 	/**
 	 * Create new configuration.
 	 *
+	 * @param driver JDBC Driver.
 	 * @param url JDBC Connection URL.
 	 * @param user JDBC Connection User.
 	 * @param password JDBC Connection Password.
 	 * @throws NullPointerException If {@code url}, {@code user} or {@code password} are null.
 	 * @throws IllegalArgumentException If {@code url} or {@code user} are blank.
 	 */
-	private JdbcConfiguration(String url, String user, String password) {
+	private JdbcConfiguration(
+		String driver,
+		String url,
+		String user,
+		String password
+	) {
+		this.driver = trimToNull(driver);
 		this.url = startsWith(url, "jdbc:", "Jdbc URL should be defined");
 		this.user = notBlank(user, "Jdbc user should be defined");
 		this.password = notNull(password, "Jdbc password should be set");
+	}
+
+	/**
+	 * Get {@link #driver}
+	 *
+	 * @return {@link #driver}
+	 */
+	public String getDriver() {
+		return driver;
 	}
 
 	/**
@@ -122,9 +159,10 @@ public class JdbcConfiguration {
 
 		if (o instanceof JdbcConfiguration) {
 			JdbcConfiguration c = (JdbcConfiguration) o;
-			return Objects.equals(url, c.url) &&
-				Objects.equals(user, c.user) &&
-				Objects.equals(password, c.password);
+			return Objects.equals(driver, c.driver)
+				&& Objects.equals(url, c.url)
+				&& Objects.equals(user, c.user)
+				&& Objects.equals(password, c.password);
 		}
 
 		return false;
@@ -132,12 +170,13 @@ public class JdbcConfiguration {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(url, user, password);
+		return Objects.hash(driver, url, user, password);
 	}
 
 	@Override
 	public String toString() {
 		return ToStringBuilder.create(getClass())
+			.append("driver", driver)
 			.append("url", url)
 			.append("user", user)
 			.append("password", password)
