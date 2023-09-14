@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.commons.lang;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isBlank;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 
 /**
  * Static PreConditions Utilities.
@@ -49,6 +50,26 @@ public final class PreConditions {
 		if (value == null) {
 			throw new NullPointerException(format(message, params));
 		}
+		return value;
+	}
+
+	/**
+	 * Ensure that given {@code value} is not {@code null}, empty.
+	 *
+	 * @param value Value to check.
+	 * @param message Error message.
+	 * @param params Optional error message parameters.
+	 * @return Value if it is not {@code null}, empty.
+	 * @throws NullPointerException If {@code value} is null.
+	 * @throws IllegalArgumentException If {@code value} is empty.
+	 */
+	public static String notEmpty(String value, String message, Object... params) {
+		notNull(value, message, params);
+
+		if (isEmpty(value)) {
+			throw new IllegalArgumentException(format(message, params));
+		}
+
 		return value;
 	}
 

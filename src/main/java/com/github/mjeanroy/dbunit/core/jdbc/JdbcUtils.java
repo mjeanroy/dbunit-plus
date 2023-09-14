@@ -25,15 +25,81 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 final class JdbcUtils {
 
+	private static final Logger log = Loggers.getLogger(JdbcUtils.class);
+
+	private JdbcUtils() {
+	}
+
 	static void loadDriver(String driverClassName) {
+		log.info("Loading driver: {}", driverClassName);
+
 		try {
 			Class.forName(driverClassName);
 		}
 		catch (ClassNotFoundException ex) {
 			throw new JdbcException("Cannot load JDBC Driver: " + driverClassName, ex);
 		}
+	}
+
+	static ResultSet executeQuery(Connection connection, String query) {
+		log.debug("Executing query: {}", query);
+
+		try {
+			return connection.createStatement().executeQuery(query);
+		}
+		catch (Exception ex) {
+			throw new JdbcException("Cannot execute query: " + query, ex);
+		}
+	}
+
+	static <T> List<T> executeQuery(Connection connection, String query, ResultSetMapFunction<T> mapFunction) {
+		log.debug("Executing query: {}", query);
+
+		try (ResultSet resultSet = connection.createStatement().executeQuery(query)) {
+			log.debug("Extracting query results");
+			List<T> outputs = new ArrayList<>();
+			while (resultSet.next()) {
+				outputs.add(mapFunction.apply(resultSet));
+			}
+
+			return outputs;
+		}
+		catch (Exception ex) {
+			throw new JdbcException("Cannot execute query: " + query, ex);
+		}
+	}
+
+	static void executeUpdates(Connection connection, Collection<String> queries) {
+		log.debug("Executing queries: {}", queries);
+		for (String query : queries) {
+			executeUpdate(connection, query);
+		}
+	}
+
+	static void executeUpdate(Connection connection, String query) {
+		log.debug("Executing update: {}", query);
+		try (Statement statement = connection.createStatement()) {
+			statement.executeUpdate(query);
+		}
+		catch (SQLException ex) {
+			throw new JdbcException("Cannot execute query: " + query, ex);
+		}
+	}
+
+	interface ResultSetMapFunction<T> {
+		T apply(ResultSet resultSet) throws Exception;
 	}
 }

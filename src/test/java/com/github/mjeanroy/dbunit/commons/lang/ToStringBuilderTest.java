@@ -50,6 +50,25 @@ class ToStringBuilderTest {
 	}
 
 	@Test
+	void it_should_create_string_using_instance_class() {
+		String value = ToStringBuilder.create(this)
+			.append("field1", "foo")
+			.append("field2", 'T')
+			.append("field3", new Klass1("bar"))
+			.append("field4", null)
+			.build();
+
+		assertThat(value).isEqualTo(
+			"ToStringBuilderTest{" +
+				"field1: \"foo\", " +
+				"field2: 'T', " +
+				"field3: toString: bar, " +
+				"field4: null" +
+			"}"
+		);
+	}
+
+	@Test
 	void it_should_create_final_string_without_fields() {
 		String value = ToStringBuilder.create(getClass()).build();
 		assertThat(value).isEqualTo("ToStringBuilderTest{}");

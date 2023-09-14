@@ -22,39 +22,27 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.jdbc;
 
-/**
- * Wrap external SQL exception.
- */
-@SuppressWarnings("serial")
-public class JdbcException extends AbstractDbUnitException {
+import java.sql.Connection;
 
-	/**
-	 * Wrap exception.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JdbcException(Exception e) {
-		super(e);
+final class MariaDBForeignKeyManager implements JdbcForeignKeyManager {
+
+	// MariaDB is "just" a fork of MySQL, so it's a "MySQL" like engine.
+	// Let's reuse the MySQL implementation.
+	private final MySQLForeignKeyManager mySQLForeignKeyManager;
+
+	MariaDBForeignKeyManager() {
+		mySQLForeignKeyManager = new MySQLForeignKeyManager();
 	}
 
-	/**
-	 * Wrap {@link java.sql.SQLException}.
-	 *
-	 * @param message Error message.
-	 */
-	public JdbcException(String message) {
-		super(message);
+	@Override
+	public void disable(Connection connection) {
+		mySQLForeignKeyManager.disable(connection);
 	}
 
-	/**
-	 * Wrap {@link java.lang.Exception}.
-	 *
-	 * @param message Error message.
-	 * @param ex Original Exception.
-	 */
-	public JdbcException(String message, Exception ex) {
-		super(message, ex);
+	@Override
+	public void enable(Connection connection) {
+		mySQLForeignKeyManager.enable(connection);
 	}
 }

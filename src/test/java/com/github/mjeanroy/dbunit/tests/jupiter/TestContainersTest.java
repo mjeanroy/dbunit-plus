@@ -40,6 +40,10 @@ public @interface TestContainersTest {
 
 	String image();
 
+	boolean runInitScripts() default true;
+
+	boolean resolveConnection() default false;
+
 	String urlProperty() default "tc.jdbcUrl";
 
 	String usernameProperty() default "tc.username";

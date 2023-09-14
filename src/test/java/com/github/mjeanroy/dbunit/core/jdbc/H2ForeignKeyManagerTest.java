@@ -22,39 +22,18 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.jdbc;
 
-/**
- * Wrap external SQL exception.
- */
-@SuppressWarnings("serial")
-public class JdbcException extends AbstractDbUnitException {
+import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 
-	/**
-	 * Wrap exception.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JdbcException(Exception e) {
-		super(e);
-	}
+@EmbeddedDatabaseTest(
+	type = EmbeddedDatabaseTest.Type.H2,
+	resolveConnection = true
+)
+class H2ForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
 
-	/**
-	 * Wrap {@link java.sql.SQLException}.
-	 *
-	 * @param message Error message.
-	 */
-	public JdbcException(String message) {
-		super(message);
-	}
-
-	/**
-	 * Wrap {@link java.lang.Exception}.
-	 *
-	 * @param message Error message.
-	 * @param ex Original Exception.
-	 */
-	public JdbcException(String message, Exception ex) {
-		super(message, ex);
+	@Override
+	JdbcForeignKeyManager foreignKeyManager() {
+		return new H2ForeignKeyManager();
 	}
 }

@@ -25,12 +25,17 @@
 package com.github.mjeanroy.dbunit.tests.jupiter;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
@@ -42,10 +47,13 @@ import org.testcontainers.containers.OracleContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
+import java.lang.reflect.Parameter;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
@@ -55,10 +63,11 @@ import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
  * A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
  * before all/after all tests.
  */
-class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, ExecutionCondition {
+class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ExecutionCondition, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TestContainersExtension.class);
-	private static final String CONTAINER_KEY = "container";
+	private static final String CONTAINER_KEY = JdbcDatabaseContainer.class.getName();
+	private static final String CONNECTION_KEY = Connection.class.getName();
 	private static final String PROP_KEY = "prop";
 
 	private static final Map<String, Function<DockerImageName, JdbcDatabaseContainer<?>>> containers;
@@ -80,13 +89,22 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 	}
 
 	@Override
-	public void afterAll(ExtensionContext context) {
+	public void afterAll(ExtensionContext context) throws Exception {
 		try {
-			shutdown(context);
+			closeConnection(context);
 		}
 		finally {
-			getStore(context).remove(CONTAINER_KEY);
+			shutdownAndClean(context);
 		}
+	}
+
+	@Override
+	public void beforeEach(ExtensionContext context) {
+	}
+
+	@Override
+	public void afterEach(ExtensionContext context) throws Exception {
+		closeConnection(context);
 	}
 
 	@Override
@@ -96,11 +114,76 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 			disabled("Docker is not available");
 	}
 
+	@Override
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+		Parameter parameter = parameterContext.getParameter();
+		Class<?> parameterClass = parameter.getType();
+
+		if (JdbcDatabaseContainer.class.isAssignableFrom(parameterClass)) {
+			return true;
+		}
+
+		if (Connection.class.isAssignableFrom(parameterClass)) {
+			return findAnnotation(extensionContext).resolveConnection();
+		}
+
+		return false;
+	}
+
+	@Override
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+		Store store = getStore(extensionContext);
+		JdbcDatabaseContainer<?> dbContainer = store.get(CONTAINER_KEY, JdbcDatabaseContainer.class);
+
+		Parameter parameter = parameterContext.getParameter();
+		Class<?> parameterClass = parameter.getType();
+		if (JdbcDatabaseContainer.class.isAssignableFrom(parameterClass)) {
+			return dbContainer;
+		}
+
+		if (Connection.class.isAssignableFrom(parameterClass)) {
+			return resolveConnection(store, dbContainer);
+		}
+
+		throw new IllegalStateException(
+			"Cannot resolve parameter of type: " + parameterClass
+		);
+	}
+
+	private static void shutdownAndClean(ExtensionContext context) {
+		try {
+			shutdown(context);
+		}
+		finally {
+			getStore(context).remove(CONTAINER_KEY);
+		}
+	}
+
+	private static void closeConnection(ExtensionContext context) throws Exception {
+		Store store = getStore(context);
+		Connection connection = store.remove(CONNECTION_KEY, Connection.class);
+		if (connection != null) {
+			connection.close();
+		}
+	}
+
+	private static Connection resolveConnection(Store store, JdbcDatabaseContainer<?> dbContainer) {
+		Connection currentConnection = store.get(CONNECTION_KEY, Connection.class);
+		if (currentConnection != null) {
+			throw new IllegalStateException(
+				"Cannot create new connection, existing one already exists"
+			);
+		}
+
+		return createConnection(dbContainer);
+	}
+
 	@SuppressWarnings("rawtypes")
-	private void initialize(ExtensionContext context) {
+	private static void initialize(ExtensionContext context) {
 		TestContainersTest annotation = findAnnotation(context);
 		String image = annotation.image();
-		JdbcDatabaseContainer container = startContainer(image);
+		boolean runInitScripts = annotation.runInitScripts();
+		JdbcDatabaseContainer container = startContainer(image, runInitScripts);
 
 		getStore(context).put(CONTAINER_KEY, container);
 
@@ -123,7 +206,7 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void shutdown(ExtensionContext context) {
+	private static void shutdown(ExtensionContext context) {
 		try (GenericContainer container = getStore(context).remove(CONTAINER_KEY, GenericContainer.class)) {
 			if (container != null) {
 				container.stop();
@@ -141,8 +224,13 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 	}
 
 	@SuppressWarnings("rawtypes")
-	private static JdbcDatabaseContainer startContainer(String image) {
-		JdbcDatabaseContainer container = getContainer(image).withInitScript("sql/schema.sql");
+	private static JdbcDatabaseContainer startContainer(String image, boolean runInitScripts) {
+		JdbcDatabaseContainer container = getContainer(image);
+
+		if (runInitScripts) {
+			container.withInitScript("sql/schema.sql");
+		}
+
 		container.start();
 		return container;
 	}
@@ -203,5 +291,24 @@ class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, Ex
 		} catch (Throwable ex) {
 			return false;
 		}
+	}
+
+	private static Connection createConnection(JdbcDatabaseContainer<?> container) {
+		try {
+			return container.getJdbcDriverInstance().connect(
+				container.getJdbcUrl(),
+				jdbcProperties(container)
+			);
+		}
+		catch (Exception ex) {
+			throw new AssertionError(ex);
+		}
+	}
+
+	private static Properties jdbcProperties(JdbcDatabaseContainer<?> container) {
+		Properties properties = new Properties();
+		properties.setProperty("user", container.getUsername());
+		properties.setProperty("password", container.getPassword());
+		return properties;
 	}
 }

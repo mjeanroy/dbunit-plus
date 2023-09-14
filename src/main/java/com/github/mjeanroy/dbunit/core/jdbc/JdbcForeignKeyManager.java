@@ -22,39 +22,13 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.exception;
+package com.github.mjeanroy.dbunit.core.jdbc;
 
-/**
- * Wrap external SQL exception.
- */
-@SuppressWarnings("serial")
-public class JdbcException extends AbstractDbUnitException {
+import java.sql.Connection;
 
-	/**
-	 * Wrap exception.
-	 *
-	 * @param e Original Exception.
-	 */
-	public JdbcException(Exception e) {
-		super(e);
-	}
+public interface JdbcForeignKeyManager {
 
-	/**
-	 * Wrap {@link java.sql.SQLException}.
-	 *
-	 * @param message Error message.
-	 */
-	public JdbcException(String message) {
-		super(message);
-	}
+	void disable(Connection connection) throws Exception;
 
-	/**
-	 * Wrap {@link java.lang.Exception}.
-	 *
-	 * @param message Error message.
-	 * @param ex Original Exception.
-	 */
-	public JdbcException(String message, Exception ex) {
-		super(message, ex);
-	}
+	void enable(Connection connection) throws Exception;
 }
