@@ -81,6 +81,17 @@ public final class ToStringBuilder {
 	}
 
 	/**
+	 * Create the builder with given class of instance (the simple name will be used to start
+	 * the {@code toString} value).
+	 *
+	 * @param instance The instance.
+	 * @return The builder.
+	 */
+	public static ToStringBuilder create(Object instance) {
+		return new ToStringBuilder(instance.getClass());
+	}
+
+	/**
 	 * The internal string builder.
 	 */
 	private final StringBuilder pending;
