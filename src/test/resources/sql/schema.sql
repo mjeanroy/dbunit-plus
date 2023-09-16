@@ -27,10 +27,19 @@
 --
 CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));
 CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));
+
 CREATE TABLE users_movies (
   user_id INT,
   movie_id INT,
   PRIMARY KEY (user_id, movie_id),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+);
+
+CREATE TABLE users_movies_events (
+  user_id INT,
+  movie_id INT,
+  id INT PRIMARY KEY,
+  event VARCHAR(200),
+  FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE
 );

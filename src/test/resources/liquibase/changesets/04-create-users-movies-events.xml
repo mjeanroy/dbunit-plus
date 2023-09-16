@@ -23,13 +23,34 @@
 -->
 
 <databaseChangeLog
-		xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.7"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.7
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.7.xsd">
 
-  <include file="changesets/01-create-users.xml" relativeToChangelogFile="true"/>
-  <include file="changesets/02-create-movies.xml" relativeToChangelogFile="true"/>
-	<include file="changesets/03-create-users-movies.xml" relativeToChangelogFile="true"/>
-	<include file="changesets/04-create-users-movies-events.xml" relativeToChangelogFile="true"/>
+  <changeSet id="create-table-users-movies-events" author="mjeanroy">
+    <createTable tableName="users_movies_events">
+      <column name="id" type="INT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="event" type="VARCHAR(200)"/>
+      <column name="user_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+      <column name="movie_id" type="INT">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="add-table-users-movies-events-fk" author="mjeanroy">
+    <addForeignKeyConstraint
+      constraintName="fk_users_movies_events_user_id_movie_id"
+      baseTableName="users_movies_events"
+      baseColumnNames="user_id,movie_id"
+      referencedTableName="users_movies"
+      referencedColumnNames="user_id,movie_id"
+    />
+  </changeSet>
 
 </databaseChangeLog>

@@ -269,6 +269,13 @@ class SqlScriptParserTest {
 				"  PRIMARY KEY (user_id, movie_id), " +
 				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
 				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				");",
+			"CREATE TABLE users_movies_events ( " +
+				"  user_id INT, " +
+				"  movie_id INT, " +
+				"  id INT PRIMARY KEY, " +
+				"  event VARCHAR(200), " +
+				"  FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
 				");"
 		);
 	}
@@ -291,6 +298,16 @@ class SqlScriptParserTest {
 				"  PRIMARY KEY (user_id, movie_id), " +
 				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
 				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				");"
+		);
+
+		verifyQueryExecution(inOrder, connection, statement,
+			"CREATE TABLE users_movies_events ( " +
+				"  user_id INT, " +
+				"  movie_id INT, " +
+				"  id INT PRIMARY KEY, " +
+				"  event VARCHAR(200), " +
+				"  FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
 				");"
 		);
 

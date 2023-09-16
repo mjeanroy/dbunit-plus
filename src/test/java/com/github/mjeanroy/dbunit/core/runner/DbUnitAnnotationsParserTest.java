@@ -170,6 +170,7 @@ class DbUnitAnnotationsParserTest {
 
 		assertThat(sqlScripts).isNotEmpty().hasSize(2);
 		assertThat(sqlScripts.get(0).getQueries()).isNotEmpty().containsExactly(
+			"DROP TABLE IF EXISTS users_movies_events;",
 			"DROP TABLE IF EXISTS users_movies;",
 			"DROP TABLE IF EXISTS movies;",
 			"DROP TABLE IF EXISTS users;"
@@ -183,6 +184,13 @@ class DbUnitAnnotationsParserTest {
 				"  PRIMARY KEY (user_id, movie_id), " +
 				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
 				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				");",
+			"CREATE TABLE users_movies_events ( " +
+				"  user_id INT, " +
+				"  movie_id INT, " +
+				"  id INT PRIMARY KEY, " +
+				"  event VARCHAR(200), " +
+				"  FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
 				");"
 		);
 	}
