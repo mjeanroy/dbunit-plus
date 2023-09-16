@@ -33,6 +33,7 @@ import java.util.Collection;
 import static com.github.mjeanroy.dbunit.tests.assertj.InstanceOfCondition.isInstanceOf;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.DATASET;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML_FILENAME;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_MOVIES_EVENTS_XML_FILENAME;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_MOVIES_XML_FILENAME;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML_FILENAME;
@@ -58,9 +59,10 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 			.are(isInstanceOf(FileResource.class))
 			.extracting(Resource::getFilename)
 			.containsExactlyInAnyOrder(
-					USERS_XML_FILENAME,
-					MOVIES_XML_FILENAME,
-					USERS_MOVIES_XML_FILENAME
+				USERS_XML_FILENAME,
+				MOVIES_XML_FILENAME,
+				USERS_MOVIES_XML_FILENAME,
+				USERS_MOVIES_EVENTS_XML_FILENAME
 			);
 	}
 

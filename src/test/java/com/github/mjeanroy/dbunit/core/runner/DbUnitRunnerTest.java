@@ -65,7 +65,8 @@ class DbUnitRunnerTest {
 		assertThat(ctx.getDataSet().getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
 			"users",
 			"movies",
-			"users_movies"
+			"users_movies",
+			"users_movies_events"
 		);
 	}
 

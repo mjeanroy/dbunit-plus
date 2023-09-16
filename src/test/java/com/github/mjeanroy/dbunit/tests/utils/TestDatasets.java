@@ -58,6 +58,8 @@ public final class TestDatasets {
 	public static final String USERS_MOVIES_XML_FILENAME = "03-users-movies.xml";
 	public static final String USERS_MOVIES_XML = XML_DATASET + "/" + USERS_MOVIES_XML_FILENAME;
 
+	public static final String USERS_MOVIES_EVENTS_XML_FILENAME = "04-users-movies-events.xml";
+
 	public static final String USERS_YAML = YAML_DATASET + "/01-users.yml";
 	public static final String USERS_JSON = JSON_DATASET + "/01-users.json";
 	public static final String USERS_CSV = CSV_DATASET + "/users.csv";
