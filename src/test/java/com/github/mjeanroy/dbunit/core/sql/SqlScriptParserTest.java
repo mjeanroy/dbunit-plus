@@ -261,21 +261,50 @@ class SqlScriptParserTest {
 
 	private static void verifyParsedQueries(List<String> queries) {
 		assertThat(queries).isNotEmpty().containsExactly(
-				"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
-				"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));",
-				"CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);"
+			"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));",
+			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));",
+			"CREATE TABLE users_movies ( " +
+				"  user_id INT, " +
+				"  movie_id INT, " +
+				"  PRIMARY KEY (user_id, movie_id), " +
+				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
+				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				");"
 		);
 	}
 
 	private static void verifyExecutedQueries(Connection connection, PreparedStatement statement) throws SQLException {
 		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement("CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));");
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement("CREATE TABLE users_movies (user_id INT, movie_id INT, PRIMARY KEY (user_id, movie_id), FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE);");
-		inOrder.verify(statement).execute();
+
+		verifyQueryExecution(inOrder, connection, statement,
+			"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));"
+		);
+
+		verifyQueryExecution(inOrder, connection, statement,
+			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
+		);
+
+		verifyQueryExecution(inOrder, connection, statement,
+			"CREATE TABLE users_movies ( " +
+				"  user_id INT, " +
+				"  movie_id INT, " +
+				"  PRIMARY KEY (user_id, movie_id), " +
+				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
+				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				");"
+		);
+
 		inOrder.verifyNoMoreInteractions();
+	}
+
+	private static void verifyQueryExecution(
+		InOrder inOrder,
+		Connection connection,
+		PreparedStatement statement,
+		String query
+	) throws SQLException {
+		inOrder.verify(connection).prepareStatement(query);
+		inOrder.verify(statement).execute();
 	}
 
 	private static InputStream createStream(String query) {
