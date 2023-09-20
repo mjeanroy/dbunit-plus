@@ -36,8 +36,8 @@ class DbUnitBatchSizeInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitBatchSizeInterceptor interceptor = new DbUnitBatchSizeInterceptor(200);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitBatchSizeInterceptor interceptor = new DbUnitBatchSizeInterceptor(200);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(200);
@@ -50,7 +50,7 @@ class DbUnitBatchSizeInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitBatchSizeInterceptor interceptor = new DbUnitBatchSizeInterceptor(200);
+		DbUnitBatchSizeInterceptor interceptor = new DbUnitBatchSizeInterceptor(200);
 		assertThat(interceptor).hasToString(
 			"DbUnitBatchSizeInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/batchSize\", " +

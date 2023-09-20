@@ -41,15 +41,15 @@ class DbUnitRunnerWithSqlInitTest {
 
 	@Test
 	void it_should_execute_sql_script_and_load_data_set(EmbeddedDatabase db) throws Exception {
-		final Class<WithDataSetAndSqlInit> klass = WithDataSetAndSqlInit.class;
-		final DbUnitRunner runner = new DbUnitRunner(klass, db);
-		final Connection connection = db.getConnection();
+		Class<WithDataSetAndSqlInit> klass = WithDataSetAndSqlInit.class;
+		DbUnitRunner runner = new DbUnitRunner(klass, db);
+		Connection connection = db.getConnection();
 
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 
 		// Setup Operation
-		final Method testMethod = klass.getMethod("method1");
+		Method testMethod = klass.getMethod("method1");
 		runner.beforeTest(testMethod);
 
 		assertThat(countUsers(connection)).isEqualTo(2);

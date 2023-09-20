@@ -36,8 +36,8 @@ class DbUnitFetchSizeInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(200);
@@ -50,7 +50,7 @@ class DbUnitFetchSizeInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
+		DbUnitFetchSizeInterceptor interceptor = new DbUnitFetchSizeInterceptor(200);
 		assertThat(interceptor).hasToString(
 			"DbUnitFetchSizeInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/fetchSize\", " +

@@ -53,7 +53,7 @@ class DbUnitSpringExtensionITest {
 
 	@Test
 	void method1() throws Exception {
-		final Connection connection = dataSource.getConnection();
+		Connection connection = dataSource.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}
@@ -61,7 +61,7 @@ class DbUnitSpringExtensionITest {
 	@Test
 	@DbUnitDataSet(CLASSPATH_USERS_XML)
 	void method2() throws Exception {
-		final Connection connection = dataSource.getConnection();
+		Connection connection = dataSource.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isZero();
 	}

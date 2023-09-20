@@ -37,12 +37,12 @@ class NowValueReplacementsProviderTest {
 
 	@Test
 	void it_should_add_replacements_for_now() {
-		final NowValueReplacementsProvider provider = new NowValueReplacementsProvider();
-		final Replacements replacements = provider.create();
+		NowValueReplacementsProvider provider = new NowValueReplacementsProvider();
+		Replacements replacements = provider.create();
 		assertThat(replacements).isNotNull();
 
-		final List<String> expectedKeys = asList("NOW()", "now()");
-		final Map<String, Object> map = replacements.getReplacements();
+		List<String> expectedKeys = asList("NOW()", "now()");
+		Map<String, Object> map = replacements.getReplacements();
 
 		assertThat(map).hasSameSizeAs(expectedKeys);
 

@@ -46,14 +46,14 @@ public class EmbeddedDatabaseClassRuleITest {
 
 	@Test
 	public void it_should_be_ok_with_first_test() throws Exception {
-		final Connection connection = rule.getDb().getConnection();
+		Connection connection = rule.getDb().getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
 	public void it_should_be_ok_with_second_test() throws Exception {
-		final Connection connection = rule.getDb().getConnection();
+		Connection connection = rule.getDb().getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}

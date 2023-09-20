@@ -35,29 +35,29 @@ class EmbeddedDatabaseRunnerTest {
 
 	@Test
 	void it_should_create_runner() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
 		assertThat(runner.getDb()).isSameAs(db);
 	}
 
 	@Test
 	void it_should_create_default_runner() {
-		final EmbeddedDatabaseRunner rule = new EmbeddedDatabaseRunner();
+		EmbeddedDatabaseRunner rule = new EmbeddedDatabaseRunner();
 		assertThat(rule.getDb()).isNotNull();
 	}
 
 	@Test
 	void it_should_shutdown_db_after_test() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
 		runner.after();
 		verify(db).shutdown();
 	}
 
 	@Test
 	void it_should_implement_to_string() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class, "MockEmbeddedDatabase");
-		final EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class, "MockEmbeddedDatabase");
+		EmbeddedDatabaseRunner runner = new EmbeddedDatabaseRunner(db);
 		assertThat(runner).hasToString(
 			"EmbeddedDatabaseRunner{" +
 				"db: MockEmbeddedDatabase" +

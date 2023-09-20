@@ -41,9 +41,9 @@ class DbUnitMetadataHandlerInterceptorTest {
 
 	@Test
 	void it_should_set_property() {
-		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class);
-		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
-		final DatabaseConfig config = new DatabaseConfig();
+		IMetadataHandler metadataHandler = mock(IMetadataHandler.class);
+		DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isSameAs(metadataHandler);
@@ -51,9 +51,9 @@ class DbUnitMetadataHandlerInterceptorTest {
 
 	@Test
 	void it_should_instantiate_class_and_set_property() {
-		final Class<DefaultMetadataHandler> metadataHandlerClass = DefaultMetadataHandler.class;
-		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<DefaultMetadataHandler> metadataHandlerClass = DefaultMetadataHandler.class;
+		DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(metadataHandlerClass);
@@ -61,9 +61,9 @@ class DbUnitMetadataHandlerInterceptorTest {
 
 	@Test
 	void it_should_set_mysql_metadata_handler_property() {
-		final Class<MySqlMetadataHandler> metadataHandlerClass = MySqlMetadataHandler.class;
-		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<MySqlMetadataHandler> metadataHandlerClass = MySqlMetadataHandler.class;
+		DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(metadataHandlerClass);
@@ -71,9 +71,9 @@ class DbUnitMetadataHandlerInterceptorTest {
 
 	@Test
 	void it_should_set_db2_metadata_handler_property() {
-		final Class<Db2MetadataHandler> metadataHandlerClass = Db2MetadataHandler.class;
-		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<Db2MetadataHandler> metadataHandlerClass = Db2MetadataHandler.class;
+		DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandlerClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(metadataHandlerClass);
@@ -86,8 +86,8 @@ class DbUnitMetadataHandlerInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final IMetadataHandler metadataHandler = mock(IMetadataHandler.class, "MockMetadataHandler");
-		final DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
+		IMetadataHandler metadataHandler = mock(IMetadataHandler.class, "MockMetadataHandler");
+		DbUnitMetadataHandlerInterceptor interceptor = new DbUnitMetadataHandlerInterceptor(metadataHandler);
 		assertThat(interceptor).hasToString(
 			"DbUnitMetadataHandlerInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/metadataHandler\", " +

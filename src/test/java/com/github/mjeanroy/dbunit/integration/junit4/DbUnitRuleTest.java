@@ -59,65 +59,65 @@ class DbUnitRuleTest {
 
 	@BeforeEach
 	void setup(EmbeddedDatabase db) throws Exception {
-		final Connection connection = db.getConnection();
+		Connection connection = db.getConnection();
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
 	void it_should_load_rule_by_scanning_test_class(EmbeddedDatabase db) throws Throwable {
-		final DbUnitRule rule = createRule();
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(WithDbUnitConnection.class, "test1");
+		DbUnitRule rule = createRule();
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(WithDbUnitConnection.class, "test1");
 
 		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
 	void it_should_load_rule_with_configuration(EmbeddedDatabase db) throws Throwable {
-		final JdbcConfiguration config = newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "sa", "");
-		final DbUnitRule rule = createRule(config);
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(WithDataSet.class, "method1");
+		JdbcConfiguration config = newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "sa", "");
+		DbUnitRule rule = createRule(config);
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(WithDataSet.class, "method1");
 
 		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
 	void it_should_load_database_for_class_test(EmbeddedDatabase db) throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
-		final DbUnitRule rule = createRule(factory);
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(WithDataSet.class, "method1");
+		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
+		DbUnitRule rule = createRule(factory);
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(WithDataSet.class, "method1");
 
 		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
 	void it_should_load_database_for_class_rule(EmbeddedDatabase db) throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
-		final DbUnitRule rule = createRule(factory);
-		final Statement statement = mock(Statement.class);
-		final Description description = createSuiteDescription(WithDataSet.class);
+		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
+		DbUnitRule rule = createRule(factory);
+		Statement statement = mock(Statement.class);
+		Description description = createSuiteDescription(WithDataSet.class);
 
 		applyAndVerifyRule(db, rule, statement, description, 2, 3);
 	}
 
 	@Test
 	void it_should_load_database_for_method_test(EmbeddedDatabase db) throws Throwable {
-		final EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
-		final DbUnitRule rule = createRule(factory);
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(WithDataSet.class, "method2");
+		EmbeddedDatabaseConnectionFactory factory = new EmbeddedDatabaseConnectionFactory(db);
+		DbUnitRule rule = createRule(factory);
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(WithDataSet.class, "method2");
 
 		applyAndVerifyRule(db, rule, statement, description, 2, 0);
 	}
 
 	@Test
 	void it_should_fail_if_rule_is_built_without_parameter_and_without_annotation(EmbeddedDatabase db) {
-		final DbUnitRule rule = createRule();
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(WithRunnerWithoutConfiguration.class, "test1");
+		DbUnitRule rule = createRule();
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(WithRunnerWithoutConfiguration.class, "test1");
 
 		assertThatThrownBy(() -> applyAndVerifyRule(db, rule, statement, description, 0, 0))
 			.isExactlyInstanceOf(DbUnitException.class)
@@ -136,8 +136,8 @@ class DbUnitRuleTest {
 		return new DbUnitRule(factory);
 	}
 
-	private static void applyAndVerifyRule(EmbeddedDatabase db, DbUnitRule rule, Statement statement, Description description, final int expectedCountUsers, final int expectedCountMovies) throws Throwable {
-		final Statement result = rule.apply(statement, description);
+	private static void applyAndVerifyRule(EmbeddedDatabase db, DbUnitRule rule, Statement statement, Description description, int expectedCountUsers, final int expectedCountMovies) throws Throwable {
+		Statement result = rule.apply(statement, description);
 
 		assertThat(result).isNotNull();
 		verifyNoInteractions(statement);

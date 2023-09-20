@@ -43,9 +43,9 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_set_property() {
-		final IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class);
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
-		final DatabaseConfig config = new DatabaseConfig();
+		IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class);
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isSameAs(dataTypeFactory);
@@ -53,9 +53,9 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_instantiate_default_datatype_and_set_property() {
-		final Class<DefaultDataTypeFactory> dataTypeFactoryClass = DefaultDataTypeFactory.class;
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<DefaultDataTypeFactory> dataTypeFactoryClass = DefaultDataTypeFactory.class;
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
@@ -63,9 +63,9 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_instantiate_h2_datatype_and_set_property() {
-		final Class<H2DataTypeFactory> dataTypeFactoryClass = H2DataTypeFactory.class;
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<H2DataTypeFactory> dataTypeFactoryClass = H2DataTypeFactory.class;
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
@@ -73,9 +73,9 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_instantiate_hsql_datatype_and_set_property() {
-		final Class<HsqldbDataTypeFactory> dataTypeFactoryClass = HsqldbDataTypeFactory.class;
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<HsqldbDataTypeFactory> dataTypeFactoryClass = HsqldbDataTypeFactory.class;
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
@@ -83,9 +83,9 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_instantiate_mysql_datatype_and_set_property() {
-		final Class<MySqlDataTypeFactory> dataTypeFactoryClass = MySqlDataTypeFactory.class;
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<MySqlDataTypeFactory> dataTypeFactoryClass = MySqlDataTypeFactory.class;
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
@@ -93,9 +93,9 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_instantiate_postgresql_datatype_and_set_property() {
-		final Class<PostgresqlDataTypeFactory> dataTypeFactoryClass = PostgresqlDataTypeFactory.class;
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
-		final DatabaseConfig config = new DatabaseConfig();
+		Class<PostgresqlDataTypeFactory> dataTypeFactoryClass = PostgresqlDataTypeFactory.class;
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactoryClass);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isNotNull().isExactlyInstanceOf(dataTypeFactoryClass);
@@ -108,8 +108,8 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class, "MockDatatypeFactory");
-		final DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
+		IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class, "MockDatatypeFactory");
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
 		assertThat(interceptor).hasToString(
 			"DbUnitDatatypeFactoryInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/datatypeFactory\", " +

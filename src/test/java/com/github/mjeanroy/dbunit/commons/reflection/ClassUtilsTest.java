@@ -46,28 +46,28 @@ class ClassUtilsTest {
 
 	@Test
 	void it_should_instantiate_class() {
-		final Klass1 o = ClassUtils.instantiate(Klass1.class);
+		Klass1 o = ClassUtils.instantiate(Klass1.class);
 		assertThat(o).isNotNull();
 		assertThat(o.getId()).isNull();
 	}
 
 	@Test
 	void it_should_instantiate_class_with_parameter() {
-		final String id = UUID.randomUUID().toString();
-		final Klass1 o = ClassUtils.instantiate(Klass1.class, id);
+		String id = UUID.randomUUID().toString();
+		Klass1 o = ClassUtils.instantiate(Klass1.class, id);
 		assertThat(o).isNotNull();
 		assertThat(o.getId()).isEqualTo(id);
 	}
 
 	@Test
 	void it_should_instantiate_class_with_default_constructor() {
-		final Klass0 o = ClassUtils.instantiate(Klass0.class);
+		Klass0 o = ClassUtils.instantiate(Klass0.class);
 		assertThat(o).isNotNull();
 	}
 
 	@Test
 	void it_should_instantiate_class_with_private_default_constructor() {
-		final Klass3 o = ClassUtils.instantiate(Klass3.class);
+		Klass3 o = ClassUtils.instantiate(Klass3.class);
 		assertThat(o).isNotNull();
 	}
 

@@ -74,27 +74,27 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_read_dataset_from_annotation() {
-		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
-		final DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
-		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
+		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
 
 		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
 	}
 
 	@Test
 	void it_should_read_dataset_from_annotations() {
-		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
-		final DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
-		final IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(singletonList(annotation), null);
+		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(singletonList(annotation), null);
 
 		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
 	}
 
 	@Test
 	void it_should_read_connection_factory_from_annotation() {
-		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
-		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
-		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
+		Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
+		DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
+		JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
 
 		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
 
@@ -108,9 +108,9 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_read_connection_factory_with_jdbc_driver_from_annotation() {
-		final Class<WithDbUnitConnectionAndDriver> testClass = WithDbUnitConnectionAndDriver.class;
-		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
-		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
+		Class<WithDbUnitConnectionAndDriver> testClass = WithDbUnitConnectionAndDriver.class;
+		DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
+		JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
 
 		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
 
@@ -135,17 +135,17 @@ class DbUnitAnnotationsParserTest {
 	}
 
 	private void test_it_should_read_connection_factory_from_annotation_and_environment_variable() {
-		final String url = "jdbc:hsqldb:mem:testdb";
-		final String username = "SA";
-		final String password = "";
+		String url = "jdbc:hsqldb:mem:testdb";
+		String username = "SA";
+		String password = "";
 
 		System.setProperty("DBUNIT_DB_URL", url);
 		System.setProperty("DBUNIT_DB_USERNAME", username);
 		System.setProperty("DBUNIT_DB_PASSWORD", password);
 
-		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
-		final DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
-		final JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
+		Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
+		DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
+		JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
 		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
 
 		JdbcDefaultConnectionFactory jdbcDefaultConnectionFactory = (JdbcDefaultConnectionFactory) factory;
@@ -164,9 +164,9 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_extract_sql_scripts_from_annotation() {
-		final Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
-		final DbUnitInit annotation = testClass.getAnnotation(DbUnitInit.class);
-		final List<SqlScript> sqlScripts = DbUnitAnnotationsParser.extractSqlScript(annotation);
+		Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
+		DbUnitInit annotation = testClass.getAnnotation(DbUnitInit.class);
+		List<SqlScript> sqlScripts = DbUnitAnnotationsParser.extractSqlScript(annotation);
 
 		assertThat(sqlScripts).isNotEmpty().hasSize(2);
 		assertThat(sqlScripts.get(0).getQueries()).isNotEmpty().containsExactly(
@@ -197,9 +197,9 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
-		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
-		final DbUnitLiquibase annotation = testClass.getAnnotation(DbUnitLiquibase.class);
-		final List<LiquibaseChangeLog> liquibaseChangeLogs = DbUnitAnnotationsParser.extractLiquibaseChangeLogs(annotation);
+		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		DbUnitLiquibase annotation = testClass.getAnnotation(DbUnitLiquibase.class);
+		List<LiquibaseChangeLog> liquibaseChangeLogs = DbUnitAnnotationsParser.extractLiquibaseChangeLogs(annotation);
 
 		assertThat(liquibaseChangeLogs).isNotEmpty().hasSize(1);
 		assertThat(liquibaseChangeLogs.get(0).getChangeLog()).isEqualTo("/liquibase/changelog.xml");
@@ -207,9 +207,9 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_read_replacements_from_providers() {
-		final DbUnitReplacements annotation = WithReplacementsProvidersDataSet.class.getAnnotation(DbUnitReplacements.class);
-		final List<DbUnitReplacements> annotations = singletonList(annotation);
-		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
+		DbUnitReplacements annotation = WithReplacementsProvidersDataSet.class.getAnnotation(DbUnitReplacements.class);
+		List<DbUnitReplacements> annotations = singletonList(annotation);
+		List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
 
 		assertThat(replacements).isNotEmpty().hasSize(2);
 
@@ -224,17 +224,17 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_not_try_to_read_replacements_without_providers() {
-		final List<DbUnitReplacements> annotations = emptyList();
-		final List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
+		List<DbUnitReplacements> annotations = emptyList();
+		List<Replacements> replacements = DbUnitAnnotationsParser.extractReplacements(annotations);
 		assertThat(replacements).isEmpty();
 	}
 
 	@Test
 	void it_should_read_interceptor() {
-		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
-		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
-		final List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
+		Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
+		DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 
 		assertThat(interceptors).hasSize(10);
 
@@ -255,10 +255,10 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_read_interceptor_with_default_interceptors() {
-		final Class<TestClassWithDefaultDbUnitConfig> testClass = TestClassWithDefaultDbUnitConfig.class;
-		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
-		final List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
+		Class<TestClassWithDefaultDbUnitConfig> testClass = TestClassWithDefaultDbUnitConfig.class;
+		DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 
 		// Default ones.
 		assertThat(interceptors).hasSize(9);
@@ -272,15 +272,15 @@ class DbUnitAnnotationsParserTest {
 		assertThat(interceptors.get(7)).isExactlyInstanceOf(DbUnitBatchSizeInterceptor.class);
 		assertThat(interceptors.get(8)).isExactlyInstanceOf(DbUnitMetadataHandlerInterceptor.class);
 
-		final boolean allowEmptyFields = false;
-		final boolean qualifiedTableNames = false;
-		final boolean caseSensitiveTableNames = false;
-		final boolean batchedStatements = false;
-		final boolean datatypeWarning = true;
-		final Class<DefaultDataTypeFactory> datatypeFactory = DefaultDataTypeFactory.class;
-		final int fetchSize = 100;
-		final int batchSize = 100;
-		final Class<DefaultMetadataHandler> metadataHandler = DefaultMetadataHandler.class;
+		boolean allowEmptyFields = false;
+		boolean qualifiedTableNames = false;
+		boolean caseSensitiveTableNames = false;
+		boolean batchedStatements = false;
+		boolean datatypeWarning = true;
+		Class<DefaultDataTypeFactory> datatypeFactory = DefaultDataTypeFactory.class;
+		int fetchSize = 100;
+		int batchSize = 100;
+		Class<DefaultMetadataHandler> metadataHandler = DefaultMetadataHandler.class;
 
 		verifyInterceptors(
 			interceptors,
@@ -298,10 +298,10 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_read_interceptor_with_appropriate_values() {
-		final Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
-		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
-		final List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
+		Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
+		DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 
 		// Default ones.
 		assertThat(interceptors).hasSize(9);
@@ -315,15 +315,15 @@ class DbUnitAnnotationsParserTest {
 		assertThat(interceptors.get(7)).isExactlyInstanceOf(DbUnitBatchSizeInterceptor.class);
 		assertThat(interceptors.get(8)).isExactlyInstanceOf(DbUnitMetadataHandlerInterceptor.class);
 
-		final boolean allowEmptyFields = true;
-		final boolean qualifiedTableNames = true;
-		final boolean caseSensitiveTableNames = true;
-		final boolean batchedStatements = true;
-		final boolean datatypeWarning = false;
-		final Class<MySqlDataTypeFactory> datatypeFactory = MySqlDataTypeFactory.class;
-		final int fetchSize = 50;
-		final int batchSize = 20;
-		final Class<MySqlMetadataHandler> metadataHandler = MySqlMetadataHandler.class;
+		boolean allowEmptyFields = true;
+		boolean qualifiedTableNames = true;
+		boolean caseSensitiveTableNames = true;
+		boolean batchedStatements = true;
+		boolean datatypeWarning = false;
+		Class<MySqlDataTypeFactory> datatypeFactory = MySqlDataTypeFactory.class;
+		int fetchSize = 50;
+		int batchSize = 20;
+		Class<MySqlMetadataHandler> metadataHandler = MySqlMetadataHandler.class;
 
 		verifyInterceptors(
 			interceptors,
@@ -341,20 +341,20 @@ class DbUnitAnnotationsParserTest {
 
 	@Test
 	void it_should_read_schema() {
-		final Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
-		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
-		final String schema = config.getSchema();
+		Class<TestClassWithCustomDbUnitConfig> testClass = TestClassWithCustomDbUnitConfig.class;
+		DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		String schema = config.getSchema();
 
 		assertThat(schema).isEqualTo("public");
 	}
 
 	@Test
 	void it_should_read_schema_with_empty_string() {
-		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
-		final DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
-		final Config config = DbUnitAnnotationsParser.readConfig(annotation);
-		final String schema = config.getSchema();
+		Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
+		DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
+		Config config = DbUnitAnnotationsParser.readConfig(annotation);
+		String schema = config.getSchema();
 
 		assertThat(schema).isNull();
 	}

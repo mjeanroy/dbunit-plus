@@ -38,8 +38,8 @@ class YamlDataSetBuilderTest {
 
 	@Test
 	void it_should_create_default_data_set_with_file() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSetBuilder(resource).build();
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSetBuilder(resource).build();
 
 		assertThat(dataSet.getResource()).isSameAs(resource);
 		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
@@ -47,9 +47,9 @@ class YamlDataSetBuilderTest {
 
 	@Test
 	void it_should_create_custom_data_set() throws Exception {
-		final Resource resource = createResource();
-		final YamlParser parser = mock(YamlParser.class);
-		final YamlDataSet dataSet = new YamlDataSetBuilder()
+		Resource resource = createResource();
+		YamlParser parser = mock(YamlParser.class);
+		YamlDataSet dataSet = new YamlDataSetBuilder()
 			.setYamlFile(resource)
 			.setCaseSensitiveTableNames(true)
 			.setParser(parser)

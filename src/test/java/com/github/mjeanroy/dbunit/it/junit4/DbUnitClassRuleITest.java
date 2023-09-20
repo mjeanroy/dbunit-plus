@@ -62,7 +62,7 @@ public class DbUnitClassRuleITest {
 
 	@Test
 	public void test1() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}

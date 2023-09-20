@@ -69,9 +69,9 @@ public class DbUnitColumnSensingITest {
 	}
 
 	private static void verify() {
-		final Connection connection = hsqldb.getConnection();
-		final Movie movie1 = findMovie(connection, 1);
-		final Movie movie3 = findMovie(connection, 3);
+		Connection connection = hsqldb.getConnection();
+		Movie movie1 = findMovie(connection, 1);
+		Movie movie3 = findMovie(connection, 3);
 
 		verifyMovie(movie1, 1, "Lord Of The Rings", null);
 		verifyMovie(movie3, 3, "Back To The Future", "The story of Marty MacFly");

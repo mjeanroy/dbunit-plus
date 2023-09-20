@@ -40,17 +40,17 @@ class JdbcDefaultConnectionFactoryTest {
 
 	@Test
 	void it_should_create_connection() throws Exception {
-		final String url = "jdbc:hsqldb:mem:database/testdb";
-		final String user = "SA";
-		final String password = "";
+		String url = "jdbc:hsqldb:mem:database/testdb";
+		String user = "SA";
+		String password = "";
 
-		final JdbcConfiguration configuration = mock(JdbcConfiguration.class);
+		JdbcConfiguration configuration = mock(JdbcConfiguration.class);
 		when(configuration.getUrl()).thenReturn(url);
 		when(configuration.getUser()).thenReturn(user);
 		when(configuration.getPassword()).thenReturn(password);
 
-		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
-		final Connection connection = factory.getConnection();
+		JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
+		Connection connection = factory.getConnection();
 
 		assertThat(connection).isNotNull();
 		assertThat(connection.getMetaData().getDriverName()).containsIgnoringCase("hsql");
@@ -58,16 +58,16 @@ class JdbcDefaultConnectionFactoryTest {
 
 	@Test
 	void it_should_fail_if_connection_cannot_be_loaded() {
-		final String url = "jdbc:custom:file:database/testdb";
-		final String user = "SA";
-		final String password = "";
+		String url = "jdbc:custom:file:database/testdb";
+		String user = "SA";
+		String password = "";
 
-		final JdbcConfiguration configuration = mock(JdbcConfiguration.class);
+		JdbcConfiguration configuration = mock(JdbcConfiguration.class);
 		when(configuration.getUrl()).thenReturn(url);
 		when(configuration.getUser()).thenReturn(user);
 		when(configuration.getPassword()).thenReturn(password);
 
-		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
+		JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
 
 		assertThatThrownBy(factory::getConnection)
 			.isExactlyInstanceOf(JdbcException.class)
@@ -83,8 +83,8 @@ class JdbcDefaultConnectionFactoryTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final JdbcConfiguration configuration = JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "");
-		final JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
+		JdbcConfiguration configuration = JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "");
+		JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
 		assertThat(factory).hasToString(
 			"JdbcDefaultConnectionFactory{" +
 				"configuration: JdbcConfiguration{" +

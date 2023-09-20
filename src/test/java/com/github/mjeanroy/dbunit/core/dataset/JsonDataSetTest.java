@@ -61,9 +61,9 @@ class JsonDataSetTest {
 	void it_should_wrap_json_exception_to_data_set_exception() {
 		parser = mock(JsonParser.class);
 
-		final IOException ioEx = new IOException();
-		final JsonException ex = new JsonException(ioEx);
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		IOException ioEx = new IOException();
+		JsonException ex = new JsonException(ioEx);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 
 		when(parser.parse(any(Resource.class))).thenThrow(ex);
 
@@ -74,9 +74,9 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_create_json_dataset() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
-		final String[] tableNames = dataSet.getTableNames();
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		String[] tableNames = dataSet.getTableNames();
 
 		assertThat(tableNames)
 			.isNotNull()
@@ -86,9 +86,9 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_table() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
-		final ITable table = dataSet.getTable("users");
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		ITable table = dataSet.getTable("users");
 
 		assertThat(table).isNotNull();
 		assertThat(table.getRowCount()).isEqualTo(2);
@@ -96,9 +96,9 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_table_metadata() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
-		final ITableMetaData metaData = dataSet.getTableMetaData("users");
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		ITableMetaData metaData = dataSet.getTableMetaData("users");
 
 		assertThat(metaData).isNotNull();
 		assertThat(metaData.getColumns())
@@ -110,9 +110,9 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_table_data() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
-		final ITable table = dataSet.getTable("users");
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		ITable table = dataSet.getTable("users");
 
 		for (int row = 0; row < table.getRowCount(); row++) {
 			assertThat(table.getValue(row, "name")).isNotNull();
@@ -121,10 +121,10 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
-		final ITableIterator it = dataSet.iterator();
-		final List<ITable> tables = new ArrayList<>();
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		ITableIterator it = dataSet.iterator();
+		List<ITable> tables = new ArrayList<>();
 
 		while (it.next()) {
 			tables.add(it.getTable());
@@ -139,10 +139,10 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
-		final ITableIterator it = dataSet.reverseIterator();
-		final List<ITable> tables = new ArrayList<>();
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		ITableIterator it = dataSet.reverseIterator();
+		List<ITable> tables = new ArrayList<>();
 
 		while (it.next()) {
 			tables.add(it.getTable());
@@ -156,9 +156,9 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_check_for_case_insensitive_names() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet d1 = new JsonDataSet(resource, false, parser);
-		final JsonDataSet d2 = new JsonDataSet(resource, true, parser);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet d1 = new JsonDataSet(resource, false, parser);
+		JsonDataSet d2 = new JsonDataSet(resource, true, parser);
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();
@@ -166,8 +166,8 @@ class JsonDataSetTest {
 
 	@Test
 	void it_should_get_resource() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		assertThat(dataSet.getResource()).isSameAs(resource);
 	}
 }

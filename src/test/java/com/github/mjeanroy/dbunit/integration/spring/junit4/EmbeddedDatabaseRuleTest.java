@@ -35,21 +35,21 @@ class EmbeddedDatabaseRuleTest {
 
 	@Test
 	void it_should_create_rule() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseRule rule = createRule(db);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseRule rule = createRule(db);
 		assertThat(rule.getDb()).isSameAs(db);
 	}
 
 	@Test
 	void it_should_create_default_rule() {
-		final EmbeddedDatabaseRule rule = createRule();
+		EmbeddedDatabaseRule rule = createRule();
 		assertThat(rule.getDb()).isNotNull();
 	}
 
 	@Test
 	void it_should_shutdown_db_after_test() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseRule rule = createRule(db);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseRule rule = createRule(db);
 		rule.after();
 		verify(db).shutdown();
 	}

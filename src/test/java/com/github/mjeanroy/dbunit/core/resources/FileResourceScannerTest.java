@@ -51,8 +51,8 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_return_list_of_files() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).build();
+		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.isNotEmpty()
@@ -68,8 +68,8 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_return_empty_list_without_directory() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
+		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.isNotNull()
@@ -78,8 +78,8 @@ class FileResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_not_scan_recursively() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(DATASET).build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromClasspath(DATASET).build();
+		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.isNotNull()

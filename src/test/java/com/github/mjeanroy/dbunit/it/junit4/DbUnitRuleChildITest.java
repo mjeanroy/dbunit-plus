@@ -36,7 +36,7 @@ public class DbUnitRuleChildITest extends DbUnitRuleITest {
 
 	@Test
 	public void testChildClass() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}

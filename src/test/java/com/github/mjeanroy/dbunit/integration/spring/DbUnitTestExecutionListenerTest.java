@@ -54,16 +54,16 @@ class DbUnitTestExecutionListenerTest {
 
 	@Test
 	void it_should_prepare_test_and_initialize_runner(EmbeddedDatabase db) throws Exception {
-		final TestContext ctx = mock(TestContext.class);
+		TestContext ctx = mock(TestContext.class);
 
-		final Class<WithDataSet> testClass = WithDataSet.class;
+		Class<WithDataSet> testClass = WithDataSet.class;
 		when(ctx.getTestClass()).thenAnswer(invocation -> testClass);
 
-		final ApplicationContext appContext = mock(ApplicationContext.class);
+		ApplicationContext appContext = mock(ApplicationContext.class);
 		when(appContext.getBean(DataSource.class)).thenReturn(db);
 		when(ctx.getApplicationContext()).thenReturn(appContext);
 
-		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
 		listener.prepareTestInstance(ctx);
 
@@ -87,10 +87,10 @@ class DbUnitTestExecutionListenerTest {
 
 	@Test
 	void it_should_execute_before_test() throws Exception {
-		final DbUnitRunner runner = mock(DbUnitRunner.class);
-		final TestSetup tst = setupTest(runner);
-		final TestContext ctx = tst.ctx;
-		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		DbUnitRunner runner = mock(DbUnitRunner.class);
+		TestSetup tst = setupTest(runner);
+		TestContext ctx = tst.ctx;
+		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
 		listener.beforeTestMethod(ctx);
 
@@ -100,10 +100,10 @@ class DbUnitTestExecutionListenerTest {
 
 	@Test
 	void it_should_execute_after_test() throws Exception {
-		final DbUnitRunner runner = mock(DbUnitRunner.class);
-		final TestSetup tst = setupTest(runner);
-		final TestContext ctx = tst.ctx;
-		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		DbUnitRunner runner = mock(DbUnitRunner.class);
+		TestSetup tst = setupTest(runner);
+		TestContext ctx = tst.ctx;
+		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
 		listener.afterTestMethod(ctx);
 
@@ -113,9 +113,9 @@ class DbUnitTestExecutionListenerTest {
 
 	@Test
 	void it_should_fail_before_test_if_dbunit_runner_is_not_found() throws Exception {
-		final TestSetup tst = setupTest(null);
-		final TestContext ctx = tst.ctx;
-		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		TestSetup tst = setupTest(null);
+		TestContext ctx = tst.ctx;
+		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
 		assertThatThrownBy(() -> listener.beforeTestMethod(ctx))
 			.isExactlyInstanceOf(DbUnitException.class)
@@ -124,9 +124,9 @@ class DbUnitTestExecutionListenerTest {
 
 	@Test
 	void it_should_fail_after_test_if_dbunit_runner_is_not_found() throws Exception {
-		final TestSetup tst = setupTest(null);
-		final TestContext ctx = tst.ctx;
-		final DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
+		TestSetup tst = setupTest(null);
+		TestContext ctx = tst.ctx;
+		DbUnitTestExecutionListener listener = new DbUnitTestExecutionListener();
 
 		assertThatThrownBy(() -> listener.afterTestMethod(ctx))
 			.isExactlyInstanceOf(DbUnitException.class)
@@ -134,9 +134,9 @@ class DbUnitTestExecutionListenerTest {
 	}
 
 	private TestSetup setupTest(DbUnitRunner runner) throws Exception {
-		final TestContext ctx = mock(TestContext.class);
-		final Class<WithDataSet> klass = WithDataSet.class;
-		final Method method = klass.getMethod("method1");
+		TestContext ctx = mock(TestContext.class);
+		Class<WithDataSet> klass = WithDataSet.class;
+		Method method = klass.getMethod("method1");
 
 		when(ctx.getTestClass()).thenAnswer(invocation -> klass);
 		when(ctx.getTestMethod()).thenReturn(method);

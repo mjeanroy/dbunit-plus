@@ -52,42 +52,42 @@ class DbUnitEmbeddedDatabaseRuleTest {
 
 	@Test
 	void it_should_create_rule_with_database() throws Exception {
-		final Connection connection = mock(Connection.class);
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		Connection connection = mock(Connection.class);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
 		when(db.getConnection()).thenReturn(connection);
 
-		final DbUnitEmbeddedDatabaseRule rule = createRule(db);
+		DbUnitEmbeddedDatabaseRule rule = createRule(db);
 		assertThat(rule.getDb()).isSameAs(db);
 		assertThat(rule.getConnection()).isNotNull();
 	}
 
 	@Test
 	void it_should_create_rule_with_default_database() {
-		final DbUnitEmbeddedDatabaseRule rule = createRule();
+		DbUnitEmbeddedDatabaseRule rule = createRule();
 		assertThat(rule.getDb()).isNull();
 		assertThat(rule.getConnection()).isNull();
 	}
 
 	@Test
 	void it_should_start_database_and_load_data_set() throws Throwable {
-		final Statement statement = mock(Statement.class);
-		final Description description = createTestDescription(WithDataSet.class, "method1");
-		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
+		Statement statement = mock(Statement.class);
+		Description description = createTestDescription(WithDataSet.class, "method1");
+		EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/drop.sql")
 			.addScript("classpath:/sql/schema.sql")
 			.build());
 
-		final DbUnitEmbeddedDatabaseRule rule = createRule(db);
+		DbUnitEmbeddedDatabaseRule rule = createRule(db);
 
-		final Statement result = rule.apply(statement, description);
+		Statement result = rule.apply(statement, description);
 
 		assertThat(result).isNotNull();
 		verify(statement, never()).evaluate();
 		verify(db, never()).shutdown();
 
 		Answer<?> answer = invocationOnMock -> {
-			final Connection connection = db.getConnection();
+			Connection connection = db.getConnection();
 			assertThat(countUsers(connection)).isEqualTo(2);
 			assertThat(countMovies(connection)).isEqualTo(3);
 			return null;

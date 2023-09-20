@@ -37,12 +37,12 @@ class CurrentTImestampValueReplacementsProviderTest {
 
 	@Test
 	void it_should_add_replacements_for_current_timestamp() {
-		final CurrentTimestampValueReplacementsProvider provider = new CurrentTimestampValueReplacementsProvider();
-		final Replacements replacements = provider.create();
+		CurrentTimestampValueReplacementsProvider provider = new CurrentTimestampValueReplacementsProvider();
+		Replacements replacements = provider.create();
 		assertThat(replacements).isNotNull();
 
-		final List<String> expectedKeys = asList("CURRENT_TIMESTAMP", "current_timestamp", "CURRENT_TIMESTAMP()", "current_timestamp()");
-		final Map<String, Object> map = replacements.getReplacements();
+		List<String> expectedKeys = asList("CURRENT_TIMESTAMP", "current_timestamp", "CURRENT_TIMESTAMP()", "current_timestamp()");
+		Map<String, Object> map = replacements.getReplacements();
 
 		assertThat(map).hasSameSizeAs(expectedKeys);
 

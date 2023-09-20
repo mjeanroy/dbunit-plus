@@ -49,10 +49,10 @@ class EmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_start_default_embedded_database_before_all_tests_and_after_all_tests() {
-		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension();
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = null;
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension();
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = null;
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		verifyStore(extensionContext, EXECUTION_MODE_PER_CLASS);
@@ -63,11 +63,11 @@ class EmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_start_custom_embedded_database_before_all_tests_and_after_all_tests() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = null;
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = null;
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		verifyStore(extensionContext, EXECUTION_MODE_PER_CLASS);
@@ -80,11 +80,11 @@ class EmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_start_custom_embedded_database_before_each_tests_and_after_each_tests() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeEach(extensionContext);
 		verifyStore(extensionContext, EXECUTION_MODE_PER_METHOD);
@@ -97,11 +97,11 @@ class EmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_not_start_custom_embedded_database_before_each_tests_and_after_each_tests_when_used_as_static() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = null;
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = null;
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
@@ -119,15 +119,15 @@ class EmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_support_embedded_database_parameter_injection() {
-		final EmbeddedDatabase db = mock(EmbeddedDatabase.class);
-		final EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = null;
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		EmbeddedDatabase db = mock(EmbeddedDatabase.class);
+		EmbeddedDatabaseExtension extension = new EmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = null;
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 
-		final ParameterContext parameterContext = createParameterContext();
+		ParameterContext parameterContext = createParameterContext();
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 		assertThat(extension.resolveParameter(parameterContext, extensionContext)).isSameAs(db);
 	}
@@ -146,8 +146,8 @@ class EmbeddedDatabaseExtensionTest {
 	}
 
 	private static ParameterContext createParameterContext() {
-		final Method method = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
-		final Parameter parameter = method.getParameters()[0];
+		Method method = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
+		Parameter parameter = method.getParameters()[0];
 		return new FakeParameterContext(parameter);
 	}
 

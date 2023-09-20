@@ -58,43 +58,43 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_parse_simple_query() {
-		final String query = "DROP TABLE users;";
-		final InputStream reader = createStream(query);
-		final List<String> queries = SqlScriptParser.parseScript(reader, configuration);
+		String query = "DROP TABLE users;";
+		InputStream reader = createStream(query);
+		List<String> queries = SqlScriptParser.parseScript(reader, configuration);
 		assertThat(queries).hasSize(1).contains(query);
 	}
 
 	@Test
 	void it_should_parse_simple_query_without_end_delimiter() {
-		final String query = "DROP TABLE users";
-		final InputStream stringReader = createStream(query);
-		final List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
+		String query = "DROP TABLE users";
+		InputStream stringReader = createStream(query);
+		List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
 		assertThat(queries).hasSize(1).contains(query);
 	}
 
 	@Test
 	void it_should_parse_two_simple_query() {
-		final String q1 = "DROP TABLE users;";
-		final String q2 = "DROP TABLE movies;";
-		final String query = q1 + BR + q2 + BR;
-		final InputStream stringReader = createStream(query);
-		final List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
+		String q1 = "DROP TABLE users;";
+		String q2 = "DROP TABLE movies;";
+		String query = q1 + BR + q2 + BR;
+		InputStream stringReader = createStream(query);
+		List<String> queries = SqlScriptParser.parseScript(stringReader, configuration);
 		assertThat(queries).hasSize(2).containsExactly(q1, q2);
 	}
 
 	@Test
 	void it_should_add_escaping_character() {
-		final String query = "SELECT * FROM users WHERE title = 'John\\'s file';";
-		final InputStream stream = createStream(query);
-		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
+		String query = "SELECT * FROM users WHERE title = 'John\\'s file';";
+		InputStream stream = createStream(query);
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 		assertThat(queries).hasSize(1).contains(query);
 	}
 
 	@Test
 	void it_should_parse_query_and_comment_line() {
-		final String q1 = "DROP TABLE users;";
-		final String q2 = "DROP TABLE movies;";
-		final String query = join(asList(
+		String q1 = "DROP TABLE users;";
+		String q2 = "DROP TABLE movies;";
+		String query = join(asList(
 			"-- Drop Table users",
 			q1,
 			"-- Drop Table movies",
@@ -114,9 +114,9 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_parse_query_and_block_comment() {
-		final String q1 = "DROP TABLE users;";
-		final String q2 = "DROP TABLE movies;";
-		final String query = join(asList(
+		String q1 = "DROP TABLE users;";
+		String q2 = "DROP TABLE movies;";
+		String query = join(asList(
 			"/* ",
 			" * Drop schema.",
 			" */",
@@ -140,9 +140,9 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_parse_query_with_varchar_values() {
-		final String q1 = "UPDATE users SET name = 'Hello -- John';";
-		final String q2 = "UPDATE users SET name = 'Hello /* John */';";
-		final String query = join(asList(
+		String q1 = "UPDATE users SET name = 'Hello -- John';";
+		String q2 = "UPDATE users SET name = 'Hello /* John */';";
+		String query = join(asList(
 			"/* ",
 			" * Drop schema.",
 			" */",
@@ -153,46 +153,46 @@ class SqlScriptParserTest {
 			q2
 		));
 
-		final InputStream stream = createStream(query);
-		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
+		InputStream stream = createStream(query);
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 		assertThat(queries).hasSize(2).containsExactly(q1, q2);
 	}
 
 	@Test
 	void it_should_parse_query_with_quote_escaping() {
-		final String query = "UPDATE users SET name = 'John''s Name';";
-		final InputStream stream = createStream(query);
-		final List<String> queries = SqlScriptParser.parseScript(stream, configuration);
+		String query = "UPDATE users SET name = 'John''s Name';";
+		InputStream stream = createStream(query);
+		List<String> queries = SqlScriptParser.parseScript(stream, configuration);
 		assertThat(queries).hasSize(1).containsExactly(query);
 	}
 
 	@Test
 	void it_should_parse_file() {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
-		final List<String> queries = SqlScriptParser.parseScript(resource, configuration);
+		Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
+		List<String> queries = SqlScriptParser.parseScript(resource, configuration);
 
 		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_parse_file_path() {
-		final String script = "/sql/schema.sql";
-		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
+		String script = "/sql/schema.sql";
+		List<String> queries = SqlScriptParser.parseScript(script, configuration);
 		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_parse_file_path_classpath() {
-		final String script = "classpath:/sql/schema.sql";
-		final List<String> queries = SqlScriptParser.parseScript(script, configuration);
+		String script = "classpath:/sql/schema.sql";
+		List<String> queries = SqlScriptParser.parseScript(script, configuration);
 		verifyParsedQueries(queries);
 	}
 
 	@Test
 	void it_should_execute_sql_file() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
-		final Connection connection = mock(Connection.class);
-		final PreparedStatement statement = mock(PreparedStatement.class);
+		Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
 
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
@@ -203,9 +203,9 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_execute_sql_file_path() throws Exception {
-		final String script = "/sql/schema.sql";
-		final Connection connection = mock(Connection.class);
-		final PreparedStatement statement = mock(PreparedStatement.class);
+		String script = "/sql/schema.sql";
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
 
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
@@ -216,9 +216,9 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_execute_sql_file_path_from_classpath() throws Exception {
-		final String script = "classpath:/sql/schema.sql";
-		final Connection connection = mock(Connection.class);
-		final PreparedStatement statement = mock(PreparedStatement.class);
+		String script = "classpath:/sql/schema.sql";
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
 
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
@@ -229,9 +229,9 @@ class SqlScriptParserTest {
 
 	@Test
 	void it_should_execute_all_queries() throws Exception {
-		final String q1 = "UPDATE users SET name = 'Hello -- John';";
-		final String q2 = "UPDATE users SET name = 'Hello /* John */';";
-		final String query = join(asList(
+		String q1 = "UPDATE users SET name = 'Hello -- John';";
+		String q2 = "UPDATE users SET name = 'Hello /* John */';";
+		String query = join(asList(
 			"/* ",
 			" * Drop schema.",
 			" */",
@@ -242,12 +242,12 @@ class SqlScriptParserTest {
 			q2
 		));
 
-		final Connection connection = mock(Connection.class);
-		final PreparedStatement statement = mock(PreparedStatement.class);
+		Connection connection = mock(Connection.class);
+		PreparedStatement statement = mock(PreparedStatement.class);
 
 		when(connection.prepareStatement(anyString())).thenReturn(statement);
 
-		final InputStream stream = createStream(query);
+		InputStream stream = createStream(query);
 
 		SqlScriptParser.executeScript(connection, stream, configuration);
 

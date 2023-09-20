@@ -62,27 +62,27 @@ class LiquibaseUpdateTest {
 
 	@Test
 	void it_should_load_liquibase_changelogs(EmbeddedDatabase db) throws Exception {
-		final String changeLog = "/liquibase/changelog.xml";
+		String changeLog = "/liquibase/changelog.xml";
 		assertLiquibaseUpdate(db, changeLog);
 	}
 
 	@Test
 	void it_should_load_liquibase_changelogs_from_classpath(EmbeddedDatabase db) throws Exception {
-		final String changeLog = "classpath:/liquibase/changelog.xml";
+		String changeLog = "classpath:/liquibase/changelog.xml";
 		assertLiquibaseUpdate(db, changeLog);
 	}
 
 	@Test
 	void it_should_load_liquibase_changelogs_from_file_system(EmbeddedDatabase db) throws Exception {
-		final File changeLogFile = getTestResource("/liquibase/changelog.xml");
-		final String changeLog = "file:" + changeLogFile.getAbsolutePath();
+		File changeLogFile = getTestResource("/liquibase/changelog.xml");
+		String changeLog = "file:" + changeLogFile.getAbsolutePath();
 		assertLiquibaseUpdate(db, changeLog);
 	}
 
 	@Test
 	void it_should_wrap_liquibase_exception() {
-		final String changeLog = "/liquibase/changelog.txt";
-		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
+		String changeLog = "/liquibase/changelog.txt";
+		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 
 		assertThatThrownBy(liquibaseUpdater::update)
 			.isExactlyInstanceOf(DbUnitException.class)
@@ -90,11 +90,11 @@ class LiquibaseUpdateTest {
 	}
 
 	private void assertLiquibaseUpdate(EmbeddedDatabase db, String changeLog) throws Exception {
-		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
+		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 
 		liquibaseUpdater.update();
 
-		final Connection connection = db.getConnection();
+		Connection connection = db.getConnection();
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 		verify(factory, atLeastOnce()).getConnection();

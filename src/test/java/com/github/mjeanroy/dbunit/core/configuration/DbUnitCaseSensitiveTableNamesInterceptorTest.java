@@ -36,8 +36,8 @@ class DbUnitCaseSensitiveTableNamesInterceptorTest {
 
 	@Test
 	void it_should_activate_property_by_default() {
-		final DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor();
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor();
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -45,8 +45,8 @@ class DbUnitCaseSensitiveTableNamesInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(true);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(true);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -54,8 +54,8 @@ class DbUnitCaseSensitiveTableNamesInterceptorTest {
 
 	@Test
 	void it_should_not_activate_property() {
-		final DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(false);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(false);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(false);
@@ -68,7 +68,7 @@ class DbUnitCaseSensitiveTableNamesInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(true);
+		DbUnitCaseSensitiveTableNamesInterceptor interceptor = new DbUnitCaseSensitiveTableNamesInterceptor(true);
 		assertThat(interceptor).hasToString(
 			"DbUnitCaseSensitiveTableNamesInterceptor{" +
 				"property: \"http://www.dbunit.org/features/caseSensitiveTableNames\", " +

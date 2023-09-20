@@ -36,8 +36,8 @@ class DbUnitDatatypeWarningInterceptorTest {
 
 	@Test
 	void it_should_not_activate_property_by_default() {
-		final DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor();
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor();
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(false);
@@ -45,8 +45,8 @@ class DbUnitDatatypeWarningInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(true);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(true);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -54,8 +54,8 @@ class DbUnitDatatypeWarningInterceptorTest {
 
 	@Test
 	void it_should_not_activate_property() {
-		final DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(false);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(false);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(false);
@@ -68,7 +68,7 @@ class DbUnitDatatypeWarningInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(false);
+		DbUnitDatatypeWarningInterceptor interceptor = new DbUnitDatatypeWarningInterceptor(false);
 		assertThat(interceptor).hasToString(
 			"DbUnitDatatypeWarningInterceptor{" +
 				"property: \"http://www.dbunit.org/features/datatypeWarning\", " +

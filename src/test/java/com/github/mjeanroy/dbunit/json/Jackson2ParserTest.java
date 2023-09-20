@@ -48,19 +48,19 @@ class Jackson2ParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		final ObjectMapper mapper = new ObjectMapper();
-		final Jackson2Parser parser = new Jackson2Parser(mapper);
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
+		ObjectMapper mapper = new ObjectMapper();
+		Jackson2Parser parser = new Jackson2Parser(mapper);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
 			.hasSize(1)
 			.containsKey("users");
 
-		final List<Map<String, Object>> table = tables.get("users");
+		List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
-		final Map<String, Object> row1 = table.get(0);
+		Map<String, Object> row1 = table.get(0);
 		assertThat(row1)
 			.hasSize(2)
 			.containsExactly(
@@ -68,7 +68,7 @@ class Jackson2ParserTest {
 				entry("name", "John Doe")
 			);
 
-		final Map<String, Object> row2 = table.get(1);
+		Map<String, Object> row2 = table.get(1);
 		assertThat(row2)
 			.hasSize(2)
 			.containsExactly(
@@ -79,15 +79,15 @@ class Jackson2ParserTest {
 
 	@Test
 	void it_should_wrap_json_parse_exception() {
-		final String malformedJson = "{test: test}";
-		final byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
-		final InputStream stream = new ByteArrayInputStream(bytes);
-		final Resource resource = new ResourceMockBuilder()
+		String malformedJson = "{test: test}";
+		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
+		Resource resource = new ResourceMockBuilder()
 			.withReader(stream)
 			.build();
 
-		final ObjectMapper mapper = new ObjectMapper();
-		final Jackson2Parser parser = new Jackson2Parser(mapper);
+		ObjectMapper mapper = new ObjectMapper();
+		Jackson2Parser parser = new Jackson2Parser(mapper);
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
@@ -96,15 +96,15 @@ class Jackson2ParserTest {
 
 	@Test
 	void it_should_wrap_json_mapping_exception() {
-		final String json = "[\"test\"]";
-		final byte[] bytes = json.getBytes(Charset.defaultCharset());
-		final InputStream stream = new ByteArrayInputStream(bytes);
-		final Resource resource = new ResourceMockBuilder()
+		String json = "[\"test\"]";
+		byte[] bytes = json.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
+		Resource resource = new ResourceMockBuilder()
 			.withReader(stream)
 			.build();
 
-		final ObjectMapper mapper = new ObjectMapper();
-		final Jackson2Parser parser = new Jackson2Parser(mapper);
+		ObjectMapper mapper = new ObjectMapper();
+		Jackson2Parser parser = new Jackson2Parser(mapper);
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
@@ -113,16 +113,16 @@ class Jackson2ParserTest {
 
 	@Test
 	void it_should_wrap_io_exception() {
-		final String json = "";
-		final byte[] bytes = json.getBytes(Charset.defaultCharset());
-		final InputStream stream = new ByteArrayInputStream(bytes);
+		String json = "";
+		byte[] bytes = json.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
 
-		final Resource resource = new ResourceMockBuilder()
+		Resource resource = new ResourceMockBuilder()
 			.withReader(stream)
 			.build();
 
-		final ObjectMapper mapper = new ObjectMapper();
-		final Jackson2Parser parser = new Jackson2Parser(mapper);
+		ObjectMapper mapper = new ObjectMapper();
+		Jackson2Parser parser = new Jackson2Parser(mapper);
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)

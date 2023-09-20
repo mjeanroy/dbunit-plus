@@ -38,8 +38,8 @@ class JsonDataSetBuilderTest {
 
 	@Test
 	void it_should_create_default_data_set_with_file() throws Exception {
-		final Resource resource = createResource();
-		final JsonDataSet dataSet = new JsonDataSetBuilder(resource).build();
+		Resource resource = createResource();
+		JsonDataSet dataSet = new JsonDataSetBuilder(resource).build();
 
 		assertThat(dataSet).isNotNull();
 		assertThat(dataSet.getResource()).isSameAs(resource);
@@ -48,9 +48,9 @@ class JsonDataSetBuilderTest {
 
 	@Test
 	void it_should_create_custom_data_set() throws Exception {
-		final Resource resource = createResource();
-		final JsonParser parser = mock(JsonParser.class);
-		final JsonDataSet dataSet = new JsonDataSetBuilder()
+		Resource resource = createResource();
+		JsonParser parser = mock(JsonParser.class);
+		JsonDataSet dataSet = new JsonDataSetBuilder()
 			.setJsonFile(resource)
 			.setCaseSensitiveTableNames(true)
 			.setParser(parser)

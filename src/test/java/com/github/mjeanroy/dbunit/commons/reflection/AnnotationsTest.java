@@ -37,8 +37,8 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_class() {
-		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
@@ -46,8 +46,8 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_meta_annotation() {
-		final Class<TestClassMetaAnnotated> klass = TestClassMetaAnnotated.class;
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+		Class<TestClassMetaAnnotated> klass = TestClassMetaAnnotated.class;
+		TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("MetaAnnotation");
@@ -55,8 +55,8 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_interface() {
-		final Class<TestClassAnnotatedOnInterface> klass = TestClassAnnotatedOnInterface.class;
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+		Class<TestClassAnnotatedOnInterface> klass = TestClassAnnotatedOnInterface.class;
+		TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("InterfaceAnnotated");
@@ -64,8 +64,8 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_super_class() {
-		final Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
+		Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
+		TestAnnotation annotation = Annotations.findAnnotation(klass, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
@@ -73,9 +73,9 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_class_if_method_is_not_annotated() throws Exception {
-		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		final Method method = klass.getMethod("method1");
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		Method method = klass.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
@@ -83,9 +83,9 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_super_class_if_method_is_not_annotated() throws Exception {
-		final Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
-		final Method method = klass.getMethod("method1");
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+		Class<TestClassAnnotationChild> klass = TestClassAnnotationChild.class;
+		Method method = klass.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("TestClassAnnotation");
@@ -93,8 +93,8 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_method() throws Exception {
-		final Method method = TestClassAnnotation.class.getDeclaredMethod("method2");
-		final TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
+		Method method = TestClassAnnotation.class.getDeclaredMethod("method2");
+		TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("method2");
@@ -102,17 +102,17 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_not_find_annotation_on_method() throws Exception {
-		final Method method = TestClassWithoutAnnotation.class.getMethod("method1");
-		final TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
+		Method method = TestClassWithoutAnnotation.class.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(method, TestAnnotation.class);
 
 		assertThat(annotation).isNull();
 	}
 
 	@Test
 	void it_should_find_annotation_directly_on_method() throws Exception {
-		final Class<TestClassAnnotation> klass = TestClassAnnotation.class;
-		final Method method = klass.getDeclaredMethod("method2");
-		final TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
+		Class<TestClassAnnotation> klass = TestClassAnnotation.class;
+		Method method = klass.getDeclaredMethod("method2");
+		TestAnnotation annotation = Annotations.findAnnotation(klass, method, TestAnnotation.class);
 
 		assertThat(annotation).isNotNull();
 		assertThat(annotation.value()).isEqualTo("method2");
@@ -120,17 +120,17 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_not_find_annotation_nor_on_method_nor_on_class() throws Exception {
-		final Class<TestClassWithoutAnnotation> klass = TestClassWithoutAnnotation.class;
-		final Method method = klass.getMethod("method1");
-		final TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
+		Class<TestClassWithoutAnnotation> klass = TestClassWithoutAnnotation.class;
+		Method method = klass.getMethod("method1");
+		TestAnnotation annotation = Annotations.findAnnotation(TestClassWithoutAnnotation.class, method, TestAnnotation.class);
 
 		assertThat(annotation).isNull();
 	}
 
 	@Test
 	void it_should_find_all_annotation_starting_from_class() {
-		final Class<TestClassWithMultipleAnnotations> klass = TestClassWithMultipleAnnotations.class;
-		final List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
+		Class<TestClassWithMultipleAnnotations> klass = TestClassWithMultipleAnnotations.class;
+		List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
 
 		assertThat(annotations).hasSize(4);
 		assertThat(annotations.get(0).value()).isEqualTo("TestClassWithMultipleAnnotations");
@@ -141,8 +141,8 @@ class AnnotationsTest {
 
 	@Test
 	void it_should_find_annotation_on_outer_class() {
-		final Class<TestClassWithInnerClass.InnerClass> klass = TestClassWithInnerClass.InnerClass.class;
-		final List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
+		Class<TestClassWithInnerClass.InnerClass> klass = TestClassWithInnerClass.InnerClass.class;
+		List<TestAnnotation> annotations = Annotations.findAnnotations(klass, TestAnnotation.class);
 
 		assertThat(annotations).hasSize(4);
 		assertThat(annotations.get(0).value()).isEqualTo("TestClassWithMultipleAnnotations");

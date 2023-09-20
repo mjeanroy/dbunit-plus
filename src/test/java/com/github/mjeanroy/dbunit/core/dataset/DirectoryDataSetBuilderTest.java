@@ -44,8 +44,8 @@ class DirectoryDataSetBuilderTest {
 
 	@Test
 	void it_should_create_default_directory_dataset() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
-		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
+		DirectoryDataSet dataSet = new DirectoryDataSetBuilder(resource).build();
 
 		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
 		assertThat(dataSet.getResource()).isEqualTo(resource);
@@ -54,23 +54,23 @@ class DirectoryDataSetBuilderTest {
 
 	@Test
 	void it_should_create_directory_dataset() throws Exception {
-		final Resource r1 = new ResourceMockBuilder()
+		Resource r1 = new ResourceMockBuilder()
 			.fromClasspath(USERS_XML)
 			.setFile()
 			.build();
 
-		final Resource r2 = new ResourceMockBuilder()
+		Resource r2 = new ResourceMockBuilder()
 			.fromClasspath(MOVIES_XML)
 			.setFile()
 			.build();
 
-		final Resource directory = new ResourceMockBuilder()
+		Resource directory = new ResourceMockBuilder()
 			.fromClasspath(XML_DATASET)
 			.addSubResources(r1, r2)
 			.setDirectory()
 			.build();
 
-		final ResourceComparator comparator = mock(ResourceComparator.class);
+		ResourceComparator comparator = mock(ResourceComparator.class);
 
 		when(comparator.compare(any(Resource.class), any(Resource.class))).thenAnswer((Answer<Integer>) invocationOnMock -> {
 			Resource f1 = (Resource) invocationOnMock.getArguments()[0];
@@ -78,7 +78,7 @@ class DirectoryDataSetBuilderTest {
 			return f2.getPath().compareTo(f1.getPath());
 		});
 
-		final DirectoryDataSet dataSet = new DirectoryDataSetBuilder()
+		DirectoryDataSet dataSet = new DirectoryDataSetBuilder()
 			.setDirectory(directory)
 			.setCaseSensitiveTableNames(true)
 			.setComparator(comparator)

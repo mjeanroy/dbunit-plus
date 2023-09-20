@@ -40,19 +40,19 @@ class GsonParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		final Gson gson = new Gson();
-		final GsonParser parser = new GsonParser(gson);
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
+		Gson gson = new Gson();
+		GsonParser parser = new GsonParser(gson);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables)
 			.hasSize(1)
 			.containsKey("users");
 
-		final List<Map<String, Object>> table = tables.get("users");
+		List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
-		final Map<String, Object> row1 = table.get(0);
+		Map<String, Object> row1 = table.get(0);
 		assertThat(row1)
 			.hasSize(2)
 			.containsExactly(
@@ -60,7 +60,7 @@ class GsonParserTest {
 				entry("name", "John Doe")
 			);
 
-		final Map<String, Object> row2 = table.get(1);
+		Map<String, Object> row2 = table.get(1);
 		assertThat(row2)
 			.hasSize(2)
 			.containsExactly(

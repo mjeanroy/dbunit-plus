@@ -40,140 +40,140 @@ class ReplacementsTest {
 
 	@Test
 	void it_should_build_replacement_with_byte_value() {
-		final String key = "foo";
-		final byte value = 0;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		byte value = 0;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_short_value() {
-		final String key = "foo";
-		final short value = 1;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		short value = 1;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_int_value() {
-		final String key = "foo";
-		final int value = 1;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		int value = 1;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_long_value() {
-		final String key = "foo";
-		final long value = 1;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		long value = 1;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_float_value() {
-		final String key = "foo";
-		final float value = 1;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		float value = 1;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_double_value() {
-		final String key = "foo";
-		final double value = 1D;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		double value = 1D;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_char_value() {
-		final String key = "foo";
-		final char value = 'a';
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		char value = 'a';
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_boolean_value() {
-		final String key = "foo";
-		final boolean value = true;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		boolean value = true;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_big_decimal_value() {
-		final String key = "foo";
-		final BigDecimal value = BigDecimal.TEN;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		BigDecimal value = BigDecimal.TEN;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_big_integer_value() {
-		final String key = "foo";
-		final BigInteger value = BigInteger.ONE;
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		BigInteger value = BigInteger.ONE;
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_date_value() {
-		final String key = "foo";
-		final Date value = new Date();
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		Date value = new Date();
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_string_value() {
-		final String key = "foo";
-		final String value = "bar";
-		final Replacements r1 = Replacements.builder().addReplacement(key, value).build();
-		final Replacements r2 = Replacements.builder().put(key, value).build();
-		final Replacements r3 = Replacements.singletonReplacement(key, value);
+		String key = "foo";
+		String value = "bar";
+		Replacements r1 = Replacements.builder().addReplacement(key, value).build();
+		Replacements r2 = Replacements.builder().put(key, value).build();
+		Replacements r3 = Replacements.singletonReplacement(key, value);
 		verify(r1, r2, r3, entry(key, value));
 	}
 
 	@Test
 	void it_should_build_replacement_with_null_value() {
-		final String key = "foo";
-		final Replacements r1 = Replacements.builder().addReplacement(key).build();
-		final Replacements r2 = Replacements.builder().put(key).build();
-		final Replacements r3 = Replacements.singletonReplacement(key);
+		String key = "foo";
+		Replacements r1 = Replacements.builder().addReplacement(key).build();
+		Replacements r2 = Replacements.builder().put(key).build();
+		Replacements r3 = Replacements.singletonReplacement(key);
 		verify(r1, r2, r3, entry(key, null));
 	}
 
 	@Test
 	void it_should_build_immutable_replacement_object() {
-		final Replacements.Builder builder = Replacements.builder()
+		Replacements.Builder builder = Replacements.builder()
 			.addReplacement("foo", "foo")
 			.addReplacement("bar", "bar");
 
-		final Replacements r1 = builder.build();
+		Replacements r1 = builder.build();
 
 		assertThat(r1.getReplacements())
 			.hasSize(2)
@@ -182,7 +182,7 @@ class ReplacementsTest {
 				entry("bar", "bar")
 			);
 
-		final Replacements r2 = builder.addReplacement("baz", "baz").build();
+		Replacements r2 = builder.addReplacement("baz", "baz").build();
 
 		assertThat(r1.getReplacements())
 			.hasSize(2)
@@ -209,7 +209,7 @@ class ReplacementsTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final Replacements replacements = Replacements.builder()
+		Replacements replacements = Replacements.builder()
 			.addReplacement("foo", "bar")
 			.put("bar", 10)
 			.build();

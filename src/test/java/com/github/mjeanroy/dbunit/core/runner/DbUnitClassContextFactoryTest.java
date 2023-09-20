@@ -50,8 +50,8 @@ class DbUnitClassContextFactoryTest {
 
 	@Test
 	void it_should_read_dataset_from_class_context() {
-		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
-		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getDataSet()).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
@@ -59,8 +59,8 @@ class DbUnitClassContextFactoryTest {
 
 	@Test
 	void it_should_read_connection_factory_from_class_context() {
-		final Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
-		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+		Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
+		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getConnectionFactory()).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
@@ -68,8 +68,8 @@ class DbUnitClassContextFactoryTest {
 
 	@Test
 	void it_should_extract_sql_scripts_from_class_context() {
-		final Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
-		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+		Class<WithDataSetAndSqlInit> testClass = WithDataSetAndSqlInit.class;
+		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getInitScripts()).isNotEmpty().hasSize(2);
@@ -101,8 +101,8 @@ class DbUnitClassContextFactoryTest {
 
 	@Test
 	void it_should_extract_liquibase_changelogs_scripts_from_class_context() {
-		final Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
-		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getLiquibaseChangeLogs()).isNotEmpty().hasSize(1);
@@ -111,8 +111,8 @@ class DbUnitClassContextFactoryTest {
 
 	@Test
 	void it_should_read_replacements_from_providers() {
-		final Class<WithReplacementsProvidersDataSet> testClass = WithReplacementsProvidersDataSet.class;
-		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+		Class<WithReplacementsProvidersDataSet> testClass = WithReplacementsProvidersDataSet.class;
+		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getReplacements()).isNotEmpty().hasSize(2);
@@ -127,8 +127,8 @@ class DbUnitClassContextFactoryTest {
 
 	@Test
 	void it_should_read_interceptor() {
-		final Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
-		final DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
+		Class<WithCustomConfiguration> testClass = WithCustomConfiguration.class;
+		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
 		assertThat(ctx.getInterceptors()).hasSize(10);

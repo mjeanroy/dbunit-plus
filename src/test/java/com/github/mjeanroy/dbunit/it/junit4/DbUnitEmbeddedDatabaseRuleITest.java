@@ -48,14 +48,14 @@ public class DbUnitEmbeddedDatabaseRuleITest {
 
 	@Test
 	public void test1() {
-		final Connection connection = rule.getConnection();
+		Connection connection = rule.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}
 
 	@Test
 	public void test2() {
-		final Connection connection = rule.getConnection();
+		Connection connection = rule.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}

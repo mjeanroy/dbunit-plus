@@ -36,8 +36,8 @@ class DbUnitQualifiedTableNamesInterceptorTest {
 
 	@Test
 	void it_should_activate_property_by_default() {
-		final DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor();
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor();
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -45,8 +45,8 @@ class DbUnitQualifiedTableNamesInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(true);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(true);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -54,8 +54,8 @@ class DbUnitQualifiedTableNamesInterceptorTest {
 
 	@Test
 	void it_should_not_activate_property() {
-		final DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(false);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(false);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(false);
@@ -68,7 +68,7 @@ class DbUnitQualifiedTableNamesInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(true);
+		DbUnitQualifiedTableNamesInterceptor interceptor = new DbUnitQualifiedTableNamesInterceptor(true);
 		assertThat(interceptor).hasToString(
 			"DbUnitQualifiedTableNamesInterceptor{" +
 				"property: \"http://www.dbunit.org/features/qualifiedTableNames\", " +

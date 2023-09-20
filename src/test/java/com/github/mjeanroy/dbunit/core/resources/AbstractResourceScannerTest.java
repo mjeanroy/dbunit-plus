@@ -38,9 +38,9 @@ abstract class AbstractResourceScannerTest {
 
 	@Test
 	void it_should_fail_if_resource_does_not_exist() {
-		final ResourceScanner scanner = getScanner();
-		final String path = "/dataset/fake.xml";
-		final Resource resource = new ResourceMockBuilder()
+		ResourceScanner scanner = getScanner();
+		String path = "/dataset/fake.xml";
+		Resource resource = new ResourceMockBuilder()
 			.setPath(path)
 			.setExists(false)
 			.build();
@@ -52,13 +52,13 @@ abstract class AbstractResourceScannerTest {
 
 	@Test
 	void it_should_returns_empty_list_without_directory() {
-		final String path = "/dataset/xml/foo.xml";
-		final Resource resource = new ResourceMockBuilder()
+		String path = "/dataset/xml/foo.xml";
+		Resource resource = new ResourceMockBuilder()
 			.setPath(path)
 			.setFile()
 			.build();
 
-		final Collection<Resource> resources = getScanner().scan(resource);
+		Collection<Resource> resources = getScanner().scan(resource);
 
 		verify(resource).isDirectory();
 		assertThat(resources)

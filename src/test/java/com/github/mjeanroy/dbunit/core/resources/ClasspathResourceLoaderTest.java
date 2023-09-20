@@ -57,7 +57,7 @@ class ClasspathResourceLoaderTest {
 
 	@Test
 	void it_should_load_resource() {
-		final Resource resource = loader.load(CLASSPATH_USERS_JSON);
+		Resource resource = loader.load(CLASSPATH_USERS_JSON);
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
 		assertThat(resource.getFilename()).isEqualTo("01-users.json");
@@ -65,7 +65,7 @@ class ClasspathResourceLoaderTest {
 
 	@Test
 	void it_should_not_load_unknown_resource() {
-		final String path = "classpath:/fake/unknown.json";
+		String path = "classpath:/fake/unknown.json";
 		assertThatThrownBy(() -> loader.load(path))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", path));

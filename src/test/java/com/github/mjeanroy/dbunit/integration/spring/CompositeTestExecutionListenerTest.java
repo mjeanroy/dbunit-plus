@@ -55,9 +55,9 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_create_listener() {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
-		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");
-		final TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		TestExecutionListener[] listeners = readPrivate(listener, "listeners");
+		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
 
 		assertThat(listeners)
 			.isNotNull()
@@ -74,7 +74,7 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_prepare_instances() throws Exception {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.prepareTestInstance(ctx);
 
@@ -85,7 +85,7 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_execute_before_test_class() throws Exception {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestClass(ctx);
 
@@ -96,7 +96,7 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_execute_before_test_method() throws Exception {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.beforeTestMethod(ctx);
 
@@ -107,7 +107,7 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_execute_after_test_class() throws Exception {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestClass(ctx);
 
@@ -118,7 +118,7 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_execute_after_test_method() throws Exception {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
 
 		listener.afterTestMethod(ctx);
 
@@ -129,9 +129,9 @@ class CompositeTestExecutionListenerTest {
 
 	@Test
 	void it_should_return_last_exception() throws Exception {
-		final CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
-		final Exception ex1 = new IOException();
-		final Exception ex2 = new IOException();
+		CompositeTestExecutionListener listener = new CompositeTestExecutionListener(asList(listener1, listener2));
+		Exception ex1 = new IOException();
+		Exception ex2 = new IOException();
 
 		doThrow(ex1).when(listener1).prepareTestInstance(ctx);
 		doThrow(ex2).when(listener2).prepareTestInstance(ctx);

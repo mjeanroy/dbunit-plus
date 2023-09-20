@@ -51,45 +51,45 @@ class UrlResourceTest {
 
 	@Test
 	void it_should_return_true_if_file_exists(WireMockServer srv) {
-		final String path = USERS_JSON;
-		final String dataset = readTestResource(path);
+		String path = USERS_JSON;
+		String dataset = readTestResource(path);
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
 				.withStatus(200)
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset.trim())));
 
-		final URL url = url(srv.port(), path);
-		final UrlResource resource = new UrlResource(url);
+		URL url = url(srv.port(), path);
+		UrlResource resource = new UrlResource(url);
 		assertThat(resource.exists()).isTrue();
 	}
 
 	@Test
 	void it_should_return_false_if_file_does_not_exists(WireMockServer srv) {
-		final String path = "/dataset/json/fake-file.json";
-		final URL url = url(srv.port(), path);
-		final UrlResource resource = new UrlResource(url);
+		String path = "/dataset/json/fake-file.json";
+		URL url = url(srv.port(), path);
+		UrlResource resource = new UrlResource(url);
 		assertThat(resource.exists()).isFalse();
 	}
 
 	@Test
 	void it_should_return_get_file_name(WireMockServer srv) {
-		final URL url = url(srv.port(), USERS_JSON);
-		final UrlResource resource = new UrlResource(url);
+		URL url = url(srv.port(), USERS_JSON);
+		UrlResource resource = new UrlResource(url);
 		assertThat(resource.getFilename()).isEqualTo("01-users.json");
 	}
 
 	@Test
 	void it_should_return_false_if_not_directory(WireMockServer srv) {
-		final URL url = url(srv.port(), USERS_JSON);
-		final UrlResource resource = new UrlResource(url);
+		URL url = url(srv.port(), USERS_JSON);
+		UrlResource resource = new UrlResource(url);
 		assertThat(resource.isDirectory()).isFalse();
 	}
 
 	@Test
 	void it_should_return_get_file_handler(WireMockServer srv) {
-		final URL url = url(srv.port(), USERS_JSON);
-		final UrlResource resource = new UrlResource(url);
+		URL url = url(srv.port(), USERS_JSON);
+		UrlResource resource = new UrlResource(url);
 
 		assertThatThrownBy(resource::toFile)
 			.isExactlyInstanceOf(UnsupportedOperationException.class)
@@ -98,35 +98,35 @@ class UrlResourceTest {
 
 	@Test
 	void it_should_get_input_stream(WireMockServer srv) throws Exception {
-		final String path = USERS_JSON;
-		final String dataset = readTestResource(path).trim();
+		String path = USERS_JSON;
+		String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
 				.withStatus(200)
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset)));
 
-		final URL url = url(srv.port(), path);
-		final UrlResource resource = new UrlResource(url);
-		final InputStream stream = resource.openStream();
-		final String result = readStream(stream).trim();
+		URL url = url(srv.port(), path);
+		UrlResource resource = new UrlResource(url);
+		InputStream stream = resource.openStream();
+		String result = readStream(stream).trim();
 
 		assertThat(result).isEqualTo(dataset);
 	}
 
 	@Test
 	void it_should_return_empty_sub_resources(WireMockServer srv) {
-		final String path = USERS_JSON;
-		final String dataset = readTestResource(path).trim();
+		String path = USERS_JSON;
+		String dataset = readTestResource(path).trim();
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
 				.withStatus(200)
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset)));
 
-		final URL url = url(srv.port(), path);
-		final UrlResource resource = new UrlResource(url);
-		final Collection<Resource> subResources = resource.listResources();
+		URL url = url(srv.port(), path);
+		UrlResource resource = new UrlResource(url);
+		Collection<Resource> subResources = resource.listResources();
 
 		assertThat(subResources)
 			.isNotNull()
@@ -144,8 +144,8 @@ class UrlResourceTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final URL url = url(8080, USERS_JSON);
-		final UrlResource r1 = new UrlResource(url);
+		URL url = url(8080, USERS_JSON);
+		UrlResource r1 = new UrlResource(url);
 
 		assertThat(r1).hasToString(
 			"UrlResource{" +

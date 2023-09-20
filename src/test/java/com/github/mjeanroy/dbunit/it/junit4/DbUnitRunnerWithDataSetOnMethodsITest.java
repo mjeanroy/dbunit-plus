@@ -54,7 +54,7 @@ public class DbUnitRunnerWithDataSetOnMethodsITest {
 
 	@BeforeClass
 	public static void setup() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 	}
@@ -62,7 +62,7 @@ public class DbUnitRunnerWithDataSetOnMethodsITest {
 	@Test
 	@DbUnitDefaultDataSet
 	public void test1() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}
@@ -70,7 +70,7 @@ public class DbUnitRunnerWithDataSetOnMethodsITest {
 	@Test
 	@DbUnitDataSet(USERS_XML)
 	public void test2() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(0);
 	}
@@ -79,7 +79,7 @@ public class DbUnitRunnerWithDataSetOnMethodsITest {
 	@DbUnitUsersDataSet
 	@DbUnitDataSet(value = MOVIES_XML, inherit = true)
 	public void test3() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}

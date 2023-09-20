@@ -33,8 +33,8 @@ class LiquibaseChangeLogTest {
 
 	@Test
 	void it_should_create_changelog() {
-		final String path = "/hsqldb/master-changelog.xml";
-		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
+		String path = "/hsqldb/master-changelog.xml";
+		LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
 		assertThat(changeLog.getChangeLog()).isEqualTo(path);
 	}
 
@@ -45,8 +45,8 @@ class LiquibaseChangeLogTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final String path = "/hsqldb/master-changelog.xml";
-		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
+		String path = "/hsqldb/master-changelog.xml";
+		LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
 		assertThat(changeLog).hasToString(
 			"LiquibaseChangeLog{" +
 				"changeLog: \"/hsqldb/master-changelog.xml\"" +

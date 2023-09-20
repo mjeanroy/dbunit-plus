@@ -36,8 +36,8 @@ class DbUnitAllowEmptyFieldsInterceptorTest {
 
 	@Test
 	void it_should_activate_property_by_default() {
-		final DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor();
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor();
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -45,8 +45,8 @@ class DbUnitAllowEmptyFieldsInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(true);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(true);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -54,8 +54,8 @@ class DbUnitAllowEmptyFieldsInterceptorTest {
 
 	@Test
 	void it_should_not_activate_property() {
-		final DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(false);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(false);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(false);
@@ -68,7 +68,7 @@ class DbUnitAllowEmptyFieldsInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(true);
+		DbUnitAllowEmptyFieldsInterceptor interceptor = new DbUnitAllowEmptyFieldsInterceptor(true);
 		assertThat(interceptor).hasToString(
 			"DbUnitAllowEmptyFieldsInterceptor{" +
 				"property: \"http://www.dbunit.org/features/allowEmptyFields\", " +

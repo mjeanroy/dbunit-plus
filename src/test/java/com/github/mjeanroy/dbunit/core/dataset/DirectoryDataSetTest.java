@@ -44,19 +44,19 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_create_directory_dataset() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
-		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 		assertThat(dataSet.getResource()).isEqualTo(resource);
 	}
 
 	@Test
 	void it_should_return_table_names() throws Exception {
-		final Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
-		final Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).build();
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
-		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
+		Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).build();
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		final String[] tableNames = dataSet.getTableNames();
+		String[] tableNames = dataSet.getTableNames();
 
 		assertThat(tableNames).hasSize(2).containsExactlyInAnyOrder(
 				"users",
@@ -66,13 +66,13 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_get_table() throws Exception {
-		final Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
-		final Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
-		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
+		Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		final ITable t1 = dataSet.getTable("users");
-		final ITable t2 = dataSet.getTable("movies");
+		ITable t1 = dataSet.getTable("users");
+		ITable t2 = dataSet.getTable("movies");
 
 		assertThat(t1).isNotNull();
 		assertThat(t1.getRowCount()).isEqualTo(2);
@@ -82,12 +82,12 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_get_table_metadata() throws Exception {
-		final Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
-		final Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
-		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
+		Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		final ITableMetaData meta1 = dataSet.getTableMetaData("users");
+		ITableMetaData meta1 = dataSet.getTableMetaData("users");
 
 		assertThat(meta1).isNotNull();
 		assertThat(meta1.getColumns())
@@ -95,7 +95,7 @@ class DirectoryDataSetTest {
 			.extracting("columnName")
 			.containsOnly("id", "name");
 
-		final ITableMetaData meta2 = dataSet.getTableMetaData("movies");
+		ITableMetaData meta2 = dataSet.getTableMetaData("movies");
 
 		assertThat(meta2).isNotNull();
 		assertThat(meta2.getColumns())
@@ -106,13 +106,13 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables() throws Exception {
-		final Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
-		final Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
-		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
+		Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		final ITableIterator it = dataSet.iterator();
-		final List<ITable> tables = new ArrayList<>();
+		ITableIterator it = dataSet.iterator();
+		List<ITable> tables = new ArrayList<>();
 
 		while (it.next()) {
 			tables.add(it.getTable());
@@ -129,13 +129,13 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		final Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
-		final Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
-		final DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource r1 = new ResourceMockBuilder().fromClasspath(USERS_XML).setFile().build();
+		Resource r2 = new ResourceMockBuilder().fromClasspath(MOVIES_XML).setFile().build();
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().addSubResources(r1, r2).build();
+		DirectoryDataSet dataSet = new DirectoryDataSet(resource, false, new ResourceComparator());
 
-		final ITableIterator it = dataSet.reverseIterator();
-		final List<ITable> tables = new ArrayList<>();
+		ITableIterator it = dataSet.reverseIterator();
+		List<ITable> tables = new ArrayList<>();
 
 		while (it.next()) {
 			tables.add(it.getTable());
@@ -152,9 +152,9 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_check_for_case_insensitive_names() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
-		final DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
-		final DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
+		DirectoryDataSet d1 = new DirectoryDataSet(resource, false, new ResourceComparator());
+		DirectoryDataSet d2 = new DirectoryDataSet(resource, true, new ResourceComparator());
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();
@@ -162,8 +162,8 @@ class DirectoryDataSetTest {
 
 	@Test
 	void it_should_implement_to_string() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
-		final DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
+		Resource resource = new ResourceMockBuilder().fromClasspath(XML_DATASET).setDirectory().build();
+		DirectoryDataSet ds = new DirectoryDataSet(resource, false, new ResourceComparator());
 		assertThat(ds).hasToString(
 			"DirectoryDataSet{" +
 				"resource: MockResource" +

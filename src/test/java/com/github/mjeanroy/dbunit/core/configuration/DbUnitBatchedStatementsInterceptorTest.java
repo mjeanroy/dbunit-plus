@@ -36,8 +36,8 @@ class DbUnitBatchedStatementsInterceptorTest {
 
 	@Test
 	void it_should_activate_property_by_default() {
-		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor();
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor();
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -45,8 +45,8 @@ class DbUnitBatchedStatementsInterceptorTest {
 
 	@Test
 	void it_should_activate_property() {
-		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(true);
@@ -54,8 +54,8 @@ class DbUnitBatchedStatementsInterceptorTest {
 
 	@Test
 	void it_should_not_activate_property() {
-		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(false);
-		final DatabaseConfig config = new DatabaseConfig();
+		DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(false);
+		DatabaseConfig config = new DatabaseConfig();
 		interceptor.applyConfiguration(config);
 
 		assertThat(config.getProperty(PROPERTY_NAME)).isEqualTo(false);
@@ -68,7 +68,7 @@ class DbUnitBatchedStatementsInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
+		DbUnitBatchedStatementsInterceptor interceptor = new DbUnitBatchedStatementsInterceptor(true);
 		assertThat(interceptor).hasToString(
 			"DbUnitBatchedStatementsInterceptor{" +
 				"property: \"http://www.dbunit.org/features/batchedStatements\", " +

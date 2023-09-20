@@ -33,8 +33,8 @@ class NullValueReplacementsProviderTest {
 
 	@Test
 	void it_should_add_null_replacement() {
-		final NullValueReplacementsProvider provider = new NullValueReplacementsProvider();
-		final Replacements replacements = provider.create();
+		NullValueReplacementsProvider provider = new NullValueReplacementsProvider();
+		Replacements replacements = provider.create();
 		assertThat(replacements).isNotNull();
 		assertThat(replacements.getReplacements()).hasSize(2).contains(
 			entry("[NULL]", null),

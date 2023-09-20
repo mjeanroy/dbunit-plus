@@ -43,13 +43,13 @@ class JdbcDataSourceConnectionFactoryTest {
 
 	@Test
 	void it_should_create_connection() throws Exception {
-		final DataSource dataSource = mock(DataSource.class);
-		final Connection connection = mock(Connection.class);
+		DataSource dataSource = mock(DataSource.class);
+		Connection connection = mock(Connection.class);
 
 		when(dataSource.getConnection()).thenReturn(connection);
 
-		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		final Connection result = factory.getConnection();
+		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
+		Connection result = factory.getConnection();
 
 		assertThat(result)
 			.isNotNull()
@@ -60,8 +60,8 @@ class JdbcDataSourceConnectionFactoryTest {
 
 	@Test
 	void it_should_fail_if_connection_cannot_be_loaded() throws Exception {
-		final DataSource dataSource = mock(DataSource.class);
-		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
+		DataSource dataSource = mock(DataSource.class);
+		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
 
 		when(dataSource.getConnection()).thenThrow(new SQLException());
 
@@ -78,8 +78,8 @@ class JdbcDataSourceConnectionFactoryTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final DataSource dataSource = mock(DataSource.class, "MockDataSource");
-		final JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
+		DataSource dataSource = mock(DataSource.class, "MockDataSource");
+		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
 		assertThat(factory).hasToString(
 			"JdbcDataSourceConnectionFactory{" +
 				"dataSource: MockDataSource" +

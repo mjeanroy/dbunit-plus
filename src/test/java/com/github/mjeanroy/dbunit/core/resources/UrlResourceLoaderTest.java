@@ -69,8 +69,8 @@ class UrlResourceLoaderTest {
 
 	@Test
 	void it_should_load_resource(WireMockServer srv) {
-		final String path = USERS_JSON;
-		final String dataset = readTestResource(path);
+		String path = USERS_JSON;
+		String dataset = readTestResource(path);
 
 		stubFor(WireMock.get(urlEqualTo(path))
 			.willReturn(aResponse()
@@ -78,8 +78,8 @@ class UrlResourceLoaderTest {
 				.withHeader("Content-Type", "text/xml")
 				.withBody(dataset.trim())));
 
-		final URL url = url(srv.port(), path);
-		final Resource resource = loader.load(url.toString());
+		URL url = url(srv.port(), path);
+		Resource resource = loader.load(url.toString());
 
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
@@ -88,8 +88,8 @@ class UrlResourceLoaderTest {
 
 	@Test
 	void it_should_not_load_unknown_resource(WireMockServer srv) {
-		final String path = "/dataset/json/fake.json";
-		final URL url = url(srv.port(), path);
+		String path = "/dataset/json/fake.json";
+		URL url = url(srv.port(), path);
 
 		assertThatThrownBy(() -> loader.load(url.toString()))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)

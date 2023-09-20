@@ -49,16 +49,16 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_start_database_and_load_data_set() throws Exception {
-		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
+		EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/drop.sql")
 			.addScript("classpath:/sql/schema.sql")
 			.build());
 
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = lookupMethod(FixtureClass.class, "test_method");
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = lookupMethod(FixtureClass.class, "test_method");
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
@@ -69,16 +69,16 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_stop_database_and_remove_data_set_after_each_test() throws Exception {
-		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
+		EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/drop.sql")
 			.addScript("classpath:/sql/schema.sql")
 			.build());
 
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = lookupMethod(FixtureClass.class, "test_method");
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = lookupMethod(FixtureClass.class, "test_method");
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
@@ -94,63 +94,63 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 
 	@Test
 	void it_should_resolve_connection_parameter() {
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(new EmbeddedDatabaseBuilder()
+		DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/drop.sql")
 			.addScript("classpath:/sql/schema.sql")
 			.build());
 
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = lookupMethod(FixtureClass.class, "test_method_with_connection_parameter", Connection.class);
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = lookupMethod(FixtureClass.class, "test_method_with_connection_parameter", Connection.class);
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
 
-		final Parameter parameter = testMethod.getParameters()[0];
-		final FakeParameterContext parameterContext = new FakeParameterContext(parameter);
+		Parameter parameter = testMethod.getParameters()[0];
+		FakeParameterContext parameterContext = new FakeParameterContext(parameter);
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 
-		final Connection connection = (Connection) extension.resolveParameter(parameterContext, extensionContext);
+		Connection connection = (Connection) extension.resolveParameter(parameterContext, extensionContext);
 		verifyData(connection, 2, 3);
 	}
 
 	@Test
 	void it_should_resolve_specific_jdbc_connection_parameter() {
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension();
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = lookupMethod(FixtureClass.class, "test_method_with_jdbc_connection_parameter", JDBCConnection.class);
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension();
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = lookupMethod(FixtureClass.class, "test_method_with_jdbc_connection_parameter", JDBCConnection.class);
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
 
-		final Parameter parameter = testMethod.getParameters()[0];
-		final FakeParameterContext parameterContext = new FakeParameterContext(parameter);
+		Parameter parameter = testMethod.getParameters()[0];
+		FakeParameterContext parameterContext = new FakeParameterContext(parameter);
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 
-		final JDBCConnection connection = (JDBCConnection) extension.resolveParameter(parameterContext, extensionContext);
+		JDBCConnection connection = (JDBCConnection) extension.resolveParameter(parameterContext, extensionContext);
 		verifyData(connection, 2, 3);
 	}
 
 	@Test
 	void it_should_support_embedded_database_parameter_injection() {
-		final EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
+		EmbeddedDatabase db = spy(new EmbeddedDatabaseBuilder()
 			.setType(EmbeddedDatabaseType.HSQL)
 			.addScript("classpath:/sql/drop.sql")
 			.addScript("classpath:/sql/schema.sql")
 			.build());
 
-		final DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
-		final FixtureClass testInstance = new FixtureClass();
-		final Method testMethod = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
-		final FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
+		DbUnitEmbeddedDatabaseExtension extension = new DbUnitEmbeddedDatabaseExtension(db);
+		FixtureClass testInstance = new FixtureClass();
+		Method testMethod = lookupMethod(FixtureClass.class, "method_with_embedded_db", EmbeddedDatabase.class);
+		FakeExtensionContext extensionContext = new FakeExtensionContext(testInstance, testMethod);
 
 		extension.beforeAll(extensionContext);
 		extension.beforeEach(extensionContext);
 
-		final Parameter parameter = testMethod.getParameters()[0];
-		final FakeParameterContext parameterContext = new FakeParameterContext(parameter);
+		Parameter parameter = testMethod.getParameters()[0];
+		FakeParameterContext parameterContext = new FakeParameterContext(parameter);
 
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 		assertThat(extension.resolveParameter(parameterContext, extensionContext)).isSameAs(db);

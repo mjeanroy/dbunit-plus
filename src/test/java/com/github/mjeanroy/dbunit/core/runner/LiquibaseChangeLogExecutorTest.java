@@ -44,10 +44,10 @@ class LiquibaseChangeLogExecutorTest {
 
 	@Test
 	void it_should_load_liquibase_change_logs(EmbeddedDatabase db) throws Exception {
-		final JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
-		final LiquibaseChangeLogExecutor executor = new LiquibaseChangeLogExecutor(factory);
-		final String path = "/liquibase/changelog.xml";
-		final LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
+		JdbcConnectionFactory factory = mock(JdbcConnectionFactory.class);
+		LiquibaseChangeLogExecutor executor = new LiquibaseChangeLogExecutor(factory);
+		String path = "/liquibase/changelog.xml";
+		LiquibaseChangeLog changeLog = new LiquibaseChangeLog(path);
 
 		when(factory.getConnection()).thenAnswer((Answer<Connection>) invocationOnMock ->
 			db.getConnection()
@@ -55,7 +55,7 @@ class LiquibaseChangeLogExecutorTest {
 
 		executor.execute(changeLog);
 
-		final Connection connection = db.getConnection();
+		Connection connection = db.getConnection();
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 		verify(factory).getConnection();

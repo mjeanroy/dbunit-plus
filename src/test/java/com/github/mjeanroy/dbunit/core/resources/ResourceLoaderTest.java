@@ -40,13 +40,13 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_find_classpath_loader() {
-		final String path = "classpath:/dataset/xml/users.xml";
+		String path = "classpath:/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.CLASSPATH);
 	}
 
 	@Test
 	void it_should_load_file_from_classpath() {
-		final Resource resource = ResourceLoader.CLASSPATH.load(CLASSPATH_USERS_XML);
+		Resource resource = ResourceLoader.CLASSPATH.load(CLASSPATH_USERS_XML);
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(FileResource.class);
 		assertThat(resource.exists()).isTrue();
@@ -54,7 +54,7 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_load_file_from_a_jar() {
-		final Resource resource = ResourceLoader.CLASSPATH.load(CLASSPATH_JAR_USERS_XML);
+		Resource resource = ResourceLoader.CLASSPATH.load(CLASSPATH_JAR_USERS_XML);
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(ClasspathResource.class);
 		assertThat(resource.exists()).isTrue();
@@ -62,7 +62,7 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_fail_if_file_does_not_exist_in_classpath() {
-		final String resource = "classpath:/dataset/xml/unknown.xml";
+		String resource = "classpath:/dataset/xml/unknown.xml";
 		assertThatThrownBy(() -> ResourceLoader.CLASSPATH.load(resource))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", resource));
@@ -70,15 +70,15 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_find_file_system_loader() {
-		final String path = "file:/dataset/xml/users.xml";
+		String path = "file:/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.FILE_SYSTEM);
 	}
 
 	@Test
 	void it_should_load_file_from_file_system(@TempDir Path tmp) throws Exception {
-		final Path tmpFile = Files.createFile(tmp.resolve("users.xml"));
-		final String path = tmpFile.toAbsolutePath().toString();
-		final Resource resource = ResourceLoader.FILE_SYSTEM.load("file:" + path);
+		Path tmpFile = Files.createFile(tmp.resolve("users.xml"));
+		String path = tmpFile.toAbsolutePath().toString();
+		Resource resource = ResourceLoader.FILE_SYSTEM.load("file:" + path);
 
 		assertThat(resource).isNotNull();
 		assertThat(resource).isExactlyInstanceOf(FileResource.class);
@@ -86,7 +86,7 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_fail_if_file_does_not_exist_in_file_system() {
-		final String resource = "file:/dataset/xml/unknown.xml";
+		String resource = "file:/dataset/xml/unknown.xml";
 		assertThatThrownBy(() -> ResourceLoader.FILE_SYSTEM.load(resource))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", resource));
@@ -94,13 +94,13 @@ class ResourceLoaderTest {
 
 	@Test
 	void it_should_find_url_loader() {
-		final String path = "http://foo.com/dataset/xml/users.xml";
+		String path = "http://foo.com/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
 	}
 
 	@Test
 	void it_should_find_url_loader_with_https() {
-		final String path = "https://foo.com/dataset/xml/users.xml";
+		String path = "https://foo.com/dataset/xml/users.xml";
 		assertThat(ResourceLoader.find(path)).isEqualTo(ResourceLoader.URL);
 	}
 }

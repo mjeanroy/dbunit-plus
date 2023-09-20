@@ -53,14 +53,14 @@ public class DbUnitRunnerWithInheritableDatasetITest {
 
 	@BeforeClass
 	public static void setup() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 	}
 
 	@Test
 	public void test1() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(0);
 	}
@@ -68,7 +68,7 @@ public class DbUnitRunnerWithInheritableDatasetITest {
 	@Test
 	@DbUnitDataSet(value = MOVIES_XML, inherit = true)
 	public void test2() {
-		final Connection connection = hsqldb.getConnection();
+		Connection connection = hsqldb.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isEqualTo(3);
 	}

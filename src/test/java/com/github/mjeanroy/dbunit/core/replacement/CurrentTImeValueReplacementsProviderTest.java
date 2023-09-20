@@ -36,12 +36,12 @@ class CurrentTImeValueReplacementsProviderTest {
 
 	@Test
 	void it_should_add_replacements_for_current_time() {
-		final CurrentTimeValueReplacementsProvider provider = new CurrentTimeValueReplacementsProvider();
-		final Replacements replacements = provider.create();
+		CurrentTimeValueReplacementsProvider provider = new CurrentTimeValueReplacementsProvider();
+		Replacements replacements = provider.create();
 		assertThat(replacements).isNotNull();
 
-		final List<String> expectedKeys = asList("CURRENT_TIME", "current_time", "CURRENT_TIME()", "current_time()");
-		final Map<String, Object> map = replacements.getReplacements();
+		List<String> expectedKeys = asList("CURRENT_TIME", "current_time", "CURRENT_TIME()", "current_time()");
+		Map<String, Object> map = replacements.getReplacements();
 
 		assertThat(map).hasSameSizeAs(expectedKeys);
 

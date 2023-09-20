@@ -57,8 +57,8 @@ class LiquibaseFunctionTest {
 
 	@Test
 	void it_should_load_liquibase_changelogs(EmbeddedDatabase db) throws Exception {
-		final String changeLog = "/liquibase/changelog.xml";
-		final LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
+		String changeLog = "/liquibase/changelog.xml";
+		LiquibaseUpdater liquibaseUpdater = new LiquibaseUpdater(changeLog, factory);
 
 		liquibaseUpdater.update();
 

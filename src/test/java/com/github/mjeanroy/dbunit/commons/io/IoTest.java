@@ -41,14 +41,14 @@ class IoTest {
 
 	@Test
 	void it_should_read_reader_line_by_line() throws Exception {
-		final String line1 = "foo";
-		final String line2 = "bar";
-		final String text = "" +
+		String line1 = "foo";
+		String line2 = "bar";
+		String text = "" +
 			"foo" + System.getProperty("line.separator") +
 			"bar" + System.getProperty("line.separator");
 
-		final InputStream reader = new ByteArrayInputStream(text.getBytes(Charset.defaultCharset()));
-		final ReaderVisitor visitor = mock(ReaderVisitor.class);
+		InputStream reader = new ByteArrayInputStream(text.getBytes(Charset.defaultCharset()));
+		ReaderVisitor visitor = mock(ReaderVisitor.class);
 
 		Io.readLines(reader, visitor);
 
@@ -59,11 +59,11 @@ class IoTest {
 
 	@Test
 	void it_should_read_reader_and_rethrown_io_exception() throws Exception {
-		final String text = "test foo bar";
-		final byte[] bytes = text.getBytes(Charset.defaultCharset());
-		final InputStream stream = new ByteArrayInputStream(bytes);
-		final InputStream buf = new BufferedInputStream(stream);
-		final ReaderVisitor visitor = mock(ReaderVisitor.class);
+		String text = "test foo bar";
+		byte[] bytes = text.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
+		InputStream buf = new BufferedInputStream(stream);
+		ReaderVisitor visitor = mock(ReaderVisitor.class);
 
 		buf.close();
 

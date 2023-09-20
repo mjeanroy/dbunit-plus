@@ -45,33 +45,33 @@ class DbUnitClassContextTest {
 
 	@Test
 	void it_should_create_class_context() {
-		final String schema = null;
-		final IDataSet dataSet = new DefaultDataSet();
+		String schema = null;
+		IDataSet dataSet = new DefaultDataSet();
 
-		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
+		JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
 			JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "")
 		);
 
-		final List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
+		List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
 			"INSERT INTO foo VALUES(1, 'John Doe');",
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
 		)));
 
-		final List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
+		List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
 			"/hsqldb/changelog.xml"
 		));
 
-		final List<Replacements> replacements = singletonList(Replacements.builder()
+		List<Replacements> replacements = singletonList(Replacements.builder()
 			.addReplacement("foo", "bar")
 			.build());
 
-		final List<DbUnitConfigInterceptor> interceptors = singletonList(
+		List<DbUnitConfigInterceptor> interceptors = singletonList(
 			mock(DbUnitConfigInterceptor.class)
 		);
 
-		final Config config = new Config(schema, interceptors);
+		Config config = new Config(schema, interceptors);
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(
+		DbUnitClassContext ctx = new DbUnitClassContext(
 			config,
 			dataSet,
 			connectionFactory,
@@ -93,33 +93,33 @@ class DbUnitClassContextTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final String schema = null;
-		final IDataSet dataSet = mock(IDataSet.class, "MockDataSet");
+		String schema = null;
+		IDataSet dataSet = mock(IDataSet.class, "MockDataSet");
 
-		final JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
+		JdbcConnectionFactory connectionFactory = new JdbcDefaultConnectionFactory(
 			JdbcConfiguration.newJdbcConfiguration("jdbc:hsqldb:mem:testdb", "SA", "")
 		);
 
-		final List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
+		List<SqlScript> sqlScripts = singletonList(new SqlScript(asList(
 			"INSERT INTO foo VALUES(1, 'John Doe');",
 			"INSERT INTO foo VALUES(2, 'Jane Doe');"
 		)));
 
-		final List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
+		List<LiquibaseChangeLog> liquibaseChangeLogs = singletonList(new LiquibaseChangeLog(
 			"/hsqldb/changelog.xml"
 		));
 
-		final List<Replacements> replacements = singletonList(
+		List<Replacements> replacements = singletonList(
 			Replacements.singletonReplacement("foo", "bar")
 		);
 
-		final List<DbUnitConfigInterceptor> interceptors = singletonList(
+		List<DbUnitConfigInterceptor> interceptors = singletonList(
 			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
 		);
 
-		final Config config = new Config(schema, interceptors);
+		Config config = new Config(schema, interceptors);
 
-		final DbUnitClassContext ctx = new DbUnitClassContext(
+		DbUnitClassContext ctx = new DbUnitClassContext(
 			config,
 			dataSet,
 			connectionFactory,

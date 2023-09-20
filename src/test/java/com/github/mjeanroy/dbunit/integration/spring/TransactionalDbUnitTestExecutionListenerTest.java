@@ -35,14 +35,14 @@ class TransactionalDbUnitTestExecutionListenerTest {
 
 	@Test
 	void it_should_create_listener() {
-		final TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
+		TransactionalDbUnitTestExecutionListener listener = new TransactionalDbUnitTestExecutionListener();
 
-		final TestExecutionListener[] listeners = readPrivate(listener, "listeners");
+		TestExecutionListener[] listeners = readPrivate(listener, "listeners");
 		assertThat(listeners).isNotNull().isNotEmpty().hasSize(2);
 		assertThat(listeners[0]).isExactlyInstanceOf(TransactionalTestExecutionListener.class);
 		assertThat(listeners[1]).isExactlyInstanceOf(DbUnitTestExecutionListener.class);
 
-		final TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
+		TestExecutionListener[] reverseListeners = readPrivate(listener, "reverseListeners");
 		assertThat(reverseListeners).isNotNull().isNotEmpty().hasSize(2);
 		assertThat(reverseListeners[0]).isExactlyInstanceOf(DbUnitTestExecutionListener.class);
 		assertThat(reverseListeners[1]).isExactlyInstanceOf(TransactionalTestExecutionListener.class);

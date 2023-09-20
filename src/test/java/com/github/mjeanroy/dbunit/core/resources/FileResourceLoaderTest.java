@@ -60,9 +60,9 @@ class FileResourceLoaderTest {
 
 	@Test
 	void it_should_load_resource(@TempDir Path tmp) throws Exception {
-		final Path tmpFile = Files.createFile(tmp.resolve("foo.json"));
-		final String path = "file:" + tmpFile.toAbsolutePath().toString();
-		final Resource resource = loader.load(path);
+		Path tmpFile = Files.createFile(tmp.resolve("foo.json"));
+		String path = "file:" + tmpFile.toAbsolutePath().toString();
+		Resource resource = loader.load(path);
 
 		assertThat(resource).isNotNull();
 		assertThat(resource.exists()).isTrue();
@@ -71,7 +71,7 @@ class FileResourceLoaderTest {
 
 	@Test
 	void it_should_not_load_unknown_resource() {
-		final String path = "file:/fake/unknown.json";
+		String path = "file:/fake/unknown.json";
 		assertThatThrownBy(() -> loader.load(path))
 			.isExactlyInstanceOf(ResourceNotFoundException.class)
 			.hasMessage(String.format("Resource <%s> does not exist", path));

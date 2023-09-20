@@ -50,8 +50,8 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_scan_sub_resources() {
-		final Resource resource = new ResourceMockBuilder().fromJar(JAR_XML_DATASET).setDirectory().build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromJar(JAR_XML_DATASET).setDirectory().build();
+		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.hasSize(2)
@@ -62,8 +62,8 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_scan_sub_resources_with_trailing_slashes() {
-		final Resource resource = new ResourceMockBuilder().fromJar(JAR_XML_DATASET + "/").setDirectory().build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromJar(JAR_XML_DATASET + "/").setDirectory().build();
+		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.hasSize(2)
@@ -74,8 +74,8 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_not_scan_recursively() {
-		final Resource resource = new ResourceMockBuilder().fromJar(JAR_DATASET).setDirectory().build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromJar(JAR_DATASET).setDirectory().build();
+		Collection<Resource> resources = scanner.scan(resource);
 
 		assertThat(resources)
 			.hasSize(1)
@@ -86,15 +86,15 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_returns_empty_list_without_directory() {
-		final Resource resource = new ResourceMockBuilder().fromJar(JAR_USERS_XML).setFile().build();
-		final Collection<Resource> resources = scanner.scan(resource);
+		Resource resource = new ResourceMockBuilder().fromJar(JAR_USERS_XML).setFile().build();
+		Collection<Resource> resources = scanner.scan(resource);
 		assertThat(resources).isNotNull().isEmpty();
 	}
 
 	@Test
 	void it_should_fail_if_resource_does_not_resides_in_an_external_file() {
-		final String path = XML_DATASET;
-		final Resource resource = new ResourceMockBuilder().fromClasspath(path).build();
+		String path = XML_DATASET;
+		Resource resource = new ResourceMockBuilder().fromClasspath(path).build();
 
 		assertThatThrownBy(() -> scanner.scan(resource))
 			.isExactlyInstanceOf(ResourceNotValidException.class)
@@ -103,8 +103,8 @@ class JarResourceScannerTest extends AbstractResourceScannerTest {
 
 	@Test
 	void it_should_fail_if_resource_does_not_resides_in_a_jar() {
-		final String path = "file:/tmp/dataset.zip!/dataset/foo.xml";
-		final Resource resource = new ResourceMockBuilder().setPath(path).setDirectory().setExists(true).build();
+		String path = "file:/tmp/dataset.zip!/dataset/foo.xml";
+		Resource resource = new ResourceMockBuilder().setPath(path).setDirectory().setExists(true).build();
 
 		assertThatThrownBy(() -> scanner.scan(resource))
 			.isExactlyInstanceOf(ResourceNotValidException.class)

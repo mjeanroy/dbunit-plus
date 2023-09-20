@@ -61,9 +61,9 @@ class YamlDataSetTest {
 	void it_should_wrap_yaml_exception_to_data_set_exception() {
 		parser = mock(YamlParser.class);
 
-		final IOException ioEx = new IOException();
-		final YamlException ex = new YamlException(ioEx);
-		final Resource resource = createResource();
+		IOException ioEx = new IOException();
+		YamlException ex = new YamlException(ioEx);
+		Resource resource = createResource();
 
 		when(parser.parse(any(Resource.class))).thenThrow(ex);
 
@@ -74,9 +74,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_create_yamL_dataset() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final String[] tableNames = dataSet.getTableNames();
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		String[] tableNames = dataSet.getTableNames();
 
 		assertThat(tableNames)
 			.isNotNull()
@@ -86,9 +86,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_get_table() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITable table = dataSet.getTable("users");
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		ITable table = dataSet.getTable("users");
 
 		assertThat(table).isNotNull();
 		assertThat(table.getRowCount()).isEqualTo(2);
@@ -96,9 +96,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_get_table_metadata() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITableMetaData metaData = dataSet.getTableMetaData("users");
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		ITableMetaData metaData = dataSet.getTableMetaData("users");
 
 		assertThat(metaData).isNotNull();
 		assertThat(metaData.getColumns())
@@ -111,9 +111,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_get_table_data() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITable table = dataSet.getTable("users");
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		ITable table = dataSet.getTable("users");
 
 		for (int row = 0; row < table.getRowCount(); row++) {
 			assertThat(table.getValue(row, "name")).isNotNull();
@@ -122,9 +122,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITableIterator it = dataSet.iterator();
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		ITableIterator it = dataSet.iterator();
 
 		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
@@ -139,9 +139,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_iterate_over_tables_in_reverse_order() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
-		final ITableIterator it = dataSet.reverseIterator();
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		ITableIterator it = dataSet.reverseIterator();
 
 		List<ITable> tables = new ArrayList<>();
 		while (it.next()) {
@@ -156,9 +156,9 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_check_for_case_insensitive_names() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet d1 = new YamlDataSet(resource, false, parser);
-		final YamlDataSet d2 = new YamlDataSet(resource, true, parser);
+		Resource resource = createResource();
+		YamlDataSet d1 = new YamlDataSet(resource, false, parser);
+		YamlDataSet d2 = new YamlDataSet(resource, true, parser);
 
 		assertThat(d1.isCaseSensitiveTableNames()).isFalse();
 		assertThat(d2.isCaseSensitiveTableNames()).isTrue();
@@ -166,8 +166,8 @@ class YamlDataSetTest {
 
 	@Test
 	void it_should_get_resource() throws Exception {
-		final Resource resource = createResource();
-		final YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
+		Resource resource = createResource();
+		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		assertThat(dataSet.getResource()).isSameAs(resource);
 	}
 

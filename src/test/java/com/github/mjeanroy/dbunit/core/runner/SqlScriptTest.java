@@ -36,12 +36,12 @@ class SqlScriptTest {
 
 	@Test
 	void it_should_create_sql_script() {
-		final List<String> queries = asList(
+		List<String> queries = asList(
 			"INSERT INTO users(name) VALUES('John Doe');",
 			"INSERT INTO users(name) VALUES('Jane Doe');"
 		);
 
-		final SqlScript sqlScript = new SqlScript(queries);
+		SqlScript sqlScript = new SqlScript(queries);
 
 		assertThat(sqlScript.getQueries()).isEqualTo(queries);
 	}
@@ -53,12 +53,12 @@ class SqlScriptTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		final List<String> queries = asList(
+		List<String> queries = asList(
 			"INSERT INTO users(name) VALUES('John Doe');",
 			"INSERT INTO users(name) VALUES('Jane Doe');"
 		);
 
-		final SqlScript sqlScript = new SqlScript(queries);
+		SqlScript sqlScript = new SqlScript(queries);
 
 		assertThat(sqlScript).hasToString(
 			"SqlScript{" +

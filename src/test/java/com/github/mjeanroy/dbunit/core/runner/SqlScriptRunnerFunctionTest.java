@@ -78,8 +78,8 @@ class SqlScriptRunnerFunctionTest {
 
 	@Test
 	void it_should_load_script(EmbeddedDatabase db) throws Exception {
-		final SqlScriptExecutor executor = new SqlScriptExecutor(factory);
-		final Connection connection = db.getConnection();
+		SqlScriptExecutor executor = new SqlScriptExecutor(factory);
+		Connection connection = db.getConnection();
 
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
@@ -94,8 +94,8 @@ class SqlScriptRunnerFunctionTest {
 
 	@Test
 	void it_should_wrap_sql_exception() throws Exception {
-		final Connection connection = mock(Connection.class);
-		final SqlScriptExecutor executor = new SqlScriptExecutor(factory);
+		Connection connection = mock(Connection.class);
+		SqlScriptExecutor executor = new SqlScriptExecutor(factory);
 
 		when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Fail Test"));
 		when(factory.getConnection()).thenReturn(connection);

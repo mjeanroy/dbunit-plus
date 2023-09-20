@@ -45,16 +45,16 @@ class SnakeYamlParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		final SnakeYamlParser parser = new SnakeYamlParser();
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
-		final Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
+		SnakeYamlParser parser = new SnakeYamlParser();
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
+		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
 		assertThat(tables).hasSize(1).containsKey("users");
 
-		final List<Map<String, Object>> table = tables.get("users");
+		List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
-		final Map<String, Object> row1 = table.get(0);
+		Map<String, Object> row1 = table.get(0);
 		assertThat(row1)
 			.hasSize(2)
 			.containsExactly(
@@ -62,7 +62,7 @@ class SnakeYamlParserTest {
 				entry("name", "John Doe")
 			);
 
-		final Map<String, Object> row2 = table.get(1);
+		Map<String, Object> row2 = table.get(1);
 		assertThat(row2)
 			.hasSize(2)
 			.containsExactly(
@@ -73,11 +73,11 @@ class SnakeYamlParserTest {
 
 	@Test
 	void it_should_wrap_yml_parse_exception() {
-		final String malformedYaml = "foo: id: 1";
-		final byte[] bytes = malformedYaml.getBytes(Charset.defaultCharset());
-		final InputStream stream = new ByteArrayInputStream(bytes);
-		final Resource resource = new ResourceMockBuilder().withReader(stream).build();
-		final SnakeYamlParser parser = new SnakeYamlParser();
+		String malformedYaml = "foo: id: 1";
+		byte[] bytes = malformedYaml.getBytes(Charset.defaultCharset());
+		InputStream stream = new ByteArrayInputStream(bytes);
+		Resource resource = new ResourceMockBuilder().withReader(stream).build();
+		SnakeYamlParser parser = new SnakeYamlParser();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(YamlException.class)

@@ -51,8 +51,8 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_xml_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
-		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_XML).build();
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
@@ -60,23 +60,23 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_data_set_from_string_path_with_classpath_by_default() throws Exception {
-		final IDataSet dataSet = DataSetFactory.createDataSet(USERS_XML);
+		IDataSet dataSet = DataSetFactory.createDataSet(USERS_XML);
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
 	}
 
 	@Test
 	void it_should_create_data_set_from_string_path_with_classpath_if_specified() throws Exception {
-		final IDataSet dataSet = DataSetFactory.createDataSet(USERS_XML);
+		IDataSet dataSet = DataSetFactory.createDataSet(USERS_XML);
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
 	}
 
 	@Test
 	void it_should_create_data_set_from_string_path_with_file_system_if_specified() throws Exception {
-		final File file = getTestResource(USERS_XML);
-		final String path = "file:" + file.getAbsolutePath();
-		final IDataSet dataSet = DataSetFactory.createDataSet(path);
+		File file = getTestResource(USERS_XML);
+		String path = "file:" + file.getAbsolutePath();
+		IDataSet dataSet = DataSetFactory.createDataSet(path);
 
 		assertThat(dataSet).isExactlyInstanceOf(FlatXmlDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactly("users");
@@ -84,12 +84,12 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_data_set_from_array_of_path() throws Exception {
-		final String[] path = new String[]{
+		String[] path = new String[]{
 			CLASSPATH_USERS_XML,
 			CLASSPATH_MOVIES_XML
 		};
 
-		final IDataSet dataSet = DataSetFactory.createDataSet(path);
+		IDataSet dataSet = DataSetFactory.createDataSet(path);
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
@@ -100,43 +100,43 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_directory_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder()
+		Resource resource = new ResourceMockBuilder()
 			.setFilename("xml")
 			.setDirectory()
 			.fromClasspath(XML_DATASET)
 			.build();
 
-		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet).isExactlyInstanceOf(DirectoryDataSet.class);
 	}
 
 	@Test
 	void it_should_create_json_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 
 		assertThat(dataSet).isExactlyInstanceOf(JsonDataSet.class);
 	}
 
 	@Test
 	void it_should_create_csv_data_set() throws Exception {
-		final Resource resource = new ResourceMockBuilder().fromClasspath(USERS_CSV).build();
-		final IDataSet dataSet = DataSetFactory.createDataSet(resource);
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_CSV).build();
+		IDataSet dataSet = DataSetFactory.createDataSet(resource);
 		assertThat(dataSet).isExactlyInstanceOf(CsvDataSet.class);
 	}
 
 	@Test
 	void it_should_merge_dataset() throws Exception {
-		final IDataSet first = new FlatXmlDataSetBuilder()
+		IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(usersXmlAsStream());
 
-		final IDataSet second = new FlatXmlDataSetBuilder()
+		IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(moviesXmlAsStream());
 
-		final IDataSet dataSet = DataSetFactory.mergeDataSet(first, second);
+		IDataSet dataSet = DataSetFactory.mergeDataSet(first, second);
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
@@ -147,15 +147,15 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_dataset_from_collection_of_datasets() throws Exception {
-		final IDataSet first = new FlatXmlDataSetBuilder()
+		IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(usersXmlAsStream());
 
-		final IDataSet second = new FlatXmlDataSetBuilder()
+		IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(moviesXmlAsStream());
 
-		final IDataSet dataSet = DataSetFactory.createDataSet(asList(first, second));
+		IDataSet dataSet = DataSetFactory.createDataSet(asList(first, second));
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
@@ -166,20 +166,20 @@ class DataSetFactoryTest {
 
 	@Test
 	void it_should_create_dataset_from_array_of_datasets() throws Exception {
-		final IDataSet first = new FlatXmlDataSetBuilder()
+		IDataSet first = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(usersXmlAsStream());
 
-		final IDataSet second = new FlatXmlDataSetBuilder()
+		IDataSet second = new FlatXmlDataSetBuilder()
 			.setColumnSensing(true)
 			.build(moviesXmlAsStream());
 
-		final IDataSet[] inputs = new IDataSet[]{
+		IDataSet[] inputs = new IDataSet[]{
 			first,
 			second
 		};
 
-		final IDataSet dataSet = DataSetFactory.createDataSet(inputs);
+		IDataSet dataSet = DataSetFactory.createDataSet(inputs);
 
 		assertThat(dataSet).isExactlyInstanceOf(CompositeDataSet.class);
 		assertThat(dataSet.getTableNames()).isNotEmpty().containsExactlyInAnyOrder(
