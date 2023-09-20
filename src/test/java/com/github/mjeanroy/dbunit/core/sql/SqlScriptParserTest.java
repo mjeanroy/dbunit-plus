@@ -267,15 +267,15 @@ class SqlScriptParserTest {
 				"  user_id INT, " +
 				"  movie_id INT, " +
 				"  PRIMARY KEY (user_id, movie_id), " +
-				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
-				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				"  CONSTRAINT fk_users_movies_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
+				"  CONSTRAINT fk_users_movies_movie_id FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
 				");",
 			"CREATE TABLE users_movies_events ( " +
 				"  user_id INT, " +
 				"  movie_id INT, " +
 				"  id INT PRIMARY KEY, " +
 				"  event VARCHAR(200), " +
-				"  FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
+				"  CONSTRAINT fk_users_movies_events_user_id_movie_id FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
 				");"
 		);
 	}
@@ -296,8 +296,8 @@ class SqlScriptParserTest {
 				"  user_id INT, " +
 				"  movie_id INT, " +
 				"  PRIMARY KEY (user_id, movie_id), " +
-				"  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
-				"  FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
+				"  CONSTRAINT fk_users_movies_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE, " +
+				"  CONSTRAINT fk_users_movies_movie_id FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE " +
 				");"
 		);
 
@@ -307,7 +307,7 @@ class SqlScriptParserTest {
 				"  movie_id INT, " +
 				"  id INT PRIMARY KEY, " +
 				"  event VARCHAR(200), " +
-				"  FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
+				"  CONSTRAINT fk_users_movies_events_user_id_movie_id FOREIGN KEY (user_id, movie_id) REFERENCES users_movies (user_id, movie_id) ON DELETE CASCADE " +
 				");"
 		);
 
