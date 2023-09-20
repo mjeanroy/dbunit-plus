@@ -47,6 +47,8 @@ public @interface EmbeddedDatabaseTest {
 
 	Lifecycle lifecycle() default Lifecycle.BEFORE_ALL;
 
+	boolean resolveConnection() default false;
+
 	enum Lifecycle {
 		BEFORE_EACH,
 		BEFORE_ALL

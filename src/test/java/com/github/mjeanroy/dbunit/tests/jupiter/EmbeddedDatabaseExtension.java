@@ -41,6 +41,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import java.lang.reflect.Parameter;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -49,12 +51,10 @@ import java.util.Optional;
  */
 class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-	/**
-	 * The internal namespace.
-	 */
 	private static final Namespace NAMESPACE = Namespace.create(EmbeddedDatabaseExtension.class);
 
-	private static final String DB_KEY = "db";
+	private static final String DB_KEY = EmbeddedDatabase.class.getName();
+	private static final String CONNECTION_KEY = Connection.class.getName();
 
 	@Override
 	public void beforeAll(ExtensionContext context) {
@@ -65,8 +65,10 @@ class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, 
 	}
 
 	@Override
-	public void afterAll(ExtensionContext context) {
-		shutdown(context);
+	public void afterAll(ExtensionContext context) throws Exception {
+		Store store = getStore(context);
+		closeConnection(store);
+		shutdown(store);
 	}
 
 	@Override
@@ -78,26 +80,65 @@ class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, 
 	}
 
 	@Override
-	public void afterEach(ExtensionContext context) {
+	public void afterEach(ExtensionContext context) throws Exception {
+		Store store = getStore(context);
+		closeConnection(store);
+
 		Lifecycle lifecycle = getLifecycle(context);
 		if (lifecycle == Lifecycle.BEFORE_EACH) {
-			shutdown(context);
+			shutdown(store);
 		}
 	}
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-		final Parameter parameter = parameterContext.getParameter();
-		final Class<?> parameterType = parameter.getType();
-		return EmbeddedDatabase.class.isAssignableFrom(parameterType);
+		Parameter parameter = parameterContext.getParameter();
+		Class<?> parameterType = parameter.getType();
+
+		if (EmbeddedDatabase.class.isAssignableFrom(parameterType)) {
+			return true;
+		}
+
+		if (Connection.class.isAssignableFrom(parameterType)) {
+			return findAnnotation(extensionContext).resolveConnection();
+		}
+
+		return false;
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-		return getStore(extensionContext).get(DB_KEY);
+		Store store = getStore(extensionContext);
+		EmbeddedDatabase db = store.get(DB_KEY, EmbeddedDatabase.class);
+
+		Parameter parameter = parameterContext.getParameter();
+		Class<?> parameterType = parameter.getType();
+		if (EmbeddedDatabase.class.isAssignableFrom(parameterType)) {
+			return db;
+		}
+
+		return resolveConnection(store, db);
 	}
 
-	private void initialize(ExtensionContext context) {
+	private static Connection resolveConnection(Store store, EmbeddedDatabase db) throws ParameterResolutionException {
+		Connection existingConnection = store.get(CONNECTION_KEY, Connection.class);
+		if (existingConnection != null) {
+			throw new ParameterResolutionException(
+				"Cannot create connection, existing one has not been closed"
+			);
+		}
+
+		try {
+			Connection connection = db.getConnection();
+			store.put(CONNECTION_KEY, connection);
+			return connection;
+		}
+		catch (SQLException ex) {
+			throw new ParameterResolutionException("Cannot open embedded database connection", ex);
+		}
+	}
+
+	private static void initialize(ExtensionContext context) {
 		EmbeddedDatabaseTest annotation = findAnnotation(context);
 
 		String dbName = annotation.db();
@@ -114,21 +155,20 @@ class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, 
 			builder.addScript("classpath:/sql/schema.sql");
 		}
 
-		EmbeddedDatabase db = builder.build();
-
-		getStore(context).put(DB_KEY, db);
+		getStore(context).put(DB_KEY, builder.build());
 	}
 
-	private static void shutdown(ExtensionContext context) {
-		final Store store = getStore(context);
-		final EmbeddedDatabase db = store.get(DB_KEY, EmbeddedDatabase.class);
+	private static void shutdown(Store store) {
+		EmbeddedDatabase db = store.remove(DB_KEY, EmbeddedDatabase.class);
 		if (db != null) {
-			try {
-				db.shutdown();
-			}
-			finally {
-				store.remove(DB_KEY);
-			}
+			db.shutdown();
+		}
+	}
+
+	private static void closeConnection(Store store) throws SQLException {
+		Connection connection = store.remove(CONNECTION_KEY, Connection.class);
+		if (connection != null) {
+			connection.close();
 		}
 	}
 
@@ -144,7 +184,8 @@ class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, 
 		);
 
 		if (!annotation.isPresent()) {
-			throw new AssertionError("Cannot find @EmbeddedDatabaseTest annotation");
+			// Should not happen
+			throw new IllegalStateException("Cannot find @EmbeddedDatabaseTest annotation");
 		}
 
 		return annotation.get();
