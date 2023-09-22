@@ -25,10 +25,74 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
+/**
+ * A foreign key manager is a (stateful) manager that can be used to
+ * <ul>
+ *   <li>Disable foreign keys.</li>
+ *   <li>Re-enable foreign keys.</li>
+ * </ul>
+ *
+ * Note that disabling/enabling foreign keys should always be executed in the following order:
+ * <ul>
+ *   <li>First, foreign key constraints are disabled, ie {{@link JdbcForeignKeyManager#disable(Connection)} is called.</li>
+ *   <li>First, foreign key constraints are re-enabled, ie {{@link JdbcForeignKeyManager#enable(Connection)} is called.</li>
+ * </ul>
+ *
+ * Executing `enable` before `disable` (i.e in the wrong order) <strong>does not give any guarantee</strong>.
+ *
+ * <br>
+ *
+ * Following implementations are currently supported out of the box:
+ *
+ * <ul>
+ *   <li>MySQL: {@link MySQLForeignKeyManager}</li>
+ *   <li>MariaDB: {@link MariaDBForeignKeyManager}</li>
+ *   <li>Postgres: {@link PostgresForeignKeyManager}</li>
+ *   <li>MsSQL: {@link MsSQLForeignKeyManager}</li>
+ *   <li>HsqlDB: {@link HsqldbForeignKeyManager}</li>
+ *   <li>H2: {@link H2ForeignKeyManager}</li>
+ *   <li>Oracle: {@link OracleForeignKeyManager}</li>
+ *   <li>Database supporting the standard {@code INFORMATION_SCHEMA}: {@link InformationSchemaForeignKeyManager}</li>
+ * </ul>
+ *
+ * @see MariaDBForeignKeyManager
+ * @see MySQLForeignKeyManager
+ * @see PostgresForeignKeyManager
+ * @see MsSQLForeignKeyManager
+ * @see HsqldbForeignKeyManager
+ * @see H2ForeignKeyManager
+ * @see OracleForeignKeyManager
+ * @see InformationSchemaForeignKeyManager
+ */
 public interface JdbcForeignKeyManager {
 
-	void disable(Connection connection) throws Exception;
+	/**
+	 * Disable foreign keys using the SQL `connection`.
+	 *
+	 * Notes:
+	 * <ul>
+	 *   <li>Disabling foreign keys is not a SQL standard, and it is specific to the underlying database.</li>
+	 *   <li>Do not close `connection`, it will be done at the end of the process.</li>
+	 * </ul>
+	 *
+	 * @param connection SQL Connection.
+	 * @throws SQLException If an error occurred while disabling foreign keys.
+	 */
+	void disable(Connection connection) throws SQLException;
 
-	void enable(Connection connection) throws Exception;
+	/**
+	 * Enable foreign keys using the SQL `connection` (that have been previously disabled).
+	 *
+	 * Notes:
+	 * <ul>
+	 *   <li>Enabling foreign keys is not a SQL standard, and it is specific to the underlying database.</li>
+	 *   <li>Do not close `connection`, it will be done at the end of the process.</li>
+	 * </ul>
+	 *
+	 * @param connection SQL Connection.
+	 * @throws SQLException If an error occurred while disabling foreign keys.
+	 */
+	void enable(Connection connection) throws SQLException;
 }

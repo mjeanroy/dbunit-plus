@@ -30,19 +30,19 @@ final class MariaDBForeignKeyManager implements JdbcForeignKeyManager {
 
 	// MariaDB is "just" a fork of MySQL, so it's a "MySQL" like engine.
 	// Let's reuse the MySQL implementation.
-	private final MySQLForeignKeyManager mySQLForeignKeyManager;
+	private final MySQLForeignKeyManager fkManager;
 
 	MariaDBForeignKeyManager() {
-		mySQLForeignKeyManager = new MySQLForeignKeyManager();
+		fkManager = new MySQLForeignKeyManager();
 	}
 
 	@Override
 	public void disable(Connection connection) {
-		mySQLForeignKeyManager.disable(connection);
+		fkManager.disable(connection);
 	}
 
 	@Override
 	public void enable(Connection connection) {
-		mySQLForeignKeyManager.enable(connection);
+		fkManager.enable(connection);
 	}
 }
