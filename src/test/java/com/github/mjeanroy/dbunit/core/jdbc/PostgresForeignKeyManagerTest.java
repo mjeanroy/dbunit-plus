@@ -26,9 +26,10 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_13;
+
 @TestContainersTest(
-	image = "postgres:13",
-	runInitScripts = true,
+	image = POSTGRES_13,
 	resolveConnection = true
 )
 class PostgresForeignKeyManagerTest extends AbstractForeignKeyManagerTest {

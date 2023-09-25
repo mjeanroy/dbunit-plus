@@ -36,7 +36,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
-final class InformationSchemaForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<InformationSchemaForeignKeyManager.ForeignKeyConstraint> {
+public final class InformationSchemaForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<InformationSchemaForeignKeyManager.ForeignKeyConstraint> {
 
 	private static final String C_CONSTRAINT_SCHEMA = "CONSTRAINT_SCHEMA";
 	private static final String C_CONSTRAINT_NAME = "CONSTRAINT_NAME";
@@ -52,7 +52,7 @@ final class InformationSchemaForeignKeyManager extends AbstractJdbcDropCreateFor
 
 	private static final ForeignKeyConstraintsMapFunction mapFunction = new ForeignKeyConstraintsMapFunction();
 
-	InformationSchemaForeignKeyManager() {
+	public InformationSchemaForeignKeyManager() {
 	}
 
 	@Override

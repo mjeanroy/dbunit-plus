@@ -26,13 +26,13 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import java.sql.Connection;
 
-final class H2ForeignKeyManager implements JdbcForeignKeyManager {
+public final class H2ForeignKeyManager implements JdbcForeignKeyManager {
 
 	// H2 supports the `INFORMATION_SCHEMA` standard, we can just re-use it
 	// to introspect foreign keys.
 	private final InformationSchemaForeignKeyManager fkManager;
 
-	H2ForeignKeyManager() {
+	public H2ForeignKeyManager() {
 		this.fkManager = new InformationSchemaForeignKeyManager();
 	}
 

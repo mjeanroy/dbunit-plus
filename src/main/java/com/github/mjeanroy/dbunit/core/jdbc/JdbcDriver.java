@@ -38,17 +38,54 @@ import static java.util.Collections.singletonList;
  */
 enum JdbcDriver {
 
-	MYSQL("mysql", asList(
-		"com.mysql.cj.jdbc.Driver",
-		"com.mysql.jdbc.Driver"
-	)),
+	MYSQL("mysql", asList("com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver")) {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new MySQLForeignKeyManager();
+		}
+	},
 
-	POSTGRESQL("postgresql", "org.postgresql.Driver"),
-	ORACLE("oracle", "oracle.jdbc.driver.OracleDriver"),
-	MSSQL("sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver"),
-	MARIADB("mariadb", "org.mariadb.jdbc.Driver"),
-	HSQLDB("hsqldb", "org.hsqldb.jdbcDriver"),
-	H2("h2", "org.h2.Driver");
+	POSTGRESQL("postgresql", "org.postgresql.Driver") {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new PostgresForeignKeyManager();
+		}
+	},
+
+	ORACLE("oracle", "oracle.jdbc.driver.OracleDriver") {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new OracleForeignKeyManager();
+		}
+	},
+
+	MSSQL("sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver") {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new MsSQLForeignKeyManager();
+		}
+	},
+
+	MARIADB("mariadb", "org.mariadb.jdbc.Driver") {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new MariaDBForeignKeyManager();
+		}
+	},
+
+	HSQLDB("hsqldb", "org.hsqldb.jdbcDriver") {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new HsqldbForeignKeyManager();
+		}
+	},
+
+	H2("h2", "org.h2.Driver") {
+		@Override
+		JdbcForeignKeyManager fkManager() {
+			return new H2ForeignKeyManager();
+		}
+	};
 
 	/**
 	 * JDBC id (visible in JDBC Connection: jdbc:[id]:[connection).
@@ -81,6 +118,13 @@ enum JdbcDriver {
 		this.id = id;
 		this.driverClassNames = new ArrayList<>(driverNames);
 	}
+
+	/**
+	 * Create new {@link JdbcForeignKeyManager} for this specific database.
+	 *
+	 * @return New {@link JdbcForeignKeyManager} instance.
+	 */
+	abstract JdbcForeignKeyManager fkManager();
 
 	/**
 	 * Load JDBC Driver.
@@ -128,7 +172,7 @@ enum JdbcDriver {
 	 * @param connectionUrl JDBC Connection URL.
 	 * @return The driver, {@code null} if no driver matches.
 	 */
-	private static JdbcDriver findOne(String connectionUrl) {
+	static JdbcDriver findOne(String connectionUrl) {
 		for (JdbcDriver driver : JdbcDriver.values()) {
 			if (driver.match(connectionUrl)) {
 				return driver;

@@ -25,11 +25,14 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.IDatabaseTester;
+import org.dbunit.operation.DatabaseOperation;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
@@ -63,11 +66,26 @@ class TearDownDbOperation implements DbOperation {
 	}
 
 	@Override
-	public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
-		DbUnitTearDown op = findAnnotation(testClass, method, DbUnitTearDown.class);
-		if (op != null) {
+	public void apply(
+		Class<?> testClass,
+		Method method,
+		IDatabaseTester dbTester,
+		List<JdbcForeignKeyManager> fkManagers
+	) throws Exception {
+		DbUnitTearDown annotation = findAnnotation(testClass, method, DbUnitTearDown.class);
+
+		DatabaseOperation databaseOperation = annotation == null ?
+			dbTester.getTearDownOperation() :
+			annotation.value().getOperation();
+
+		DatabaseOperation tearDownDatabaseOperation = JdbcForeignKeyManagerDatabaseOperation.merge(
+			databaseOperation,
+			fkManagers
+		);
+
+		if (tearDownDatabaseOperation != null) {
 			log.trace("    - Initialize tear down operation");
-			dbTester.setTearDownOperation(op.value().getOperation());
+			dbTester.setTearDownOperation(tearDownDatabaseOperation);
 		}
 		else {
 			log.trace("    - No tear down operation defined, use default");

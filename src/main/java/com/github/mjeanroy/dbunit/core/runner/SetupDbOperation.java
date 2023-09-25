@@ -25,11 +25,14 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.IDatabaseTester;
+import org.dbunit.operation.DatabaseOperation;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
@@ -63,12 +66,26 @@ class SetupDbOperation implements DbOperation {
 	}
 
 	@Override
-	public void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception {
+	public void apply(
+		Class<?> testClass,
+		Method method,
+		IDatabaseTester dbTester,
+		List<JdbcForeignKeyManager> fkManagers
+	) throws Exception {
 		DbUnitSetup annotation = findAnnotation(testClass, method, DbUnitSetup.class);
 
-		if (annotation != null) {
+		DatabaseOperation databaseOperation = annotation == null ?
+			dbTester.getSetUpOperation() :
+			annotation.value().getOperation();
+
+		DatabaseOperation setupDatabaseOperation = JdbcForeignKeyManagerDatabaseOperation.merge(
+			databaseOperation,
+			fkManagers
+		);
+
+		if (setupDatabaseOperation != null) {
 			log.debug("    - Initialize setup operation");
-			dbTester.setSetUpOperation(annotation.value().getOperation());
+			dbTester.setSetUpOperation(setupDatabaseOperation);
 		}
 		else {
 			log.trace("    - No setup operation defined, use default");

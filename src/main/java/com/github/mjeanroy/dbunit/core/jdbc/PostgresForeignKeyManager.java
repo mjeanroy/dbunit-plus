@@ -36,7 +36,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
-final class PostgresForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<PostgresForeignKeyManager.ForeignKey> {
+public final class PostgresForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<PostgresForeignKeyManager.ForeignKey> {
 
 	private static final String C_NSPNAME = "nspname";
 	private static final String C_RELNAME = "relname";
@@ -45,7 +45,7 @@ final class PostgresForeignKeyManager extends AbstractJdbcDropCreateForeignKeyMa
 
 	private static final ForeignKeyMapFunction mapFunction = new ForeignKeyMapFunction();
 
-	PostgresForeignKeyManager() {
+	public PostgresForeignKeyManager() {
 		super();
 	}
 

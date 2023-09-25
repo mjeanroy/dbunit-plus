@@ -25,6 +25,14 @@
 package com.github.mjeanroy.dbunit.it.jupiter;
 
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.jdbc.H2ForeignKeyManager;
+import com.github.mjeanroy.dbunit.core.jdbc.HsqldbForeignKeyManager;
+import com.github.mjeanroy.dbunit.core.jdbc.MariaDBForeignKeyManager;
+import com.github.mjeanroy.dbunit.core.jdbc.MsSQLForeignKeyManager;
+import com.github.mjeanroy.dbunit.core.jdbc.MySQLForeignKeyManager;
+import com.github.mjeanroy.dbunit.core.jdbc.OracleForeignKeyManager;
+import com.github.mjeanroy.dbunit.core.jdbc.PostgresForeignKeyManager;
 import com.github.mjeanroy.dbunit.integration.jupiter.DbUnitExtension;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitH2Connection;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitHsqldbConnection;
@@ -42,6 +50,19 @@ import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIADB_10;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_8;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_12;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_13;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_14;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_15;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_MOVIES_EVENTS_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class DbUnitDbProductITest {
@@ -52,12 +73,20 @@ class DbUnitDbProductITest {
 			assertThat(countUsers(connection)).isEqualTo(2);
 			assertThat(countMovies(connection)).isEqualTo(3);
 		}
+
+		@Test
+		@DbUnitDataSet({USERS_MOVIES_EVENTS_XML, USERS_MOVIES_XML, USERS_XML, MOVIES_XML})
+		void it_should_load_default_dataset_without_foreign_keys(Connection connection) {
+			assertThat(countUsers(connection)).isEqualTo(2);
+			assertThat(countMovies(connection)).isEqualTo(3);
+		}
 	}
 
 	@EmbeddedDatabaseTest(type = Type.HSQL)
 	@ExtendWith(DbUnitExtension.class)
 	@DbUnitTest
 	@DbUnitHsqldbConnection
+	@DbUnitConfig(fkManagers = HsqldbForeignKeyManager.class)
 	@Nested
 	class HsqlDB extends AbstractDbUnitDbProductITest {
 	}
@@ -65,56 +94,64 @@ class DbUnitDbProductITest {
 	@EmbeddedDatabaseTest(type = Type.H2)
 	@ExtendWith(DbUnitExtension.class)
 	@DbUnitTest
-	@DbUnitConfig(schema = "public")
+	@DbUnitConfig(schema = "public", fkManagers = H2ForeignKeyManager.class)
 	@DbUnitH2Connection
 	@Nested
 	class H2 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "mysql:5.7")
+	@TestContainersTest(image = MYSQL_57)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = MySQLForeignKeyManager.class)
 	@Nested
 	class MySQL57 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "mysql:8")
+	@TestContainersTest(image = MYSQL_8)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = MySQLForeignKeyManager.class)
 	@Nested
 	class MySQL8 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "postgres:12")
+	@TestContainersTest(image = POSTGRES_12)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
 	class Postgres12 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "postgres:13")
+	@TestContainersTest(image = POSTGRES_13)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
 	class Postgres13 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "postgres:14")
+	@TestContainersTest(image = POSTGRES_14)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
 	class Postgres14 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "postgres:15")
+	@TestContainersTest(image = POSTGRES_15)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
 	class Postgres15 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "mariadb:10")
+	@TestContainersTest(image = MARIADB_10)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = MariaDBForeignKeyManager.class)
 	@Nested
 	class MariaDB10 extends AbstractDbUnitDbProductITest {
 	}
 
-	@TestContainersTest(image = "mcr.microsoft.com/mssql/server")
+	@TestContainersTest(image = MSSQL)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
 	@Nested
 	class MsSQL extends AbstractDbUnitDbProductITest {
 	}
@@ -124,8 +161,9 @@ class DbUnitDbProductITest {
 		matches = "aarch64",
 		disabledReason = "Oracle Container does not work on Apple M1"
 	)
-	@TestContainersTest(image = "gvenzl/oracle-xe:21")
+	@TestContainersTest(image = ORACLE)
 	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = OracleForeignKeyManager.class)
 	@Nested
 	class Oracle extends AbstractDbUnitDbProductITest {
 	}

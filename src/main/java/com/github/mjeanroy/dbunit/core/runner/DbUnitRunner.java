@@ -215,7 +215,12 @@ public class DbUnitRunner {
 
 			// Apply operation (setup or tear down).
 			log.trace(" 4- Apply database operation");
-			op.apply(testClass, testMethod, dbTester);
+			op.apply(
+				testClass,
+				testMethod,
+				dbTester,
+				config.getFkManagers()
+			);
 
 			log.trace(" 5- Closing SQL connection");
 			dbConnection.close();

@@ -26,11 +26,9 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 
-@TestContainersTest(
-	image = "mysql:5.7",
-	runInitScripts = true,
-	resolveConnection = true
-)
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
+
+@TestContainersTest(image = MYSQL_57, resolveConnection = true)
 class MySQLForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
 
 	@Override
