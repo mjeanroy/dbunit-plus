@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.annotations;
 
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import org.dbunit.database.DefaultMetadataHandler;
 import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
@@ -88,6 +89,19 @@ public @interface DbUnitConfig {
 	 * @return Schema.
 	 */
 	String schema() default "";
+
+	/**
+	 * List of foreign key manager that can be used to:
+	 *
+	 * <ul>
+	 *   <li>Disable foreign keys before setup/teardown operations.</li>
+	 *   <li>Re-enable foreign keys after setup/teardown operations.</li>
+	 * </ul>
+	 *
+	 * @return Array of foreign key managers, each class must have an empty constructor to be initialized.
+	 * @see JdbcForeignKeyManager
+	 */
+	Class<? extends JdbcForeignKeyManager>[] fkManagers() default {};
 
 	/**
 	 * The interceptor class that will be instantiated and executed before applying DbUnit dataset.

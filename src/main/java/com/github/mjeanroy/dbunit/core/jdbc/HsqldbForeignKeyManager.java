@@ -26,13 +26,13 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import java.sql.Connection;
 
-final class HsqldbForeignKeyManager implements JdbcForeignKeyManager {
+public final class HsqldbForeignKeyManager implements JdbcForeignKeyManager {
 
 	// HSQLDB supports the `INFORMATION_SCHEMA` standard, we can just re-use it
 	// to introspect foreign keys.
 	private final InformationSchemaForeignKeyManager fkManager;
 
-	HsqldbForeignKeyManager() {
+	public HsqldbForeignKeyManager() {
 		this.fkManager = new InformationSchemaForeignKeyManager();
 	}
 

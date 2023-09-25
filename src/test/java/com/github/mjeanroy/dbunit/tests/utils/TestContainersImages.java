@@ -22,17 +22,20 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.jdbc;
+package com.github.mjeanroy.dbunit.tests.utils;
 
-import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
+public final class TestContainersImages {
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL;
-
-@TestContainersTest(image = MSSQL, resolveConnection = true)
-class MsSQLForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
-
-	@Override
-	JdbcForeignKeyManager foreignKeyManager() {
-		return new MsSQLForeignKeyManager();
+	private TestContainersImages() {
 	}
+
+	public static final String MYSQL_57 = "mysql:5.7";
+	public static final String MYSQL_8 = "mysql:8";
+	public static final String MARIADB_10 = "mariadb:10";
+	public static final String POSTGRES_12 = "postgres:12";
+	public static final String POSTGRES_13 = "postgres:13";
+	public static final String POSTGRES_14 = "postgres:14";
+	public static final String POSTGRES_15 = "postgres:15";
+	public static final String MSSQL = "mcr.microsoft.com/mssql/server";
+	public static final String ORACLE = "gvenzl/oracle-xe:21";
 }

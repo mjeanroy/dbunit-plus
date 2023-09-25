@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Test;
 
@@ -41,32 +42,33 @@ class ConfigTest {
 		Config config = new Config();
 		assertThat(config.getSchema()).isNull();
 		assertThat(config.getInterceptors()).isEmpty();
+		assertThat(config.getFkManagers()).isEmpty();
 	}
 
 	@Test
 	void it_should_create_config() {
 		String schema = "public";
-		List<DbUnitConfigInterceptor> interceptors = singletonList(
-			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
-		);
+		List<DbUnitConfigInterceptor> interceptors = defaultInterceptors();
+		List<JdbcForeignKeyManager> fkManagers = defaultFkManagers();
 
-		Config config = new Config(schema, interceptors);
+		Config config = new Config(schema, interceptors, fkManagers);
 
 		assertThat(config.getSchema()).isEqualTo(schema);
 		assertThat(config.getInterceptors()).isEqualTo(interceptors);
+		assertThat(config.getFkManagers()).isEqualTo(fkManagers);
 	}
 
 	@Test
 	void it_should_create_config_and_trim_schema_to_null() {
 		String schema = " ";
-		List<DbUnitConfigInterceptor> interceptors = singletonList(
-			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
-		);
+		List<DbUnitConfigInterceptor> interceptors = defaultInterceptors();
+		List<JdbcForeignKeyManager> fkManagers = defaultFkManagers();
 
-		Config config = new Config(schema, interceptors);
+		Config config = new Config(schema, interceptors, fkManagers);
 
 		assertThat(config.getSchema()).isNull();
 		assertThat(config.getInterceptors()).isEqualTo(interceptors);
+		assertThat(config.getFkManagers()).isEqualTo(fkManagers);
 	}
 
 	@Test
@@ -77,17 +79,29 @@ class ConfigTest {
 	@Test
 	void it_should_implement_to_string() {
 		String schema = "public";
-		List<DbUnitConfigInterceptor> interceptors = singletonList(
-			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
-		);
+		List<DbUnitConfigInterceptor> interceptors = defaultInterceptors();
+		List<JdbcForeignKeyManager> fkManagers = defaultFkManagers();
 
-		Config config = new Config(schema, interceptors);
+		Config config = new Config(schema, interceptors, fkManagers);
 
 		assertThat(config).hasToString(
 			"Config{" +
 				"schema: \"public\", " +
-				"interceptors: [MockDbUnitConfigInterceptor]" +
+				"interceptors: [MockDbUnitConfigInterceptor], " +
+				"fkManagers: [MockJdbcForeignKeyManager]" +
 			"}"
+		);
+	}
+
+	private static List<DbUnitConfigInterceptor> defaultInterceptors() {
+		return singletonList(
+			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
+		);
+	}
+
+	private static List<JdbcForeignKeyManager> defaultFkManagers() {
+		return singletonList(
+			mock(JdbcForeignKeyManager.class, "MockJdbcForeignKeyManager")
 		);
 	}
 }

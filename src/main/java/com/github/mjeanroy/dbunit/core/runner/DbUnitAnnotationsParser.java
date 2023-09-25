@@ -44,6 +44,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesIn
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import com.github.mjeanroy.dbunit.core.replacement.ReplacementsProvider;
 import com.github.mjeanroy.dbunit.core.sql.SqlScriptParserConfiguration;
@@ -307,9 +308,13 @@ final class DbUnitAnnotationsParser {
 			new DbUnitMetadataHandlerInterceptor(metadataHandlerClass)
 		);
 
+		List<JdbcForeignKeyManager> fkManagers = Arrays.stream(annotation.fkManagers())
+			.map(ClassUtils::instantiate)
+			.collect(Collectors.toList());
+
 		Class<? extends DbUnitConfigInterceptor>[] interceptorClasses = annotation.value();
 		if (interceptorClasses.length == 0) {
-			return new Config(schema, defaultInterceptors);
+			return new Config(schema, defaultInterceptors, fkManagers);
 		}
 
 		List<DbUnitConfigInterceptor> customInterceptors = Arrays.stream(interceptorClasses)
@@ -319,7 +324,7 @@ final class DbUnitAnnotationsParser {
 		List<DbUnitConfigInterceptor> interceptors = new ArrayList<>(customInterceptors.size() + defaultInterceptors.size());
 		interceptors.addAll(defaultInterceptors);
 		interceptors.addAll(customInterceptors);
-		return new Config(schema, interceptors);
+		return new Config(schema, interceptors, fkManagers);
 	}
 
 }

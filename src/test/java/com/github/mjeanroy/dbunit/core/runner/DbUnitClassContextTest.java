@@ -28,6 +28,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import com.github.mjeanroy.dbunit.core.replacement.Replacements;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.dataset.DefaultDataSet;
@@ -69,7 +70,15 @@ class DbUnitClassContextTest {
 			mock(DbUnitConfigInterceptor.class)
 		);
 
-		Config config = new Config(schema, interceptors);
+		List<JdbcForeignKeyManager> fkManagers = singletonList(
+			mock(JdbcForeignKeyManager.class)
+		);
+
+		Config config = new Config(
+			schema,
+			interceptors,
+			fkManagers
+		);
 
 		DbUnitClassContext ctx = new DbUnitClassContext(
 			config,
@@ -117,7 +126,15 @@ class DbUnitClassContextTest {
 			mock(DbUnitConfigInterceptor.class, "MockDbUnitConfigInterceptor")
 		);
 
-		Config config = new Config(schema, interceptors);
+		List<JdbcForeignKeyManager> fkManagers = singletonList(
+			mock(JdbcForeignKeyManager.class, "MockJdbcForeignKeyManager")
+		);
+
+		Config config = new Config(
+			schema,
+			interceptors,
+			fkManagers
+		);
 
 		DbUnitClassContext ctx = new DbUnitClassContext(
 			config,
@@ -134,7 +151,8 @@ class DbUnitClassContextTest {
 
 				"config: Config{" +
 					"schema: null, " +
-					"interceptors: [MockDbUnitConfigInterceptor]" +
+					"interceptors: [MockDbUnitConfigInterceptor], " +
+					"fkManagers: [MockJdbcForeignKeyManager]" +
 				"}, " +
 
 				"connectionFactory: JdbcDefaultConnectionFactory{" +

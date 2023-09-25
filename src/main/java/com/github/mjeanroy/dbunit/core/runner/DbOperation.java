@@ -24,9 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import org.dbunit.IDatabaseTester;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Apply DbUnit database operation (setup or tear down).
@@ -39,7 +41,13 @@ interface DbOperation {
 	 * @param testClass Test Class.
 	 * @param method Executed method.
 	 * @param dbTester DbUnit database.
+	 * @param fkManagers Foreign key managers, optional and may be empty.
 	 * @throws Exception If an error occurred.
 	 */
-	void apply(Class<?> testClass, Method method, IDatabaseTester dbTester) throws Exception;
+	void apply(
+		Class<?> testClass,
+		Method method,
+		IDatabaseTester dbTester,
+		List<JdbcForeignKeyManager> fkManagers
+	) throws Exception;
 }

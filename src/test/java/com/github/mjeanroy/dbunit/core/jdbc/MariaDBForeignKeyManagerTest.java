@@ -26,11 +26,9 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 
-@TestContainersTest(
-	image = "mariadb:10",
-	runInitScripts = true,
-	resolveConnection = true
-)
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIADB_10;
+
+@TestContainersTest(image = MARIADB_10, resolveConnection = true)
 class MariaDBForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
 
 	@Override

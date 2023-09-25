@@ -24,17 +24,24 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSet;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithoutDataSet;
+import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
+import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
+import static java.util.Collections.emptyList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -47,8 +54,14 @@ class TearDownDbOperationTest {
 		Class<WithDataSet> testClass = WithDataSet.class;
 		Method method = testClass.getMethod("method1");
 		IDatabaseTester dbTester = mock(IDatabaseTester.class);
+		List<JdbcForeignKeyManager> fkManagers = emptyList();
 
-		op.apply(testClass, method, dbTester);
+		op.apply(
+			testClass,
+			method,
+			dbTester,
+			fkManagers
+		);
 
 		verify(dbTester).setTearDownOperation(DatabaseOperation.TRUNCATE_TABLE);
 		verify(dbTester).onTearDown();
@@ -56,16 +69,32 @@ class TearDownDbOperationTest {
 	}
 
 	@Test
-	void it_should_not_set_operations_but_trigger_setup() throws Exception {
+	void it_should_not_set_operations_but_trigger_teardown() throws Exception {
 		TearDownDbOperation op = TearDownDbOperation.getInstance();
 
 		Class<WithoutDataSet> testClass = WithoutDataSet.class;
 		Method method = testClass.getMethod("method1");
-		IDatabaseTester dbTester = mock(IDatabaseTester.class);
+		IDatabaseTester dbTester = spy(
+			new DefaultDatabaseTester(
+				mock(IDatabaseConnection.class)
+			)
+		);
 
-		op.apply(testClass, method, dbTester);
+		DatabaseOperation tearDownOperation = dbTester.getTearDownOperation();
+		List<JdbcForeignKeyManager> fkManagers = emptyList();
 
-		verify(dbTester, never()).setTearDownOperation(any(DatabaseOperation.class));
+		doNothing().when(dbTester).onTearDown();
+
+		op.apply(
+			testClass,
+			method,
+			dbTester,
+			fkManagers
+		);
+
+		assertThat(tearDownOperation).isNotNull();
+		verify(dbTester, atLeastOnce()).getTearDownOperation();
+		verify(dbTester).setTearDownOperation(tearDownOperation);
 		verify(dbTester).onTearDown();
 		verifyNoMoreInteractions(dbTester);
 	}

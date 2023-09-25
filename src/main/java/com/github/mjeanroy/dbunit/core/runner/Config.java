@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.core.runner;
 import com.github.mjeanroy.dbunit.commons.lang.Strings;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +47,27 @@ final class Config {
 	 */
 	private final List<DbUnitConfigInterceptor> interceptors;
 
+	/**
+	 * List of foreign key managers that will be called:
+	 * <ul>
+	 *   <li>Before the setup/teardown operations.</li>
+	 *   <li>After the setup/teardown operations.</li>
+	 * </ul>
+	 */
+	private final List<JdbcForeignKeyManager> fkManagers;
+
 	Config() {
-		this(null, emptyList());
+		this(null, emptyList(), emptyList());
 	}
 
 	Config(
 		String schema,
-		List<DbUnitConfigInterceptor> interceptors
+		List<DbUnitConfigInterceptor> interceptors,
+		List<JdbcForeignKeyManager> fkManagers
 	) {
 		this.schema = Strings.trimToNull(schema);
 		this.interceptors = new ArrayList<>(interceptors);
+		this.fkManagers = new ArrayList<>(fkManagers);
 	}
 
 	/**
@@ -76,6 +88,15 @@ final class Config {
 		return unmodifiableList(interceptors);
 	}
 
+	/**
+	 * Get {@link #fkManagers}
+	 *
+	 * @return {@link #fkManagers}
+	 */
+	List<JdbcForeignKeyManager> getFkManagers() {
+		return unmodifiableList(fkManagers);
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (o == this) {
@@ -84,7 +105,9 @@ final class Config {
 
 		if (o instanceof Config) {
 			Config c = (Config) o;
-			return Objects.equals(schema, c.schema) && Objects.equals(interceptors, c.interceptors);
+			return Objects.equals(schema, c.schema)
+				&& Objects.equals(interceptors, c.interceptors)
+				&& Objects.equals(fkManagers, c.fkManagers);
 		}
 
 		return false;
@@ -92,7 +115,7 @@ final class Config {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(schema, interceptors);
+		return Objects.hash(schema, interceptors, fkManagers);
 	}
 
 	@Override
@@ -100,6 +123,7 @@ final class Config {
 		return ToStringBuilder.create(Config.class)
 			.append("schema", schema)
 			.append("interceptors", interceptors)
+			.append("fkManagers", fkManagers)
 			.build();
 	}
 }

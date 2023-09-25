@@ -39,7 +39,21 @@ class JdbcDriverTest {
 		assertThat(JdbcDriver.MSSQL.match(url)).isFalse();
 		assertThat(JdbcDriver.HSQLDB.match(url)).isFalse();
 		assertThat(JdbcDriver.H2.match(url)).isFalse();
+		assertThat(JdbcDriver.MARIADB.match(url)).isFalse();
 	}
+
+	@Test
+	void it_should_match_mariadn_driver() {
+		String url = "jdbc:mariadb://localhost/";
+		assertThat(JdbcDriver.MARIADB.match(url)).isTrue();
+		assertThat(JdbcDriver.MYSQL.match(url)).isFalse();
+		assertThat(JdbcDriver.POSTGRESQL.match(url)).isFalse();
+		assertThat(JdbcDriver.ORACLE.match(url)).isFalse();
+		assertThat(JdbcDriver.MSSQL.match(url)).isFalse();
+		assertThat(JdbcDriver.HSQLDB.match(url)).isFalse();
+		assertThat(JdbcDriver.H2.match(url)).isFalse();
+	}
+
 
 	@Test
 	void it_should_match_postgresql_driver() {
@@ -50,6 +64,7 @@ class JdbcDriverTest {
 		assertThat(JdbcDriver.MSSQL.match(url)).isFalse();
 		assertThat(JdbcDriver.HSQLDB.match(url)).isFalse();
 		assertThat(JdbcDriver.H2.match(url)).isFalse();
+		assertThat(JdbcDriver.MARIADB.match(url)).isFalse();
 	}
 
 	@Test
@@ -61,6 +76,7 @@ class JdbcDriverTest {
 		assertThat(JdbcDriver.MSSQL.match(url)).isFalse();
 		assertThat(JdbcDriver.HSQLDB.match(url)).isFalse();
 		assertThat(JdbcDriver.H2.match(url)).isFalse();
+		assertThat(JdbcDriver.MARIADB.match(url)).isFalse();
 	}
 
 	@Test
@@ -72,6 +88,7 @@ class JdbcDriverTest {
 		assertThat(JdbcDriver.MYSQL.match(url)).isFalse();
 		assertThat(JdbcDriver.HSQLDB.match(url)).isFalse();
 		assertThat(JdbcDriver.H2.match(url)).isFalse();
+		assertThat(JdbcDriver.MARIADB.match(url)).isFalse();
 	}
 
 	@Test
@@ -83,6 +100,7 @@ class JdbcDriverTest {
 		assertThat(JdbcDriver.POSTGRESQL.match(url)).isFalse();
 		assertThat(JdbcDriver.MYSQL.match(url)).isFalse();
 		assertThat(JdbcDriver.H2.match(url)).isFalse();
+		assertThat(JdbcDriver.MARIADB.match(url)).isFalse();
 	}
 
 	@Test
@@ -94,5 +112,17 @@ class JdbcDriverTest {
 		assertThat(JdbcDriver.ORACLE.match(url)).isFalse();
 		assertThat(JdbcDriver.POSTGRESQL.match(url)).isFalse();
 		assertThat(JdbcDriver.MYSQL.match(url)).isFalse();
+		assertThat(JdbcDriver.MARIADB.match(url)).isFalse();
+	}
+
+	@Test
+	void it_should_load_fk_managers() {
+		assertThat(JdbcDriver.MYSQL.fkManager()).isExactlyInstanceOf(MySQLForeignKeyManager.class);
+		assertThat(JdbcDriver.MARIADB.fkManager()).isExactlyInstanceOf(MariaDBForeignKeyManager.class);
+		assertThat(JdbcDriver.POSTGRESQL.fkManager()).isExactlyInstanceOf(PostgresForeignKeyManager.class);
+		assertThat(JdbcDriver.ORACLE.fkManager()).isExactlyInstanceOf(OracleForeignKeyManager.class);
+		assertThat(JdbcDriver.MSSQL.fkManager()).isExactlyInstanceOf(MsSQLForeignKeyManager.class);
+		assertThat(JdbcDriver.HSQLDB.fkManager()).isExactlyInstanceOf(HsqldbForeignKeyManager.class);
+		assertThat(JdbcDriver.H2.fkManager()).isExactlyInstanceOf(H2ForeignKeyManager.class);
 	}
 }
