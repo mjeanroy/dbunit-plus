@@ -54,7 +54,7 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIAD
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2017;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_8;
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE_21;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_12;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_13;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_14;
@@ -161,7 +161,7 @@ class DbUnitDbProductITest {
 		matches = "aarch64",
 		disabledReason = "Oracle Container does not work on Apple M1"
 	)
-	@TestContainersTest(image = ORACLE)
+	@TestContainersTest(image = ORACLE_21)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = OracleForeignKeyManager.class)
 	@Nested

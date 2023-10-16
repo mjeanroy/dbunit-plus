@@ -32,7 +32,7 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIADB_10;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2017;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE_21;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_13;
 
 class AutoDetectForeignKeyManagerTest {
@@ -86,7 +86,7 @@ class AutoDetectForeignKeyManagerTest {
 		matches = "aarch64",
 		disabledReason = "Oracle Container does not work on Apple M1"
 	)
-	@TestContainersTest(image = ORACLE, resolveConnection = true)
+	@TestContainersTest(image = ORACLE_21, resolveConnection = true)
 	class AutoDetectOracleForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
 	}
 }

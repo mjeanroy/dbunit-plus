@@ -27,14 +27,14 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE_21;
 
 @DisabledIfSystemProperty(
 	named = "os.arch",
 	matches = "aarch64",
 	disabledReason = "Oracle Container does not work on Apple M1"
 )
-@TestContainersTest(image = ORACLE, resolveConnection = true)
+@TestContainersTest(image = ORACLE_21, resolveConnection = true)
 class OracleForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
 
 	@Override
