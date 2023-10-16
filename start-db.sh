@@ -30,9 +30,15 @@ YELLOW="\033[0;33m"
 RESET_COLORS="\033[0m"
 
 function start_mssql_server {
+  local version=$1
+
+  if [ "$version" == "" ]; then
+    version="2017"
+  fi
+
   local port="1433"
   local password="Azerty123!"
-  local image="mcr.microsoft.com/mssql/server"
+  local image="mcr.microsoft.com/mssql/server:${version}-latest"
 
   echo -e "${GREEN}Pulling image: ${image}${RESET_COLORS}"
   docker pull "${image}"
@@ -179,7 +185,7 @@ function start_oracle {
 db_engine=$1
 
 if [ "$db_engine" == "mssql" ]; then
-  start_mssql_server
+  start_mssql_server $2
 elif [ "$db_engine" == "mysql" ]; then
   start_mysql $2
 elif [ "$db_engine" == "mariadb" ]; then

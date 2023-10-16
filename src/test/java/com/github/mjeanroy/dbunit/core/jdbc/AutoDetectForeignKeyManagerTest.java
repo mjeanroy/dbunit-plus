@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIADB_10;
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2017;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_13;
@@ -76,7 +76,7 @@ class AutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
-	@TestContainersTest(image = MSSQL, resolveConnection = true)
+	@TestContainersTest(image = MSSQL_2017, resolveConnection = true)
 	class AutoDetectMsSQLForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
 	}
 
