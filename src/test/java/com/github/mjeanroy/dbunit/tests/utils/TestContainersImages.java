@@ -32,10 +32,10 @@ public final class TestContainersImages {
 	public static final String MYSQL_57 = "mysql:5.7";
 	public static final String MYSQL_8 = "mysql:8";
 	public static final String MARIADB_10 = "mariadb:10";
-	public static final String POSTGRES_12 = "postgres:12";
-	public static final String POSTGRES_13 = "postgres:13";
-	public static final String POSTGRES_14 = "postgres:14";
-	public static final String POSTGRES_15 = "postgres:15";
+	public static final String POSTGRES_12 = "postgres:12-alpine";
+	public static final String POSTGRES_13 = "postgres:13-alpine";
+	public static final String POSTGRES_14 = "postgres:14-alpine";
+	public static final String POSTGRES_15 = "postgres:15-alpine";
 	public static final String MSSQL = "mcr.microsoft.com/mssql/server";
 	public static final String ORACLE = "gvenzl/oracle-xe:21";
 }

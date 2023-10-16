@@ -127,7 +127,7 @@ function start_postgres {
   local port="5432"
   local user="test"
   local password="Azerty123!"
-  local image="postgres:${version}"
+  local image="postgres:${version}-alpine"
 
   echo -e "${GREEN}Pulling image: ${image}${RESET_COLORS}"
   docker pull ${image}
