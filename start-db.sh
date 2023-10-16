@@ -159,7 +159,7 @@ function start_oracle {
   local port="1521"
   local app_user="test"
   local password="Azerty123!"
-  local image="gvenzl/oracle-xe"
+  local image="gvenzl/oracle-xe:21-slim-faststart"
 
   echo -e "${GREEN}Pulling image: ${image}${RESET_COLORS}"
   docker pull ${image}
