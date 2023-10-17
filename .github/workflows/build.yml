@@ -47,7 +47,7 @@ jobs:
     - name: java -version
       run: java -version
     - name: mvn -version
-      run: mvn -version
+      run: ./mvnw -version
     - name: Build
       run: ./mvnw -B install -DskipTests
     - name: Test
