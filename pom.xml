@@ -125,6 +125,7 @@
     <liquibase-slf4j.version>5.0.0</liquibase-slf4j.version>
     <testcontainers.version>1.19.1</testcontainers.version>
     <h2.version>2.2.224</h2.version>
+    <byte-buddy.version>1.14.9</byte-buddy.version>
 
     <postgresql.version>42.6.0</postgresql.version>
     <mysql.version>8.0.33</mysql.version>
@@ -213,6 +214,25 @@
       <url>file://${project.basedir}/test-repo</url>
     </repository>
   </repositories>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Ensure byte-buddy version compatible with java 21 are used -->
+      <!-- Dependencies using byte-buddy as a transitive dependencies: mockito, equalsverfier, assertj -->
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>${byte-buddy.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy-agent</artifactId>
+        <version>${byte-buddy.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
