@@ -34,6 +34,14 @@ on:
       developmentVersion:
         description: "Snapshot version"
         required: true
+      dry_run:
+        description: Run dry-run release
+        required: true
+        type: choice
+        default: 'true'
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   build:
@@ -62,7 +70,7 @@ jobs:
           ./mvnw -B -U \
             release:prepare \
             release:perform \
-            -DdryRun \
+            -DdryRun=${{ inputs.dry_run }} \
             -Dgpg.passphrase=${{ secrets.MAVEN_GPG_PASSPHRASE }} \
             -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
             -DdevelopmentVersion=${{ github.event.inputs.developmentVersion }} \
