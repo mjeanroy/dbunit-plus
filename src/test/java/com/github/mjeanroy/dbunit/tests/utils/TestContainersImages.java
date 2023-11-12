@@ -37,5 +37,7 @@ public final class TestContainersImages {
 	public static final String POSTGRES_14 = "postgres:14-alpine";
 	public static final String POSTGRES_15 = "postgres:15-alpine";
 	public static final String MSSQL_2017 = "mcr.microsoft.com/mssql/server:2017-latest";
+	public static final String MSSQL_2019 = "mcr.microsoft.com/mssql/server:2019-latest";
+	public static final String MSSQL_2022 = "mcr.microsoft.com/mssql/server:2022-latest";
 	public static final String ORACLE_21 = "gvenzl/oracle-xe:21-slim-faststart";
 }

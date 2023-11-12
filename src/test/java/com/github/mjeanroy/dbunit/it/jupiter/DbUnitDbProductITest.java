@@ -52,6 +52,8 @@ import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIADB_10;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2017;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2019;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2022;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_8;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.ORACLE_21;
@@ -153,7 +155,21 @@ class DbUnitDbProductITest {
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
 	@Nested
-	class MsSQL extends AbstractDbUnitDbProductITest {
+	class MsSQL2017 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = MSSQL_2019)
+	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
+	@Nested
+	class MsSQL2019 extends AbstractDbUnitDbProductITest {
+	}
+
+	@TestContainersTest(image = MSSQL_2022)
+	@DbUnitTestContainersTest
+	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
+	@Nested
+	class MsSQL2022 extends AbstractDbUnitDbProductITest {
 	}
 
 	@DisabledIfSystemProperty(
