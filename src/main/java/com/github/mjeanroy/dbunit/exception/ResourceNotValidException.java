@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Error thrown when resource is not a valid resource.
  */
-@SuppressWarnings("serial")
 public class ResourceNotValidException extends ResourceException {
 
 	/**

@@ -30,7 +30,6 @@ package com.github.mjeanroy.dbunit.exception;
  * This exception should provide a unique way to handle parser exception,
  * whatever the internal mapper library.
  */
-@SuppressWarnings("serial")
 public abstract class AbstractParserException extends AbstractDbUnitException {
 
 	/**

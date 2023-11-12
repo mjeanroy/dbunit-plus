@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Wrap external SQL exception.
  */
-@SuppressWarnings("serial")
 public class JdbcException extends AbstractDbUnitException {
 
 	/**

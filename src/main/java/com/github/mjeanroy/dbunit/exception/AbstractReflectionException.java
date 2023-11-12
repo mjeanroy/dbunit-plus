@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Exception thrown when a reflection error occurs.
  */
-@SuppressWarnings("serial")
 abstract class AbstractReflectionException extends AbstractDbUnitException {
 
 	/**

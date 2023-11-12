@@ -32,7 +32,6 @@ package com.github.mjeanroy.dbunit.exception;
  * This exception should be thrown by JUnit rule and DbUnit runner
  * when initialization failed because of bad configuration.
  */
-@SuppressWarnings("serial")
 public class DbUnitException extends AbstractDbUnitException {
 
 	/**

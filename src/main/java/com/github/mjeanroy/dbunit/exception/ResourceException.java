@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Error thrown when an error occurred when dealing with resources.
  */
-@SuppressWarnings("serial")
 public class ResourceException extends AbstractDbUnitException {
 
 	/**

@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Exception thrown if an error occurred during SQL parsing.
  */
-@SuppressWarnings("serial")
 public class SqlParserException extends AbstractDbUnitException {
 
 	/**

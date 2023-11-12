@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.exception;
 /**
  * Error thrown when resource is not found.
  */
-@SuppressWarnings("serial")
 public class ResourceNotFoundException extends ResourceException {
 
 	/**
