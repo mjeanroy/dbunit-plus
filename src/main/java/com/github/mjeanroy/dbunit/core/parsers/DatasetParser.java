@@ -24,12 +24,15 @@
 
 package com.github.mjeanroy.dbunit.core.parsers;
 
-import java.util.List;
-import java.util.Map;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Dataset parser: read file and returns in-memory dataset representation.
+ */
 public interface DatasetParser {
 
 	/**

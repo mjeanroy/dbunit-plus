@@ -39,6 +39,12 @@ public class ResourceNotValidException extends ResourceException {
 		super(path, message);
 	}
 
+	/**
+	 * Create exception for invalid JAR error.
+	 *
+	 * @param path Resource path.
+	 * @return The exception.
+	 */
 	public static ResourceNotValidException invalidJarException(String path) {
 		return new ResourceNotValidException(path, String.format("Resource <%s> does not seems to resides in an external JAR file", path));
 	}

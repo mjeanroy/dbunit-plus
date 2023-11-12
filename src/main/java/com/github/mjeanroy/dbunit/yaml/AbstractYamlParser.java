@@ -24,13 +24,13 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-import java.io.Reader;
-
 import com.github.mjeanroy.dbunit.core.parsers.AbstractDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.AbstractParserException;
 import com.github.mjeanroy.dbunit.exception.YamlException;
 import com.github.mjeanroy.dbunit.json.JsonParser;
+
+import java.io.Reader;
 
 /**
  * Abstract implementation of {@link JsonParser} that create {@link Reader} from
@@ -42,6 +42,12 @@ import com.github.mjeanroy.dbunit.json.JsonParser;
  * be wrapped into {@link YamlException}.
  */
 public abstract class AbstractYamlParser extends AbstractDatasetParser implements JsonParser {
+
+	/**
+	 * Create default parser.
+	 */
+	protected AbstractYamlParser() {
+	}
 
 	@Override
 	protected AbstractParserException wrapException(Exception ex) {

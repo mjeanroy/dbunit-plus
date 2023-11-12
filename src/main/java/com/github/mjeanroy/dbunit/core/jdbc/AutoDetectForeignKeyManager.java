@@ -44,6 +44,9 @@ public final class AutoDetectForeignKeyManager implements JdbcForeignKeyManager 
 	private JdbcDriver driver;
 	private JdbcForeignKeyManager fkManager;
 
+	/**
+	 * Create foreign key manager.
+	 */
 	public AutoDetectForeignKeyManager() {
 		super();
 	}

@@ -26,12 +26,18 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import java.sql.Connection;
 
+/**
+ * Implementation of {@link JdbcForeignKeyManager} for MariaDB DBMS.
+ */
 public final class MariaDBForeignKeyManager implements JdbcForeignKeyManager {
 
 	// MariaDB is "just" a fork of MySQL, so it's a "MySQL" like engine.
 	// Let's reuse the MySQL implementation.
 	private final MySQLForeignKeyManager fkManager;
 
+	/**
+	 * Create FK Manager.
+	 */
 	public MariaDBForeignKeyManager() {
 		fkManager = new MySQLForeignKeyManager();
 	}

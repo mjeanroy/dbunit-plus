@@ -24,12 +24,12 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import java.io.Reader;
-
 import com.github.mjeanroy.dbunit.core.parsers.AbstractDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.AbstractParserException;
 import com.github.mjeanroy.dbunit.exception.JsonException;
+
+import java.io.Reader;
 
 /**
  * Abstract implementation of {@link JsonParser} that create {@link Reader} from
@@ -41,6 +41,12 @@ import com.github.mjeanroy.dbunit.exception.JsonException;
  * be wrapped into {@link JsonException}.
  */
 public abstract class AbstractJsonParser extends AbstractDatasetParser implements JsonParser {
+
+	/**
+	 * Create default parser.
+	 */
+	protected AbstractJsonParser() {
+	}
 
 	@Override
 	protected AbstractParserException wrapException(Exception ex) {

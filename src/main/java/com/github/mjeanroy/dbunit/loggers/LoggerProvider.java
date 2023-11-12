@@ -24,6 +24,9 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
+/**
+ * A logger provider, used to create loggers based on a given logger name.
+ */
 public interface LoggerProvider {
 
 	/**

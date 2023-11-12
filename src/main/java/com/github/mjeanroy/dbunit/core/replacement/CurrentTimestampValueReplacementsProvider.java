@@ -37,6 +37,12 @@ import java.util.Date;
  */
 public class CurrentTimestampValueReplacementsProvider implements ReplacementsProvider {
 
+	/**
+	 * Create provider.
+	 */
+	public CurrentTimestampValueReplacementsProvider() {
+	}
+
 	@Override
 	public Replacements create() {
 		Date now = new Date();

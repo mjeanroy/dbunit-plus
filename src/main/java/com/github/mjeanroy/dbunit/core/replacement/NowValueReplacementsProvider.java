@@ -35,6 +35,12 @@ import java.util.Date;
  */
 public class NowValueReplacementsProvider implements ReplacementsProvider {
 
+	/**
+	 * Create provider.
+	 */
+	public NowValueReplacementsProvider() {
+	}
+
 	@Override
 	public Replacements create() {
 		Date now = new Date();

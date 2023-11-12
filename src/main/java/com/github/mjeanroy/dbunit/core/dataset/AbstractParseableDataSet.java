@@ -176,7 +176,7 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 	}
 
 	/**
-	 * Gets {@link #resource}.
+	 * Gets resource.
 	 *
 	 * @return {@link #resource}.
 	 */

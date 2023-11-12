@@ -145,6 +145,13 @@ public final class SqlScriptParser {
 		executeQueries(connection, queries);
 	}
 
+	/**
+	 * Execute SQL Queries.
+	 *
+	 * @param connection SQL Connection.
+	 * @param queries SQL Queries.
+	 * @throws SQLException If an error occurred while executing queries.
+	 */
 	public static void executeQueries(Connection connection, List<String> queries) throws SQLException {
 		for (String query : queries) {
 			connection.prepareStatement(query).execute();

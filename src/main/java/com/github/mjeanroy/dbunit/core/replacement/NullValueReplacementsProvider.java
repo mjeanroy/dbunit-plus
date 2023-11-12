@@ -31,6 +31,12 @@ public class NullValueReplacementsProvider implements ReplacementsProvider {
 
 	private static final Replacements REPLACEMENTS = Replacements.builder().put("[NULL]").put("[null]").build();
 
+	/**
+	 * Create provider.
+	 */
+	public NullValueReplacementsProvider() {
+	}
+
 	@Override
 	public Replacements create() {
 		return REPLACEMENTS;

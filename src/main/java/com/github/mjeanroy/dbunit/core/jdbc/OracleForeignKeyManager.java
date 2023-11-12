@@ -35,12 +35,21 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
+/**
+ * Implementation of {@link JdbcForeignKeyManager} for Oracle DBMS.
+ */
 public final class OracleForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<OracleForeignKeyManager.ForeignKey> {
 
 	private static final String C_CONSTRAINT_NAME = "CONSTRAINT_NAME";
 	private static final String C_TABLE_NAME = "TABLE_NAME";
 
 	private static final ForeignKeyMapFunction mapFunction = new ForeignKeyMapFunction();
+
+	/**
+	 * Create FK Manager.
+	 */
+	public OracleForeignKeyManager() {
+	}
 
 	@Override
 	List<ForeignKey> introspectForeignKeys(Connection connection) {

@@ -24,18 +24,18 @@
 
 package com.github.mjeanroy.dbunit.core.parsers;
 
+import com.github.mjeanroy.dbunit.core.resources.Resource;
+import com.github.mjeanroy.dbunit.exception.AbstractParserException;
+import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.exception.AbstractParserException;
-import com.github.mjeanroy.dbunit.loggers.Logger;
-import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 /**
  * Abstract implementation of {@link DatasetParser} that create {@link Reader} from
@@ -52,6 +52,12 @@ public abstract class AbstractDatasetParser implements DatasetParser {
 	 * Class logger.
 	 */
 	private static final Logger log = Loggers.getLogger(AbstractDatasetParser.class);
+
+	/**
+	 * Create default parser.
+	 */
+	protected AbstractDatasetParser() {
+	}
 
 	@Override
 	public Map<String, List<Map<String, Object>>> parse(Resource resource) {
@@ -78,5 +84,11 @@ public abstract class AbstractDatasetParser implements DatasetParser {
 	 */
 	protected abstract Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception;
 
+	/**
+	 * Wrap exception in case an error occurred during {@link #parse(Resource)} operation.
+	 *
+	 * @param ex The original exception.
+	 * @return The wrapped exception.
+	 */
 	protected abstract AbstractParserException wrapException(Exception ex);
 }

@@ -97,6 +97,29 @@ public final class Strings {
 		return input == null ? null : input.trim();
 	}
 
+	/**
+	 * Substitute given input using given context.
+	 *
+	 * For example, suppose:
+	 * <ul>
+	 *   <li>{@code prefix = "[" }</li>
+	 *   <li>{@code suffix = "]" }</li>
+	 * </ul>
+	 *
+	 * And given input: {@code "Hello [name]"}.
+	 *
+	 * The {@code "name"} placeholder will be replaced using given context:
+	 * <ul>
+	 *   <li>If {@code "name"} is available in given context, value will be used.</li>
+	 *   <li>Otherwise, the empty string will be used as context value.</li>
+	 * </ul>
+	 *
+	 * @param input Input.
+	 * @param prefix Placeholder prefix.
+	 * @param suffix Placeholder suffix.
+	 * @param variables Context.
+	 * @return The substituted value.
+	 */
 	public static String substitute(String input, String prefix, String suffix, Map<String, String> variables) {
 		if (isEmpty(input)) {
 			return input;

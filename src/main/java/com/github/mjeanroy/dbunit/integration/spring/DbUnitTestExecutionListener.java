@@ -45,6 +45,13 @@ public class DbUnitTestExecutionListener extends AbstractTestExecutionListener {
 
 	private static final String DBUNIT_RUNNER = "DBUNIT_RUNNER";
 
+	/**
+	 * Create listener.
+	 */
+	public DbUnitTestExecutionListener() {
+		super();
+	}
+
 	@Override
 	public void prepareTestInstance(TestContext ctx) throws Exception {
 		super.prepareTestInstance(ctx);
