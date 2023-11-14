@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
-import com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.ResultSetMapFunction;
+import com.github.mjeanroy.dbunit.commons.jdbc.ResultSetMapFunction;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.executeQuery;
+import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
 /**

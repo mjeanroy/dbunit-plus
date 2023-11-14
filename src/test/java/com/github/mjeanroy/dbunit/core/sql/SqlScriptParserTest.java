@@ -40,7 +40,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -193,12 +192,11 @@ class SqlScriptParserTest {
 		Resource resource = new ResourceMockBuilder().fromClasspath("/sql/schema.sql").build();
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
-
-		when(connection.prepareStatement(anyString())).thenReturn(statement);
+		when(connection.createStatement()).thenReturn(statement);
 
 		SqlScriptParser.executeScript(connection, resource, configuration);
 
-		verifyExecutedQueries(connection, statement);
+		verifyExecutedQueries(statement);
 	}
 
 	@Test
@@ -206,12 +204,11 @@ class SqlScriptParserTest {
 		String script = "/sql/schema.sql";
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
-
-		when(connection.prepareStatement(anyString())).thenReturn(statement);
+		when(connection.createStatement()).thenReturn(statement);
 
 		SqlScriptParser.executeScript(connection, script, configuration);
 
-		verifyExecutedQueries(connection, statement);
+		verifyExecutedQueries(statement);
 	}
 
 	@Test
@@ -220,11 +217,11 @@ class SqlScriptParserTest {
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
 
-		when(connection.prepareStatement(anyString())).thenReturn(statement);
+		when(connection.createStatement()).thenReturn(statement);
 
 		SqlScriptParser.executeScript(connection, script, configuration);
 
-		verifyExecutedQueries(connection, statement);
+		verifyExecutedQueries(statement);
 	}
 
 	@Test
@@ -244,18 +241,17 @@ class SqlScriptParserTest {
 
 		Connection connection = mock(Connection.class);
 		PreparedStatement statement = mock(PreparedStatement.class);
-
-		when(connection.prepareStatement(anyString())).thenReturn(statement);
+		when(connection.createStatement()).thenReturn(statement);
 
 		InputStream stream = createStream(query);
 
 		SqlScriptParser.executeScript(connection, stream, configuration);
 
-		InOrder inOrder = inOrder(connection, statement);
-		inOrder.verify(connection).prepareStatement(q1);
-		inOrder.verify(statement).execute();
-		inOrder.verify(connection).prepareStatement(q2);
-		inOrder.verify(statement).execute();
+		InOrder inOrder = inOrder(statement);
+		inOrder.verify(statement).addBatch(q1);
+		inOrder.verify(statement).addBatch(q2);
+		inOrder.verify(statement).executeBatch();
+		inOrder.verify(statement).close();
 		inOrder.verifyNoMoreInteractions();
 	}
 
@@ -280,18 +276,18 @@ class SqlScriptParserTest {
 		);
 	}
 
-	private static void verifyExecutedQueries(Connection connection, PreparedStatement statement) throws SQLException {
-		InOrder inOrder = inOrder(connection, statement);
+	private static void verifyExecutedQueries(PreparedStatement statement) throws SQLException {
+		InOrder inOrder = inOrder(statement);
 
-		verifyQueryExecution(inOrder, connection, statement,
+		inOrder.verify(statement).addBatch(
 			"CREATE TABLE users (id INT PRIMARY KEY, name varchar(100));"
 		);
 
-		verifyQueryExecution(inOrder, connection, statement,
+		inOrder.verify(statement).addBatch(
 			"CREATE TABLE movies (id INT PRIMARY KEY, title varchar(100), synopsys varchar(200));"
 		);
 
-		verifyQueryExecution(inOrder, connection, statement,
+		inOrder.verify(statement).addBatch(
 			"CREATE TABLE users_movies ( " +
 				"  user_id INT, " +
 				"  movie_id INT, " +
@@ -301,7 +297,7 @@ class SqlScriptParserTest {
 				");"
 		);
 
-		verifyQueryExecution(inOrder, connection, statement,
+		inOrder.verify(statement).addBatch(
 			"CREATE TABLE users_movies_events ( " +
 				"  user_id INT, " +
 				"  movie_id INT, " +
@@ -311,17 +307,9 @@ class SqlScriptParserTest {
 				");"
 		);
 
+		inOrder.verify(statement).executeBatch();
+		inOrder.verify(statement).close();
 		inOrder.verifyNoMoreInteractions();
-	}
-
-	private static void verifyQueryExecution(
-		InOrder inOrder,
-		Connection connection,
-		PreparedStatement statement,
-		String query
-	) throws SQLException {
-		inOrder.verify(connection).prepareStatement(query);
-		inOrder.verify(statement).execute();
 	}
 
 	private static InputStream createStream(String query) {

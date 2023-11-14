@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.jdbc;
+package com.github.mjeanroy.dbunit.commons.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
@@ -36,14 +36,23 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-final class JdbcUtils {
+/**
+ * Static JDBC Utilities, should only be used internally.
+ */
+public final class JdbcUtils {
 
 	private static final Logger log = Loggers.getLogger(JdbcUtils.class);
 
 	private JdbcUtils() {
 	}
 
-	static void loadDriver(String driverClassName) {
+	/**
+	 * Load JDBC Driver.
+	 *
+	 * @param driverClassName Driver classname.
+	 * @throws JdbcException If JDBC driver cannot be loaded.
+	 */
+	public static void loadDriver(String driverClassName) {
 		log.info("Loading driver: {}", driverClassName);
 
 		try {
@@ -54,7 +63,15 @@ final class JdbcUtils {
 		}
 	}
 
-	static ResultSet executeQuery(Connection connection, String query) {
+	/**
+	 * Execute SQL Query and returns result.
+	 *
+	 * @param connection JDBC Connection.
+	 * @param query SQL Query.
+	 * @return JDBC Result Set.
+	 * @throws JdbcException If the SQL cannot be executed.
+	 */
+	public static ResultSet executeQuery(Connection connection, String query) {
 		log.debug("Executing query: {}", query);
 
 		try {
@@ -65,7 +82,16 @@ final class JdbcUtils {
 		}
 	}
 
-	static <T> List<T> executeQuery(Connection connection, String query, ResultSetMapFunction<T> mapFunction) {
+	/**
+	 * Execute SQL Query and returns mapped result.
+	 *
+	 * @param connection JDBC Connection.
+	 * @param query SQL Query.
+	 * @param mapFunction The resultset mapping function, executed for each returned rows.
+	 * @return Results.
+	 * @param <T> Type of results being returned.
+	 */
+	public static <T> List<T> executeQuery(Connection connection, String query, ResultSetMapFunction<T> mapFunction) {
 		log.debug("Executing query: {}", query);
 
 		try (ResultSet resultSet = connection.createStatement().executeQuery(query)) {
@@ -82,24 +108,33 @@ final class JdbcUtils {
 		}
 	}
 
-	static void executeUpdates(Connection connection, Collection<String> queries) {
-		log.debug("Executing queries: {}", queries);
-		for (String query : queries) {
-			executeUpdate(connection, query);
+	/**
+	 * Execute SQL Queries in a batch statement.
+	 *
+	 * @param connection JDBC Connection.
+	 * @param queries SQL Queries.
+	 */
+	public static void executeQueries(Connection connection, Collection<String> queries) {
+		if (queries.isEmpty()) {
+			return;
 		}
-	}
 
-	static void executeUpdate(Connection connection, String query) {
-		log.debug("Executing update: {}", query);
+		if (queries.size() == 1) {
+			executeQuery(connection, queries.iterator().next());
+			return;
+		}
+
+		log.debug("Executing batched queries: {}", queries);
 		try (Statement statement = connection.createStatement()) {
-			statement.executeUpdate(query);
+			for (String query : queries) {
+				log.debug("Adding batched query: {}", query);
+				statement.addBatch(query);
+			}
+
+			statement.executeBatch();
 		}
 		catch (SQLException ex) {
-			throw new JdbcException("Cannot execute query: " + query, ex);
+			throw new JdbcException("Cannot execute queries: " + queries, ex);
 		}
-	}
-
-	interface ResultSetMapFunction<T> {
-		T apply(ResultSet resultSet) throws Exception;
 	}
 }

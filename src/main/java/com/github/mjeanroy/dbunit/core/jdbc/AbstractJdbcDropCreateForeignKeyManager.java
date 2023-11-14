@@ -32,7 +32,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.executeUpdates;
+import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQueries;
 
 abstract class AbstractJdbcDropCreateForeignKeyManager<T> implements JdbcForeignKeyManager {
 
@@ -95,7 +95,7 @@ abstract class AbstractJdbcDropCreateForeignKeyManager<T> implements JdbcForeign
 		}
 
 		try {
-			executeUpdates(connection, queries);
+			executeQueries(connection, queries);
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
@@ -119,7 +119,7 @@ abstract class AbstractJdbcDropCreateForeignKeyManager<T> implements JdbcForeign
 		}
 
 		try {
-			executeUpdates(connection, queries);
+			executeQueries(connection, queries);
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);

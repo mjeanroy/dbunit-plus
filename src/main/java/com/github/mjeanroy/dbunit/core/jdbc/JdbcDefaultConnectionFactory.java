@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import java.sql.Connection;

@@ -32,8 +32,8 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQueries;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.executeQueries;
 
 /**
  * Function to execute SQL scripts against SQL connection.

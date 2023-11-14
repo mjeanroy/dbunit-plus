@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
+import com.github.mjeanroy.dbunit.commons.jdbc.ResultSetMapFunction;
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import java.sql.Connection;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
-import static com.github.mjeanroy.dbunit.core.jdbc.JdbcUtils.executeQuery;
+import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
 /**
@@ -133,7 +134,7 @@ public final class OracleForeignKeyManager extends AbstractJdbcDropCreateForeign
 		}
 	}
 
-	private static final class ForeignKeyMapFunction implements JdbcUtils.ResultSetMapFunction<ForeignKey> {
+	private static final class ForeignKeyMapFunction implements ResultSetMapFunction<ForeignKey> {
 
 		@Override
 		public ForeignKey apply(ResultSet resultSet) throws Exception {
