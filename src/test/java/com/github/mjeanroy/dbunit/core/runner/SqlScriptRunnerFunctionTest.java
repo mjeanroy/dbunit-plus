@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.runner;
 
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
-import com.github.mjeanroy.dbunit.exception.DbUnitException;
+import com.github.mjeanroy.dbunit.exception.JdbcException;
 import com.github.mjeanroy.dbunit.tests.jupiter.EmbeddedDatabaseTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,15 +33,15 @@ import org.mockito.stubbing.Answer;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,31 +49,12 @@ import static org.mockito.Mockito.when;
 @EmbeddedDatabaseTest
 class SqlScriptRunnerFunctionTest {
 
-	private SqlScript sqlScript;
 	private JdbcConnectionFactory factory;
+	private Connection connection;
 
 	@BeforeEach
-	void setUp(EmbeddedDatabase db) {
+	void setUp(EmbeddedDatabase db) throws Exception {
 		initFactory(db);
-		initSqlScript();
-	}
-
-	private void initFactory(EmbeddedDatabase db) {
-		factory = mock(JdbcConnectionFactory.class);
-		when(factory.getConnection()).thenAnswer((Answer<Connection>) invocationOnMock ->
-			db.getConnection()
-		);
-	}
-
-	private void initSqlScript() {
-		sqlScript = new SqlScript(asList(
-			"INSERT INTO users VALUES(1, 'John Doe');",
-			"INSERT INTO users VALUES(2, 'Jane Doe');",
-
-			"INSERT INTO movies VALUES(1, 'Star Wars', NULL);",
-			"INSERT INTO movies VALUES(2, 'Lord Of The Rings', NULL);",
-			"INSERT INTO movies VALUES(3, 'Back To The Future', 'The story of Marty MacFly');"
-		));
 	}
 
 	@Test
@@ -84,6 +65,15 @@ class SqlScriptRunnerFunctionTest {
 		assertThat(countUsers(connection)).isZero();
 		assertThat(countMovies(connection)).isZero();
 
+		SqlScript sqlScript = new SqlScript(asList(
+			"INSERT INTO users VALUES(1, 'John Doe');",
+			"INSERT INTO users VALUES(2, 'Jane Doe');",
+
+			"INSERT INTO movies VALUES(1, 'Star Wars', NULL);",
+			"INSERT INTO movies VALUES(2, 'Lord Of The Rings', NULL);",
+			"INSERT INTO movies VALUES(3, 'Back To The Future', 'The story of Marty MacFly');"
+		));
+
 		executor.execute(sqlScript);
 
 		assertThat(countUsers(connection)).isEqualTo(2);
@@ -93,14 +83,21 @@ class SqlScriptRunnerFunctionTest {
 	}
 
 	@Test
-	void it_should_wrap_sql_exception() throws Exception {
-		Connection connection = mock(Connection.class);
+	void it_should_wrap_sql_exception(EmbeddedDatabase db) throws Exception {
 		SqlScriptExecutor executor = new SqlScriptExecutor(factory);
+		SqlScript sqlScript = new SqlScript(
+			singletonList("INVALID SQL QUERY")
+		);
 
-		when(connection.prepareStatement(anyString())).thenThrow(new SQLException("Fail Test"));
-		when(factory.getConnection()).thenReturn(connection);
-
-		assertThatThrownBy(() -> executor.execute(sqlScript)).isExactlyInstanceOf(DbUnitException.class);
+		assertThatThrownBy(() -> executor.execute(sqlScript)).isExactlyInstanceOf(JdbcException.class);
 		verify(connection).close();
+	}
+
+	private void initFactory(EmbeddedDatabase db) throws Exception {
+		factory = mock(JdbcConnectionFactory.class);
+		connection = spy(db.getConnection());
+		when(factory.getConnection()).thenAnswer((Answer<Connection>) invocationOnMock ->
+			connection
+		);
 	}
 }
