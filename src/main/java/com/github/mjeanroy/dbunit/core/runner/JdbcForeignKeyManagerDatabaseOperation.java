@@ -24,7 +24,10 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -40,8 +43,13 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
 class JdbcForeignKeyManagerDatabaseOperation extends DatabaseOperation {
 
+	private static final Logger log = Loggers.getLogger(JdbcForeignKeyManagerDatabaseOperation.class);
+
 	static DatabaseOperation merge(DatabaseOperation operation, List<JdbcForeignKeyManager> fkManagers) {
+		log.debug("Create composite database operation with foreign key managers: {}", fkManagers);
+
 		if (fkManagers == null || fkManagers.isEmpty()) {
+			log.debug("No foreign key managers detected, using database operation: {}", operation);
 			return operation;
 		}
 
@@ -58,17 +66,21 @@ class JdbcForeignKeyManagerDatabaseOperation extends DatabaseOperation {
 		int i = 0;
 
 		for (JdbcForeignKeyManagerDatabaseOperation fkManagerOperation : fkManagerOperations) {
+			log.debug("Adding foreign key manager operation (first step): {}", fkManagerOperation);
 			operations[i++] = fkManagerOperation;
 		}
 
 		if (operation != null) {
+			log.debug("Adding database operation: {}", operation);
 			operations[i++] = operation;
 		}
 
 		for (JdbcForeignKeyManagerDatabaseOperation fkManagerOperation : fkManagerOperations) {
+			log.debug("Adding foreign key manager operation (second step): {}", fkManagerOperation);
 			operations[i++] = fkManagerOperation;
 		}
 
+		log.debug("Creating composite list of database operations: {}", (Object) operations);
 		return new CompositeOperation(
 			operations
 		);
@@ -81,19 +93,28 @@ class JdbcForeignKeyManagerDatabaseOperation extends DatabaseOperation {
 		this.fkManager = notNull(fkManager, "Foreign key manager must be defined");
 	}
 
-
 	@Override
 	public synchronized void execute(IDatabaseConnection dbConnection, IDataSet dataSet) throws DatabaseUnitException, SQLException {
 		Connection connection = dbConnection.getConnection();
 
 		// Toggle depending on the internal state.
 		if (applied) {
+			log.debug("Enabling database FK constraints");
 			fkManager.enable(connection);
 		}
 		else {
+			log.debug("Disabling database FK constraints");
 			fkManager.disable(connection);
 		}
 
 		applied = !applied;
+	}
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.create(getClass())
+			.append("fkManager", fkManager)
+			.append("applied", applied)
+			.build();
 	}
 }

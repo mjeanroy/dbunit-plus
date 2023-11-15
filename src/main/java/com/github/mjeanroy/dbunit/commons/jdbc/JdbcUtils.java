@@ -75,10 +75,16 @@ public final class JdbcUtils {
 		log.debug("Executing query: {}", query);
 
 		try {
-			return connection.createStatement().executeQuery(query);
+			ResultSet resultSet = connection.createStatement().executeQuery(query);
+			log.debug("Query successfully executed: {}", query);
+			return resultSet;
 		}
 		catch (Exception ex) {
+			log.error("Error while executing query: {}", query);
 			throw new JdbcException("Cannot execute query: " + query, ex);
+		}
+		finally {
+			log.debug("Query executed: {}", query);
 		}
 	}
 
@@ -96,15 +102,22 @@ public final class JdbcUtils {
 
 		try (ResultSet resultSet = connection.createStatement().executeQuery(query)) {
 			log.debug("Extracting query results");
+
+			int i = 0;
 			List<T> outputs = new ArrayList<>();
 			while (resultSet.next()) {
+				log.debug("Extracting query result #{}", i++);
 				outputs.add(mapFunction.apply(resultSet));
 			}
 
 			return outputs;
 		}
 		catch (Exception ex) {
+			log.error("Error while executing query: {}", query);
 			throw new JdbcException("Cannot execute query: " + query, ex);
+		}
+		finally {
+			log.debug("Query executed: {}", query);
 		}
 	}
 
@@ -125,16 +138,23 @@ public final class JdbcUtils {
 		}
 
 		log.debug("Executing batched queries: {}", queries);
+
 		try (Statement statement = connection.createStatement()) {
 			for (String query : queries) {
 				log.debug("Adding batched query: {}", query);
 				statement.addBatch(query);
 			}
 
-			statement.executeBatch();
+			log.debug("Executing batch with #{} queries", queries.size());
+			int[] result = statement.executeBatch();
+			log.debug("Batched queries successfully executed, row counts: {}", result);
 		}
 		catch (SQLException ex) {
+			log.error("Error while executing batched queries: {}", queries);
 			throw new JdbcException("Cannot execute queries: " + queries, ex);
+		}
+		finally {
+			log.debug("Batched queries executed: {}", queries);
 		}
 	}
 }

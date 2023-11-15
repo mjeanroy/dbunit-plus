@@ -78,20 +78,21 @@ class TearDownDbOperation implements DbOperation {
 			dbTester.getTearDownOperation() :
 			annotation.value().getOperation();
 
+		log.debug("-> Merging database operation with FK manager: {} with {}", databaseOperation, fkManagers);
 		DatabaseOperation tearDownDatabaseOperation = JdbcForeignKeyManagerDatabaseOperation.merge(
 			databaseOperation,
 			fkManagers
 		);
 
 		if (tearDownDatabaseOperation != null) {
-			log.trace("    - Initialize tear down operation");
+			log.trace("-> Initialize tear down operation");
 			dbTester.setTearDownOperation(tearDownDatabaseOperation);
 		}
 		else {
-			log.trace("    - No tear down operation defined, use default");
+			log.trace("-> No tear down operation defined, use default");
 		}
 
-		log.trace("    - Trigger tearDown operation");
+		log.trace("-> Trigger tearDown operation");
 		dbTester.onTearDown();
 	}
 }

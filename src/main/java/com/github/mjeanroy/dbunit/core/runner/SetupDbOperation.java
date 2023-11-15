@@ -78,20 +78,21 @@ class SetupDbOperation implements DbOperation {
 			dbTester.getSetUpOperation() :
 			annotation.value().getOperation();
 
+		log.debug("-> Merging database operation with FK manager: {} with {}", databaseOperation, fkManagers);
 		DatabaseOperation setupDatabaseOperation = JdbcForeignKeyManagerDatabaseOperation.merge(
 			databaseOperation,
 			fkManagers
 		);
 
 		if (setupDatabaseOperation != null) {
-			log.debug("    - Initialize setup operation");
+			log.debug("-> Initialize setup operation");
 			dbTester.setSetUpOperation(setupDatabaseOperation);
 		}
 		else {
-			log.trace("    - No setup operation defined, use default");
+			log.trace("-> No setup operation defined, use default");
 		}
 
-		log.trace("    - Trigger setup operations");
+		log.trace("-> Trigger setup operations");
 		dbTester.onSetup();
 	}
 }
