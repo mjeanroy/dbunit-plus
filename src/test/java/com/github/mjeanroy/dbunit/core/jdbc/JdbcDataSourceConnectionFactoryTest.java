@@ -45,16 +45,12 @@ class JdbcDataSourceConnectionFactoryTest {
 	void it_should_create_connection() throws Exception {
 		DataSource dataSource = mock(DataSource.class);
 		Connection connection = mock(Connection.class);
-
 		when(dataSource.getConnection()).thenReturn(connection);
 
 		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
 		Connection result = factory.getConnection();
 
-		assertThat(result)
-			.isNotNull()
-			.isSameAs(connection);
-
+		assertThat(result).isExactlyInstanceOf(ConnectionProxy.class);
 		verify(dataSource).getConnection();
 	}
 

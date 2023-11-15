@@ -52,7 +52,7 @@ class JdbcDefaultConnectionFactoryTest {
 		JdbcDefaultConnectionFactory factory = new JdbcDefaultConnectionFactory(configuration);
 		Connection connection = factory.getConnection();
 
-		assertThat(connection).isNotNull();
+		assertThat(connection).isNotNull().isExactlyInstanceOf(ConnectionProxy.class);
 		assertThat(connection.getMetaData().getDriverName()).containsIgnoringCase("hsql");
 	}
 

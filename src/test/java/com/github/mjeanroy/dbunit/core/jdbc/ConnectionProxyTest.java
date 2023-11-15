@@ -24,61 +24,29 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
-import java.util.Objects;
 
-/**
- * Implementation of {@link JdbcConnectionFactory} to produce instance
- * of {@link Connection} from  given {@link DataSource}.
- */
-public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFactory {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
-	/**
-	 * Connection DataSource.
-	 */
-	private final DataSource dataSource;
+class ConnectionProxyTest {
 
-	/**
-	 * Create new factory.
-	 *
-	 * @param dataSource Connection DataSource.
-	 */
-	public JdbcDataSourceConnectionFactory(DataSource dataSource) {
-		super();
-		this.dataSource = DataSourceProxy.of(dataSource);
+	@Test
+	void it_should_implement_equals_hash_code() {
+		EqualsVerifier.forClass(ConnectionProxy.class).verify();
 	}
 
-	@Override
-	protected Connection createConnection() throws Exception {
-		return dataSource.getConnection();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o == this) {
-			return true;
-		}
-
-		if (o instanceof JdbcDataSourceConnectionFactory) {
-			JdbcDataSourceConnectionFactory f = (JdbcDataSourceConnectionFactory) o;
-			return Objects.equals(dataSource, f.dataSource);
-		}
-
-		return false;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(dataSource);
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.create(getClass())
-			.append("dataSource", dataSource)
-			.build();
+	@Test
+	void it_should_implement_to_string() {
+		Connection connection = mock(Connection.class, "MockConnection");
+		ConnectionProxy cp = ConnectionProxy.of(connection);
+		assertThat(cp).hasToString(
+			"ConnectionProxy{" +
+				"connection: MockConnection" +
+			"}"
+		);
 	}
 }

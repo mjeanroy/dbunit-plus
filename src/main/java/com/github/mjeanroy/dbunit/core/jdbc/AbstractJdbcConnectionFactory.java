@@ -49,7 +49,9 @@ public abstract class AbstractJdbcConnectionFactory implements JdbcConnectionFac
 	@Override
 	public Connection getConnection() {
 		try {
-			return createConnection();
+			return ConnectionProxy.of(
+				createConnection()
+			);
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);

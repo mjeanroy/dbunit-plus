@@ -42,7 +42,7 @@ class DataSourceProxyTest {
 	@Test
 	void it_should_implement_to_string() {
 		DataSource dataSource = mock(DataSource.class, "MockDataSource");
-		DataSourceProxy dds = new DataSourceProxy(dataSource);
+		DataSourceProxy dds = DataSourceProxy.of(dataSource);
 		assertThat(dds).hasToString(
 			"DataSourceProxy{" +
 				"dataSource: MockDataSource" +

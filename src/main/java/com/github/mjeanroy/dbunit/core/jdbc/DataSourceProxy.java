@@ -45,6 +45,21 @@ final class DataSourceProxy implements DataSource {
 	private static final com.github.mjeanroy.dbunit.loggers.Logger log = Loggers.getLogger(DataSourceProxy.class);
 
 	/**
+	 * Returns given {@code dataSource} if it is already a proxy, otherwise
+	 * wrap it in a proxy and returns the new proxy instance.
+	 *
+	 * @param dataSource Datasource.
+	 * @return The proxied datasource.
+	 */
+	static DataSourceProxy of(DataSource dataSource) {
+		if (dataSource instanceof DataSourceProxy) {
+			return (DataSourceProxy) dataSource;
+		}
+
+		return new DataSourceProxy(dataSource);
+	}
+
+	/**
 	 * The internal datasource.s
 	 */
 	private final DataSource dataSource;
@@ -54,20 +69,24 @@ final class DataSourceProxy implements DataSource {
 	 *
 	 * @param dataSource Internal datasource.
 	 */
-	DataSourceProxy(DataSource dataSource) {
+	private DataSourceProxy(DataSource dataSource) {
 		this.dataSource = notNull(dataSource, "DataSource must not be null");
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
 		log.debug("Getting datasource connection");
-		return dataSource.getConnection();
+		return ConnectionProxy.of(
+			dataSource.getConnection()
+		);
 	}
 
 	@Override
 	public Connection getConnection(String username, String password) throws SQLException {
 		log.debug("Getting datasource connection with credentials: '{}'", username);
-		return dataSource.getConnection(username, password);
+		return ConnectionProxy.of(
+			dataSource.getConnection(username, password)
+		);
 	}
 
 	@Override

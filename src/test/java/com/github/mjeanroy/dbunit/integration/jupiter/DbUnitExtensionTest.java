@@ -171,7 +171,7 @@ class DbUnitExtensionTest {
 		FakeParameterContext parameterContext = new FakeParameterContext(parameter);
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 
-		JDBCConnection connection = (JDBCConnection) extension.resolveParameter(parameterContext, extensionContext);
+		Connection connection = (Connection) extension.resolveParameter(parameterContext, extensionContext);
 		assertThat(connection).isNotNull();
 		verifyData(connection, 2);
 	}

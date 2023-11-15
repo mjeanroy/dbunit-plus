@@ -129,7 +129,7 @@ class DbUnitEmbeddedDatabaseExtensionTest {
 		FakeParameterContext parameterContext = new FakeParameterContext(parameter);
 		assertThat(extension.supportsParameter(parameterContext, extensionContext)).isTrue();
 
-		JDBCConnection connection = (JDBCConnection) extension.resolveParameter(parameterContext, extensionContext);
+		Connection connection = (Connection) extension.resolveParameter(parameterContext, extensionContext);
 		verifyData(connection, 2, 3);
 	}
 
