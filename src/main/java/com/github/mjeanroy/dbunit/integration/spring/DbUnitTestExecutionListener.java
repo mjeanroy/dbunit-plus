@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.integration.spring;
 
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
+import com.github.mjeanroy.dbunit.core.jdbc.JdbcDataSourceConnectionFactory;
 import com.github.mjeanroy.dbunit.core.runner.DbUnitRunner;
 import com.github.mjeanroy.dbunit.exception.DbUnitException;
 import org.springframework.context.ApplicationContext;
@@ -59,7 +61,11 @@ public class DbUnitTestExecutionListener extends AbstractTestExecutionListener {
 		// Initialize runner
 		ApplicationContext appContext = ctx.getApplicationContext();
 		DataSource dataSource = appContext.getBean(DataSource.class);
-		DbUnitRunner runner = new DbUnitRunner(ctx.getTestClass(), dataSource);
+		JdbcConnectionFactory factory = new JdbcDataSourceConnectionFactory(
+			dataSource
+		);
+
+		DbUnitRunner runner = new DbUnitRunner(ctx.getTestClass(), factory);
 		ctx.setAttribute(DBUNIT_RUNNER, runner);
 	}
 

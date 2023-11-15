@@ -48,7 +48,7 @@ public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFacto
 	 */
 	public JdbcDataSourceConnectionFactory(DataSource dataSource) {
 		super();
-		this.dataSource = dataSource;
+		this.dataSource = new DataSourceProxy(dataSource);
 	}
 
 	@Override

@@ -24,63 +24,28 @@
 
 package com.github.mjeanroy.dbunit.core.jdbc;
 
-import com.github.mjeanroy.dbunit.exception.JdbcException;
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-class JdbcDataSourceConnectionFactoryTest {
-
-	@Test
-	void it_should_create_connection() throws Exception {
-		DataSource dataSource = mock(DataSource.class);
-		Connection connection = mock(Connection.class);
-
-		when(dataSource.getConnection()).thenReturn(connection);
-
-		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		Connection result = factory.getConnection();
-
-		assertThat(result)
-			.isNotNull()
-			.isSameAs(connection);
-
-		verify(dataSource).getConnection();
-	}
-
-	@Test
-	void it_should_fail_if_connection_cannot_be_loaded() throws Exception {
-		DataSource dataSource = mock(DataSource.class);
-		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		when(dataSource.getConnection()).thenThrow(new SQLException());
-
-		assertThatThrownBy(factory::getConnection).isExactlyInstanceOf(JdbcException.class);
-	}
+class DataSourceProxyTest {
 
 	@Test
 	void it_should_implement_equals_hash_code() {
-		EqualsVerifier.forClass(JdbcDataSourceConnectionFactory.class)
-			.suppress(Warning.STRICT_INHERITANCE)
-			.verify();
+		EqualsVerifier.forClass(DataSourceProxy.class).verify();
 	}
 
 	@Test
 	void it_should_implement_to_string() {
 		DataSource dataSource = mock(DataSource.class, "MockDataSource");
-		JdbcDataSourceConnectionFactory factory = new JdbcDataSourceConnectionFactory(dataSource);
-		assertThat(factory).hasToString(
-			"JdbcDataSourceConnectionFactory{" +
-				"dataSource: DataSourceProxy{dataSource: MockDataSource}" +
+		DataSourceProxy dds = new DataSourceProxy(dataSource);
+		assertThat(dds).hasToString(
+			"DataSourceProxy{" +
+				"dataSource: MockDataSource" +
 			"}"
 		);
 	}
