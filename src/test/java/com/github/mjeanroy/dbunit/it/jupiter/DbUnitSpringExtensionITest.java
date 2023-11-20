@@ -33,17 +33,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.deleteMovies;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.deleteUsers;
+import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.deleteUsersMovies;
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.CLASSPATH_USERS_XML;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestSpringConfiguration.class)
+@Transactional
 @DbUnitSpring
 @DbUnitTest
 class DbUnitSpringExtensionITest {
@@ -64,5 +69,13 @@ class DbUnitSpringExtensionITest {
 		Connection connection = dataSource.getConnection();
 		assertThat(countUsers(connection)).isEqualTo(2);
 		assertThat(countMovies(connection)).isZero();
+	}
+
+	@Test
+	void method3() throws Exception {
+		Connection connection = dataSource.getConnection();
+		assertThat(deleteUsersMovies(connection)).isEqualTo(3L);
+		assertThat(deleteMovies(connection)).isEqualTo(3L);
+		assertThat(deleteUsers(connection)).isEqualTo(2L);
 	}
 }

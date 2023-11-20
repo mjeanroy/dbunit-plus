@@ -59,6 +59,22 @@ final class JdbcQueries {
 	}
 
 	/**
+	 * Run SQL {@code "DELETE"} query against given table using given {@link Connection}.
+	 *
+	 * @param connection The SQL Connection.
+	 * @param tableName The table name.
+	 * @return The number of deleted rows.
+	 */
+	static int deleteFrom(Connection connection, String tableName) {
+		try {
+			return connection.prepareStatement("DELETE FROM " + tableName).executeUpdate();
+		}
+		catch (SQLException ex) {
+			throw new AssertionError(ex);
+		}
+	}
+
+	/**
 	 * Execute query and returns all results.
 	 * @param connection The database connection.
 	 * @param query The query to execute.

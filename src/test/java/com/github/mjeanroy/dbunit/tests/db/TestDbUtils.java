@@ -27,6 +27,7 @@ package com.github.mjeanroy.dbunit.tests.db;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
+import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.deleteFrom;
 
 /**
  * Static test DB Utilities.
@@ -55,6 +56,36 @@ public final class TestDbUtils {
 	 */
 	public static long countMovies(Connection connection) {
 		return countFrom(connection, "movies");
+	}
+
+	/**
+	 * Delete all rows in `users_movies` table.
+	 *
+	 * @param connection The SQL Connection to use.
+	 * @return The number of deleted rows.
+	 */
+	public static long deleteUsersMovies(Connection connection) {
+		return deleteFrom(connection, "users_movies");
+	}
+
+	/**
+	 * Delete all rows in `movies` table.
+	 *
+	 * @param connection The SQL Connection to use.
+	 * @return The number of deleted rows.
+	 */
+	public static long deleteMovies(Connection connection) {
+		return deleteFrom(connection, "movies");
+	}
+
+	/**
+	 * Delete all rows in `users` table.
+	 *
+	 * @param connection The SQL Connection to use.
+	 * @return The number of deleted rows.
+	 */
+	public static long deleteUsers(Connection connection) {
+		return deleteFrom(connection, "users");
 	}
 
 	/**

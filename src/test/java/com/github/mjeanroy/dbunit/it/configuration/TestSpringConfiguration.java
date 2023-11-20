@@ -28,6 +28,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.TransactionManager;
 
 import javax.sql.DataSource;
 
@@ -41,5 +43,12 @@ public class TestSpringConfiguration {
 			.addScript("classpath:/sql/drop.sql")
 			.addScript("classpath:/sql/schema.sql")
 			.build();
+	}
+
+	@Bean
+	public TransactionManager transactionManager(DataSource dataSource) {
+		JdbcTransactionManager txManager = new JdbcTransactionManager();
+		txManager.setDataSource(dataSource);
+		return txManager;
 	}
 }
