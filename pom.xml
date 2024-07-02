@@ -128,7 +128,7 @@
     <byte-buddy.version>1.14.17</byte-buddy.version>
 
     <postgresql.version>42.7.3</postgresql.version>
-    <mysql.version>8.4.0</mysql.version>
+    <mysql.version>9.0.0</mysql.version>
     <mariadb.version>3.4.0</mariadb.version>
     <mssql.version>12.7.0.jre8-preview</mssql.version>
     <ojdbc8.version>23.4.0.24.05</ojdbc8.version>
