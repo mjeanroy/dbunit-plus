@@ -123,9 +123,7 @@ class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, 
 	private static Connection resolveConnection(Store store, EmbeddedDatabase db) throws ParameterResolutionException {
 		Connection existingConnection = store.get(CONNECTION_KEY, Connection.class);
 		if (existingConnection != null) {
-			throw new ParameterResolutionException(
-				"Cannot create connection, existing one has not been closed"
-			);
+			return existingConnection;
 		}
 
 		try {

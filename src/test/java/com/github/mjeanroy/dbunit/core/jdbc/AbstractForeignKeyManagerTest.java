@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.exception.JdbcException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +41,14 @@ abstract class AbstractForeignKeyManagerTest {
 	@BeforeEach
 	void setUp() {
 		manager = foreignKeyManager();
+	}
+
+	@BeforeEach
+	@AfterEach
+	void cleanupDatabase(Connection connection) {
+		executeUpdate(connection, "DELETE FROM users_movies");
+		executeUpdate(connection, "DELETE FROM users");
+		executeUpdate(connection, "DELETE FROM movies");
 	}
 
 	@Test
