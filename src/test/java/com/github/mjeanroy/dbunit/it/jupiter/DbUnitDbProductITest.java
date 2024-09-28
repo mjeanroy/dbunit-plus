@@ -51,7 +51,6 @@ import java.sql.Connection;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countMovies;
 import static com.github.mjeanroy.dbunit.tests.db.TestDbUtils.countUsers;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MARIADB_10;
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2017;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2019;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2022;
 import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_57;
@@ -149,13 +148,6 @@ class DbUnitDbProductITest {
 	@DbUnitConfig(fkManagers = MariaDBForeignKeyManager.class)
 	@Nested
 	class MariaDB10 extends AbstractDbUnitDbProductITest {
-	}
-
-	@TestContainersTest(image = MSSQL_2017)
-	@DbUnitTestContainersTest
-	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
-	@Nested
-	class MsSQL2017 extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = MSSQL_2019)

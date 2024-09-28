@@ -26,9 +26,9 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2017;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MSSQL_2019;
 
-@TestContainersTest(image = MSSQL_2017, resolveConnection = true)
+@TestContainersTest(image = MSSQL_2019, resolveConnection = true)
 class MsSQLForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
 
 	@Override
