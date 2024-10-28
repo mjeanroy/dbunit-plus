@@ -129,7 +129,7 @@
 
     <postgresql.version>42.7.4</postgresql.version>
     <mysql.version>9.1.0</mysql.version>
-    <mariadb.version>3.4.1</mariadb.version>
+    <mariadb.version>3.5.0</mariadb.version>
     <mssql.version>12.8.1.jre8</mssql.version>
     <ojdbc8.version>23.5.0.24.07</ojdbc8.version>
   </properties>
