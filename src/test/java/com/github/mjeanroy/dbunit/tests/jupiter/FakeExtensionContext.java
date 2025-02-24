@@ -27,11 +27,14 @@ package com.github.mjeanroy.dbunit.tests.jupiter;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -180,6 +183,16 @@ public class FakeExtensionContext implements ExtensionContext {
 
 	@Override
 	public void publishReportEntry(String value) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void publishFile(String name, MediaType mediaType, ThrowingConsumer<Path> action) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void publishDirectory(String name, ThrowingConsumer<Path> action) {
 		throw new UnsupportedOperationException();
 	}
 
