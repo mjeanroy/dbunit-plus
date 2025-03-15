@@ -36,6 +36,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -105,6 +106,11 @@ public class FakeExtensionContext implements ExtensionContext {
 
 	@Override
 	public Optional<Class<?>> getTestClass() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
 		throw new UnsupportedOperationException();
 	}
 
