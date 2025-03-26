@@ -115,7 +115,7 @@
     <hsqldb.version>2.5.1</hsqldb.version>
     <spring.version>5.3.23</spring.version>
     <liquibase.version>4.31.1</liquibase.version>
-    <guava.version>33.4.5-jre</guava.version>
+    <guava.version>33.4.6-jre</guava.version>
 
     <!-- Test Dependencies -->
     <assertj.version>3.27.3</assertj.version>
