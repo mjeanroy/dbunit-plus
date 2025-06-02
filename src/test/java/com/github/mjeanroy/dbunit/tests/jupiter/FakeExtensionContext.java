@@ -221,6 +221,11 @@ public class FakeExtensionContext implements ExtensionContext {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public Store getStore(StoreScope scope, Namespace namespace) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * Get the single created store, or fail with {@link AssertionError} otherwise (no store, or more than
 	 * one store created).
