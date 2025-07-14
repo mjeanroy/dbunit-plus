@@ -102,7 +102,7 @@
 
     <!-- Runtime Dependencies -->
     <slf4j.version>2.0.17</slf4j.version>
-    <log4j.version>2.25.0</log4j.version>
+    <log4j.version>2.25.1</log4j.version>
     <junit.version>4.13.2</junit.version>
     <jupiter.version>5.13.3</jupiter.version>
     <junit-platform-launcher.version>1.13.3</junit-platform-launcher.version>
