@@ -37,8 +37,8 @@
       <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{1}-%M:%L] %m%n</pattern>
     </encoder>
   </appender>
-  <logger name="com.github.mjeanroy.dbunit" level="OFF"/>
-  <root level="OFF">
+  <logger name="com.github.mjeanroy.dbunit" level="DEBUG"/>
+  <root level="INFO">
     <appender-ref ref="ConsoleJournal"/>
   </root>
 </configuration>
