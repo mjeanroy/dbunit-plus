@@ -24,6 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.annotations;
 
+import com.github.mjeanroy.dbunit.core.dataset.DataSetProvider;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -32,36 +34,46 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Data set annotation, used to specify which data set should be loaded for
- * the next test.
+ * Data set annotation used to specify which DbUnit dataset(s) should be loaded
+ * before executing a test.
  *
- * This annotation can be used on:
+ * <p>This annotation can be applied at different levels to define datasets
+ * globally or locally:</p>
  * <ul>
- *   <li>Method (i.e test method).</li>
- *   <li>Class (i.e test class).</li>
- *   <li>Package (i.e package where test classes belongs)</li>
+ *   <li><b>Class</b> – applies to all test methods in the class.</li>
+ *   <li><b>Method</b> – applies only to the annotated test method.</li>
  * </ul>
  *
- * For example:
+ * <p>Multiple datasets can be specified, and they will be loaded in the order
+ * declared. Each entry can be a classpath resource or any location supported
+ * by the underlying DbUnit {@link org.dbunit.dataset.IDataSet} loader.</p>
  *
- * <pre><code>
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * @DbUnitDataSet("/dataset/common.xml")
+ * public class MyTest {
  *
- *  &#64;DbUnitDataSet("/dataset/xml")
- *   public class TestClass {
- *     &#64;Rule
- *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
+ *   @Rule
+ *   public DbUnitRule dbUnitRule = new DbUnitRule(connectionFactory);
  *
- *     &#64;Test
- *     public void test1() {
- *     }
- *
- *     &#64;Test
- *     &#64;DbUnitDataSet("/dataset/xml/table1.xml")
- *     public void test2() {
- *     }
+ *   @Test
+ *   public void defaultDataSetIsLoaded() {
+ *       // Uses /dataset/common.xml
  *   }
  *
- * </code></pre>
+ *   @Test
+ *   @DbUnitDataSet("/dataset/override/table1.xml")
+ *   public void methodSpecificDataSet() {
+ *       // Uses /dataset/override/table1.xml
+ *   }
+ * }
+ * }</pre>
+ *
+ * <p>Advanced: Instead of static files, you may provide one or more
+ * {@link DataSetProvider} implementations through {@link #providers()} to
+ * build datasets programmatically. Each provider class <strong>must declare a
+ * public no-argument constructor</strong> so the framework can instantiate it
+ * reflectively.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
@@ -73,24 +85,32 @@ import java.lang.annotation.Target;
 public @interface DbUnitDataSet {
 
 	/**
-	 * Set of data set file to load.
+	 * Path(s) to dataset files to load. These are typically classpath resources
+	 * such as {@code "/dataset/users.xml"}.
 	 *
-	 * @return DataSet file to load.
+	 * @return one or more dataset file paths.
 	 */
 	String[] value() default {};
 
 	/**
-	 * A flag indicating if given annotation should be merged with "parent" annotations. For example, a method can
-	 * define additional dataset to load than the dataset defined at class level.
+	 * Optional programmatic dataset providers. Each provider must implement
+	 * {@link DataSetProvider} and have a public no-argument constructor.
 	 *
-	 * The default value is {@code false} (mainly for retro-compatibility reasons).
-	 * This means that the dataset for the annotated method or class will <em>shadow</em> and effectively
-	 * replace any datasets defined by superclasses.
+	 * @return an array of dataset provider classes.
+	 */
+	Class<? extends DataSetProvider>[] providers() default {};
+
+	/**
+	 * Indicates whether datasets defined on parent scopes (package or class)
+	 * should be merged with those declared on the current element.
 	 *
-	 * If this flag is set to {@code true}, this means that an annotated method or class will <em>inherit</em>
-	 * the datasets defined by test superclasses (or meta-annotations).
+	 * <p>When {@code false} (default), datasets defined here completely replace
+	 * any datasets from superclasses or package-level annotations.</p>
 	 *
-	 * @return The inherit flag value.
+	 * <p>When {@code true}, datasets from parent annotations are inherited and
+	 * merged with the ones defined here.</p>
+	 *
+	 * @return {@code true} to merge with parent datasets; {@code false} to override.
 	 */
 	boolean inherit() default false;
 }

@@ -48,6 +48,7 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithCustomConfiguration.QualifiedTableNameConfigurationInterceptor;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetProviders;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnectionAndDriver;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
@@ -75,6 +76,15 @@ class DbUnitAnnotationsParserTest {
 	@Test
 	void it_should_read_dataset_from_annotation() {
 		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
+		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
+
+		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+	}
+
+	@Test
+	void it_should_read_dataset_from_providers_specified_in_annotation() {
+		Class<WithDataSetProviders> testClass = WithDataSetProviders.class;
 		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
 
@@ -132,34 +142,6 @@ class DbUnitAnnotationsParserTest {
 			System.clearProperty("DBUNIT_DB_USERNAME");
 			System.clearProperty("DBUNIT_DB_PASSWORD");
 		}
-	}
-
-	private void test_it_should_read_connection_factory_from_annotation_and_environment_variable() {
-		String url = "jdbc:hsqldb:mem:testdb";
-		String username = "SA";
-		String password = "";
-
-		System.setProperty("DBUNIT_DB_URL", url);
-		System.setProperty("DBUNIT_DB_USERNAME", username);
-		System.setProperty("DBUNIT_DB_PASSWORD", password);
-
-		Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
-		DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
-		JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
-		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
-
-		JdbcDefaultConnectionFactory jdbcDefaultConnectionFactory = (JdbcDefaultConnectionFactory) factory;
-		assertThat(jdbcDefaultConnectionFactory)
-			.extracting(
-				"configuration.url",
-				"configuration.user",
-				"configuration.password"
-			)
-			.containsExactly(
-				url,
-				username,
-				password
-			);
 	}
 
 	@Test
@@ -359,6 +341,34 @@ class DbUnitAnnotationsParserTest {
 		assertThat(schema).isNull();
 	}
 
+	private void test_it_should_read_connection_factory_from_annotation_and_environment_variable() {
+		String url = "jdbc:hsqldb:mem:testdb";
+		String username = "SA";
+		String password = "";
+
+		System.setProperty("DBUNIT_DB_URL", url);
+		System.setProperty("DBUNIT_DB_USERNAME", username);
+		System.setProperty("DBUNIT_DB_PASSWORD", password);
+
+		Class<WithDbUnitConnection> testClass = WithDbUnitConnection.class;
+		DbUnitConnection annotation = testClass.getAnnotation(DbUnitConnection.class);
+		JdbcConnectionFactory factory = DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
+		assertThat(factory).isNotNull().isExactlyInstanceOf(JdbcDefaultConnectionFactory.class);
+
+		JdbcDefaultConnectionFactory jdbcDefaultConnectionFactory = (JdbcDefaultConnectionFactory) factory;
+		assertThat(jdbcDefaultConnectionFactory)
+			.extracting(
+				"configuration.url",
+				"configuration.user",
+				"configuration.password"
+			)
+			.containsExactly(
+				url,
+				username,
+				password
+			);
+	}
+
 	private static void verifyInterceptors(
 		List<DbUnitConfigInterceptor> interceptors,
 		boolean allowEmptyFields,
@@ -369,8 +379,8 @@ class DbUnitAnnotationsParserTest {
 		Class<? extends IDataTypeFactory> datatypeFactory,
 		int fetchSize,
 		int batchSize,
-		Class<? extends IMetadataHandler> metadataHandler) {
-
+		Class<? extends IMetadataHandler> metadataHandler
+	) {
 		DatabaseConfig config = new DatabaseConfig();
 		for (DbUnitConfigInterceptor interceptor : interceptors) {
 			interceptor.applyConfiguration(config);

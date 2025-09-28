@@ -70,11 +70,16 @@ public final class DataSetFactory {
 	}
 
 	/**
-	 * Create data set from collection of file path.
+	 * Creates a single {@link org.dbunit.dataset.IDataSet} by merging the
+	 * contents of multiple datasets into one composite instance.
 	 *
-	 * @param dataSets List of datasets.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
+	 * <p>The resulting dataset is a dataSet that exposes the combined tables of
+	 * all datasets in the order they are provided</p>
+	 *
+	 * @param dataSets A non-null collection of individual {@link IDataSet} instances to merge.
+	 * @return A new {@link org.dbunit.dataset.CompositeDataSet} containing all tables from the supplied datasets.
+	 * @throws org.dbunit.dataset.DataSetException if the composite dataset cannot be created.
+	 * @throws NullPointerException If {@code dataSets} is {@code null} or contains {@code null} elements.
 	 */
 	public static IDataSet createDataSet(Collection<IDataSet> dataSets) throws DataSetException {
 		return new CompositeDataSet(dataSets.toArray(new IDataSet[0]));

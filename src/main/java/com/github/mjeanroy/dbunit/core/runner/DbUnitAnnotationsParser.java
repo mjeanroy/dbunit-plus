@@ -42,6 +42,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitFetchSizeInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitMetadataHandlerInterceptor;
 import com.github.mjeanroy.dbunit.core.configuration.DbUnitQualifiedTableNamesInterceptor;
 import com.github.mjeanroy.dbunit.core.dataset.DataSetFactory;
+import com.github.mjeanroy.dbunit.core.dataset.DataSetProvider;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcDefaultConnectionFactory;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
@@ -64,6 +65,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.substitute;
+import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConfiguration;
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.parseScript;
 import static java.util.Arrays.asList;
@@ -88,19 +91,114 @@ final class DbUnitAnnotationsParser {
 	}
 
 	/**
-	 * Read dbUnit dataSet from annotation.
+	 * Builds a combined DbUnit {@link org.dbunit.dataset.IDataSet} from the
+	 * configuration supplied by a {@link com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet}
+	 * annotation.
 	 *
-	 * @param annotation The configured annotation.
-	 * @return Parsed dataSet.
-	 * @throws DbUnitException If dataSet parsing failed.
+	 * <p>This method inspects both sources defined in the annotation:</p>
+	 * <ul>
+	 *   <li><strong>Providers</strong> – classes implementing  {@link com.github.mjeanroy.dbunit.core.dataset.DataSetProvider} that construct datasets programmatically.</li>
+	 *   <li><strong>Paths</strong> – string paths to static dataset files (for example, XML files on the classpath).</li>
+	 * </ul>
+	 *
+	 * <p>The resulting dataset is determined as follows:</p>
+	 * <ol>
+	 *   <li>If neither providers nor paths are specified, {@code null} is returned.</li>
+	 *   <li>If only one source is present, the dataset from that source is returned.</li>
+	 *   <li>
+	 *     If both sources are present, their datasets are merged into a single
+	 *     composite dataset using {@code DataSetFactory.createDataSet} in the
+	 *     order of provider data first, followed by path data.
+	 *   </li>
+	 * </ol>
+	 *
+	 * @param annotation The {@code @DbUnitDataSet} annotation whose configuration supplies the dataset sources.
+	 * @return a fully constructed {@link org.dbunit.dataset.IDataSet}, or {@code null} if no providers or paths are defined.
+	 * @throws DbUnitException any provider throws an exception or if merging/reading a dataset fails.
 	 */
 	static IDataSet readDataSet(DbUnitDataSet annotation) {
-		if (annotation == null || annotation.value().length == 0) {
+		if (annotation == null) {
+			return null;
+		}
+
+		IDataSet d1 = parseDataSetProviders(annotation);
+		IDataSet d2 = parseDataSetPaths(annotation);
+
+		if (d1 == null && d2 == null) {
+			return null;
+		}
+
+		if (d1 == null) {
+			return d2;
+		}
+
+		if (d2 == null) {
+			return d1;
+		}
+
+		try {
+			return createDataSet(asList(d1, d2));
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
+	}
+
+	/**
+	 * Builds a dataset by invoking each {@link DataSetProvider} declared in the
+	 * given annotation.
+	 *
+	 * Returns {@code null} if no providers are specified.
+	 *
+	 * @param annotation The dataset annotation (never {@code null}).
+	 * @return A merged {@link IDataSet} from all providers, or {@code null} if none are declared.
+	 * @throws DbUnitException if any provider cannot be instantiated or its {@code get()} method fails.
+	 */
+	private static IDataSet parseDataSetProviders(DbUnitDataSet annotation) {
+		Class<? extends DataSetProvider>[] providers = annotation.providers();
+		if (providers.length == 0) {
+			return null;
+		}
+
+		List<IDataSet> dataSets = new ArrayList<>(providers.length);
+		for (Class<? extends DataSetProvider> providerClass : providers) {
+			DataSetProvider provider = instantiate(providerClass);
+
+			try {
+				dataSets.add(provider.get());
+			}
+			catch (Exception ex) {
+				log.error(ex.getMessage(), ex);
+				throw new DbUnitException(ex);
+			}
+		}
+
+		try {
+			return createDataSet(dataSets);
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
+	}
+
+	/**
+	 * Builds a dataset by loading the resource paths declared in the annotation.
+	 * Returns {@code null} if no paths are specified.
+	 *
+	 * @param annotation The dataset annotation (never {@code null}).
+	 * @return A merged {@link IDataSet} from the configured resource paths, or {@code null} if none are declared.
+	 * @throws DbUnitException If any resource cannot be read or parsed.
+	 */
+	private static IDataSet parseDataSetPaths(DbUnitDataSet annotation) {
+		String[] paths = annotation.value();
+		if (paths.length == 0) {
 			return null;
 		}
 
 		try {
-			return DataSetFactory.createDataSet(annotation.value());
+			return createDataSet(annotation.value());
 		}
 		catch (DataSetException ex) {
 			log.error(ex.getMessage(), ex);
@@ -145,7 +243,7 @@ final class DbUnitAnnotationsParser {
 		}
 
 		try {
-			final IDataSet dataSet = DataSetFactory.createDataSet(dataSets);
+			final IDataSet dataSet = createDataSet(dataSets);
 			return !inheritable || parentDataSet == null ? dataSet : DataSetFactory.mergeDataSet(parentDataSet, dataSet);
 		}
 		catch (DataSetException ex) {
@@ -236,7 +334,7 @@ final class DbUnitAnnotationsParser {
 	private static Map<String, String> buildEnv() {
 		Map<String, String> env = new HashMap<>(System.getenv());
 
-		for (String property: System.getProperties().stringPropertyNames()) {
+		for (String property : System.getProperties().stringPropertyNames()) {
 			env.put(property, System.getProperty(property));
 		}
 
