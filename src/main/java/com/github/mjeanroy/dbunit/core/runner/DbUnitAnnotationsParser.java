@@ -62,6 +62,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.substitute;
@@ -121,23 +122,93 @@ final class DbUnitAnnotationsParser {
 			return null;
 		}
 
-		IDataSet d1 = parseDataSetProviders(annotation);
-		IDataSet d2 = parseDataSetPaths(annotation);
+		List<IDataSet> dataSets = new ArrayList<>(3);
 
-		if (d1 == null && d2 == null) {
+		IDataSet d1 = parseDataSetProvidersFromServiceLoader(annotation);
+		if (d1 != null) {
+			dataSets.add(d1);
+		}
+
+		IDataSet d2 = parseDataSetProviders(annotation);
+		if (d2 != null) {
+			dataSets.add(d2);
+		}
+
+		IDataSet d3 = parseDataSetPaths(annotation);
+		if (d3 != null) {
+			dataSets.add(d3);
+		}
+
+		if (dataSets.isEmpty()) {
 			return null;
 		}
 
-		if (d1 == null) {
-			return d2;
-		}
-
-		if (d2 == null) {
-			return d1;
+		if (dataSets.size() == 1) {
+			return dataSets.get(0);
 		}
 
 		try {
-			return createDataSet(asList(d1, d2));
+			return createDataSet(dataSets);
+		}
+		catch (DataSetException ex) {
+			log.error(ex.getMessage(), ex);
+			throw new DbUnitException(ex);
+		}
+	}
+
+	/**
+	 * Loads and merges {@link IDataSet} instances discovered via the {@link java.util.ServiceLoader} mechanism.
+	 *
+	 * <p>This method is invoked when the supplied {@link DbUnitDataSet} annotation
+	 * is configured to use the service loader (i.e. {@link DbUnitDataSet#useServiceLoader()}
+	 * returns {@code true}). It scans the runtime classpath for all
+	 * {@link DataSetProvider} service implementations declared under
+	 * {@code META-INF/services/com.github.mjeanroy.dbunit.core.dataset.DataSetProvider},
+	 * instantiates each provider, calls its {@link DataSetProvider#get()} method,
+	 * and merges the returned datasets into a single composite {@link IDataSet}.</p>
+	 *
+	 * <p>If no providers are discovered or if {@code useServiceLoader} is
+	 * {@code false}, this method returns {@code null}.</p>
+	 *
+	 * <p><strong>Error Handling:</strong>
+	 * If a provider cannot be instantiated, or if its {@code get()} method throws
+	 * an exception, the error is logged and wrapped in a {@link DbUnitException}.
+	 * Likewise, if merging the resulting datasets fails, a {@link DbUnitException}
+	 * is thrown.</p>
+	 *
+	 * @param annotation The {@link DbUnitDataSet} annotation controlling service-loader usage; never {@code null}.
+	 * @return A merged {@link IDataSet} composed of all datasets returned by
+	 *         discovered {@link DataSetProvider}s, or {@code null} if no providers
+	 *         are found or service loading is disabled.
+	 * @throws DbUnitException if a provider cannot be instantiated, if a provider's {@link DataSetProvider#get()}
+	 *                         invocation fails, or if the merged dataset cannot be created.
+	 * @see java.util.ServiceLoader
+	 * @see DataSetProvider
+	 */
+	private static IDataSet parseDataSetProvidersFromServiceLoader(DbUnitDataSet annotation) {
+		if (!annotation.useServiceLoader()) {
+			return null;
+		}
+
+		ServiceLoader<DataSetProvider> serviceLoader = ServiceLoader.load(DataSetProvider.class);
+		List<IDataSet> dataSets = new ArrayList<>();
+		for (DataSetProvider provider : serviceLoader) {
+			try {
+				IDataSet dataSet = provider.get();
+				dataSets.add(dataSet);
+			}
+			catch (Exception ex) {
+				log.error(ex.getMessage(), ex);
+				throw new DbUnitException(ex);
+			}
+		}
+
+		if (dataSets.isEmpty()) {
+			return null;
+		}
+
+		try {
+			return createDataSet(dataSets);
 		}
 		catch (DataSetException ex) {
 			log.error(ex.getMessage(), ex);

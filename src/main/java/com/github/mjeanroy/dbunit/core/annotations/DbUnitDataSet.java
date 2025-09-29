@@ -101,6 +101,29 @@ public @interface DbUnitDataSet {
 	Class<? extends DataSetProvider>[] providers() default {};
 
 	/**
+	 * Enables discovery and loading of {@link com.github.mjeanroy.dbunit.core.dataset.DataSetProvider}
+	 * implementations through the standard Java {@link java.util.ServiceLoader} mechanism.
+	 *
+	 * <p>When set to {@code true} (the default), the framework will scan the classpath for
+	 * service declarations located at {@code META-INF/services/com.github.mjeanroy.dbunit.core.dataset.DataSetProvider}.
+	 * Each discovered provider is instantiated (requiring a public no-argument constructor)
+	 * and its {@link com.github.mjeanroy.dbunit.core.dataset.DataSetProvider#get()} method is
+	 * invoked to obtain an {@link org.dbunit.dataset.IDataSet}. All datasets returned by these
+	 * providers are then merged into the final dataset for the test.</p>
+	 *
+	 * <p>When set to {@code false}, no service-loader lookup is performed and only the
+	 * datasets specified by {@link #value()} and/or {@link #providers()} are considered.</p>
+	 *
+	 * <p><strong>Usage Note:</strong> This flag is optional. Disable it if you do not
+	 * rely on service-loader–based dataset providers or if you want to avoid any
+	 * runtime classpath scanning for performance.</p>
+	 *
+	 * @return {@code true} to automatically discover {@link DataSetProvider} services;
+	 *         {@code false} to skip service-loader discovery.
+	 */
+	boolean useServiceLoader() default true;
+
+	/**
 	 * Indicates whether datasets defined on parent scopes (package or class)
 	 * should be merged with those declared on the current element.
 	 *
