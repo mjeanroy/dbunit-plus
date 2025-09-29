@@ -32,6 +32,8 @@ import org.dbunit.dataset.IDataSet;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.column;
@@ -258,6 +260,33 @@ class DataSetBuilderTest {
 		});
 	}
 
+	@Test
+	void it_should_build_dataset_with_rows_from_map() throws Exception {
+		Map<String, Object> johnDoe = userRowMap(1, "John Doe");
+		Map<String, Object> janeDoe = userRowMap(2, "Jane Doe");
+		DataSetTable usersTable = table("users",
+			row(johnDoe),
+			row(janeDoe)
+		);
+
+		IDataSet dataSet = DataSetBuilder.builder()
+			.addTable(usersTable)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getTableNames()).hasSize(1).containsExactlyInAnyOrder(
+			usersTable.getTableName()
+		);
+
+		assertThat(dataSet.getTable(usersTable.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(2);
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.get("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.get("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.get("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.get("name"));
+		});
+	}
+
 	@Nested
 	class DataSetTableTest {
 		@Test
@@ -383,6 +412,15 @@ class DataSetBuilderTest {
 			assertThat(row).isNotNull();
 			assertThat(row.get("id")).isEqualTo(userRow.id);
 			assertThat(row.get("name")).isEqualTo(userRow.name);
+		}
+
+		@Test
+		void it_should_create_row_from_map() {
+			Map<String, Object> userRow = userRowMap(1, "John Doe");
+			DataSetRow row = row(userRow);
+			assertThat(row).isNotNull();
+			assertThat(row.get("id")).isEqualTo(userRow.get("id"));
+			assertThat(row.get("name")).isEqualTo(userRow.get("name"));
 		}
 
 		@Test
@@ -543,6 +581,13 @@ class DataSetBuilderTest {
 			);
 			// @formatter:on
 		}
+	}
+
+	private static Map<String, Object> userRowMap(long id, String name) {
+		Map<String, Object> values = new HashMap<>();
+		values.put("id", id);
+		values.put("name", name);
+		return values;
 	}
 
 	private static final class UserRow {

@@ -198,6 +198,41 @@ public final class DataSetBuilder {
 	}
 
 	/**
+	 * Creates a {@link DataSetRow} from a map of column names to values.
+	 *
+	 * <p>Each entry in the provided map is converted into a {@link DataSetRowValue},
+	 * where the map key is used as the column name and the map value as the column value.
+	 * The resulting {@link DataSetRow} preserves the order of entries in the map
+	 * if the map implementation maintains iteration order (e.g., {@link java.util.LinkedHashMap}).</p>
+	 *
+	 * <h2>Example</h2>
+	 * <pre>{@code
+	 * Map<String, Object> values = new LinkedHashMap<>();
+	 * values.put("id", 1);
+	 * values.put("name", "Alice");
+	 * DataSetRow row = DataSetBuilder.rowFromMap(values);
+	 * }</pre>
+	 *
+	 * @param values A non-null map containing column names and their corresponding values.
+	 * @return a new {@link DataSetRow} containing one {@link DataSetRowValue} per
+	 *         entry in the map.
+	 * @throws NullPointerException if {@code values} is {@code null} or contains any {@code null} keys.
+	 */
+	public static DataSetRow row(Map<String, Object> values) {
+		List<DataSetRowValue> rowValues = new ArrayList<>(
+			notNull(values, "Map values must not be null").size()
+		);
+
+		for (Map.Entry<String, Object> entry : values.entrySet()) {
+			rowValues.add(
+				new DataSetRowValue(entry.getKey(), entry.getValue())
+			);
+		}
+
+		return row(rowValues);
+	}
+
+	/**
 	 * Creates a new {@link DataSetRow} from a first column value plus optional additional ones.
 	 *
 	 * @param value First column value.
