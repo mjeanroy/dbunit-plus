@@ -46,7 +46,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.toSnakeCase;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.extractMembers;
 import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
@@ -146,6 +148,53 @@ public final class DataSetBuilder {
 	 */
 	public static DataSetRow row(Collection<DataSetRowValue> values) {
 		return new DataSetRow(values);
+	}
+
+	/**
+	 * Creates a {@link DataSetRow} by introspecting the members (public and privates) of a given object.
+	 *
+	 * <p>This convenience method uses reflection to extract readable fields or
+	 * properties from the supplied instance.
+	 * Each discovered member name is automatically converted to <em>snake_case</em>, and its current value
+	 * is used as the column value.</p>
+	 *
+	 * <p>The resulting {@code DataSetRow} contains one {@link DataSetRowValue} per
+	 * discovered member.</p>
+	 *
+	 * <p>If multiple fields with same name exists (for example in superclasses), the first value encountered is used.</p>
+	 *
+	 * <h2>Example</h2>
+	 * <pre>{@code
+	 * class User {
+	 *     private final long id = 1L;
+	 *     private final String firstName = "John";
+	 *     private final String lastName = "Doe";
+	 * }
+	 *
+	 * DataSetRow row = DataSetBuilder.rowFromObject(new User());
+	 * // Produces columns: "id" -> 1L, "first_name" -> "John", last_name -> "Doe"
+	 * }</pre>
+	 *
+	 * @param o The object instance to introspect (must not be {@code null}).
+	 * @return a new {@link DataSetRow} containing one column/value pair for each extracted member of {@code o}.
+	 * @throws NullPointerException If {@code o} is {@code null}.
+	 * @throws com.github.mjeanroy.dbunit.exception.FieldAccessException If accessing a field value fails.
+	 */
+	public static DataSetRow rowFromObject(Object o) {
+		Map<String, Object> values = extractMembers(
+			notNull(o, "Object instance must not be null")
+		);
+
+		List<DataSetRowValue> rowValues = new ArrayList<>(values.size());
+
+		for (Map.Entry<String, Object> entry : values.entrySet()) {
+			String columnName = toSnakeCase(entry.getKey());
+			rowValues.add(
+				new DataSetRowValue(columnName, entry.getValue())
+			);
+		}
+
+		return row(rowValues);
 	}
 
 	/**

@@ -36,6 +36,7 @@ import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.column;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.row;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.rowFromObject;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.table;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -230,6 +231,33 @@ class DataSetBuilderTest {
 		});
 	}
 
+	@Test
+	void it_should_build_dataset_with_rows_from_object_instances() throws Exception {
+		UserRow johnDoe = new UserRow(1, "John Doe");
+		UserRow janeDoe = new UserRow(2, "Jane Doe");
+		DataSetTable usersTable = table("users",
+			rowFromObject(johnDoe),
+			rowFromObject(janeDoe)
+		);
+
+		IDataSet dataSet = DataSetBuilder.builder()
+			.addTable(usersTable)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getTableNames()).hasSize(1).containsExactlyInAnyOrder(
+			usersTable.getTableName()
+		);
+
+		assertThat(dataSet.getTable(usersTable.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(2);
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.id);
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.name);
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.id);
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.name);
+		});
+	}
+
 	@Nested
 	class DataSetTableTest {
 		@Test
@@ -346,6 +374,15 @@ class DataSetBuilderTest {
 			assertThat(row.get("id")).isEqualTo(1);
 			assertThat(row.get("title")).isEqualTo("Star Wars");
 			assertThat(row.get("column_that_does_not_exist")).isNull();
+		}
+
+		@Test
+		void it_should_create_row_from_object() {
+			UserRow userRow = new UserRow(1, "John Doe");
+			DataSetRow row = DataSetBuilder.rowFromObject(userRow);
+			assertThat(row).isNotNull();
+			assertThat(row.get("id")).isEqualTo(userRow.id);
+			assertThat(row.get("name")).isEqualTo(userRow.name);
 		}
 
 		@Test
@@ -505,6 +542,16 @@ class DataSetBuilderTest {
 				"}"
 			);
 			// @formatter:on
+		}
+	}
+
+	private static final class UserRow {
+		private final long id;
+		private final String name;
+
+		private UserRow(long id, String name) {
+			this.id = id;
+			this.name = name;
 		}
 	}
 }

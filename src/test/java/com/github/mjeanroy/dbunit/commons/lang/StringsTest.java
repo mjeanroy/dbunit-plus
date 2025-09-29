@@ -166,4 +166,12 @@ class StringsTest {
 		Map<String, String> variables = Collections.emptyMap();
 		assertThat(Strings.substitute(input, prefix, suffix, variables)).isEqualTo("");
 	}
+
+	@Test
+	void it_should_translate_string_to_snake_case() {
+		assertThat(Strings.toSnakeCase(null)).isNull();
+		assertThat(Strings.toSnakeCase("")).isEqualTo("");
+		assertThat(Strings.toSnakeCase("firstName")).isEqualTo("first_name");
+		assertThat(Strings.toSnakeCase("id")).isEqualTo("id");
+	}
 }

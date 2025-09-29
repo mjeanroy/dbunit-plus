@@ -43,6 +43,45 @@ public final class Strings {
 	}
 
 	/**
+	 * Converts a string from camel-case or mixed-case style to lower-snake-case.
+	 *
+	 * <p>Each uppercase character in the input is replaced with an underscore
+	 * followed by its lowercase equivalent. Characters that are already lowercase
+	 * or non-alphabetic are left unchanged. If the input is {@code null} or empty,
+	 * the same value is returned unchanged.</p>
+	 *
+	 * <h2>Examples</h2>
+	 * <ul>
+	 *   <li>{@code "firstName"} → {@code "first_name"}</li>
+	 *   <li>{@code "UserID"} → {@code "user_i_d"}</li>
+	 *   <li>{@code "already_snake"} → {@code "already_snake"}</li>
+	 *   <li>{@code ""} → {@code ""}</li>
+	 *   <li>{@code null} → {@code null}</li>
+	 * </ul>
+	 *
+	 * @param value The input string to convert; may be {@code null} or empty.
+	 * @return A new string in lower-snake-case, or the original value if {@code value} is {@code null} or empty.
+	 */
+	public static String toSnakeCase(String value) {
+		if (isEmpty(value)) {
+			return value;
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		for (char c : value.toCharArray()) {
+			if (Character.isUpperCase(c)) {
+				sb.append('_').append(Character.toLowerCase(c));
+			}
+			else {
+				sb.append(c);
+			}
+		}
+
+		return sb.toString();
+	}
+
+	/**
 	 * Check if string is not empty (i.e not {@code null} and contains characters).
 	 *
 	 * @param value The string value.
