@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.IDatabaseConnection;
 
 /**
  * An interceptor that can be used to apply some custom DbUnit configuration on a {@link DatabaseConfig} instance.
@@ -41,4 +42,14 @@ public interface DbUnitConfigInterceptor {
 	 * @param config The database configuration instance.
 	 */
 	void applyConfiguration(DatabaseConfig config);
+
+	/**
+	 * Apply customization on the database configuration instance.
+	 *
+	 * @param config The database configuration instance.
+	 * @param dbConnection The database connection.
+	 */
+	default void applyConfiguration(DatabaseConfig config, IDatabaseConnection dbConnection) {
+		applyConfiguration(config);
+	}
 }

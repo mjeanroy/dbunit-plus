@@ -193,7 +193,7 @@ public class DbUnitRunner {
 			List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
 			if (!interceptors.isEmpty()) {
 				for (DbUnitConfigInterceptor interceptor : interceptors) {
-					interceptor.applyConfiguration(dbConnection.getConfig());
+					interceptor.applyConfiguration(dbConnection.getConfig(), dbConnection);
 				}
 			}
 
