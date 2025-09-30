@@ -61,9 +61,9 @@ public final class DataSetFactory {
 	 */
 	public static IDataSet createDataSet(String[] paths) throws DataSetException {
 		IDataSet[] dataSets = new IDataSet[paths.length];
-		int i = 0;
-		for (String path : paths) {
-			dataSets[i++] = createDataSet(path);
+
+		for (int i = 0; i < paths.length; ++i) {
+			dataSets[i] = createDataSet(paths[i]);
 		}
 
 		return createDataSet(dataSets);
@@ -82,7 +82,21 @@ public final class DataSetFactory {
 	 * @throws NullPointerException If {@code dataSets} is {@code null} or contains {@code null} elements.
 	 */
 	public static IDataSet createDataSet(Collection<IDataSet> dataSets) throws DataSetException {
-		return new CompositeDataSet(dataSets.toArray(new IDataSet[0]));
+		if (dataSets.isEmpty()) {
+			log.warn("Empty dataset, returning null");
+			return null;
+		}
+
+		if (dataSets.size() == 1) {
+			IDataSet dataSet = dataSets.iterator().next();
+			log.debug("Single dataset, returning {}", dataSet);
+			return dataSet;
+		}
+
+		log.debug("Returning composite datasets from: {}", dataSets);
+		return new CompositeDataSet(
+			dataSets.toArray(new IDataSet[0])
+		);
 	}
 
 	/**
@@ -109,13 +123,28 @@ public final class DataSetFactory {
 	}
 
 	/**
-	 * Create data set from collection of file path.
+	 * Create data set from array of datasets:
+	 *
+	 * <ul>
+	 *   <li>If {@code dataSets} is empty, {@code null} is returned.</li>
+	 *   <li>If {@code dataSets} contains one, and only one, element, this single dataset is returned.</li>
+	 *   <li>Otherwise, all datasets in this array are merged into one single dataset.</li>
+	 * </ul>
 	 *
 	 * @param dataSets List of datasets.
 	 * @return Instance of {@link IDataSet}.
 	 * @throws DataSetException If data set cannot be created.
 	 */
 	static IDataSet createDataSet(IDataSet[] dataSets) throws DataSetException {
+		if (dataSets.length == 0) {
+			log.warn("Empty dataset, skipping.");
+			return null;
+		}
+
+		if (dataSets.length == 1) {
+			return dataSets[0];
+		}
+
 		return new CompositeDataSet(dataSets);
 	}
 
@@ -128,8 +157,10 @@ public final class DataSetFactory {
 	 * @throws DataSetException If data set cannot be created.
 	 */
 	static IDataSet createDataSet(String path) throws DataSetException {
-		notNull(path, "Path must not be null to create data set");
-		ResourceLoader loader = ResourceLoader.find(path);
+		ResourceLoader loader = ResourceLoader.find(
+			notNull(path, "Path must not be null to create data set")
+		);
+
 		if (loader == null) {
 			log.debug("Cannot find resource loader with path: {}, use default (CLASSPATH)", path);
 			loader = ResourceLoader.CLASSPATH;

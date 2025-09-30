@@ -40,7 +40,6 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndLiquibase;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetAndSqlInit;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
-import org.dbunit.dataset.CompositeDataSet;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +53,14 @@ class DbUnitClassContextFactoryTest {
 		DbUnitClassContext ctx = DbUnitClassContextFactory.from(testClass);
 
 		assertThat(ctx).isNotNull();
-		assertThat(ctx.getDataSet()).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(ctx.getDataSet()).isNotNull().satisfies(dataSet ->
+			assertThat(dataSet.getTableNames()).containsExactlyInAnyOrder(
+				"users",
+				"movies",
+				"users_movies",
+				"users_movies_events"
+			)
+		);
 	}
 
 	@Test

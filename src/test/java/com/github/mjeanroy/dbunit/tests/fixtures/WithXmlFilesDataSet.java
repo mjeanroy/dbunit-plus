@@ -22,33 +22,35 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.tests.utils;
+package com.github.mjeanroy.dbunit.tests.fixtures;
 
-import com.github.mjeanroy.dbunit.core.dataset.DataSetProvider;
-import org.dbunit.dataset.CompositeDataSet;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitSetup;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitTearDown;
+import com.github.mjeanroy.dbunit.core.operation.DbUnitOperation;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_MOVIES_XML;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_XML;
 
-public final class XmlDataSetProvider implements DataSetProvider {
+@DbUnitDataSet({
+	USERS_XML,
+	MOVIES_XML,
+	USERS_MOVIES_XML,
+})
+@DbUnitSetup(DbUnitOperation.CLEAN_INSERT)
+@DbUnitTearDown(DbUnitOperation.TRUNCATE_TABLE)
+public class WithXmlFilesDataSet {
 
-	@Override
-	public IDataSet get() throws Exception {
-		String[] xmlFiles = new String[]{
-			"01-users.xml",
-			"02-movies.xml",
-			"03-users-movies.xml",
-			"04-users-movies-events.xml",
-		};
+	public void method1() {
+	}
 
-		IDataSet[] dataSets = new IDataSet[xmlFiles.length];
-		for (int i = 0; i < xmlFiles.length; i++) {
-			dataSets[i] = new FlatXmlDataSetBuilder().setColumnSensing(true).build(
-				getTestResource("/dataset/xml/" + xmlFiles[i])
-			);
-		}
+	@DbUnitDataSet(USERS_XML)
+	public void method2() {
+	}
 
-		return new CompositeDataSet(dataSets);
+	@DbUnitSetup(DbUnitOperation.NONE)
+	@DbUnitTearDown(DbUnitOperation.NONE)
+	public void method3() {
 	}
 }

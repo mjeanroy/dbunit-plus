@@ -52,10 +52,10 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithDataSetProviders;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnection;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithDbUnitConnectionAndDriver;
 import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSet;
+import com.github.mjeanroy.dbunit.tests.fixtures.WithXmlFilesDataSet;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DefaultMetadataHandler;
 import org.dbunit.database.IMetadataHandler;
-import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
@@ -74,21 +74,49 @@ import static org.assertj.core.api.Assertions.entry;
 class DbUnitAnnotationsParserTest {
 
 	@Test
-	void it_should_read_dataset_from_annotation() {
+	void it_should_read_single_dataset_from_annotation() {
 		Class<WithDataSetAndLiquibase> testClass = WithDataSetAndLiquibase.class;
 		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
 
-		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(dataSet).isNotNull().satisfies(dataset ->
+			assertThat(dataset.getTableNames()).containsExactlyInAnyOrder(
+				"users",
+				"movies",
+				"users_movies",
+				"users_movies_events"
+			)
+		);
 	}
 
 	@Test
-	void it_should_read_dataset_from_providers_specified_in_annotation() {
+	void it_should_read_list_of_datasets_from_annotation() {
+		Class<WithXmlFilesDataSet> testClass = WithXmlFilesDataSet.class;
+		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
+		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
+
+		assertThat(dataSet).isNotNull().satisfies(dataset ->
+			assertThat(dataset.getTableNames()).containsExactlyInAnyOrder(
+				"users",
+				"movies",
+				"users_movies"
+			)
+		);
+	}
+
+	@Test
+	void it_should_read_dataset_from_providers_specified_in_annotation() throws Exception {
 		Class<WithDataSetProviders> testClass = WithDataSetProviders.class;
 		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(annotation);
 
-		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getTableNames()).containsExactlyInAnyOrder(
+			"users",
+			"movies",
+			"users_movies",
+			"users_movies_events"
+		);
 	}
 
 	@Test
@@ -97,7 +125,14 @@ class DbUnitAnnotationsParserTest {
 		DbUnitDataSet annotation = testClass.getAnnotation(DbUnitDataSet.class);
 		IDataSet dataSet = DbUnitAnnotationsParser.readDataSet(singletonList(annotation), null);
 
-		assertThat(dataSet).isNotNull().isExactlyInstanceOf(CompositeDataSet.class);
+		assertThat(dataSet).isNotNull().satisfies(dataset ->
+			assertThat(dataset.getTableNames()).containsExactlyInAnyOrder(
+				"users",
+				"movies",
+				"users_movies",
+				"users_movies_events"
+			)
+		);
 	}
 
 	@Test

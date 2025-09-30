@@ -186,16 +186,26 @@ final class DbUnitAnnotationsParser {
 	 * @see DataSetProvider
 	 */
 	private static IDataSet parseDataSetProvidersFromServiceLoader(DbUnitDataSet annotation) {
+		log.debug("Parsing dataset providers from service loader");
 		if (!annotation.useServiceLoader()) {
+			log.debug("No dataset providers registered in service loader, skipping.");
 			return null;
 		}
 
 		ServiceLoader<DataSetProvider> serviceLoader = ServiceLoader.load(DataSetProvider.class);
 		List<IDataSet> dataSets = new ArrayList<>();
+
 		for (DataSetProvider provider : serviceLoader) {
 			try {
+				log.info("Loading dataset from provider: {}", provider);
 				IDataSet dataSet = provider.get();
-				dataSets.add(dataSet);
+				if (dataSet != null) {
+					log.debug("Found dataset: {}", dataSet);
+					dataSets.add(dataSet);
+				}
+				else {
+					log.warn("Got null dataset from provider: {}", provider);
+				}
 			}
 			catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
@@ -204,10 +214,12 @@ final class DbUnitAnnotationsParser {
 		}
 
 		if (dataSets.isEmpty()) {
+			log.warn("No dataset produced from providers, skipping.");
 			return null;
 		}
 
 		try {
+			log.info("Creating dataset from: {}", dataSets);
 			return createDataSet(dataSets);
 		}
 		catch (DataSetException ex) {
@@ -227,8 +239,10 @@ final class DbUnitAnnotationsParser {
 	 * @throws DbUnitException if any provider cannot be instantiated or its {@code get()} method fails.
 	 */
 	private static IDataSet parseDataSetProviders(DbUnitDataSet annotation) {
+		log.debug("Parsing data set providers");
 		Class<? extends DataSetProvider>[] providers = annotation.providers();
 		if (providers.length == 0) {
+			log.debug("No dataset providers found, skipping.");
 			return null;
 		}
 
@@ -237,7 +251,15 @@ final class DbUnitAnnotationsParser {
 			DataSetProvider provider = instantiate(providerClass);
 
 			try {
-				dataSets.add(provider.get());
+				log.info("Loading dataset from provider: {}", provider);
+				IDataSet dataSet = provider.get();
+				if (dataSet != null) {
+					log.debug("Found dataset: {}", dataSet);
+					dataSets.add(dataSet);
+				}
+				else {
+					log.warn("Got null dataset for provider: {}", provider);
+				}
 			}
 			catch (Exception ex) {
 				log.error(ex.getMessage(), ex);
@@ -245,7 +267,13 @@ final class DbUnitAnnotationsParser {
 			}
 		}
 
+		if (dataSets.isEmpty()) {
+			log.warn("No dataset produced from providers, skipping.");
+			return null;
+		}
+
 		try {
+			log.info("Creating datasets from: {}", dataSets);
 			return createDataSet(dataSets);
 		}
 		catch (DataSetException ex) {
@@ -263,13 +291,16 @@ final class DbUnitAnnotationsParser {
 	 * @throws DbUnitException If any resource cannot be read or parsed.
 	 */
 	private static IDataSet parseDataSetPaths(DbUnitDataSet annotation) {
+		log.info("Parsing dataset paths");
 		String[] paths = annotation.value();
 		if (paths.length == 0) {
+			log.debug("No dataset paths found, skipping.");
 			return null;
 		}
 
 		try {
-			return createDataSet(annotation.value());
+			log.info("Creating dataset paths from: {}", (Object) paths);
+			return createDataSet(paths);
 		}
 		catch (DataSetException ex) {
 			log.error(ex.getMessage(), ex);
