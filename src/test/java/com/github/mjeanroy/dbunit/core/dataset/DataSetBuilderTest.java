@@ -293,12 +293,12 @@ class DataSetBuilderTest {
 		void it_should_create_table() {
 			DataSetTable table = table("users",
 				row(
-					"id", 1,
-					"name", "John Doe"
+					column("id", 1),
+					column("name", "John Doe")
 				),
 				row(
-					"id", 2,
-					"name", "Jane Doe"
+					column("id", 2),
+					column("name", "Jane Doe")
 				)
 			);
 
@@ -321,12 +321,12 @@ class DataSetBuilderTest {
 		void it_should_find_table_row() {
 			DataSetTable table = table("users",
 				row(
-					"id", 1,
-					"name", "John Doe"
+					column("id", 1),
+					column("name", "John Doe")
 				),
 				row(
-					"id", 2,
-					"name", "Jane Doe"
+					column("id", 2),
+					column("name", "Jane Doe")
 				)
 			);
 
@@ -345,12 +345,12 @@ class DataSetBuilderTest {
 		void it_should_implement_to_string() {
 			DataSetTable table = table("users",
 				row(
-					"id", 1,
-					"name", "John Doe"
+					column("id", 1),
+					column("name", "John Doe")
 				),
 				row(
-					"id", 2,
-					"name", "Jane Doe"
+					column("id", 2),
+					column("name", "Jane Doe")
 				)
 			);
 
@@ -436,77 +436,6 @@ class DataSetBuilderTest {
 			assertThat(row.get("id")).isEqualTo(1);
 			assertThat(row.get("title")).isEqualTo("Star Wars");
 			assertThat(row.get("column_that_does_not_exist")).isNull();
-		}
-
-		@Test
-		void it_should_create_row_with_single_value() {
-			DataSetRow row = row(
-				"id", 1
-			);
-
-			assertThat(row).isNotNull();
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("title")).isNull();
-		}
-
-		@Test
-		void it_should_create_row_with_two_value() {
-			DataSetRow row = row(
-				"id", 1,
-				"title", "Star Wars"
-			);
-
-			assertThat(row).isNotNull();
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("title")).isEqualTo("Star Wars");
-		}
-
-		@Test
-		void it_should_create_row_with_three_values() {
-			DataSetRow row = row(
-				"id", 1,
-				"title", "Star Wars",
-				"synopsys", "Skywalker Saga"
-			);
-
-			assertThat(row).isNotNull();
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("title")).isEqualTo("Star Wars");
-			assertThat(row.get("synopsys")).isEqualTo("Skywalker Saga");
-		}
-
-		@Test
-		void it_should_create_row_with_four_values() {
-			DataSetRow row = row(
-				"id", 1,
-				"title", "Star Wars",
-				"synopsys", "Skywalker Saga",
-				"oscar_winner", true
-			);
-
-			assertThat(row).isNotNull();
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("title")).isEqualTo("Star Wars");
-			assertThat(row.get("synopsys")).isEqualTo("Skywalker Saga");
-			assertThat(row.get("oscar_winner")).isEqualTo(true);
-		}
-
-		@Test
-		void it_should_create_row_with_five_values() {
-			DataSetRow row = row(
-				"id", 1,
-				"title", "Star Wars",
-				"synopsys", "Skywalker Saga",
-				"oscar_winner", true,
-				"year", 1977
-			);
-
-			assertThat(row).isNotNull();
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("title")).isEqualTo("Star Wars");
-			assertThat(row.get("synopsys")).isEqualTo("Skywalker Saga");
-			assertThat(row.get("oscar_winner")).isEqualTo(true);
-			assertThat(row.get("year")).isEqualTo(1977);
 		}
 
 		@Test

@@ -49,7 +49,6 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.toSnakeCase;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.extractMembers;
-import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
@@ -244,74 +243,6 @@ public final class DataSetBuilder {
 		values.add(value);
 		Collections.addAll(values, others);
 		return row(values);
-	}
-
-	/**
-	 * Convenience factory to create a single-column {@link DataSetRow}.
-	 *
-	 * @param columnName Column name.
-	 * @param value Column value.
-	 * @return A new row containing one column/value pair.
-	 */
-	public static DataSetRow row(
-		String columnName,
-		Object value
-	) {
-		return new DataSetRow(
-			singleton(column(columnName, value))
-		);
-	}
-
-	public static DataSetRow row(
-		String c1, Object v1,
-		String c2, Object v2
-	) {
-		List<DataSetRowValue> values = new ArrayList<>(2);
-		values.add(column(c1, v1));
-		values.add(column(c2, v2));
-		return new DataSetRow(values);
-	}
-
-	public static DataSetRow row(
-		String c1, Object v1,
-		String c2, Object v2,
-		String c3, Object v3
-	) {
-		List<DataSetRowValue> values = new ArrayList<>(3);
-		values.add(column(c1, v1));
-		values.add(column(c2, v2));
-		values.add(column(c3, v3));
-		return new DataSetRow(values);
-	}
-
-	public static DataSetRow row(
-		String c1, Object v1,
-		String c2, Object v2,
-		String c3, Object v3,
-		String c4, Object v4
-	) {
-		List<DataSetRowValue> values = new ArrayList<>(4);
-		values.add(column(c1, v1));
-		values.add(column(c2, v2));
-		values.add(column(c3, v3));
-		values.add(column(c4, v4));
-		return new DataSetRow(values);
-	}
-
-	public static DataSetRow row(
-		String c1, Object v1,
-		String c2, Object v2,
-		String c3, Object v3,
-		String c4, Object v4,
-		String c5, Object v5
-	) {
-		List<DataSetRowValue> values = new ArrayList<>(5);
-		values.add(column(c1, v1));
-		values.add(column(c2, v2));
-		values.add(column(c3, v3));
-		values.add(column(c4, v4));
-		values.add(column(c5, v5));
-		return new DataSetRow(values);
 	}
 
 	/**
