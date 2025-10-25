@@ -26,7 +26,11 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
@@ -67,6 +71,158 @@ public final class DataSetBuilderRowValue {
 	 */
 	public Object getValue() {
 		return value;
+	}
+
+	/**
+	 * Get {@link Short} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Short}.
+	 */
+	public Short getShort() {
+		Number nb = getValueAs(Number.class);
+		return nb == null ? null : nb.shortValue();
+	}
+
+	/**
+	 * Get {@link Integer} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Integer}.
+	 */
+	public Integer getInteger() {
+		Number nb = getValueAs(Number.class);
+		return nb == null ? null : nb.intValue();
+	}
+
+	/**
+	 * Get {@link Long} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Long}.
+	 */
+	public Long getLong() {
+		Number nb = getValueAs(Number.class);
+		return nb == null ? null : nb.longValue();
+	}
+
+	/**
+	 * Get {@link Float} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Float}.
+	 */
+	public Float getFloat() {
+		Number nb = getValueAs(Number.class);
+		return nb == null ? null : nb.floatValue();
+	}
+
+	/**
+	 * Get {@link Double} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Double}.
+	 */
+	public Double getDouble() {
+		Number nb = getValueAs(Number.class);
+		return nb == null ? null : nb.doubleValue();
+	}
+
+	/**
+	 * Get {@link Boolean} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Boolean}.
+	 */
+	public Boolean getBoolean() {
+		return getValueAs(Boolean.class);
+	}
+
+	/**
+	 * Get {@link String} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link String}.
+	 */
+	public String getString() {
+		Object o = getValueAs(Object.class);
+		return o == null ? null : o.toString();
+	}
+
+	/**
+	 * Get {@link BigInteger} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link BigInteger}.
+	 */
+	public BigInteger getBigInteger() {
+		Number nb = getValueAs(Number.class);
+
+		if (nb == null) {
+			return null;
+		}
+
+		if (nb instanceof BigInteger) {
+			return (BigInteger) nb;
+		}
+
+		return BigInteger.valueOf(nb.longValue());
+	}
+
+	/**
+	 * Get {@link BigDecimal} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link BigDecimal}.
+	 */
+	public BigDecimal getBigDecimal() {
+		Number nb = getValueAs(Number.class);
+
+		if (nb == null) {
+			return null;
+		}
+
+		if (nb instanceof BigDecimal) {
+			return (BigDecimal) nb;
+		}
+
+		return BigDecimal.valueOf(nb.doubleValue());
+	}
+
+	/**
+	 * Get {@link Date} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
+	 */
+	public Date getDate() {
+		return getValueAs(Date.class);
+	}
+
+	/**
+	 * Get {@link UUID} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link UUID}.
+	 */
+	public UUID getUUID() {
+		return getValueAs(UUID.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> T getValueAs(Class<T> klass) {
+		if (value == null) {
+			return null;
+		}
+
+		Class<?> valueClass = value.getClass();
+		if (klass != valueClass && !klass.isAssignableFrom(valueClass)) {
+			throw new UnsupportedOperationException(
+				"Cannot cast value '" + valueClass.getName() + "(" + value + ")' as '" + klass.getName() + "'"
+			);
+		}
+
+		return (T) value;
 	}
 
 	@Override

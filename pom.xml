@@ -502,6 +502,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
         <configuration>
+          <argLine>-Duser.timezone=UTC</argLine>
           <consoleOutputReporter>
             <disable>true</disable>
           </consoleOutputReporter>
