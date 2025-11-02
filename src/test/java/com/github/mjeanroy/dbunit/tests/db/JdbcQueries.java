@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * Static JDBC Queries utilities, to use in unit tests only.
  */
-final class JdbcQueries {
+public final class JdbcQueries {
 
 	// Ensure no instantiation.
 	private JdbcQueries() {
@@ -47,7 +47,7 @@ final class JdbcQueries {
 	 * @param tableName The table name.
 	 * @return The number of rows in given table.
 	 */
-	static int countFrom(Connection connection, String tableName) {
+	public static int countFrom(Connection connection, String tableName) {
 		try {
 			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
 			result.next();
@@ -65,7 +65,7 @@ final class JdbcQueries {
 	 * @param tableName The table name.
 	 * @return The number of deleted rows.
 	 */
-	static int deleteFrom(Connection connection, String tableName) {
+	public static int deleteFrom(Connection connection, String tableName) {
 		try {
 			return connection.prepareStatement("DELETE FROM " + tableName).executeUpdate();
 		}
@@ -82,7 +82,7 @@ final class JdbcQueries {
 	 * @param <T> Type of elements returned by the query.
 	 * @return The results.
 	 */
-	static <T> T findOne(Connection connection, String query, ResultSetMapper<T> mapper) {
+	public static <T> T findOne(Connection connection, String query, ResultSetMapper<T> mapper) {
 		List<T> results = findAll(connection, query, mapper);
 		return ensureSingleResult(query, results);
 	}
@@ -115,7 +115,7 @@ final class JdbcQueries {
 	 * @param <T> Type of elements returned by the query.
 	 * @return The results.
 	 */
-	private static <T> List<T> findAll(Connection connection, String query, ResultSetMapper<T> mapper) {
+	public static <T> List<T> findAll(Connection connection, String query, ResultSetMapper<T> mapper) {
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
 			ResultSet rs = statement.executeQuery();
@@ -137,7 +137,7 @@ final class JdbcQueries {
 	 *
 	 * @param <T> Type of object instance.
 	 */
-	interface ResultSetMapper<T> {
+	public interface ResultSetMapper<T> {
 
 		/**
 		 * The mapper function.
