@@ -62,13 +62,13 @@ class DataSetBuilderTableTest {
 		assertThat(table.rowCount()).isEqualTo(2);
 
 		assertThat(table.getRow(0)).isNotNull().satisfies(row -> {
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("name")).isEqualTo("John Doe");
+			assertThat(row.getInteger("id")).isEqualTo(1);
+			assertThat(row.getString("name")).isEqualTo("John Doe");
 		});
 
 		assertThat(table.getRow(1)).isNotNull().satisfies(row -> {
-			assertThat(row.get("id")).isEqualTo(2);
-			assertThat(row.get("name")).isEqualTo("Jane Doe");
+			assertThat(row.getInteger("id")).isEqualTo(2);
+			assertThat(row.getString("name")).isEqualTo("Jane Doe");
 		});
 	}
 
@@ -92,10 +92,10 @@ class DataSetBuilderTableTest {
 			)
 		);
 
-		assertThat(table.getRow((row) -> Objects.equals(row.get("id"), 0))).isNotPresent();
-		assertThat(table.getRow((row) -> Objects.equals(row.get("id"), 1))).isPresent();
-		assertThat(table.getRow((row) -> Objects.equals(row.get("id"), 2))).isPresent();
-		assertThat(table.getRow((row) -> Objects.equals(row.get("id"), 3))).isNotPresent();
+		assertThat(table.getRow((row) -> Objects.equals(row.getInteger("id"), 0))).isNotPresent();
+		assertThat(table.getRow((row) -> Objects.equals(row.getInteger("id"), 1))).isPresent();
+		assertThat(table.getRow((row) -> Objects.equals(row.getInteger("id"), 2))).isPresent();
+		assertThat(table.getRow((row) -> Objects.equals(row.getInteger("id"), 3))).isNotPresent();
 	}
 
 	@Test

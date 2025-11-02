@@ -26,11 +26,16 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.UUID;
+import java.util.function.Function;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
@@ -71,10 +76,160 @@ public final class DataSetBuilderRow {
 	 * @return Column value, or {@code null} if the column does not exist or has a null value.
 	 * @throws IllegalArgumentException if {@code columnName} is blank.
 	 */
+	@Deprecated
 	public Object get(String columnName) {
 		String normalizedColumnName = notNull(trimToNull(columnName), "Column name must not be empty");
 		DataSetBuilderRowValue rowValue = values.get(normalizedColumnName);
 		return rowValue == null ? null : rowValue.getValue();
+	}
+
+	/**
+	 * Returns the {@link Short} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Short}.
+	 */
+	public Short getShort(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getShort);
+	}
+
+	/**
+	 * Returns the {@link Integer} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Integer}.
+	 */
+	public Integer getInteger(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getInteger);
+	}
+
+	/**
+	 * Returns the {@link Long} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Long}.
+	 */
+	public Long getLong(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getLong);
+	}
+
+	/**
+	 * Returns the {@link Float} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Float}.
+	 */
+	public Float getFloat(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getFloat);
+	}
+
+	/**
+	 * Returns the {@link Double} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Double}.
+	 */
+	public Double getDouble(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getDouble);
+	}
+
+	/**
+	 * Returns the {@link BigInteger} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link BigInteger}.
+	 */
+	public BigInteger getBigInteger(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getBigInteger);
+	}
+
+	/**
+	 * Returns the {@link BigDecimal} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link BigDecimal}.
+	 */
+	public BigDecimal getBigDecimal(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getBigDecimal);
+	}
+
+	/**
+	 * Returns the {@link Boolean} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Boolean}.
+	 */
+	public Boolean getBoolean(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getBoolean);
+	}
+
+	/**
+	 * Returns the {@link String} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link String}.
+	 */
+	public String getString(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getString);
+	}
+
+	/**
+	 * Returns the {@link Date} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link Date}.
+	 */
+	public Date getDate(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getDate);
+	}
+
+	/**
+	 * Returns the {@link UUID} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link UUID}.
+	 */
+	public UUID getUUID(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getUUID);
+	}
+
+	/**
+	 * Returns the value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 */
+	private <T> T get(String columnName, Function<DataSetBuilderRowValue, T> function) {
+		String normalizedColumnName = notNull(trimToNull(columnName), "Column name must not be empty");
+		DataSetBuilderRowValue rowValue = values.get(normalizedColumnName);
+		if (rowValue == null) {
+			return null;
+		}
+
+		return function.apply(rowValue);
 	}
 
 	/**

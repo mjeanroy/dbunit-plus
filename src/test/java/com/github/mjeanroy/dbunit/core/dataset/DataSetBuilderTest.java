@@ -53,8 +53,8 @@ class DataSetBuilderTest {
 		UserRow userRow = new UserRow(1, "John Doe");
 		DataSetBuilderRow row = rowFromObject(userRow);
 		assertThat(row).isNotNull();
-		assertThat(row.get("id")).isEqualTo(userRow.id);
-		assertThat(row.get("name")).isEqualTo(userRow.name);
+		assertThat(row.getInteger("id")).isEqualTo(userRow.id);
+		assertThat(row.getString("name")).isEqualTo(userRow.name);
 	}
 
 	@Test
@@ -62,8 +62,8 @@ class DataSetBuilderTest {
 		Map<String, Object> userRow = userRowMap(1, "John Doe");
 		DataSetBuilderRow row = row(userRow);
 		assertThat(row).isNotNull();
-		assertThat(row.get("id")).isEqualTo(userRow.get("id"));
-		assertThat(row.get("name")).isEqualTo(userRow.get("name"));
+		assertThat(row.getLong("id")).isEqualTo(userRow.get("id"));
+		assertThat(row.getString("name")).isEqualTo(userRow.get("name"));
 	}
 
 	@Test
@@ -76,16 +76,16 @@ class DataSetBuilderTest {
 		);
 
 		assertThat(row).isNotNull();
-		assertThat(row.get("id")).isEqualTo(1);
-		assertThat(row.get("title")).isEqualTo("Star Wars");
-		assertThat(row.get("column_that_does_not_exist")).isNull();
+		assertThat(row.getInteger("id")).isEqualTo(1);
+		assertThat(row.getString("title")).isEqualTo("Star Wars");
+		assertThat(row.getString("column_that_does_not_exist")).isNull();
 	}
 
 	@Test
 	void it_should_create_empty_row() {
 		DataSetBuilderRow row = row(emptyList());
 		assertThat(row).isNotNull();
-		assertThat(row.get("id")).isNull();
+		assertThat(row.getInteger("id")).isNull();
 	}
 
 	@Test
@@ -108,13 +108,13 @@ class DataSetBuilderTest {
 		assertThat(table.rowCount()).isEqualTo(2);
 
 		assertThat(table.getRow(0)).isNotNull().satisfies(row -> {
-			assertThat(row.get("id")).isEqualTo(1);
-			assertThat(row.get("name")).isEqualTo("John Doe");
+			assertThat(row.getInteger("id")).isEqualTo(1);
+			assertThat(row.getString("name")).isEqualTo("John Doe");
 		});
 
 		assertThat(table.getRow(1)).isNotNull().satisfies(row -> {
-			assertThat(row.get("id")).isEqualTo(2);
-			assertThat(row.get("name")).isEqualTo("Jane Doe");
+			assertThat(row.getInteger("id")).isEqualTo(2);
+			assertThat(row.getString("name")).isEqualTo("Jane Doe");
 		});
 	}
 
@@ -166,16 +166,16 @@ class DataSetBuilderTest {
 
 		DataSetBuilderTable usersMovies = table("users_movies",
 			row(
-				column("user_id", johnDoe.get("id")),
-				column("movie_id", lordOfTheRings.get("id"))
+				column("user_id", johnDoe.getInteger("id")),
+				column("movie_id", lordOfTheRings.getInteger("id"))
 			),
 			row(
-				column("user_id", johnDoe.get("id")),
-				column("movie_id", starWars.get("id"))
+				column("user_id", johnDoe.getInteger("id")),
+				column("movie_id", starWars.getInteger("id"))
 			),
 			row(
-				column("user_id", janeDoe.get("id")),
-				column("movie_id", lordOfTheRings.get("id"))
+				column("user_id", janeDoe.getInteger("id")),
+				column("movie_id", lordOfTheRings.getInteger("id"))
 			)
 		);
 
@@ -194,38 +194,38 @@ class DataSetBuilderTest {
 
 		assertThat(dataSet.getTable(usersTable.getTableName())).isNotNull().satisfies(table -> {
 			assertThat(table.getRowCount()).isEqualTo(2);
-			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.get("id"));
-			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.get("name"));
-			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.get("id"));
-			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.get("name"));
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.getString("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.getString("name"));
 		});
 
 		assertThat(dataSet.getTable(moviesTable.getTableName())).isNotNull().satisfies(table -> {
 			assertThat(table.getRowCount()).isEqualTo(3);
-			assertThat(table.getValue(0, "id")).isEqualTo(lordOfTheRings.get("id"));
-			assertThat(table.getValue(0, "title")).isEqualTo(lordOfTheRings.get("title"));
+			assertThat(table.getValue(0, "id")).isEqualTo(lordOfTheRings.getInteger("id"));
+			assertThat(table.getValue(0, "title")).isEqualTo(lordOfTheRings.getString("title"));
 			assertThat(table.getValue(0, "synopsys")).isNull();
 
-			assertThat(table.getValue(1, "id")).isEqualTo(starWars.get("id"));
-			assertThat(table.getValue(1, "title")).isEqualTo(starWars.get("title"));
+			assertThat(table.getValue(1, "id")).isEqualTo(starWars.getInteger("id"));
+			assertThat(table.getValue(1, "title")).isEqualTo(starWars.getString("title"));
 			assertThat(table.getValue(1, "synopsys")).isNull();
 
-			assertThat(table.getValue(2, "id")).isEqualTo(backToTheFuture.get("id"));
-			assertThat(table.getValue(2, "title")).isEqualTo(backToTheFuture.get("title"));
-			assertThat(table.getValue(2, "synopsys")).isNotNull().isEqualTo(backToTheFuture.get("synopsys"));
+			assertThat(table.getValue(2, "id")).isEqualTo(backToTheFuture.getInteger("id"));
+			assertThat(table.getValue(2, "title")).isEqualTo(backToTheFuture.getString("title"));
+			assertThat(table.getValue(2, "synopsys")).isNotNull().isEqualTo(backToTheFuture.getString("synopsys"));
 		});
 
 		assertThat(dataSet.getTable(usersMovies.getTableName())).isNotNull().satisfies(table -> {
 			assertThat(table.getRowCount()).isEqualTo(3);
 
-			assertThat(table.getValue(0, "user_id")).isEqualTo(johnDoe.get("id"));
-			assertThat(table.getValue(0, "movie_id")).isEqualTo(lordOfTheRings.get("id"));
+			assertThat(table.getValue(0, "user_id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "movie_id")).isEqualTo(lordOfTheRings.getInteger("id"));
 
-			assertThat(table.getValue(1, "user_id")).isEqualTo(johnDoe.get("id"));
-			assertThat(table.getValue(1, "movie_id")).isEqualTo(starWars.get("id"));
+			assertThat(table.getValue(1, "user_id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(1, "movie_id")).isEqualTo(starWars.getInteger("id"));
 
-			assertThat(table.getValue(2, "user_id")).isEqualTo(janeDoe.get("id"));
-			assertThat(table.getValue(2, "movie_id")).isEqualTo(lordOfTheRings.get("id"));
+			assertThat(table.getValue(2, "user_id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(2, "movie_id")).isEqualTo(lordOfTheRings.getInteger("id"));
 		});
 	}
 
@@ -250,10 +250,10 @@ class DataSetBuilderTest {
 		assertThat(dataSet.getTableNames()).hasSize(1).containsExactly("users");
 		assertThat(dataSet.getTable("users")).isNotNull().satisfies(table -> {
 			assertThat(table.getRowCount()).isEqualTo(2);
-			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.get("id"));
-			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.get("name"));
-			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.get("id"));
-			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.get("name"));
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.getString("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.getString("name"));
 		});
 	}
 
@@ -277,10 +277,10 @@ class DataSetBuilderTest {
 		assertThat(dataSet.getTableNames()).hasSize(1).containsExactly("users");
 		assertThat(dataSet.getTable("users")).isNotNull().satisfies(table -> {
 			assertThat(table.getRowCount()).isEqualTo(2);
-			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.get("id"));
-			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.get("name"));
-			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.get("id"));
-			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.get("name"));
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.getString("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.getString("name"));
 		});
 	}
 
@@ -304,10 +304,10 @@ class DataSetBuilderTest {
 		assertThat(dataSet.getTableNames()).hasSize(1).containsExactly("users");
 		assertThat(dataSet.getTable("users")).isNotNull().satisfies(table -> {
 			assertThat(table.getRowCount()).isEqualTo(2);
-			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.get("id"));
-			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.get("name"));
-			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.get("id"));
-			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.get("name"));
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.getString("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.getString("name"));
 		});
 	}
 
