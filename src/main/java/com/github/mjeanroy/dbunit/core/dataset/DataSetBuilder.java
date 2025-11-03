@@ -168,7 +168,7 @@ public final class DataSetBuilder {
 		for (Map.Entry<String, Object> entry : values.entrySet()) {
 			String columnName = toSnakeCase(entry.getKey());
 			rowValues.add(
-				new DataSetBuilderRowValue(columnName, entry.getValue())
+				column(columnName, entry.getValue())
 			);
 		}
 
