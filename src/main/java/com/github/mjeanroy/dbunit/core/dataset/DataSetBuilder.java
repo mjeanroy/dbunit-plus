@@ -27,12 +27,16 @@ package com.github.mjeanroy.dbunit.core.dataset;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.IDataSet;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.toSnakeCase;
@@ -74,8 +78,7 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.extractM
  * {@code DataSetTable}, {@code DataSetRow}, or {@code DataSetRowValue} is
  * created, those objects are immutable and safe to share.</p>
  *
- * <p><strong>Note:</strong> All helper factory methods (such as
- * {@link #addTable(String, Collection)} and {@link #row(String, Object)}) perform
+ * <p><strong>Note:</strong> All helper factory methods perform
  * null/empty checks and throw {@link IllegalArgumentException} if arguments
  * are invalid.</p>
  */
@@ -226,13 +229,148 @@ public final class DataSetBuilder {
 
 	/**
 	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its value.
+	 * with {@code NULL} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName) {
+		return new DataSetBuilderRowValue(columnName, null);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Short} value.
 	 *
 	 * @param columnName Column name (must not be {@code null} or blank).
 	 * @param value Value to assign (may be {@code null}).
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
-	public static DataSetBuilderRowValue column(String columnName, Object value) {
+	public static DataSetBuilderRowValue column(String columnName, Short value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Integer} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, Integer value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Long} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, Long value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Float} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, Float value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Double} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, Double value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Boolean} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, Boolean value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link BigInteger} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, BigInteger value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link BigDecimal} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, BigDecimal value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link String} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, String value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link UUID} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, UUID value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link Date} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, Date value) {
+		return new DataSetBuilderRowValue(columnName, value);
+	}
+
+	private static DataSetBuilderRowValue column(String columnName, Object value) {
 		return new DataSetBuilderRowValue(columnName, value);
 	}
 
