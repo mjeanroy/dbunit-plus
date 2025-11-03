@@ -32,6 +32,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.binder;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
@@ -44,8 +45,8 @@ class DataSetBuilderRowTest {
 	void it_should_create_row() {
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			asList(
-				new DataSetBuilderRowValue("id", 1),
-				new DataSetBuilderRowValue("title", "Star Wars")
+				rowValue("id", 1),
+				rowValue("title", "Star Wars")
 			)
 		);
 
@@ -68,7 +69,7 @@ class DataSetBuilderRowTest {
 
 	@Test
 	void it_should_create_row_with_duplicated_column_name() {
-		assertThatThrownBy(() -> new DataSetBuilderRow(asList(new DataSetBuilderRowValue("id", 1), new DataSetBuilderRowValue("id", "Star Wars"))))
+		assertThatThrownBy(() -> new DataSetBuilderRow(asList(rowValue("id", 1), rowValue("id", "Star Wars"))))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage("Duplicated column name: id");
 	}
@@ -77,8 +78,8 @@ class DataSetBuilderRowTest {
 	void it_should_get_column_names() {
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			asList(
-				new DataSetBuilderRowValue("id", 1),
-				new DataSetBuilderRowValue("title", "Star Wars")
+				rowValue("id", 1),
+				rowValue("title", "Star Wars")
 			)
 		);
 
@@ -92,8 +93,8 @@ class DataSetBuilderRowTest {
 	void it_should_get_column_value() {
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			asList(
-				new DataSetBuilderRowValue("id", 1),
-				new DataSetBuilderRowValue("title", "Star Wars")
+				rowValue("id", 1),
+				rowValue("title", "Star Wars")
 			)
 		);
 
@@ -107,7 +108,7 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 
@@ -121,19 +122,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getBigInteger(columnName)).isEqualTo(value);
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(BigDecimal.valueOf((double) value));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Short(1)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Short(1)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Short(1)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -142,7 +130,7 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 		assertThat(row.getInteger(columnName)).isEqualTo(value);
@@ -155,19 +143,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getBigInteger(columnName)).isEqualTo(value);
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(BigDecimal.valueOf((double) value));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Integer(1)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Integer(1)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Integer(1)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -176,9 +151,10 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
+
 		assertThat(row.getLong(columnName)).isEqualTo(value);
 
 		// These conversions should be possible
@@ -189,19 +165,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getBigInteger(columnName)).isEqualTo(value);
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(BigDecimal.valueOf((double) value));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Long(1)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Long(1)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Long(1)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -210,9 +173,10 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
+
 		assertThat(row.getFloat(columnName)).isEqualTo(value);
 
 		// These conversions should be possible
@@ -223,19 +187,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getBigInteger(columnName)).isEqualTo(BigInteger.valueOf((int) value));
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(BigDecimal.valueOf(value));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Float(1.5)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Float(1.5)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Float(1.5)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -244,9 +195,10 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
+
 		assertThat(row.getDouble(columnName)).isEqualTo(value);
 
 		// These conversions should be possible
@@ -257,19 +209,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getBigInteger(columnName)).isEqualTo(BigInteger.valueOf((int) value));
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(BigDecimal.valueOf(value));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Double(1.5)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Double(1.5)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Double(1.5)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -278,9 +217,10 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
+
 		assertThat(row.getBigInteger(columnName)).isEqualTo(value);
 
 		// These conversions should be possible
@@ -291,19 +231,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getDouble(columnName)).isEqualTo(value.doubleValue());
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(BigDecimal.valueOf(value.doubleValue()));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.math.BigInteger(1)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.math.BigInteger(1)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.math.BigInteger(1)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -312,9 +239,10 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
+
 		assertThat(row.getBigDecimal(columnName)).isEqualTo(value);
 
 		// These conversions should be possible
@@ -325,19 +253,6 @@ class DataSetBuilderRowTest {
 		assertThat(row.getDouble(columnName)).isEqualTo(value.doubleValue());
 		assertThat(row.getBigInteger(columnName)).isEqualTo(BigInteger.valueOf(value.longValue()));
 		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.math.BigDecimal(1.5)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.math.BigDecimal(1.5)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.math.BigDecimal(1.5)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -346,48 +261,11 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 
 		assertThat(row.getString(columnName)).isEqualTo(value);
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getShort(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getLong(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getDouble(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBigInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBigDecimal(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.String(John Doe)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -396,47 +274,11 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 
 		assertThat(row.getBoolean(columnName)).isEqualTo(value);
-
-		// These conversions should be possible
-		assertThat(row.getString(columnName)).isEqualTo(String.valueOf(value));
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getShort(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getLong(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getDouble(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBigInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBigDecimal(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.util.Date'"
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.lang.Boolean(true)' as 'java.util.UUID'"
-		);
 	}
 
 	@Test
@@ -445,47 +287,11 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 
 		assertThat(row.getDate(columnName)).isEqualTo(value);
-
-		// These conversions should be possible
-		assertThat(row.getString(columnName)).isEqualTo(value.toString());
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getShort(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Number'", value)
-		);
-
-		assertThatThrownBy(() -> row.getInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Number'", value)
-		);
-
-		assertThatThrownBy(() -> row.getLong(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Number'", value)
-		);
-
-		assertThatThrownBy(() -> row.getDouble(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Number'", value)
-		);
-
-		assertThatThrownBy(() -> row.getBigInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Number'", value)
-		);
-
-		assertThatThrownBy(() -> row.getBigDecimal(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Number'", value)
-		);
-
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.lang.Boolean'", value)
-		);
-
-		assertThatThrownBy(() -> row.getUUID(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.util.UUID'", value)
-		);
 	}
 
 	@Test
@@ -494,47 +300,11 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 
 		assertThat(row.getUUID(columnName)).isEqualTo(value);
-
-		// These conversions should be possible
-		assertThat(row.getString(columnName)).isEqualTo(value.toString());
-
-		// These conversions are not possible
-		assertThatThrownBy(() -> row.getShort(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getLong(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getDouble(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBigInteger(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBigDecimal(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Number'"
-		);
-
-		assertThatThrownBy(() -> row.getBoolean(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.lang.Boolean'"
-		);
-
-		assertThatThrownBy(() -> row.getDate(columnName)).isInstanceOf(UnsupportedOperationException.class).hasMessage(
-			"Cannot cast value 'java.util.UUID(6bf01d0a-8020-400d-9195-bc84c01949d5)' as 'java.util.Date'"
-		);
 	}
 
 	@Test
@@ -543,7 +313,7 @@ class DataSetBuilderRowTest {
 		String columnName = "id";
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			singleton(
-				new DataSetBuilderRowValue(columnName, value)
+				rowValue(columnName, value)
 			)
 		);
 
@@ -568,8 +338,8 @@ class DataSetBuilderRowTest {
 	void it_should_implement_to_string() {
 		DataSetBuilderRow row = new DataSetBuilderRow(
 			asList(
-				new DataSetBuilderRowValue("id", 2),
-				new DataSetBuilderRowValue("title", "Star Wars")
+				rowValue("id", 2),
+				rowValue("title", "Star Wars")
 			)
 		);
 
@@ -579,15 +349,21 @@ class DataSetBuilderRowTest {
 				"values: {" +
 					"id=DataSetBuilderRowValue{" +
 						"columnName: \"id\", " +
-						"value: 2" +
+						"value: 2, " +
+						"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 					"}, " +
 					"title=DataSetBuilderRowValue{" +
 						"columnName: \"title\", " +
-						"value: Star Wars" +
+						"value: Star Wars, " +
+						"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 					"}" +
 				"}" +
 			"}"
 		);
 		// @formatter:on
+	}
+
+	private static DataSetBuilderRowValue rowValue(String columnName, Object value) {
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 }

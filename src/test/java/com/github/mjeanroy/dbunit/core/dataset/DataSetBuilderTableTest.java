@@ -30,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.table;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.binder;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,14 +45,14 @@ class DataSetBuilderTableTest {
 			asList(
 				new DataSetBuilderRow(
 					asList(
-						new DataSetBuilderRowValue("id", 1),
-						new DataSetBuilderRowValue("name", "John Doe")
+						rowValue("id", 1),
+						rowValue("name", "John Doe")
 					)
 				),
 				new DataSetBuilderRow(
 					asList(
-						new DataSetBuilderRowValue("id", 2),
-						new DataSetBuilderRowValue("name", "Jane Doe")
+						rowValue("id", 2),
+						rowValue("name", "Jane Doe")
 					)
 				)
 			)
@@ -79,14 +80,14 @@ class DataSetBuilderTableTest {
 			asList(
 				new DataSetBuilderRow(
 					asList(
-						new DataSetBuilderRowValue("id", 1),
-						new DataSetBuilderRowValue("name", "John Doe")
+						rowValue("id", 1),
+						rowValue("name", "John Doe")
 					)
 				),
 				new DataSetBuilderRow(
 					asList(
-						new DataSetBuilderRowValue("id", 2),
-						new DataSetBuilderRowValue("name", "Jane Doe")
+						rowValue("id", 2),
+						rowValue("name", "Jane Doe")
 					)
 				)
 			)
@@ -104,15 +105,15 @@ class DataSetBuilderTableTest {
 
 		DataSetBuilderRow row1 = new DataSetBuilderRow(
 			asList(
-				new DataSetBuilderRowValue("id", 1),
-				new DataSetBuilderRowValue("name", "John Doe")
+				rowValue("id", 1),
+				rowValue("name", "John Doe")
 			)
 		);
 
 		DataSetBuilderRow row2 = new DataSetBuilderRow(
 			asList(
-				new DataSetBuilderRowValue("id", 2),
-				new DataSetBuilderRowValue("name", "Jane Doe")
+				rowValue("id", 2),
+				rowValue("name", "Jane Doe")
 			)
 		);
 
@@ -135,14 +136,14 @@ class DataSetBuilderTableTest {
 		DataSetBuilderTable table = table("users",
 			new DataSetBuilderRow(
 				asList(
-					new DataSetBuilderRowValue("id", 1),
-					new DataSetBuilderRowValue("name", "John Doe")
+					rowValue("id", 1),
+					rowValue("name", "John Doe")
 				)
 			),
 			new DataSetBuilderRow(
 				asList(
-					new DataSetBuilderRowValue("id", 2),
-					new DataSetBuilderRowValue("name", "Jane Doe")
+					rowValue("id", 2),
+					rowValue("name", "Jane Doe")
 				)
 			)
 		);
@@ -156,11 +157,13 @@ class DataSetBuilderTableTest {
 						"values: {" +
 							"id=DataSetBuilderRowValue{" +
 								"columnName: \"id\", " +
-								"value: 1" +
+								"value: 1, " +
+								"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 							"}, " +
 							"name=DataSetBuilderRowValue{" +
 								"columnName: \"name\", " +
-								"value: John Doe" +
+								"value: John Doe, " +
+								"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 							"}" +
 						"}" +
 					"}, " +
@@ -168,11 +171,13 @@ class DataSetBuilderTableTest {
 						"values: {" +
 							"id=DataSetBuilderRowValue{" +
 								"columnName: \"id\", " +
-								"value: 2" +
+								"value: 2, " +
+								"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 							"}, " +
 							"name=DataSetBuilderRowValue{" +
 								"columnName: \"name\", " +
-								"value: Jane Doe" +
+								"value: Jane Doe, " +
+								"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 							"}" +
 						"}" +
 					"}" +
@@ -180,5 +185,9 @@ class DataSetBuilderTableTest {
 			"}"
 		);
 		// @formatter:on
+	}
+
+	private static DataSetBuilderRowValue rowValue(String columnName, Object value) {
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 }

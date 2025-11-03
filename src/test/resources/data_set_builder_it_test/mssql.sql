@@ -34,5 +34,7 @@ CREATE TABLE data_set_builder_it_test_table (
   big_integer_value INTEGER,
   big_decimal_value NUMERIC,
   uuid_value VARCHAR(36),
-  date_value DATETIME
+  date_value DATETIME,
+  offset_date_time_value DATETIME,
+  local_date_time_value DATETIME
 );

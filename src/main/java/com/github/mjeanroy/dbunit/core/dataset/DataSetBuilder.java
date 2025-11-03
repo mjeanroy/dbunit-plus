@@ -29,6 +29,8 @@ import org.dbunit.dataset.IDataSet;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,6 +43,7 @@ import java.util.UUID;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.toSnakeCase;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.extractMembers;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.binder;
 
 /**
  * Fluent builder for creating DbUnit {@link org.dbunit.dataset.IDataSet} instances
@@ -206,7 +209,7 @@ public final class DataSetBuilder {
 
 		for (Map.Entry<String, Object> entry : values.entrySet()) {
 			rowValues.add(
-				new DataSetBuilderRowValue(entry.getKey(), entry.getValue())
+				new DataSetBuilderRowValue(entry.getKey(), entry.getValue(), binder(entry.getValue()))
 			);
 		}
 
@@ -235,7 +238,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName) {
-		return new DataSetBuilderRowValue(columnName, null);
+		return new DataSetBuilderRowValue(columnName, null, binder(null));
 	}
 
 	/**
@@ -247,7 +250,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Short value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -259,7 +262,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Integer value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -271,7 +274,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Long value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -283,7 +286,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Float value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -295,7 +298,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Double value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -307,7 +310,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Boolean value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -319,7 +322,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, BigInteger value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -331,7 +334,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, BigDecimal value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -343,7 +346,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, String value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -355,7 +358,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, UUID value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**
@@ -367,11 +370,35 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Date value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link OffsetDateTime} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, OffsetDateTime value) {
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link LocalDateTime} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, LocalDateTime value) {
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	private static DataSetBuilderRowValue column(String columnName, Object value) {
-		return new DataSetBuilderRowValue(columnName, value);
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
 	/**

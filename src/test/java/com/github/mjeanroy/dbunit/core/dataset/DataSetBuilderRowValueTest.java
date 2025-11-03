@@ -29,9 +29,12 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.binder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -39,7 +42,7 @@ class DataSetBuilderRowValueTest {
 
 	@Test
 	void it_should_create_row_value() {
-		DataSetBuilderRowValue value = new DataSetBuilderRowValue("name", "John Doe");
+		DataSetBuilderRowValue value = rowValue("name", "John Doe");
 		assertThat(value.getColumnName()).isEqualTo("name");
 		assertThat(value.getValue()).isEqualTo("John Doe");
 	}
@@ -47,7 +50,7 @@ class DataSetBuilderRowValueTest {
 	@Test
 	void it_should_get_short_value() {
 		short value = 1;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getShort()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -71,12 +74,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.Short(1)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Short(1)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Short(1)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_integer_value() {
 		int value = 1;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getInteger()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -100,12 +111,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.Integer(1)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Integer(1)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Integer(1)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_long_value() {
 		long value = 1L;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getLong()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -129,12 +148,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.Long(1)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Long(1)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Long(1)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_float_value() {
 		float value = 1.0F;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getFloat()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -158,12 +185,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.Float(1.0)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Float(1.0)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Float(1.0)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_double_value() {
 		double value = 1.0F;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getDouble()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -187,12 +222,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.Double(1.0)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Double(1.0)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Double(1.0)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_big_integer_value() {
 		BigInteger value = BigInteger.valueOf(1L);
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getBigInteger()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -216,12 +259,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.math.BigInteger(1)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.math.BigInteger(1)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.math.BigInteger(1)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_big_decimal_value() {
 		BigDecimal value = BigDecimal.valueOf(1.5D);
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getBigDecimal()).isEqualTo(value);
 
 		// Conversion to other numbers should be ok
@@ -245,12 +296,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.math.BigDecimal(1.5)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.math.BigDecimal(1.5)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.math.BigDecimal(1.5)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_boolean_value() {
 		boolean value = true;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getBoolean()).isEqualTo(value);
 
 		// These conversions should be ok
@@ -288,12 +347,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.Boolean(true)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Boolean(true)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.Boolean(true)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_string_value() {
 		String value = "John Doe";
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getString()).isEqualTo(value);
 
 		// These conversions should not possible.
@@ -336,12 +403,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.lang.String(John Doe)' as 'java.util.UUID'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.String(John Doe)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.lang.String(John Doe)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_get_date_value() {
 		Date value = new Date(1761417392393L);
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getDate()).isEqualTo(value);
 
 		// These conversions should be possible
@@ -383,12 +458,130 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.util.UUID'", value)
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.time.OffsetDateTime'", value)
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.util.Date(%s)' as 'java.time.LocalDateTime'", value)
+		);
+	}
+
+	@Test
+	void it_should_get_offset_date_time_value() {
+		OffsetDateTime value = OffsetDateTime.now();
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
+		assertThat(rowValue.getOffsetDateTime()).isEqualTo(value);
+
+		// These conversions should be possible
+		assertThat(rowValue.getString()).isEqualTo(value.toString());
+
+		// These conversions should not possible.
+		assertThatThrownBy(rowValue::getShort).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getInteger).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getLong).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getFloat).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getDouble).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getBigInteger).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getBigDecimal).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getBoolean).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.lang.Boolean'", value)
+		);
+
+		assertThatThrownBy(rowValue::getDate).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.util.Date'", value)
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.time.LocalDateTime'", value)
+		);
+
+		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.OffsetDateTime(%s)' as 'java.util.UUID'", value)
+		);
+	}
+
+	@Test
+	void it_should_get_local_date_time_value() {
+		LocalDateTime value = LocalDateTime.now();
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
+		assertThat(rowValue.getLocalDateTime()).isEqualTo(value);
+
+		// These conversions should be possible
+		assertThat(rowValue.getString()).isEqualTo(value.toString());
+
+		// These conversions should not possible.
+		assertThatThrownBy(rowValue::getShort).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getInteger).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getLong).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getFloat).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getDouble).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getBigInteger).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getBigDecimal).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Number'", value)
+		);
+
+		assertThatThrownBy(rowValue::getBoolean).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.lang.Boolean'", value)
+		);
+
+		assertThatThrownBy(rowValue::getDate).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.util.Date'", value)
+		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.time.OffsetDateTime'", value)
+		);
+
+		assertThatThrownBy(rowValue::getUUID).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			String.format("Cannot cast value 'java.time.LocalDateTime(%s)' as 'java.util.UUID'", value)
+		);
 	}
 
 	@Test
 	void it_should_get_uuid_value() {
 		UUID value = UUID.fromString("73aeeedb-5645-478b-b458-2b0ba0470cc2");
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getUUID()).isEqualTo(value);
 
 		// These conversions should be possible
@@ -430,12 +623,20 @@ class DataSetBuilderRowValueTest {
 		assertThatThrownBy(rowValue::getDate).isInstanceOf(UnsupportedOperationException.class).hasMessage(
 			"Cannot cast value 'java.util.UUID(73aeeedb-5645-478b-b458-2b0ba0470cc2)' as 'java.util.Date'"
 		);
+
+		assertThatThrownBy(rowValue::getOffsetDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.util.UUID(73aeeedb-5645-478b-b458-2b0ba0470cc2)' as 'java.time.OffsetDateTime'"
+		);
+
+		assertThatThrownBy(rowValue::getLocalDateTime).isInstanceOf(UnsupportedOperationException.class).hasMessage(
+			"Cannot cast value 'java.util.UUID(73aeeedb-5645-478b-b458-2b0ba0470cc2)' as 'java.time.LocalDateTime'"
+		);
 	}
 
 	@Test
 	void it_should_handle_null_value() {
 		Object value = null;
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue("id", value);
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
 		assertThat(rowValue.getShort()).isNull();
 		assertThat(rowValue.getInteger()).isNull();
 		assertThat(rowValue.getLong()).isNull();
@@ -454,7 +655,7 @@ class DataSetBuilderRowValueTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		DataSetBuilderRowValue rowValue = new DataSetBuilderRowValue(
+		DataSetBuilderRowValue rowValue = rowValue(
 			"name",
 			"John Doe"
 		);
@@ -463,9 +664,14 @@ class DataSetBuilderRowValueTest {
 		assertThat(rowValue).hasToString(
 			"DataSetBuilderRowValue{" +
 				"columnName: \"name\", " +
-				"value: John Doe" +
+				"value: John Doe, " +
+				"binder: \"com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue$IdentityBinder\"" +
 			"}"
 		);
 		// @formatter:on
+	}
+
+	private static DataSetBuilderRowValue rowValue(String columnName, Object value) {
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 }

@@ -28,6 +28,8 @@ import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -70,17 +72,14 @@ public final class DataSetBuilderRow {
 	}
 
 	/**
-	 * Returns the value associated with the specified column.
+	 * Get value to bind to DBUnit {@link org.dbunit.dataset.Column}.
 	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @param columnName Column name.
+	 * @return Value to bind to (may be {@code null}).
 	 */
-	@Deprecated
-	public Object get(String columnName) {
-		String normalizedColumnName = notNull(trimToNull(columnName), "Column name must not be empty");
-		DataSetBuilderRowValue rowValue = values.get(normalizedColumnName);
-		return rowValue == null ? null : rowValue.getValue();
+	Object bindValue(String columnName) {
+		DataSetBuilderRowValue rowValue = getRowValue(columnName);
+		return rowValue == null ? null : rowValue.bindValue();
 	}
 
 	/**
@@ -204,6 +203,30 @@ public final class DataSetBuilderRow {
 	}
 
 	/**
+	 * Returns the {@link OffsetDateTime} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link OffsetDateTime}.
+	 */
+	public OffsetDateTime getOffsetDateTime(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getOffsetDateTime);
+	}
+
+	/**
+	 * Returns the {@link LocalDateTime} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link LocalDateTime}.
+	 */
+	public LocalDateTime getLocalDateTime(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getLocalDateTime);
+	}
+
+	/**
 	 * Returns the {@link UUID} value associated with the specified column.
 	 *
 	 * @param columnName Name of the column.
@@ -215,21 +238,14 @@ public final class DataSetBuilderRow {
 		return get(columnName, DataSetBuilderRowValue::getUUID);
 	}
 
-	/**
-	 * Returns the value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 */
 	private <T> T get(String columnName, Function<DataSetBuilderRowValue, T> function) {
-		String normalizedColumnName = notNull(trimToNull(columnName), "Column name must not be empty");
-		DataSetBuilderRowValue rowValue = values.get(normalizedColumnName);
-		if (rowValue == null) {
-			return null;
-		}
+		DataSetBuilderRowValue rowValue = getRowValue(columnName);
+		return rowValue == null ? null : function.apply(rowValue);
+	}
 
-		return function.apply(rowValue);
+	private DataSetBuilderRowValue getRowValue(String columnName) {
+		String normalizedColumnName = notNull(trimToNull(columnName), "Column name must not be empty");
+		return values.get(normalizedColumnName);
 	}
 
 	/**

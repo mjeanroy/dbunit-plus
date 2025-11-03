@@ -39,6 +39,8 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -184,7 +186,9 @@ class DataSetBuilderItTest {
 						column("big_integer_value", object.bigIntegerValue),
 						column("big_decimal_value", object.bigDecimalValue),
 						column("uuid_value", object.uuidValue),
-						column("date_value", object.dateValue)
+						column("date_value", object.dateValue),
+						column("offset_date_time_value", object.offsetDateTimeValue),
+						column("local_date_time_value", object.localDateTimeValue)
 					)
 				)
 				.build();
@@ -211,5 +215,7 @@ class DataSetBuilderItTest {
 		BigDecimal bigDecimalValue = BigDecimal.valueOf(3.5D);
 		UUID uuidValue = UUID.fromString("a94a598c-f929-4e43-a696-ca369f215b12");
 		Date dateValue = new Date(1761557071915L);
+		OffsetDateTime offsetDateTimeValue = OffsetDateTime.now();
+		LocalDateTime localDateTimeValue = LocalDateTime.now();
 	}
 }

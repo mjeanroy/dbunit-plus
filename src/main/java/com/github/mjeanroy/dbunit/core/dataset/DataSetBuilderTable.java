@@ -132,7 +132,7 @@ public final class DataSetBuilderTable {
 		for (DataSetBuilderRow row : rows) {
 			table.addRow(
 				Arrays.stream(columns)
-					.map((column) -> row.get(column.getColumnName()))
+					.map((column) -> row.bindValue(column.getColumnName()))
 					.toArray(Object[]::new)
 			);
 		}

@@ -34,5 +34,7 @@ CREATE TABLE data_set_builder_it_test_table (
   big_integer_value INTEGER,
   big_decimal_value NUMERIC,
   uuid_value UUID,
-  date_value TIMESTAMP
+  date_value TIMESTAMP,
+  offset_date_time_value TIMESTAMP,
+  local_date_time_value TIMESTAMP
 );

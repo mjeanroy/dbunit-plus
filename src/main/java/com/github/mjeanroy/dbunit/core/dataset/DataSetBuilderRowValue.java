@@ -28,7 +28,13 @@ import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -50,8 +56,15 @@ public final class DataSetBuilderRowValue {
 	 */
 	private final Object value;
 
-	DataSetBuilderRowValue(String columnName, Object value) {
+	/**
+	 * A binder used to serialize input value to a value
+	 * supported by DBUnit {@link org.dbunit.dataset.Column}.
+	 */
+	private final Binder<?, ?> binder;
+
+	DataSetBuilderRowValue(String columnName, Object value, Binder<?, ?> binder) {
 		this.columnName = notNull(trimToNull(columnName), "Column name must not be empty");
+		this.binder = notNull(binder, "Binder must not be null");
 		this.value = value;
 	}
 
@@ -71,6 +84,16 @@ public final class DataSetBuilderRowValue {
 	 */
 	public Object getValue() {
 		return value;
+	}
+
+	/**
+	 * Get value to bind to DBUnit {@link org.dbunit.dataset.Column}.
+	 *
+	 * @return Value to bind to (may be {@code null}).
+	 */
+	@SuppressWarnings("unchecked")
+	Object bindValue() {
+		return value == null ? null : ((Binder<Object, Object>) binder).bindTo(value);
 	}
 
 	/**
@@ -190,13 +213,27 @@ public final class DataSetBuilderRowValue {
 	}
 
 	/**
-	 * Get {@link Date} value.
+	 * Get {@link OffsetDateTime} value.
 	 *
 	 * @return Value (may be {@code null}).
 	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
 	 */
 	public Date getDate() {
 		return getValueAs(Date.class);
+	}
+
+	public OffsetDateTime getOffsetDateTime() {
+		return getValueAs(OffsetDateTime.class);
+	}
+
+	/**
+	 * Get {@link LocalDateTime} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
+	 */
+	public LocalDateTime getLocalDateTime() {
+		return getValueAs(LocalDateTime.class);
 	}
 
 	/**
@@ -233,7 +270,9 @@ public final class DataSetBuilderRowValue {
 
 		if (o instanceof DataSetBuilderRowValue) {
 			DataSetBuilderRowValue that = (DataSetBuilderRowValue) o;
-			return Objects.equals(columnName, that.columnName) && Objects.equals(value, that.value);
+			return Objects.equals(columnName, that.columnName)
+				&& Objects.equals(value, that.value)
+				&& Objects.equals(binder, that.binder);
 		}
 
 		return false;
@@ -241,7 +280,7 @@ public final class DataSetBuilderRowValue {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(columnName, value);
+		return Objects.hash(columnName, value, binder);
 	}
 
 	@Override
@@ -249,6 +288,99 @@ public final class DataSetBuilderRowValue {
 		return ToStringBuilder.create(this)
 			.append("columnName", columnName)
 			.append("value", value)
+			.append("binder", binder.getClass().getName())
 			.build();
+	}
+
+	interface Binder<T, U> {
+		U bindTo(T input);
+	}
+
+	private static final class IdentityBinder implements Binder<Object, Object> {
+		@Override
+		public Object bindTo(Object input) {
+			return input;
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.create(this).build();
+		}
+	}
+
+	private static final class OffsetDateTimeBinder implements Binder<OffsetDateTime, Date> {
+		@Override
+		public Date bindTo(OffsetDateTime input) {
+			if (input == null) {
+				return null;
+			}
+
+			Instant instant = input.toInstant();
+			return Date.from(instant);
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.create(this).build();
+		}
+	}
+
+	private static final class LocalDateTimeBinder implements Binder<LocalDateTime, Date> {
+		@Override
+		public Date bindTo(LocalDateTime input) {
+			if (input == null) {
+				return null;
+			}
+
+			return Date.from(
+				input.atZone(ZoneId.systemDefault()).toInstant()
+			);
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.create(this).build();
+		}
+	}
+
+	private static final Binder<Object, Object> IDENTITY_BINDER = new IdentityBinder();
+	private static final Binder<OffsetDateTime, Date> OFFSET_DATE_TIME_BINDER = new OffsetDateTimeBinder();
+	private static final Binder<LocalDateTime, Date> LOCALE_DATE_TIME_BINDER = new LocalDateTimeBinder();
+
+	private static final Map<Class<?>, Binder<?, ?>> binders;
+	static {
+		binders = new HashMap<>();
+
+		// Default binders
+		binders.put(Short.class, IDENTITY_BINDER);
+		binders.put(Integer.class, IDENTITY_BINDER);
+		binders.put(Long.class, IDENTITY_BINDER);
+		binders.put(Float.class, IDENTITY_BINDER);
+		binders.put(Double.class, IDENTITY_BINDER);
+		binders.put(BigInteger.class, IDENTITY_BINDER);
+		binders.put(BigDecimal.class, IDENTITY_BINDER);
+		binders.put(Boolean.class, IDENTITY_BINDER);
+		binders.put(String.class, IDENTITY_BINDER);
+		binders.put(UUID.class, IDENTITY_BINDER);
+		binders.put(Date.class, IDENTITY_BINDER);
+
+		// Custom binders for types that are not supported natively
+		// by DBUnit.
+		binders.put(OffsetDateTime.class, OFFSET_DATE_TIME_BINDER);
+		binders.put(LocalDateTime.class, LOCALE_DATE_TIME_BINDER);
+	}
+
+	static Binder<?, ?> binder(Object value) {
+		if (value == null) {
+			return IDENTITY_BINDER;
+		}
+
+		if (binders.containsKey(value.getClass())) {
+			return binders.get(value.getClass());
+		}
+
+		throw new UnsupportedOperationException(
+			"Unsupported value type: " + value.getClass().getName()
+		);
 	}
 }
