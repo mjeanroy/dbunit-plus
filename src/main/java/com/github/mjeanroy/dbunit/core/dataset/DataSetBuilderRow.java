@@ -28,6 +28,7 @@ import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -233,10 +234,22 @@ public final class DataSetBuilderRow {
 	 * @param columnName Name of the column.
 	 * @return Column value, or {@code null} if the column does not exist or has a null value.
 	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link LocalDateTime}.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link ZonedDateTime}.
 	 */
 	public ZonedDateTime getZonedDateTime(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getZonedDateTime);
+	}
+
+	/**
+	 * Returns the {@link LocalDate} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link LocalDate}.
+	 */
+	public LocalDate getLocalDate(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	/**

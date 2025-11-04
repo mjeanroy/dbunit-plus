@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -71,6 +72,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -95,6 +97,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -119,6 +122,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -143,6 +147,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -167,6 +172,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -191,6 +197,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -215,6 +222,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -260,6 +268,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -284,6 +293,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -307,6 +317,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, Date.class, DataSetBuilderRowValue::getDate);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 		assertUnsupportedConversion(rowValue, UUID.class, DataSetBuilderRowValue::getUUID);
 	}
 
@@ -331,6 +342,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, Date.class, DataSetBuilderRowValue::getDate);
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 		assertUnsupportedConversion(rowValue, UUID.class, DataSetBuilderRowValue::getUUID);
 	}
 
@@ -355,6 +367,32 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, Date.class, DataSetBuilderRowValue::getDate);
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
+		assertUnsupportedConversion(rowValue, UUID.class, DataSetBuilderRowValue::getUUID);
+	}
+
+	@Test
+	void it_should_get_local_date_value() {
+		LocalDate value = LocalDate.now();
+		DataSetBuilderRowValue rowValue = rowValue("id", value);
+		assertThat(rowValue.getLocalDate()).isEqualTo(value);
+
+		// These conversions should be possible
+		assertThat(rowValue.getString()).isEqualTo(value.toString());
+
+		// These conversions should not possible.
+		assertUnsupportedConversion(rowValue, Number.class, DataSetBuilderRowValue::getShort);
+		assertUnsupportedConversion(rowValue, Number.class, DataSetBuilderRowValue::getInteger);
+		assertUnsupportedConversion(rowValue, Number.class, DataSetBuilderRowValue::getLong);
+		assertUnsupportedConversion(rowValue, Number.class, DataSetBuilderRowValue::getFloat);
+		assertUnsupportedConversion(rowValue, Date.class, DataSetBuilderRowValue::getDate);
+		assertUnsupportedConversion(rowValue, Number.class, DataSetBuilderRowValue::getBigInteger);
+		assertUnsupportedConversion(rowValue, Number.class, DataSetBuilderRowValue::getBigDecimal);
+		assertUnsupportedConversion(rowValue, Boolean.class, DataSetBuilderRowValue::getBoolean);
+		assertUnsupportedConversion(rowValue, Date.class, DataSetBuilderRowValue::getDate);
+		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
+		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
+		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
 		assertUnsupportedConversion(rowValue, UUID.class, DataSetBuilderRowValue::getUUID);
 	}
 
@@ -380,6 +418,7 @@ class DataSetBuilderRowValueTest {
 		assertUnsupportedConversion(rowValue, OffsetDateTime.class, DataSetBuilderRowValue::getOffsetDateTime);
 		assertUnsupportedConversion(rowValue, LocalDateTime.class, DataSetBuilderRowValue::getLocalDateTime);
 		assertUnsupportedConversion(rowValue, ZonedDateTime.class, DataSetBuilderRowValue::getZonedDateTime);
+		assertUnsupportedConversion(rowValue, LocalDate.class, DataSetBuilderRowValue::getLocalDate);
 	}
 
 	@Test
@@ -398,6 +437,7 @@ class DataSetBuilderRowValueTest {
 		assertThat(rowValue.getOffsetDateTime()).isNull();
 		assertThat(rowValue.getLocalDateTime()).isNull();
 		assertThat(rowValue.getZonedDateTime()).isNull();
+		assertThat(rowValue.getLocalDate()).isNull();
 	}
 
 	private static <T> void assertUnsupportedConversion(

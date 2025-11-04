@@ -39,6 +39,7 @@ import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -167,6 +168,7 @@ class DataSetBuilderItTest {
 				val.offsetDateTimeValue = rs.getTimestamp("offset_date_time_value").toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime();
 				val.localDateTimeValue = rs.getTimestamp("local_date_time_value").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 				val.zonedDateTimeValue = rs.getTimestamp("zoned_date_time_value").toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime().toZonedDateTime();
+				val.localDateValue = rs.getTimestamp("local_date_value").toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 				return val;
 			});
 
@@ -194,7 +196,8 @@ class DataSetBuilderItTest {
 						column("date_value", object.dateValue),
 						column("offset_date_time_value", object.offsetDateTimeValue),
 						column("local_date_time_value", object.localDateTimeValue),
-						column("zoned_date_time_value", object.zonedDateTimeValue)
+						column("zoned_date_time_value", object.zonedDateTimeValue),
+						column("local_date_value", object.localDateValue)
 					)
 				)
 				.build();
@@ -224,5 +227,6 @@ class DataSetBuilderItTest {
 		OffsetDateTime offsetDateTimeValue = OffsetDateTime.now();
 		LocalDateTime localDateTimeValue = LocalDateTime.now();
 		ZonedDateTime zonedDateTimeValue = ZonedDateTime.now();
+		LocalDate localDateValue = LocalDate.now();
 	}
 }

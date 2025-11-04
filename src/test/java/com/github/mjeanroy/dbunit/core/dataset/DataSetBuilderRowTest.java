@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -334,6 +335,19 @@ class DataSetBuilderRowTest {
 		);
 
 		assertThat(row.getZonedDateTime(columnName)).isEqualTo(value);
+	}
+
+	@Test
+	void it_should_get_column_local_date_value() {
+		LocalDate value = LocalDate.now();
+		String columnName = "id";
+		DataSetBuilderRow row = new DataSetBuilderRow(
+			singleton(
+				rowValue(columnName, value)
+			)
+		);
+
+		assertThat(row.getLocalDate(columnName)).isEqualTo(value);
 	}
 
 	@Test

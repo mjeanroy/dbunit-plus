@@ -37,5 +37,6 @@ CREATE TABLE data_set_builder_it_test_table (
   date_value TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   offset_date_time_value TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   local_date_time_value TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  zoned_date_time_value TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  zoned_date_time_value TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  local_date_value DATE
 );

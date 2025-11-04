@@ -29,6 +29,7 @@ import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -248,6 +249,16 @@ public final class DataSetBuilderRowValue {
 	}
 
 	/**
+	 * Get {@link LocalDate} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
+	 */
+	public LocalDate getLocalDate() {
+		return getValueAs(LocalDate.class);
+	}
+
+	/**
 	 * Get {@link UUID} value.
 	 *
 	 * @return Value (may be {@code null}).
@@ -372,10 +383,29 @@ public final class DataSetBuilderRowValue {
 		}
 	}
 
+	private static final class LocalDateBinder implements Binder<LocalDate, Date> {
+		@Override
+		public Date bindTo(LocalDate input) {
+			if (input == null) {
+				return null;
+			}
+
+			return Date.from(
+				input.atStartOfDay(ZoneId.systemDefault()).toInstant()
+			);
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.create(this).build();
+		}
+	}
+
 	private static final Binder<Object, Object> IDENTITY_BINDER = new IdentityBinder();
 	private static final Binder<OffsetDateTime, Date> OFFSET_DATE_TIME_BINDER = new OffsetDateTimeBinder();
 	private static final Binder<LocalDateTime, Date> LOCALE_DATE_TIME_BINDER = new LocalDateTimeBinder();
 	private static final Binder<ZonedDateTime, Date> ZONED_DATE_TIME_BINDER = new ZonedDateTimeBinder();
+	private static final Binder<LocalDate, Date> LOCALE_DATE_BINDER = new LocalDateBinder();
 
 	private static final Map<Class<?>, Binder<?, ?>> binders;
 	static {
@@ -399,6 +429,7 @@ public final class DataSetBuilderRowValue {
 		binders.put(OffsetDateTime.class, OFFSET_DATE_TIME_BINDER);
 		binders.put(LocalDateTime.class, LOCALE_DATE_TIME_BINDER);
 		binders.put(ZonedDateTime.class, ZONED_DATE_TIME_BINDER);
+		binders.put(LocalDate.class, LOCALE_DATE_BINDER);
 	}
 
 	static Binder<?, ?> binder(Object value) {
