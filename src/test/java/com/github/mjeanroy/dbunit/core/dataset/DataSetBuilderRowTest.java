@@ -29,6 +29,9 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -292,6 +295,45 @@ class DataSetBuilderRowTest {
 		);
 
 		assertThat(row.getDate(columnName)).isEqualTo(value);
+	}
+
+	@Test
+	void it_should_get_column_offset_date_time_value() {
+		OffsetDateTime value = OffsetDateTime.now();
+		String columnName = "id";
+		DataSetBuilderRow row = new DataSetBuilderRow(
+			singleton(
+				rowValue(columnName, value)
+			)
+		);
+
+		assertThat(row.getOffsetDateTime(columnName)).isEqualTo(value);
+	}
+
+	@Test
+	void it_should_get_column_local_date_time_value() {
+		LocalDateTime value = LocalDateTime.now();
+		String columnName = "id";
+		DataSetBuilderRow row = new DataSetBuilderRow(
+			singleton(
+				rowValue(columnName, value)
+			)
+		);
+
+		assertThat(row.getLocalDateTime(columnName)).isEqualTo(value);
+	}
+
+	@Test
+	void it_should_get_column_zoned_date_time_value() {
+		ZonedDateTime value = ZonedDateTime.now();
+		String columnName = "id";
+		DataSetBuilderRow row = new DataSetBuilderRow(
+			singleton(
+				rowValue(columnName, value)
+			)
+		);
+
+		assertThat(row.getZonedDateTime(columnName)).isEqualTo(value);
 	}
 
 	@Test

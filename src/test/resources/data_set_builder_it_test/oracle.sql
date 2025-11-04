@@ -35,5 +35,6 @@ CREATE TABLE data_set_builder_it_test_table (
   uuid_value VARCHAR2(36),
   date_value TIMESTAMP,
   offset_date_time_value TIMESTAMP,
-  local_date_time_value TIMESTAMP
+  local_date_time_value TIMESTAMP,
+  zoned_date_time_value TIMESTAMP
 )

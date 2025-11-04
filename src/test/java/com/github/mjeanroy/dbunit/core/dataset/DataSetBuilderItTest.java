@@ -41,6 +41,8 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -161,7 +163,10 @@ class DataSetBuilderItTest {
 				val.bigIntegerValue = BigInteger.valueOf(rs.getLong("big_integer_value"));
 				val.bigDecimalValue = rs.getBigDecimal("big_decimal_value");
 				val.uuidValue = UUID.fromString(rs.getString("uuid_value"));
-				val.dateValue = rs.getDate("date_value");
+				val.dateValue = rs.getTimestamp("date_value");
+				val.offsetDateTimeValue = rs.getTimestamp("offset_date_time_value").toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime();
+				val.localDateTimeValue = rs.getTimestamp("local_date_time_value").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+				val.zonedDateTimeValue = rs.getTimestamp("zoned_date_time_value").toInstant().atZone(ZoneId.systemDefault()).toOffsetDateTime().toZonedDateTime();
 				return val;
 			});
 
@@ -188,7 +193,8 @@ class DataSetBuilderItTest {
 						column("uuid_value", object.uuidValue),
 						column("date_value", object.dateValue),
 						column("offset_date_time_value", object.offsetDateTimeValue),
-						column("local_date_time_value", object.localDateTimeValue)
+						column("local_date_time_value", object.localDateTimeValue),
+						column("zoned_date_time_value", object.zonedDateTimeValue)
 					)
 				)
 				.build();
@@ -217,5 +223,6 @@ class DataSetBuilderItTest {
 		Date dateValue = new Date(1761557071915L);
 		OffsetDateTime offsetDateTimeValue = OffsetDateTime.now();
 		LocalDateTime localDateTimeValue = LocalDateTime.now();
+		ZonedDateTime zonedDateTimeValue = ZonedDateTime.now();
 	}
 }

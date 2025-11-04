@@ -32,6 +32,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -237,6 +238,16 @@ public final class DataSetBuilderRowValue {
 	}
 
 	/**
+	 * Get {@link ZonedDateTime} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
+	 */
+	public ZonedDateTime getZonedDateTime() {
+		return getValueAs(ZonedDateTime.class);
+	}
+
+	/**
 	 * Get {@link UUID} value.
 	 *
 	 * @return Value (may be {@code null}).
@@ -343,9 +354,28 @@ public final class DataSetBuilderRowValue {
 		}
 	}
 
+	private static final class ZonedDateTimeBinder implements Binder<ZonedDateTime, Date> {
+		@Override
+		public Date bindTo(ZonedDateTime input) {
+			if (input == null) {
+				return null;
+			}
+
+			return Date.from(
+				input.toInstant()
+			);
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.create(this).build();
+		}
+	}
+
 	private static final Binder<Object, Object> IDENTITY_BINDER = new IdentityBinder();
 	private static final Binder<OffsetDateTime, Date> OFFSET_DATE_TIME_BINDER = new OffsetDateTimeBinder();
 	private static final Binder<LocalDateTime, Date> LOCALE_DATE_TIME_BINDER = new LocalDateTimeBinder();
+	private static final Binder<ZonedDateTime, Date> ZONED_DATE_TIME_BINDER = new ZonedDateTimeBinder();
 
 	private static final Map<Class<?>, Binder<?, ?>> binders;
 	static {
@@ -368,6 +398,7 @@ public final class DataSetBuilderRowValue {
 		// by DBUnit.
 		binders.put(OffsetDateTime.class, OFFSET_DATE_TIME_BINDER);
 		binders.put(LocalDateTime.class, LOCALE_DATE_TIME_BINDER);
+		binders.put(ZonedDateTime.class, ZONED_DATE_TIME_BINDER);
 	}
 
 	static Binder<?, ?> binder(Object value) {

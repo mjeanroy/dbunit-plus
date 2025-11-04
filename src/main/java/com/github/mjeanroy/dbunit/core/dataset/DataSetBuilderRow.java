@@ -30,6 +30,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -224,6 +225,18 @@ public final class DataSetBuilderRow {
 	 */
 	public LocalDateTime getLocalDateTime(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getLocalDateTime);
+	}
+
+	/**
+	 * Returns the {@link ZonedDateTime} value associated with the specified column.
+	 *
+	 * @param columnName Name of the column.
+	 * @return Column value, or {@code null} if the column does not exist or has a null value.
+	 * @throws IllegalArgumentException if {@code columnName} is blank.
+	 * @throws UnsupportedOperationException If value cannot casted to a {@link LocalDateTime}.
+	 */
+	public ZonedDateTime getZonedDateTime(String columnName) {
+		return get(columnName, DataSetBuilderRowValue::getZonedDateTime);
 	}
 
 	/**

@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -394,6 +395,18 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, LocalDateTime value) {
+		return new DataSetBuilderRowValue(columnName, value, binder(value));
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its {@link ZonedDateTime} value.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to assign (may be {@code null}).
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue column(String columnName, ZonedDateTime value) {
 		return new DataSetBuilderRowValue(columnName, value, binder(value));
 	}
 
