@@ -37,7 +37,7 @@ import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGR
 
 class AutoDetectForeignKeyManagerTest {
 
-	static abstract class BaseAutoAutoDetectForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
+	static abstract class AbstractAutoAutoDetectForeignKeyManagerTest extends AbstractForeignKeyManagerTest {
 		@Override
 		final JdbcForeignKeyManager foreignKeyManager() {
 			return new AutoDetectForeignKeyManager();
@@ -49,7 +49,7 @@ class AutoDetectForeignKeyManagerTest {
 		type = EmbeddedDatabaseTest.Type.H2,
 		resolveConnection = true
 	)
-	class AutoDetectH2ForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class H2Test extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
@@ -57,27 +57,27 @@ class AutoDetectForeignKeyManagerTest {
 		type = EmbeddedDatabaseTest.Type.HSQL,
 		resolveConnection = true
 	)
-	class AutoDetectHsqldbForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class HsqldbTest extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
 	@TestContainersTest(image = POSTGRES_13, resolveConnection = true)
-	class AutoDetectPostgresForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class Postgres13Test extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
 	@TestContainersTest(image = MYSQL_57, resolveConnection = true)
-	class AutoDetectMySQLForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class MySQL57Test extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
 	@TestContainersTest(image = MARIADB_10, resolveConnection = true)
-	class AutoDetectMariaDBForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class MariaDB10Test extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
 	@TestContainersTest(image = MSSQL_2019, resolveConnection = true)
-	class AutoDetectMsSQLForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class MsSQL2019Test extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 
 	@Nested
@@ -87,6 +87,6 @@ class AutoDetectForeignKeyManagerTest {
 		disabledReason = "Oracle Container does not work on Apple M1"
 	)
 	@TestContainersTest(image = ORACLE_21, resolveConnection = true)
-	class AutoDetectOracleForeignKeyManagerTest extends BaseAutoAutoDetectForeignKeyManagerTest {
+	class Oracle21Test extends AbstractAutoAutoDetectForeignKeyManagerTest {
 	}
 }

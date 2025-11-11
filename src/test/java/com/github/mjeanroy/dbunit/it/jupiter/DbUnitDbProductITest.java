@@ -89,7 +89,7 @@ class DbUnitDbProductITest {
 	@DbUnitHsqldbConnection
 	@DbUnitConfig(fkManagers = HsqldbForeignKeyManager.class)
 	@Nested
-	class HsqlDB extends AbstractDbUnitDbProductITest {
+	class HsqlDBTest extends AbstractDbUnitDbProductITest {
 	}
 
 	@EmbeddedDatabaseTest(type = Type.H2)
@@ -98,70 +98,70 @@ class DbUnitDbProductITest {
 	@DbUnitConfig(schema = "public", fkManagers = H2ForeignKeyManager.class)
 	@DbUnitH2Connection
 	@Nested
-	class H2 extends AbstractDbUnitDbProductITest {
+	class H2Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = MYSQL_57)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = MySQLForeignKeyManager.class)
 	@Nested
-	class MySQL57 extends AbstractDbUnitDbProductITest {
+	class MySQL57Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = MYSQL_8)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = MySQLForeignKeyManager.class)
 	@Nested
-	class MySQL8 extends AbstractDbUnitDbProductITest {
+	class MySQL8Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = POSTGRES_12)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
-	class Postgres12 extends AbstractDbUnitDbProductITest {
+	class Postgres12Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = POSTGRES_13)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
-	class Postgres13 extends AbstractDbUnitDbProductITest {
+	class Postgres13Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = POSTGRES_14)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
-	class Postgres14 extends AbstractDbUnitDbProductITest {
+	class Postgres14Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = POSTGRES_15)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = PostgresForeignKeyManager.class)
 	@Nested
-	class Postgres15 extends AbstractDbUnitDbProductITest {
+	class Postgres15Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = MARIADB_10)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = MariaDBForeignKeyManager.class)
 	@Nested
-	class MariaDB10 extends AbstractDbUnitDbProductITest {
+	class MariaDB10Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = MSSQL_2019)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
 	@Nested
-	class MsSQL2019 extends AbstractDbUnitDbProductITest {
+	class MsSQL2019Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@TestContainersTest(image = MSSQL_2022)
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = MsSQLForeignKeyManager.class)
 	@Nested
-	class MsSQL2022 extends AbstractDbUnitDbProductITest {
+	class MsSQL2022Test extends AbstractDbUnitDbProductITest {
 	}
 
 	@DisabledIfSystemProperty(
@@ -173,6 +173,6 @@ class DbUnitDbProductITest {
 	@DbUnitTestContainersTest
 	@DbUnitConfig(fkManagers = OracleForeignKeyManager.class)
 	@Nested
-	class Oracle extends AbstractDbUnitDbProductITest {
+	class OracleTest extends AbstractDbUnitDbProductITest {
 	}
 }
