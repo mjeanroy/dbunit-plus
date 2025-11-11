@@ -126,7 +126,7 @@
     <liquibase-slf4j.version>5.1.0</liquibase-slf4j.version>
     <testcontainers.version>1.21.3</testcontainers.version>
     <h2.version>2.2.224</h2.version>
-    <byte-buddy.version>1.17.8</byte-buddy.version>
+    <byte-buddy.version>1.18.0</byte-buddy.version>
 
     <postgresql.version>42.7.8</postgresql.version>
     <mysql.version>9.5.0</mysql.version>
