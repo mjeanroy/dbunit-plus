@@ -64,15 +64,15 @@ public final class JsonParserFactory {
 	 */
 	public static JsonParser createDefault() {
 		if (JACKSON2_AVAILABLE) {
-			return new Jackson2Parser();
+			return Jackson2Parser.getInstance();
 		}
 
 		if (GSON_AVAILABLE) {
-			return new GsonParser();
+			return GsonParser.getInstance();
 		}
 
 		if (JACKSON1_AVAILABLE) {
-			return new Jackson1Parser();
+			return Jackson1Parser.getInstance();
 		}
 
 		throw new UnsupportedOperationException("Cannot create JSON parser, please add jackson or gson to your classpath");

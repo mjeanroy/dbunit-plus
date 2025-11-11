@@ -29,7 +29,6 @@ import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -48,25 +47,20 @@ class Jackson1ParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson1Parser parser = new Jackson1Parser(mapper);
+		Jackson1Parser parser = Jackson1Parser.getInstance();
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
-		assertThat(tables)
-			.hasSize(1)
-			.containsKey("users");
+		assertThat(tables).hasSize(1).containsKey("users");
 
 		List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
 		Map<String, Object> row1 = table.get(0);
-		assertThat(row1)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 1),
-				entry("name", "John Doe")
-			);
+		assertThat(row1).hasSize(2).containsExactly(
+			entry("id", 1),
+			entry("name", "John Doe")
+		);
 
 		Map<String, Object> row2 = table.get(1);
 		assertThat(row2)
@@ -82,12 +76,9 @@ class Jackson1ParserTest {
 		String malformedJson = "{test: test}";
 		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder()
-			.withReader(stream)
-			.build();
+		Resource resource = new ResourceMockBuilder().withReader(stream).build();
 
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson1Parser parser = new Jackson1Parser(mapper);
+		Jackson1Parser parser = Jackson1Parser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
@@ -103,8 +94,7 @@ class Jackson1ParserTest {
 			.withReader(stream)
 			.build();
 
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson1Parser parser = new Jackson1Parser(mapper);
+		Jackson1Parser parser = Jackson1Parser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
@@ -116,13 +106,9 @@ class Jackson1ParserTest {
 		String malformedJson = "";
 		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
+		Resource resource = new ResourceMockBuilder().withReader(stream).build();
 
-		Resource resource = new ResourceMockBuilder()
-			.withReader(stream)
-			.build();
-
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson1Parser parser = new Jackson1Parser(mapper);
+		Jackson1Parser parser = Jackson1Parser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)

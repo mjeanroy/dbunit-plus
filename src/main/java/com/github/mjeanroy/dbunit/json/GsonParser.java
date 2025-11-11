@@ -24,44 +24,30 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import com.google.gson.Gson;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-
-import com.google.gson.Gson;
 
 /**
  * Json Parser using Google {@link Gson} as internal implementation.
  */
 class GsonParser extends AbstractJsonParser {
 
-	/**
-	 * Internal parser.
-	 */
-	private final Gson gson;
+	private static final Gson GSON = new Gson();
+	private static final GsonParser INSTANCE = new GsonParser();
 
-	/**
-	 * Create parser using default Gson mapper.
-	 */
-	GsonParser() {
-		this(new Gson());
+	static GsonParser getInstance() {
+		return INSTANCE;
 	}
 
-	/**
-	 * Create parser using specific Gson mapper.
-	 *
-	 * @param gson Gson Mapper.
-	 * @throws NullPointerException If {@code gson} is {@code null}.
-	 */
-	GsonParser(Gson gson) {
-		this.gson = notNull(gson, "Gson Parser should not be null");
+	private GsonParser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) {
-		return (Map<String, List<Map<String, Object>>>) gson.fromJson(reader, Map.class);
+		return (Map<String, List<Map<String, Object>>>) GSON.fromJson(reader, Map.class);
 	}
 }

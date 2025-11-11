@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.json;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -40,32 +39,25 @@ class GsonParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		Gson gson = new Gson();
-		GsonParser parser = new GsonParser(gson);
+		GsonParser parser = GsonParser.getInstance();
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
-		assertThat(tables)
-			.hasSize(1)
-			.containsKey("users");
+		assertThat(tables).hasSize(1).containsKey("users");
 
 		List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
 		Map<String, Object> row1 = table.get(0);
-		assertThat(row1)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 1D),
-				entry("name", "John Doe")
-			);
+		assertThat(row1).hasSize(2).containsExactly(
+			entry("id", 1D),
+			entry("name", "John Doe")
+		);
 
 		Map<String, Object> row2 = table.get(1);
-		assertThat(row2)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 2D),
-				entry("name", "Jane Doe")
-			);
+		assertThat(row2).hasSize(2).containsExactly(
+			entry("id", 2D),
+			entry("name", "Jane Doe")
+		);
 	}
 }

@@ -24,44 +24,30 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Json Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
  */
 class Jackson2Parser extends AbstractJsonParser {
 
-	/**
-	 * Internal Jackson2 Mapper.
-	 */
-	private final ObjectMapper mapper;
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final Jackson2Parser INSTANCE = new Jackson2Parser();
 
-	/**
-	 * Create parser with default object mapper.
-	 */
-	Jackson2Parser() {
-		this(new ObjectMapper());
+	static Jackson2Parser getInstance() {
+		return INSTANCE;
 	}
 
-	/**
-	 * Create parser with Jackson2 mapper.
-	 *
-	 * @param mapper Mapper.
-	 * @throws NullPointerException If {@code mapper} is {@code null}.
-	 */
-	Jackson2Parser(ObjectMapper mapper) {
-		this.mapper = notNull(mapper, "Jackson2 Object Mapper should not be null");
+	private Jackson2Parser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
-		return (Map<String, List<Map<String, Object>>>) mapper.readValue(reader, Map.class);
+		return (Map<String, List<Map<String, Object>>>) OBJECT_MAPPER.readValue(reader, Map.class);
 	}
 }

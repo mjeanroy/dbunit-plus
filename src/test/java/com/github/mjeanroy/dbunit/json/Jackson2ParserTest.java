@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.json;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
@@ -48,33 +47,26 @@ class Jackson2ParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson2Parser parser = new Jackson2Parser(mapper);
+		Jackson2Parser parser = Jackson2Parser.getInstance();
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
-		assertThat(tables)
-			.hasSize(1)
-			.containsKey("users");
+		assertThat(tables).hasSize(1).containsKey("users");
 
 		List<Map<String, Object>> table = tables.get("users");
 		assertThat(table).hasSize(2);
 
 		Map<String, Object> row1 = table.get(0);
-		assertThat(row1)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 1),
-				entry("name", "John Doe")
-			);
+		assertThat(row1).hasSize(2).containsExactly(
+			entry("id", 1),
+			entry("name", "John Doe")
+		);
 
 		Map<String, Object> row2 = table.get(1);
-		assertThat(row2)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 2),
-				entry("name", "Jane Doe")
-			);
+		assertThat(row2).hasSize(2).containsExactly(
+			entry("id", 2),
+			entry("name", "Jane Doe")
+		);
 	}
 
 	@Test
@@ -82,12 +74,9 @@ class Jackson2ParserTest {
 		String malformedJson = "{test: test}";
 		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder()
-			.withReader(stream)
-			.build();
+		Resource resource = new ResourceMockBuilder().withReader(stream).build();
 
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson2Parser parser = new Jackson2Parser(mapper);
+		Jackson2Parser parser = Jackson2Parser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
@@ -99,12 +88,9 @@ class Jackson2ParserTest {
 		String json = "[\"test\"]";
 		byte[] bytes = json.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder()
-			.withReader(stream)
-			.build();
+		Resource resource = new ResourceMockBuilder().withReader(stream).build();
 
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson2Parser parser = new Jackson2Parser(mapper);
+		Jackson2Parser parser = Jackson2Parser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
@@ -116,13 +102,9 @@ class Jackson2ParserTest {
 		String json = "";
 		byte[] bytes = json.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
+		Resource resource = new ResourceMockBuilder().withReader(stream).build();
 
-		Resource resource = new ResourceMockBuilder()
-			.withReader(stream)
-			.build();
-
-		ObjectMapper mapper = new ObjectMapper();
-		Jackson2Parser parser = new Jackson2Parser(mapper);
+		Jackson2Parser parser = Jackson2Parser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(JsonException.class)
