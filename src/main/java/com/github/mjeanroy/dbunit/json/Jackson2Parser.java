@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Reader;
@@ -37,6 +38,10 @@ class Jackson2Parser extends AbstractJsonParser {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 	private static final Jackson2Parser INSTANCE = new Jackson2Parser();
+
+	static {
+		OBJECT_MAPPER.enable(DeserializationFeature.USE_LONG_FOR_INTS);
+	}
 
 	static Jackson2Parser getInstance() {
 		return INSTANCE;

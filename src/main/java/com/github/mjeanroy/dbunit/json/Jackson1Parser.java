@@ -24,9 +24,16 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import org.codehaus.jackson.JsonParser;
+import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.util.JsonParserDelegate;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +42,10 @@ import java.util.Map;
  */
 class Jackson1Parser extends AbstractJsonParser {
 
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(
+		new CustomJsonFactory()
+	);
+
 	private static final Jackson1Parser INSTANCE = new Jackson1Parser();
 
 	static Jackson1Parser getInstance() {
@@ -49,5 +59,76 @@ class Jackson1Parser extends AbstractJsonParser {
 	@Override
 	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
 		return (Map<String, List<Map<String, Object>>>) OBJECT_MAPPER.readValue(reader, Map.class);
+	}
+
+	private static final class CustomJsonFactory extends MappingJsonFactory {
+		private CustomJsonFactory() {
+		}
+
+		@Override
+		public JsonParser createJsonParser(File f) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(f)
+			);
+		}
+
+		@Override
+		public JsonParser createJsonParser(URL url) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(url)
+			);
+		}
+
+		@Override
+		public JsonParser createJsonParser(InputStream in) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(in)
+			);
+		}
+
+		@Override
+		public JsonParser createJsonParser(Reader r) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(r)
+			);
+		}
+
+		@Override
+		public JsonParser createJsonParser(byte[] data) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(data)
+			);
+		}
+
+		@Override
+		public JsonParser createJsonParser(byte[] data, int offset, int len) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(data, offset, len)
+			);
+		}
+
+		@Override
+		public JsonParser createJsonParser(String content) throws IOException {
+			return new CustomJsonParser(
+				super.createJsonParser(content)
+			);
+		}
+	}
+
+	private static final class CustomJsonParser extends JsonParserDelegate {
+		private CustomJsonParser(org.codehaus.jackson.JsonParser d) {
+			super(d);
+		}
+
+		@Override
+		public Number getNumberValue() throws IOException {
+			Number n = super.getNumberValue();
+
+			if (n instanceof Integer || n instanceof Short) {
+				return n.longValue();
+			}
+
+			return n;
+		}
 	}
 }

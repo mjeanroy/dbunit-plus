@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.json;
 
 import com.google.gson.Gson;
+import com.google.gson.ToNumberPolicy;
 
 import java.io.Reader;
 import java.util.List;
@@ -35,7 +36,11 @@ import java.util.Map;
  */
 class GsonParser extends AbstractJsonParser {
 
-	private static final Gson GSON = new Gson();
+	private static final Gson GSON = new Gson().newBuilder()
+		.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+		.setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+		.create();
+
 	private static final GsonParser INSTANCE = new GsonParser();
 
 	static GsonParser getInstance() {
