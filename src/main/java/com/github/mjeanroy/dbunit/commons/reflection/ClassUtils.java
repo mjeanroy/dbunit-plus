@@ -66,6 +66,28 @@ public final class ClassUtils {
 	}
 
 	/**
+	 * Check if given classes are available on classpath.
+	 *
+	 * @param c1 First Class FQN.
+	 * @param c2 Second Class FQN.
+	 * @param others Other Class FQN.
+	 * @return `true` if <strong>all</strong> classes are available, `false` otherwise.
+	 */
+	public static boolean isPresent(String c1, String c2, String... others) {
+		if (!isPresent(c1) || !isPresent(c2)) {
+			return false;
+		}
+
+		for (String other : others) {
+			if (!isPresent(other)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Instantiate class using full qualified class name.
 	 *
 	 * @param rawClass Fully qualified class name.

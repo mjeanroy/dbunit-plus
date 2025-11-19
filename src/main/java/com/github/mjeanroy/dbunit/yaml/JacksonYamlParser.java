@@ -24,46 +24,34 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 /**
  * YAML Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
  */
-public class JacksonYamlParser extends AbstractYamlParser implements YamlParser {
+class JacksonYamlParser extends AbstractYamlParser implements YamlParser {
 
-	/**
-	 * Internal Jackson2 Mapper.
-	 */
-	private final ObjectMapper mapper;
+	private static final ObjectMapper MAPPER = new ObjectMapper(
+		new YAMLFactory()
+	);
 
-	/**
-	 * Create parser with default YAML Factory.
-	 */
-	JacksonYamlParser() {
-		this(new YAMLFactory());
+	private static final JacksonYamlParser INSTANCE = new JacksonYamlParser();
+
+	static JacksonYamlParser getInstance() {
+		return INSTANCE;
 	}
 
-	/**
-	 * Create parser with Jackson2 mapper.
-	 *
-	 * @param yamlFactory The YAML Factory that will be used to create Jackson Object Mapper.
-	 * @throws NullPointerException If {@code mapper} is {@code null}.
-	 */
-	private JacksonYamlParser(YAMLFactory yamlFactory) {
-		notNull(yamlFactory, "YAML Factory must not be null");
-		this.mapper = new ObjectMapper(yamlFactory);
+	private JacksonYamlParser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
-		return (Map<String, List<Map<String, Object>>>) mapper.readValue(reader, Map.class);
+		return (Map<String, List<Map<String, Object>>>) MAPPER.readValue(reader, Map.class);
 	}
 }

@@ -46,7 +46,7 @@ class JacksonYamlParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		JacksonYamlParser parser = new JacksonYamlParser();
+		JacksonYamlParser parser = JacksonYamlParser.getInstance();
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
@@ -78,7 +78,7 @@ class JacksonYamlParserTest {
 		byte[] bytes = malformedYaml.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder().withReader(stream).build();
-		JacksonYamlParser parser = new JacksonYamlParser();
+		JacksonYamlParser parser = JacksonYamlParser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(YamlException.class)
@@ -91,7 +91,7 @@ class JacksonYamlParserTest {
 		byte[] bytes = yaml.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder().withReader(stream).build();
-		JacksonYamlParser parser = new JacksonYamlParser();
+		JacksonYamlParser parser = JacksonYamlParser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(YamlException.class)

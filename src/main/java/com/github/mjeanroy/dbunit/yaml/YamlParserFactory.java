@@ -31,15 +31,14 @@ import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
  */
 public final class YamlParserFactory {
 
-	/**
-	 * Determines whether JACKSON 2 is available in the classpath.
-	 */
-	private static final boolean JACKSON_YAML_AVAILABLE = ClassUtils.isPresent("com.fasterxml.jackson.dataformat.yaml.YAMLFactory");
+	private static final boolean JACKSON_YAML_AVAILABLE = ClassUtils.isPresent(
+		"com.fasterxml.jackson.databind.ObjectMapper",
+		"com.fasterxml.jackson.dataformat.yaml.YAMLFactory"
+	);
 
-	/**
-	 * Determines whether GSON is available in the classpath.
-	 */
-	private static final boolean SNAKE_YAML_AVAILABLE = ClassUtils.isPresent("org.yaml.snakeyaml.Yaml");
+	private static final boolean SNAKE_YAML_AVAILABLE = ClassUtils.isPresent(
+		"org.yaml.snakeyaml.Yaml"
+	);
 
 	// Ensure non instantiation.
 	private YamlParserFactory() {
@@ -47,6 +46,7 @@ public final class YamlParserFactory {
 
 	/**
 	 * Create default parser.
+	 *
 	 * Implementation will be selected using classpath detection:
 	 * <ul>
 	 *   <li>If Jackson2 is available on classpath, then it is selected.</li>
@@ -59,11 +59,11 @@ public final class YamlParserFactory {
 	 */
 	public static YamlParser createDefault() {
 		if (JACKSON_YAML_AVAILABLE) {
-			return new JacksonYamlParser();
+			return JacksonYamlParser.getInstance();
 		}
 
 		if (SNAKE_YAML_AVAILABLE) {
-			return new SnakeYamlParser();
+			return SnakeYamlParser.getInstance();
 		}
 
 		throw new UnsupportedOperationException(

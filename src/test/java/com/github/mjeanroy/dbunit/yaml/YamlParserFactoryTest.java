@@ -24,9 +24,11 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
+import com.github.fridujo.junit.extension.classpath.ModifiedClasspath;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class YamlParserFactoryTest {
 
@@ -34,5 +36,38 @@ class YamlParserFactoryTest {
 	void it_should_create_jackson_yaml_parser_by_default() {
 		YamlParser parser = YamlParserFactory.createDefault();
 		assertThat(parser).isExactlyInstanceOf(JacksonYamlParser.class);
+	}
+
+	@Test
+	@ModifiedClasspath(excludeJars = {
+		"com.fasterxml.jackson.core:jackson-databind",
+		"com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+	})
+	void it_should_create_snake_yaml_parser_if_jackson_is_not_in_classpath() {
+		YamlParser parser = YamlParserFactory.createDefault();
+		assertThat(parser).isExactlyInstanceOf(SnakeYamlParser.class);
+	}
+
+	@Test
+	@ModifiedClasspath(excludeJars = {
+		"com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+	})
+	void it_should_create_snake_yaml_parser_if_jackson_is_in_classpath_without_jackson_yaml() {
+		YamlParser parser = YamlParserFactory.createDefault();
+		assertThat(parser).isExactlyInstanceOf(SnakeYamlParser.class);
+	}
+
+	@Test
+	@ModifiedClasspath(excludeJars = {
+		"com.fasterxml.jackson.core:jackson-databind",
+		"com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
+		"org.yaml:snakeyaml",
+	})
+	void it_should_fail_without_valid_implementation() {
+		assertThatThrownBy(YamlParserFactory::createDefault)
+			.isInstanceOf(UnsupportedOperationException.class)
+			.hasMessage(
+				"Cannot create YAML parser, please add jackson (com.fasterxml.jackson.dataformat.jackson-dataformat-yaml) or SnakeYAML (org.yaml.snakeyaml) to your classpath"
+			);
 	}
 }

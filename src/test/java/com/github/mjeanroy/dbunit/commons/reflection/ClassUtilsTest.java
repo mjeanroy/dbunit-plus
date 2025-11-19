@@ -45,6 +45,17 @@ class ClassUtilsTest {
 	}
 
 	@Test
+	void it_should_check_if_classes_are_available() {
+		String c1 = "com.github.mjeanroy.dbunit.commons.reflection.ClassUtilsTest";
+		String c2 = "org.junit.jupiter.api.extension.BeforeAllCallback";
+		String c3 = "org.junit.jupiter.api.extension.AfterAllCallback";
+		String c4 =  "com.foo.Bar";
+		assertThat(ClassUtils.isPresent(c1, c2)).isTrue();
+		assertThat(ClassUtils.isPresent(c1, c2, c3)).isTrue();
+		assertThat(ClassUtils.isPresent(c1, c2, c3, c4)).isFalse();
+	}
+
+	@Test
 	void it_should_instantiate_class() {
 		Klass1 o = ClassUtils.instantiate(Klass1.class);
 		assertThat(o).isNotNull();

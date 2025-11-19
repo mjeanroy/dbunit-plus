@@ -24,44 +24,29 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
 
-import org.yaml.snakeyaml.Yaml;
-
 /**
  * YAML Parser using SnakeYAML as internal implementation.
  */
-public class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
+class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
 
-	/**
-	 * Internal parser.
-	 */
-	private final Yaml yaml;
+	private static final Yaml YAML = new Yaml();
+	private static final SnakeYamlParser INSTANCE = new SnakeYamlParser();
 
-	/**
-	 * Create parser with default YAML Factory.
-	 */
-	SnakeYamlParser() {
-		this(new Yaml());
+	static SnakeYamlParser getInstance() {
+		return INSTANCE;
 	}
 
-	/**
-	 * Create parser with SnakeYAML parser.
-	 *
-	 * @param yaml The internal yaml parser
-	 * @throws NullPointerException If {@code yaml} is {@code null}.
-	 */
-	private SnakeYamlParser(Yaml yaml) {
-		this.yaml = notNull(yaml, "YAML Parser must not be null");
+	private SnakeYamlParser() {
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) {
-		return (Map<String, List<Map<String, Object>>>) yaml.load(reader);
+		return YAML.load(reader);
 	}
 }

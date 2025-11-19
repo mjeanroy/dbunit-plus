@@ -45,7 +45,7 @@ class SnakeYamlParserTest {
 
 	@Test
 	void it_should_parse_file() {
-		SnakeYamlParser parser = new SnakeYamlParser();
+		SnakeYamlParser parser = SnakeYamlParser.getInstance();
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
 		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
 
@@ -77,7 +77,7 @@ class SnakeYamlParserTest {
 		byte[] bytes = malformedYaml.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
 		Resource resource = new ResourceMockBuilder().withReader(stream).build();
-		SnakeYamlParser parser = new SnakeYamlParser();
+		SnakeYamlParser parser = SnakeYamlParser.getInstance();
 
 		assertThatThrownBy(() -> parser.parse(resource))
 			.isExactlyInstanceOf(YamlException.class)
