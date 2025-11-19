@@ -106,6 +106,7 @@
     <junit.version>4.13.2</junit.version>
     <jupiter.version>5.13.4</jupiter.version>
     <junit-platform-launcher.version>1.13.4</junit-platform-launcher.version>
+    <classpath-junit-extension.version>1.0.0</classpath-junit-extension.version>
     <dbunit.version>3.0.0</dbunit.version>
     <jackson1.version>1.9.13</jackson1.version>
     <jackson.version>2.20.1</jackson.version>
@@ -360,6 +361,12 @@
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-launcher</artifactId>
       <version>${junit-platform-launcher.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.fridujo</groupId>
+      <artifactId>classpath-junit-extension</artifactId>
+      <version>1.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -24,15 +24,42 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import com.github.fridujo.junit.extension.classpath.ModifiedClasspath;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JsonParserFactoryTest {
 
 	@Test
-	void it_should_create_jackson2_parser_by_default() {
+	@ModifiedClasspath(excludeJars = {
+		"com.fasterxml.jackson.core:jackson-databind",
+	})
+	void it_should_create_gson_parser_if_jackson2_is_not_in_classpath() {
 		JsonParser parser = JsonParserFactory.createDefault();
-		assertThat(parser).isExactlyInstanceOf(Jackson2Parser.class);
+		assertThat(parser).isExactlyInstanceOf(GsonParser.class);
+	}
+
+	@Test
+	@ModifiedClasspath(excludeJars = {
+		"com.fasterxml.jackson.core:jackson-databind",
+		"com.google.code.gson:gson",
+	})
+	void it_should_create_jackson1_parser_if_jackson2_gson_are_not_in_classpath() {
+		JsonParser parser = JsonParserFactory.createDefault();
+		assertThat(parser).isExactlyInstanceOf(Jackson1Parser.class);
+	}
+
+	@Test
+	@ModifiedClasspath(excludeJars = {
+		"com.fasterxml.jackson.core:jackson-databind",
+		"com.google.code.gson:gson",
+		"org.codehaus.jackson:jackson-mapper-asl",
+	})
+	void it_should_fail_without_json_implementation() {
+		assertThatThrownBy(JsonParserFactory::createDefault)
+			.isInstanceOf(UnsupportedOperationException.class)
+			.hasMessage("Cannot create JSON parser, please add jackson or gson to your classpath");
 	}
 }

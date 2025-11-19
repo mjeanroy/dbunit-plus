@@ -31,20 +31,17 @@ import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
  */
 public final class JsonParserFactory {
 
-	/**
-	 * Determines whether JACKSON 2 is available in the classpath.
-	 */
-	private static final boolean JACKSON2_AVAILABLE = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper");
+	private static final boolean JACKSON2_AVAILABLE = ClassUtils.isPresent(
+		"com.fasterxml.jackson.databind.ObjectMapper"
+	);
 
-	/**
-	 * Determines whether GSON is available in the classpath.
-	 */
-	private static final boolean GSON_AVAILABLE = ClassUtils.isPresent("com.google.gson.Gson");
+	private static final boolean GSON_AVAILABLE = ClassUtils.isPresent(
+		"com.google.gson.Gson"
+	);
 
-	/**
-	 * Determines whether JACKSON 1 is available in the classpath.
-	 */
-	private static final boolean JACKSON1_AVAILABLE = ClassUtils.isPresent("org.codehaus.jackson.map.ObjectMapper");
+	private static final boolean JACKSON1_AVAILABLE = ClassUtils.isPresent(
+		"org.codehaus.jackson.map.ObjectMapper"
+	);
 
 	// Ensure non instantiation.
 	private JsonParserFactory() {
@@ -52,6 +49,7 @@ public final class JsonParserFactory {
 
 	/**
 	 * Create default parser.
+	 *
 	 * Implementation will be selected using classpath detection:
 	 * <ul>
 	 *   <li>If Jackson2 is available on classpath, then it is selected.</li>
@@ -75,6 +73,8 @@ public final class JsonParserFactory {
 			return Jackson1Parser.getInstance();
 		}
 
-		throw new UnsupportedOperationException("Cannot create JSON parser, please add jackson or gson to your classpath");
+		throw new UnsupportedOperationException(
+			"Cannot create JSON parser, please add jackson or gson to your classpath"
+		);
 	}
 }
