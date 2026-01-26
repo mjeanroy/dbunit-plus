@@ -119,7 +119,7 @@
     <guava.version>33.5.0-jre</guava.version>
 
     <!-- Test Dependencies -->
-    <assertj.version>3.27.6</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <mockito.version>4.11.0</mockito.version>
     <logback.version>1.3.16</logback.version>
     <wiremock.version>2.27.2</wiremock.version>
