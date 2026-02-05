@@ -133,7 +133,7 @@
     <mysql.version>9.6.0</mysql.version>
     <mariadb.version>3.5.7</mariadb.version>
     <mssql.version>13.3.0.jre8-preview</mssql.version>
-    <ojdbc8.version>23.26.0.0.0</ojdbc8.version>
+    <ojdbc8.version>23.26.1.0.0</ojdbc8.version>
   </properties>
 
   <profiles>
