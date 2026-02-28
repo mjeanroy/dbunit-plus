@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
+package com.github.mjeanroy.dbunit.yaml;
 
-import com.github.mjeanroy.dbunit.exception.JsonException;
+import com.github.mjeanroy.dbunit.exception.YamlException;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -38,52 +38,51 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.openTestResource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.data.MapEntry.entry;
 
-abstract class AbstractJsonParserTest {
+abstract class AbstractYamlParserTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
 	void it_should_parse_file() {
-		Reader reader = openTestResource(USERS_JSON);
-		Map<String, Object> tables = jsonParser().readObject(reader);
+		Reader reader = openTestResource(USERS_YAML);
+		Map<String, Object> tables = yamlParser().readObject(reader);
 
 		assertThat(tables).hasSize(1).containsKey("users");
 		assertThat(tables.get("users")).isInstanceOf(Collection.class);
 
 		Collection<Object> table = (Collection<Object>) tables.get("users");
-		assertThat(table).hasSize(2).allMatch(row -> row instanceof Map);
+		assertThat(table).hasSize(2).allMatch((entry) -> entry instanceof Map);
 
 		List<Object> rows = new ArrayList<>(table);
-
 		Map<String, Object> row1 = (Map<String, Object>) rows.get(0);
 		assertThat(row1).hasSize(2).containsExactly(
-			entry("id", 1L),
+			entry("id", 1),
 			entry("name", "John Doe")
 		);
 
 		Map<String, Object> row2 = (Map<String, Object>) rows.get(1);
 		assertThat(row2).hasSize(2).containsExactly(
-			entry("id", 2L),
+			entry("id", 2),
 			entry("name", "Jane Doe")
 		);
 	}
 
 	@Test
 	void it_should_wrap_exception() {
-		String malformedJson = "{te st: test}";
+		String malformedJson = "key value";
 		byte[] bytes = malformedJson.getBytes(Charset.defaultCharset());
 		InputStream stream = new ByteArrayInputStream(bytes);
 		InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
 
-		assertThatThrownBy(() -> jsonParser().readObject(reader)).isExactlyInstanceOf(
-			JsonException.class
+		assertThatThrownBy(() -> yamlParser().readObject(reader)).isExactlyInstanceOf(
+			YamlException.class
 		);
 	}
 
-	abstract JsonParser jsonParser();
+	abstract YamlParser yamlParser();
 }

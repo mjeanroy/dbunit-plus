@@ -30,7 +30,11 @@ import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 import org.dbunit.dataset.DataSetException;
 
-abstract class AbstractParseableDataSetBuilder<T extends AbstractParseableDataSetBuilder<T, PARSER, DATASET>, PARSER extends DatasetParser, DATASET extends AbstractParseableDataSet> {
+abstract class AbstractParseableDataSetBuilder<
+	T extends AbstractParseableDataSetBuilder<T, PARSER, DATASET>,
+	PARSER extends DatasetParser,
+	DATASET extends AbstractParseableDataSet
+> {
 
 	/**
 	 * Class Logger.

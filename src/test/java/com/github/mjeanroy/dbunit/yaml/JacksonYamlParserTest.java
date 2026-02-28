@@ -24,77 +24,10 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-import com.fasterxml.jackson.dataformat.yaml.JacksonYAMLParseException;
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.YamlException;
-import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.junit.jupiter.api.Test;
+class JacksonYamlParserTest extends AbstractYamlParserTest {
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Map;
-
-import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.data.MapEntry.entry;
-
-class JacksonYamlParserTest {
-
-	@Test
-	void it_should_parse_file() {
-		JacksonYamlParser parser = JacksonYamlParser.getInstance();
-		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
-		Map<String, List<Map<String, Object>>> tables = parser.parse(resource);
-
-		assertThat(tables).hasSize(1).containsKey("users");
-
-		List<Map<String, Object>> table = tables.get("users");
-		assertThat(table).hasSize(2);
-
-		Map<String, Object> row1 = table.get(0);
-		assertThat(row1)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 1),
-				entry("name", "John Doe")
-			);
-
-		Map<String, Object> row2 = table.get(1);
-		assertThat(row2)
-			.hasSize(2)
-			.containsExactly(
-				entry("id", 2),
-				entry("name", "Jane Doe")
-			);
-	}
-
-	@Test
-	void it_should_wrap_yml_parse_exception() {
-		String malformedYaml = "foo: id: 1";
-		byte[] bytes = malformedYaml.getBytes(Charset.defaultCharset());
-		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder().withReader(stream).build();
-		JacksonYamlParser parser = JacksonYamlParser.getInstance();
-
-		assertThatThrownBy(() -> parser.parse(resource))
-			.isExactlyInstanceOf(YamlException.class)
-			.hasCauseInstanceOf(JacksonYAMLParseException.class);
-	}
-
-	@Test
-	void it_should_wrap_io_exception() {
-		String yaml = "";
-		byte[] bytes = yaml.getBytes(Charset.defaultCharset());
-		InputStream stream = new ByteArrayInputStream(bytes);
-		Resource resource = new ResourceMockBuilder().withReader(stream).build();
-		JacksonYamlParser parser = JacksonYamlParser.getInstance();
-
-		assertThatThrownBy(() -> parser.parse(resource))
-			.isExactlyInstanceOf(YamlException.class)
-			.hasCauseInstanceOf(IOException.class);
+	@Override
+	YamlParser yamlParser() {
+		return JacksonYamlParser.getInstance();
 	}
 }

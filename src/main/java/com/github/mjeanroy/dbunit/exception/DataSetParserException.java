@@ -22,31 +22,19 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.json;
-
-import java.io.Reader;
-import java.util.Map;
+package com.github.mjeanroy.dbunit.exception;
 
 /**
- * Parse JSON input and return {@link Map}.
+ * Exception thrown when DataSet cannot be parsed.
  */
-public interface JsonParser {
+public class DataSetParserException extends AbstractDbUnitException {
 
 	/**
-	 * Read and deserialize JSON content from the given {@link Reader}.
+	 * Wrap original exception.
 	 *
-	 * <p>
-	 * The JSON content is expected to represent a JSON object and will
-	 * be converted into a {@link Map} where:
-	 * </p>
-	 * <ul>
-	 *   <li>Keys are {@link String}</li>
-	 *   <li>Values are {@link Object}.</li>
-	 * </ul>
-	 *
-	 * @param reader the reader containing JSON content (must not be {@code null})
-	 * @return the parsed JSON object as a {@link Map}
+	 * @param ex Original Exception.
 	 */
-	Map<String, Object> readObject(Reader reader);
+	public DataSetParserException(Exception ex) {
+		super(ex);
+	}
 }
-

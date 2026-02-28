@@ -24,16 +24,23 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
+import java.io.Reader;
 import java.util.Map;
 
-import com.github.mjeanroy.dbunit.core.parsers.DatasetParser;
-import com.github.mjeanroy.dbunit.exception.YamlException;
-
 /**
- * Parse YAML file and return DBUnit dataSet as {@link Map}.
- *
- * Each implementation should wrap specific exception to an internal {@link YamlException} (library
- * will catch instance of this exception and re-throw appropriate exception).
+ * Read YAML inputs and return {@link Map} object.
  */
-public interface YamlParser extends DatasetParser {
+public interface YamlParser {
+
+	/**
+	 * Read and deserialize YAML content from the given {@link Reader}.
+	 *
+	 * <p>
+	 * The YAML input must represent a mapping at the root level.
+	 * </p>
+	 *
+	 * @param reader the reader containing YAML content (must not be {@code null})
+	 * @return the parsed YAML object as a {@code Map<String, Object>}
+	 */
+	Map<String, Object> readObject(Reader reader);
 }

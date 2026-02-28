@@ -25,22 +25,43 @@
 package com.github.mjeanroy.dbunit.core.parsers;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.DataSetParserException;
+import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
+import com.github.mjeanroy.dbunit.yaml.YamlParser;
+import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
+import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
-/**
- * Dataset parser: read file and returns in-memory dataset representation.
- */
-public interface DatasetParser {
+import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
-	/**
-	 * Read File and return representation.
-	 *
-	 * @param resource Input resource.
-	 * @return DataSet representation.
-	 * @throws DataSetParserException If parse/read operation fail (invalid schema, unreadable file).
-	 */
-	Map<String, Collection<Map<String, Object>>> parse(Resource resource);
+class YamlDatasetParserTest {
+
+	@Test
+	void it_should_parse_yaml_dataset() {
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
+		YamlParser parser = YamlParserFactory.createDefault();
+		YamlDatasetParser dataSetParser = new YamlDatasetParser(parser);
+
+		Map<String, Collection<Map<String, Object>>> dataSet = dataSetParser.parse(resource);
+
+		assertThat(dataSet).hasSize(1).containsKeys("users");
+
+		List<Map<String, Object>> users = new ArrayList<>(dataSet.get("users"));
+		assertThat(users).hasSize(2);
+
+		assertThat(users.get(0)).hasSize(2).containsExactly(
+			entry("id", 1),
+			entry("name", "John Doe")
+		);
+
+		assertThat(users.get(1)).hasSize(2).containsExactly(
+			entry("id", 2),
+			entry("name", "Jane Doe")
+		);
+	}
 }

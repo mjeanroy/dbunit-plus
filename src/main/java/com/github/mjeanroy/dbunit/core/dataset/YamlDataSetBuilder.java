@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.YamlDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.yaml.YamlParser;
 import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
 import org.dbunit.dataset.DataSetException;
 
@@ -41,7 +41,11 @@ import org.dbunit.dataset.DataSetException;
  *   <li>SnakeYAML</li>
  * </ul>
  */
-public class YamlDataSetBuilder extends AbstractParseableDataSetBuilder<YamlDataSetBuilder, YamlParser, YamlDataSet> {
+public class YamlDataSetBuilder extends AbstractParseableDataSetBuilder<
+	YamlDataSetBuilder,
+	YamlDatasetParser,
+	YamlDataSet
+> {
 
 	/**
 	 * Create builder.
@@ -70,12 +74,18 @@ public class YamlDataSetBuilder extends AbstractParseableDataSetBuilder<YamlData
 	}
 
 	@Override
-	YamlDataSet build(YamlParser parser, Resource resource, boolean caseSensitiveTableNames) throws DataSetException {
+	YamlDataSet build(
+		YamlDatasetParser parser,
+		Resource resource,
+		boolean caseSensitiveTableNames
+	) throws DataSetException {
 		return new YamlDataSet(resource, caseSensitiveTableNames, parser);
 	}
 
 	@Override
-	YamlParser getDefaultParser() {
-		return YamlParserFactory.createDefault();
+	YamlDatasetParser getDefaultParser() {
+		return new YamlDatasetParser(
+			YamlParserFactory.createDefault()
+		);
 	}
 }

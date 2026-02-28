@@ -24,13 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.YamlDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.yaml.YamlParser;
 import org.junit.jupiter.api.Test;
 
+import java.io.Reader;
+
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -49,16 +53,17 @@ class YamlDataSetBuilderTest {
 	void it_should_create_custom_data_set() throws Exception {
 		Resource resource = createResource();
 		YamlParser parser = mock(YamlParser.class);
+
 		YamlDataSet dataSet = new YamlDataSetBuilder()
 			.setYamlFile(resource)
 			.setCaseSensitiveTableNames(true)
-			.setParser(parser)
+			.setParser(new YamlDatasetParser(parser))
 			.build();
 
 		assertThat(dataSet).isNotNull();
 		assertThat(dataSet.getResource()).isSameAs(resource);
 		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
-		verify(parser).parse(resource);
+		verify(parser).readObject(any(Reader.class));
 	}
 
 	private static Resource createResource() {

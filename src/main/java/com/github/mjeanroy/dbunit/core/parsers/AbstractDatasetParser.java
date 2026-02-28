@@ -25,7 +25,7 @@
 package com.github.mjeanroy.dbunit.core.parsers;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.AbstractParserException;
+import com.github.mjeanroy.dbunit.exception.DataSetParserException;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -34,8 +34,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.List;
+import java.util.Collection;
 import java.util.Map;
+
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * Abstract implementation of {@link DatasetParser} that create {@link Reader} from
@@ -46,7 +48,7 @@ import java.util.Map;
  * Note that exceptions thrown from {@link #doParse(Reader)} method will automatically
  * be wrapped into {@link JsonException}.
  */
-public abstract class AbstractDatasetParser implements DatasetParser {
+abstract class AbstractDatasetParser implements DatasetParser {
 
 	/**
 	 * Class logger.
@@ -60,14 +62,47 @@ public abstract class AbstractDatasetParser implements DatasetParser {
 	}
 
 	@Override
-	public Map<String, List<Map<String, Object>>> parse(Resource resource) {
-		try (InputStream stream = resource.openStream(); InputStreamReader reader = new InputStreamReader(stream); BufferedReader buf = new BufferedReader(reader)) {
-			return doParse(buf);
+	public Map<String, Collection<Map<String, Object>>> parse(Resource resource) {
+		try (
+			InputStream stream = resource.openStream();
+			InputStreamReader reader = new InputStreamReader(stream);
+			BufferedReader buf = new BufferedReader(reader)
+		) {
+			Map<String, Object> parsed = doParse(buf);
+			return validateDataSet(parsed);
 		}
 		catch (Exception ex) {
 			log.error(ex.getMessage(), ex);
-			throw wrapException(ex);
+			throw new DataSetParserException(ex);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Map<String, Collection<Map<String, Object>>> validateDataSet(Map<String, ?> input) {
+		for (Map.Entry<String, ?> entry : input.entrySet()) {
+			Object value = entry.getValue();
+
+			if (!(value instanceof Collection)) {
+				throw new UnsupportedOperationException(
+					"DataSet entry <" + entry.getKey() + "> should be an array of table entries, got: " + value
+				);
+			}
+
+			Collection<?> rows = (Collection<?>) value;
+			int position = 0;
+
+			for (Object row : rows) {
+				if (!(row instanceof Map)) {
+					throw new UnsupportedOperationException(
+						"DataSet entry <" + entry.getKey() + "[" + position + "]> should be a an object, got: " + row
+					);
+				}
+
+				++position;
+			}
+		}
+
+		return unmodifiableMap((Map<String, Collection<Map<String, Object>>>) input);
 	}
 
 	/**
@@ -80,15 +115,6 @@ public abstract class AbstractDatasetParser implements DatasetParser {
 	 *
 	 * @param reader The reader.
 	 * @return The dataset input.
-	 * @throws Exception If an error occurred during JSON parsing.
 	 */
-	protected abstract Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception;
-
-	/**
-	 * Wrap exception in case an error occurred during {@link #parse(Resource)} operation.
-	 *
-	 * @param ex The original exception.
-	 * @return The wrapped exception.
-	 */
-	protected abstract AbstractParserException wrapException(Exception ex);
+	abstract Map<String, Object> doParse(Reader reader);
 }

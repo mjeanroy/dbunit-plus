@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.util.JsonParserDelegate;
@@ -34,31 +33,74 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Json Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
+ * {@link JsonParser} implementation based on Jackson 1.x
+ * {@link ObjectMapper}.
+ *
+ * <p>
+ * This parser delegates JSON deserialization to a statically configured
+ * {@link ObjectMapper} instance backed by a custom {@link MappingJsonFactory}.
+ * The custom factory ensures that all created {@link org.codehaus.jackson.JsonParser}
+ * instances are wrapped in a {@link CustomJsonParser} in order to normalize
+ * numeric values.
+ * </p>
+ *
+ * <p>
+ * Integer and {@link Short} numeric values are automatically converted to
+ * {@link Long} to ensure consistent number handling across JSON parsing
+ * implementations.
+ * </p>
+ *
+ * <p>
+ * This implementation is thread-safe as it relies on a single shared
+ * {@link ObjectMapper} instance and exposes a singleton instance via
+ * {@link #getInstance()}.
+ * </p>
  */
-class Jackson1Parser extends AbstractJsonParser {
+class Jackson1Parser extends AbstractJsonParser implements JsonParser {
 
+	/**
+	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
+	 *
+	 * <p>
+	 * The mapper is configured with a {@link CustomJsonFactory} to ensure
+	 * numeric normalization during parsing.
+	 * </p>
+	 */
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(
 		new CustomJsonFactory()
 	);
 
+	/**
+	 * Singleton instance of the parser.
+	 */
 	private static final Jackson1Parser INSTANCE = new Jackson1Parser();
 
+	/**
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link Jackson1Parser} instance.
+	 */
 	static Jackson1Parser getInstance() {
 		return INSTANCE;
 	}
 
+	/**
+	 * Create a new {@link Jackson1Parser}.
+	 *
+	 * <p>
+	 * Constructor is private to enforce singleton usage.
+	 * </p>
+	 */
 	private Jackson1Parser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
-		return (Map<String, List<Map<String, Object>>>) OBJECT_MAPPER.readValue(reader, Map.class);
+	final Map<String, Object> doRead(Reader reader) throws Exception {
+		return (Map<String, Object>) OBJECT_MAPPER.readValue(reader, Map.class);
 	}
 
 	private static final class CustomJsonFactory extends MappingJsonFactory {
@@ -66,49 +108,49 @@ class Jackson1Parser extends AbstractJsonParser {
 		}
 
 		@Override
-		public JsonParser createJsonParser(File f) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(File f) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(f)
 			);
 		}
 
 		@Override
-		public JsonParser createJsonParser(URL url) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(URL url) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(url)
 			);
 		}
 
 		@Override
-		public JsonParser createJsonParser(InputStream in) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(InputStream in) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(in)
 			);
 		}
 
 		@Override
-		public JsonParser createJsonParser(Reader r) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(Reader r) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(r)
 			);
 		}
 
 		@Override
-		public JsonParser createJsonParser(byte[] data) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(byte[] data) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(data)
 			);
 		}
 
 		@Override
-		public JsonParser createJsonParser(byte[] data, int offset, int len) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(byte[] data, int offset, int len) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(data, offset, len)
 			);
 		}
 
 		@Override
-		public JsonParser createJsonParser(String content) throws IOException {
+		public org.codehaus.jackson.JsonParser createJsonParser(String content) throws IOException {
 			return new CustomJsonParser(
 				super.createJsonParser(content)
 			);

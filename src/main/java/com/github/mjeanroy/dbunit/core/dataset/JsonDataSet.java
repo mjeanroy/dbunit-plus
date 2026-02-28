@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.JsonDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.json.JsonParser;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
@@ -59,7 +59,11 @@ public class JsonDataSet extends AbstractParseableDataSet {
 	 * @param parser JSON Parser (will be used to parser input resource).
 	 * @throws DataSetException If JSON parsing fail.
 	 */
-	JsonDataSet(Resource resource, boolean caseSensitiveTableNames, JsonParser parser) throws DataSetException {
+	JsonDataSet(
+		Resource resource,
+		boolean caseSensitiveTableNames,
+		JsonDatasetParser parser
+	) throws DataSetException {
 		super(resource, caseSensitiveTableNames, parser);
 	}
 }

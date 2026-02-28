@@ -28,30 +28,62 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.Reader;
-import java.util.List;
 import java.util.Map;
 
 /**
- * YAML Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
+ * {@link YamlParser} implementation based on Jackson 2.x
+ * {@link ObjectMapper} with {@link YAMLFactory}.
+ *
+ * <p>
+ * This parser delegates YAML deserialization to a statically configured
+ * {@link ObjectMapper} backed by a {@link YAMLFactory}. The YAML content
+ * is converted into a {@code Map<String, Object>} representing the root
+ * YAML mapping.
+ * </p>
+ *
+ * <p>
+ * This implementation is thread-safe since it relies on a single shared
+ * {@link ObjectMapper} instance and exposes a singleton instance via
+ * {@link #getInstance()}.
+ * </p>
  */
 class JacksonYamlParser extends AbstractYamlParser implements YamlParser {
 
+	/**
+	 * Shared {@link ObjectMapper} instance configured with
+	 * a {@link YAMLFactory} to parse YAML input.
+	 */
 	private static final ObjectMapper MAPPER = new ObjectMapper(
 		new YAMLFactory()
 	);
 
+	/**
+	 * Singleton instance of the parser.
+	 */
 	private static final JacksonYamlParser INSTANCE = new JacksonYamlParser();
 
+	/**
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link JacksonYamlParser} instance
+	 */
 	static JacksonYamlParser getInstance() {
 		return INSTANCE;
 	}
 
+	/**
+	 * Create a new {@link JacksonYamlParser}.
+	 *
+	 * <p>
+	 * Constructor is private to enforce singleton usage.
+	 * </p>
+	 */
 	private JacksonYamlParser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
-		return (Map<String, List<Map<String, Object>>>) MAPPER.readValue(reader, Map.class);
+	Map<String, Object> doRead(Reader reader) throws Exception {
+		return (Map<String, Object>) MAPPER.readValue(reader, Map.class);
 	}
 }

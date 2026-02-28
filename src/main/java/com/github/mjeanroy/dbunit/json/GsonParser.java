@@ -28,31 +28,68 @@ import com.google.gson.Gson;
 import com.google.gson.ToNumberPolicy;
 
 import java.io.Reader;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Json Parser using Google {@link Gson} as internal implementation.
+ * Implementation of {@link JsonParser} using Google {@link Gson}
+ * as internal implementation.
+ *
+ * <p>
+ * This parser delegates JSON deserialization to an internal {@link Gson}
+ * instance configured to use {@link ToNumberPolicy#LONG_OR_DOUBLE} for
+ * numeric conversions. This ensures that JSON numeric values are parsed
+ * as {@link Long} when possible, or {@link Double} otherwise.
+ * </p>
+ *
+ * <p>
+ * This implementation is thread-safe since it relies on a single,
+ * statically initialized {@link Gson} instance and exposes a singleton
+ * instance via {@link #getInstance()}.
+ * </p>
  */
 class GsonParser extends AbstractJsonParser {
 
+	/**
+	 * Shared {@link Gson} instance used to deserialize JSON content.
+	 *
+	 * <p>
+	 * Configured with {@link ToNumberPolicy#LONG_OR_DOUBLE} to preserve
+	 * numeric precision by converting numbers to {@link Long} when possible,
+	 * or {@link Double} otherwise.
+	 * </p>
+	 */
 	private static final Gson GSON = new Gson().newBuilder()
 		.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
 		.setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
 		.create();
 
+	/**
+	 * Singleton instance of the parser.
+	 */
 	private static final GsonParser INSTANCE = new GsonParser();
 
+	/**
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link GsonParser} instance.
+	 */
 	static GsonParser getInstance() {
 		return INSTANCE;
 	}
 
+	/**
+	 * Create a new {@link GsonParser}.
+	 *
+	 * <p>
+	 * Constructor is private to enforce singleton usage.
+	 * </p>
+	 */
 	private GsonParser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) {
-		return (Map<String, List<Map<String, Object>>>) GSON.fromJson(reader, Map.class);
+	final Map<String, Object> doRead(Reader reader) {
+		return (Map<String, Object>) GSON.fromJson(reader, Map.class);
 	}
 }

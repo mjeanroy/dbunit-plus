@@ -24,52 +24,32 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.YamlDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.YamlException;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.yaml.YamlParser;
 import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_YAML;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @SuppressWarnings("SameParameterValue")
 class YamlDataSetTest {
 
-	private YamlParser parser;
+	private YamlDatasetParser parser;
 
 	@BeforeEach
 	void setUp() {
-		parser = YamlParserFactory.createDefault();
-	}
-
-	@Test
-	void it_should_wrap_yaml_exception_to_data_set_exception() {
-		parser = mock(YamlParser.class);
-
-		IOException ioEx = new IOException();
-		YamlException ex = new YamlException(ioEx);
-		Resource resource = createResource();
-
-		when(parser.parse(any(Resource.class))).thenThrow(ex);
-
-		assertThatThrownBy(() -> new YamlDataSet(resource, false, parser))
-			.isExactlyInstanceOf(DataSetException.class)
-			.hasCause(ex);
+		parser = new YamlDatasetParser(
+			YamlParserFactory.createDefault()
+		);
 	}
 
 	@Test
@@ -78,10 +58,9 @@ class YamlDataSetTest {
 		YamlDataSet dataSet = new YamlDataSet(resource, false, parser);
 		String[] tableNames = dataSet.getTableNames();
 
-		assertThat(tableNames)
-			.isNotNull()
-			.hasSize(1)
-			.containsOnly("users");
+		assertThat(tableNames).hasSize(1).containsOnly(
+			"users"
+		);
 	}
 
 	@Test
@@ -101,10 +80,7 @@ class YamlDataSetTest {
 		ITableMetaData metaData = dataSet.getTableMetaData("users");
 
 		assertThat(metaData).isNotNull();
-		assertThat(metaData.getColumns())
-			.isNotNull()
-			.isNotEmpty()
-			.hasSize(2)
+		assertThat(metaData.getColumns()).hasSize(2)
 			.extracting("columnName")
 			.containsOnly("id", "name");
 	}
@@ -131,8 +107,7 @@ class YamlDataSetTest {
 			tables.add(it.getTable());
 		}
 
-		assertThat(tables)
-			.hasSize(1)
+		assertThat(tables).hasSize(1)
 			.extracting("tableMetaData.tableName")
 			.containsExactly("users");
 	}
@@ -148,8 +123,7 @@ class YamlDataSetTest {
 			tables.add(it.getTable());
 		}
 
-		assertThat(tables)
-			.hasSize(1)
+		assertThat(tables).hasSize(1)
 			.extracting("tableMetaData.tableName")
 			.containsExactly("users");
 	}

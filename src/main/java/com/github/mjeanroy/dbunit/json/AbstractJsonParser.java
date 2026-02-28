@@ -24,32 +24,29 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import com.github.mjeanroy.dbunit.core.parsers.AbstractDatasetParser;
-import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.AbstractParserException;
 import com.github.mjeanroy.dbunit.exception.JsonException;
 
 import java.io.Reader;
+import java.util.Map;
 
 /**
- * Abstract implementation of {@link JsonParser} that create {@link Reader} from
- * given {@link Resource} and execute {@link #doParse(Reader)}.
- *
- * <p>
- *
- * Note that exceptions thrown from {@link #doParse(Reader)} method will automatically
- * be wrapped into {@link JsonException}.
+ * Abstract implementation of {@link JsonParser} that delegate to {@link #doRead(Reader reader)},
+ * re-throwing any exceptions into {@link JsonException}.
  */
-public abstract class AbstractJsonParser extends AbstractDatasetParser implements JsonParser {
+abstract class AbstractJsonParser implements JsonParser {
 
-	/**
-	 * Create default parser.
-	 */
-	protected AbstractJsonParser() {
+	AbstractJsonParser() {
 	}
 
 	@Override
-	protected AbstractParserException wrapException(Exception ex) {
-		return new JsonException(ex);
+	public final Map<String, Object> readObject(Reader reader) {
+		try {
+			return doRead(reader);
+		}
+		catch (Exception ex) {
+			throw new JsonException(ex);
+		}
 	}
+
+	abstract Map<String, Object> doRead(Reader reader) throws Exception;
 }

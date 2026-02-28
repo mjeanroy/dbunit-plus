@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.YamlDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.yaml.YamlParser;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
@@ -50,14 +50,18 @@ import org.dbunit.dataset.IDataSet;
 public class YamlDataSet extends AbstractParseableDataSet {
 
 	/**
-	 * Create JSON DataSet.
+	 * Create YAML DataSet.
 	 *
 	 * @param resource Input resource.
 	 * @param caseSensitiveTableNames Case Insensitivity Flag.
 	 * @param parser JSON Parser (will be used to parser input resource).
 	 * @throws DataSetException If JSON parsing fail.
 	 */
-	YamlDataSet(Resource resource, boolean caseSensitiveTableNames, YamlParser parser) throws DataSetException {
+	YamlDataSet(
+		Resource resource,
+		boolean caseSensitiveTableNames,
+		YamlDatasetParser parser
+	) throws DataSetException {
 		super(resource, caseSensitiveTableNames, parser);
 	}
 }

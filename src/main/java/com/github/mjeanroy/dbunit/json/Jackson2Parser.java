@@ -28,31 +28,75 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.Reader;
-import java.util.List;
 import java.util.Map;
 
 /**
- * Json Parser using Jackson (V2) {@link ObjectMapper} as internal implementation.
+ * {@link JsonParser} implementation based on Jackson 2.x
+ * {@link ObjectMapper}.
+ *
+ * <p>
+ * This parser delegates JSON deserialization to a statically configured
+ * {@link ObjectMapper}. The mapper is configured to enable
+ * {@link DeserializationFeature#USE_LONG_FOR_INTS}, ensuring that
+ * integral numeric values are deserialized as {@link Long} instead of
+ * {@link Integer}.
+ * </p>
+ *
+ * <p>
+ * This behavior guarantees consistent numeric handling across JSON
+ * parser implementations, especially when interoperating with other
+ * {@link JsonParser} implementations within the same codebase.
+ * </p>
+ *
+ * <p>
+ * This implementation is thread-safe as it relies on a single shared
+ * {@link ObjectMapper} instance and exposes a singleton instance via
+ * {@link #getInstance()}.
+ * </p>
  */
-class Jackson2Parser extends AbstractJsonParser {
+class Jackson2Parser extends AbstractJsonParser implements JsonParser {
 
+	/**
+	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
+	 *
+	 * <p>
+	 * Configured to enable {@link DeserializationFeature#USE_LONG_FOR_INTS}
+	 * so that integral values are mapped to {@link Long}.
+	 * </p>
+	 */
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+	/**
+	 * Singleton instance of the parser.
+	 */
 	private static final Jackson2Parser INSTANCE = new Jackson2Parser();
 
 	static {
 		OBJECT_MAPPER.enable(DeserializationFeature.USE_LONG_FOR_INTS);
 	}
 
+	/**
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link Jackson2Parser} instance.
+	 */
 	static Jackson2Parser getInstance() {
 		return INSTANCE;
 	}
 
+	/**
+	 * Create a new {@link Jackson2Parser}.
+	 *
+	 * <p>
+	 * Constructor is private to enforce singleton usage.
+	 * </p>
+	 */
 	private Jackson2Parser() {
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Map<String, List<Map<String, Object>>> doParse(Reader reader) throws Exception {
-		return (Map<String, List<Map<String, Object>>>) OBJECT_MAPPER.readValue(reader, Map.class);
+	final Map<String, Object> doRead(Reader reader) throws Exception {
+		return (Map<String, Object>) OBJECT_MAPPER.readValue(reader, Map.class);
 	}
 }

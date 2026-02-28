@@ -24,52 +24,31 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.JsonDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.exception.JsonException;
-import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.json.JsonParserFactory;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@SuppressWarnings("SameParameterValue")
 class JsonDataSetTest {
 
-	private JsonParser parser;
+	private JsonDatasetParser parser;
 
 	@BeforeEach
 	void setUp() {
-		parser = JsonParserFactory.createDefault();
-	}
-
-	@Test
-	void it_should_wrap_json_exception_to_data_set_exception() {
-		parser = mock(JsonParser.class);
-
-		IOException ioEx = new IOException();
-		JsonException ex = new JsonException(ioEx);
-		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-
-		when(parser.parse(any(Resource.class))).thenThrow(ex);
-
-		assertThatThrownBy(() -> new JsonDataSet(resource, false, parser))
-			.isExactlyInstanceOf(DataSetException.class)
-			.hasCause(ex);
+		parser = new JsonDatasetParser(
+			JsonParserFactory.createDefault()
+		);
 	}
 
 	@Test
@@ -78,10 +57,9 @@ class JsonDataSetTest {
 		JsonDataSet dataSet = new JsonDataSet(resource, false, parser);
 		String[] tableNames = dataSet.getTableNames();
 
-		assertThat(tableNames)
-			.isNotNull()
-			.hasSize(1)
-			.containsOnly("users");
+		assertThat(tableNames).hasSize(1).containsOnly(
+			"users"
+		);
 	}
 
 	@Test
@@ -101,9 +79,7 @@ class JsonDataSetTest {
 		ITableMetaData metaData = dataSet.getTableMetaData("users");
 
 		assertThat(metaData).isNotNull();
-		assertThat(metaData.getColumns())
-			.isNotEmpty()
-			.hasSize(2)
+		assertThat(metaData.getColumns()).hasSize(2)
 			.extracting("columnName")
 			.containsOnly("id", "name");
 	}
@@ -130,9 +106,7 @@ class JsonDataSetTest {
 			tables.add(it.getTable());
 		}
 
-		assertThat(tables)
-			.isNotNull()
-			.hasSize(1)
+		assertThat(tables).hasSize(1)
 			.extracting("tableMetaData.tableName")
 			.containsExactly("users");
 	}
@@ -148,9 +122,7 @@ class JsonDataSetTest {
 			tables.add(it.getTable());
 		}
 
-		assertThat(tables)
-			.hasSize(1)
-			.extracting("tableMetaData.tableName")
+		assertThat(tables).extracting("tableMetaData.tableName")
 			.containsExactly("users");
 	}
 

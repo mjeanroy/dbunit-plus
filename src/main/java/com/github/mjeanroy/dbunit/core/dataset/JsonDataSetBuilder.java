@@ -24,8 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.parsers.JsonDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.json.JsonParser;
 import com.github.mjeanroy.dbunit.json.JsonParserFactory;
 import org.dbunit.dataset.DataSetException;
 
@@ -42,7 +42,11 @@ import org.dbunit.dataset.DataSetException;
  *   <li>Jackson 1</li>
  * </ul>
  */
-public class JsonDataSetBuilder extends AbstractParseableDataSetBuilder<JsonDataSetBuilder, JsonParser, JsonDataSet> {
+public class JsonDataSetBuilder extends AbstractParseableDataSetBuilder<
+	JsonDataSetBuilder,
+	JsonDatasetParser,
+	JsonDataSet
+> {
 
 	/**
 	 * Create builder.
@@ -71,12 +75,18 @@ public class JsonDataSetBuilder extends AbstractParseableDataSetBuilder<JsonData
 	}
 
 	@Override
-	JsonDataSet build(JsonParser parser, Resource resource, boolean caseSensitiveTableNames) throws DataSetException {
+	JsonDataSet build(
+		JsonDatasetParser parser,
+		Resource resource,
+		boolean caseSensitiveTableNames
+	) throws DataSetException {
 		return new JsonDataSet(resource, caseSensitiveTableNames, parser);
 	}
 
 	@Override
-	JsonParser getDefaultParser() {
-		return JsonParserFactory.createDefault();
+	JsonDatasetParser getDefaultParser() {
+		return new JsonDatasetParser(
+			JsonParserFactory.createDefault()
+		);
 	}
 }

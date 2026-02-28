@@ -22,62 +22,49 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.yaml;
+package com.github.mjeanroy.dbunit.core.parsers;
 
-import org.yaml.snakeyaml.Yaml;
+import com.github.mjeanroy.dbunit.json.JsonParser;
 
 import java.io.Reader;
 import java.util.Map;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
 /**
- * {@link YamlParser} implementation based on SnakeYAML.
+ * {@link DatasetParser} implementation that parses datasets from JSON input.
  *
  * <p>
- * This parser delegates YAML deserialization to a shared
- * {@link Yaml} instance from the SnakeYAML library.
- * The YAML content is parsed into a {@code Map<String, Object>}
- * representing the root YAML mapping.
+ * This parser delegates JSON deserialization to a provided
+ * {@link JsonParser} implementation. The resulting {@code Map<String, Object>}
+ * represents the raw dataset structure and is then processed to return
+ * dataset as {@code Map<String, Collection<Map<String, Object>>>} instances.
  * </p>
  *
  * <p>
- * This implementation is thread-safe provided that the underlying
- * {@link Yaml} instance is not reconfigured at runtime. A singleton
- * instance is exposed via {@link #getInstance()}.
+ * This class is immutable and thread-safe provided that the underlying
+ * {@link JsonParser} implementation is itself thread-safe.
  * </p>
  */
-class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
+public final class JsonDatasetParser extends AbstractDatasetParser implements DatasetParser {
 
 	/**
-	 * Shared {@link Yaml} instance used to deserialize YAML content.
+	 * Underlying JSON parser used to deserialize input content.
 	 */
-	private static final Yaml YAML = new Yaml();
+	private final JsonParser parser;
 
 	/**
-	 * Singleton instance of the parser.
-	 */
-	private static final SnakeYamlParser INSTANCE = new SnakeYamlParser();
-
-	/**
-	 * Return the singleton instance of this parser.
+	 * Create a new JSON dataset parser.
 	 *
-	 * @return the shared {@link SnakeYamlParser} instance
+	 * @param parser the JSON parser to use (must not be {@code null})
+	 * @throws NullPointerException if {@code parser} is {@code null}
 	 */
-	static SnakeYamlParser getInstance() {
-		return INSTANCE;
-	}
-
-	/**
-	 * Create a new {@link SnakeYamlParser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 */
-	private SnakeYamlParser() {
+	public JsonDatasetParser(JsonParser parser) {
+		this.parser = notNull(parser, "JSON parser must not be null");
 	}
 
 	@Override
-	protected Map<String, Object> doRead(Reader reader) {
-		return YAML.load(reader);
+	protected Map<String, Object> doParse(Reader reader) {
+		return parser.readObject(reader);
 	}
 }

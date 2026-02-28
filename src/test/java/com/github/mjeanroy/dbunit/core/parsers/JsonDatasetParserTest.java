@@ -22,51 +22,46 @@
  * SOFTWARE.
  */
 
-package com.github.mjeanroy.dbunit.core.dataset;
+package com.github.mjeanroy.dbunit.core.parsers;
 
-import com.github.mjeanroy.dbunit.core.parsers.JsonDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
+import com.github.mjeanroy.dbunit.json.JsonParserFactory;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.jupiter.api.Test;
 
-import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestDatasets.USERS_JSON;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.entry;
 
-class JsonDataSetBuilderTest {
+class JsonDatasetParserTest {
 
 	@Test
-	void it_should_create_default_data_set_with_file() throws Exception {
-		Resource resource = createResource();
-		JsonDataSet dataSet = new JsonDataSetBuilder(resource).build();
+	void it_should_parse_json_dataset() {
+		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		JsonParser parser = JsonParserFactory.createDefault();
+		JsonDatasetParser dataSetParser = new JsonDatasetParser(parser);
 
-		assertThat(dataSet).isNotNull();
-		assertThat(dataSet.getResource()).isSameAs(resource);
-		assertThat(dataSet.isCaseSensitiveTableNames()).isFalse();
-	}
+		Map<String, Collection<Map<String, Object>>> dataSet = dataSetParser.parse(resource);
 
-	@Test
-	void it_should_create_custom_data_set() throws Exception {
-		Resource resource = createResource();
-		JsonParser parser = mock(JsonParser.class);
-		JsonDataSet dataSet = new JsonDataSetBuilder()
-			.setJsonFile(resource)
-			.setCaseSensitiveTableNames(true)
-			.setParser(new JsonDatasetParser(parser))
-			.build();
+		assertThat(dataSet).hasSize(1).containsKeys("users");
 
-		assertThat(dataSet).isNotNull();
-		assertThat(dataSet.getResource()).isSameAs(resource);
-		assertThat(dataSet.isCaseSensitiveTableNames()).isTrue();
-		verify(parser).readObject(any(Reader.class));
-	}
+		List<Map<String, Object>> users = new ArrayList<>(dataSet.get("users"));
+		assertThat(users).hasSize(2);
 
-	private static Resource createResource() {
-		return new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
+		assertThat(users.get(0)).hasSize(2).containsExactly(
+			entry("id", 1L),
+			entry("name", "John Doe")
+		);
+
+		assertThat(users.get(1)).hasSize(2).containsExactly(
+			entry("id", 2L),
+			entry("name", "Jane Doe")
+		);
 	}
 }

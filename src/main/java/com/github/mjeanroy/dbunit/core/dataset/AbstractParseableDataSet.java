@@ -77,7 +77,11 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 	 * @param parser JSON Parser (will be used to parser input resource).
 	 * @throws DataSetException If JSON parsing fail.
 	 */
-	AbstractParseableDataSet(Resource resource, boolean caseSensitiveTableNames, DatasetParser parser) throws DataSetException {
+	AbstractParseableDataSet(
+		Resource resource,
+		boolean caseSensitiveTableNames,
+		DatasetParser parser
+	) throws DataSetException {
 		super(caseSensitiveTableNames);
 
 		// Some preconditions.
@@ -98,7 +102,7 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 	 * @throws DataSetException If an error occurred during parsing.
 	 */
 	private List<ITable> initialize(Resource resource, DatasetParser parser) throws DataSetException {
-		Map<String, List<Map<String, Object>>> tables = parse(resource, parser);
+		Map<String, Collection<Map<String, Object>>> tables = parse(resource, parser);
 		return readTables(tables);
 	}
 
@@ -111,7 +115,7 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 	 * @return List of tables.
 	 * @throws DataSetException If an error occurred during JSON parsing (invalid schema, etc.).
 	 */
-	private Map<String, List<Map<String, Object>>> parse(Resource resource, DatasetParser parser) throws DataSetException {
+	private Map<String, Collection<Map<String, Object>>> parse(Resource resource, DatasetParser parser) throws DataSetException {
 		try {
 			log.debug("Parsing resource: {}", resource);
 			return parser.parse(resource);
@@ -129,13 +133,13 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 	 * @return List of {@link ITable}.
 	 * @throws DataSetException If an error occurred during extraction.
 	 */
-	private List<ITable> readTables(Map<String, List<Map<String, Object>>> tables) throws DataSetException {
-		Set<Map.Entry<String, List<Map<String, Object>>>> entries = tables.entrySet();
+	private List<ITable> readTables(Map<String, Collection<Map<String, Object>>> tables) throws DataSetException {
+		Set<Map.Entry<String, Collection<Map<String, Object>>>> entries = tables.entrySet();
 		List<ITable> results = new ArrayList<>(entries.size());
 
-		for (Map.Entry<String, List<Map<String, Object>>> entry : entries) {
+		for (Map.Entry<String, Collection<Map<String, Object>>> entry : entries) {
 			String tableName = entry.getKey();
-			List<Map<String, Object>> rows = entry.getValue();
+			Collection<Map<String, Object>> rows = entry.getValue();
 			log.debug("Extract table '{}'", tableName);
 
 			// Create table.
