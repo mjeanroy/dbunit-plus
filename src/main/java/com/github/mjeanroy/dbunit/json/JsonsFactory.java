@@ -27,9 +27,10 @@ package com.github.mjeanroy.dbunit.json;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
 /**
- * The goal of this factory is to create default instances of {@link JsonParser}.
+ * The goal of this factory is to create default instances
+ * of {@link JsonParser}/{@link JsonSerializer}.
  */
-public final class JsonParserFactory {
+public final class JsonsFactory {
 
 	private static final boolean JACKSON2_AVAILABLE = ClassUtils.isPresent(
 		"com.fasterxml.jackson.databind.ObjectMapper"
@@ -44,7 +45,7 @@ public final class JsonParserFactory {
 	);
 
 	// Ensure non instantiation.
-	private JsonParserFactory() {
+	private JsonsFactory() {
 	}
 
 	/**
@@ -60,7 +61,7 @@ public final class JsonParserFactory {
 	 *
 	 * @return The created parser.
 	 */
-	public static JsonParser createDefault() {
+	public static JsonParser createDefaultParser() {
 		if (JACKSON2_AVAILABLE) {
 			return Jackson2Parser.getInstance();
 		}
@@ -74,7 +75,24 @@ public final class JsonParserFactory {
 		}
 
 		throw new UnsupportedOperationException(
-			"Cannot create JSON parser, please add jackson or gson to your classpath"
+			"Cannot create JSON mapper, please add jackson or gson to your classpath"
 		);
+	}
+
+	/**
+	 * Create default serializer.
+	 *
+	 * Implementation will be selected using classpath detection:
+	 * <ul>
+	 *   <li>If Jackson2 is available on classpath, then it is selected.</li>
+	 *   <li>If Gson is available on classpath, then it is selected.</li>
+	 *   <li>If Jackson1 is available on classpath, then it is selected.</li>
+	 *   <li>If none of these dependencies are available, an instance of {@link UnsupportedOperationException} is thrown.</li>
+	 * </ul>
+	 *
+	 * @return The created parser.
+	 */
+	public static JsonSerializer createDefaultSerializer() {
+		return (JsonSerializer) createDefaultParser();
 	}
 }

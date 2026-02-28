@@ -26,6 +26,7 @@ package com.github.mjeanroy.dbunit.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mjeanroy.dbunit.exception.JsonException;
 
 import java.io.Reader;
 import java.util.Map;
@@ -54,7 +55,7 @@ import java.util.Map;
  * {@link #getInstance()}.
  * </p>
  */
-class Jackson2Parser extends AbstractJsonParser implements JsonParser {
+class Jackson2Parser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
 	/**
 	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
@@ -98,5 +99,15 @@ class Jackson2Parser extends AbstractJsonParser implements JsonParser {
 	@Override
 	final Map<String, Object> doRead(Reader reader) throws Exception {
 		return (Map<String, Object>) OBJECT_MAPPER.readValue(reader, Map.class);
+	}
+
+	@Override
+	public String writeToString(Object object) {
+		try {
+			return OBJECT_MAPPER.writeValueAsString(object);
+		}
+		catch (Exception ex) {
+			throw new JsonException(ex);
+		}
 	}
 }

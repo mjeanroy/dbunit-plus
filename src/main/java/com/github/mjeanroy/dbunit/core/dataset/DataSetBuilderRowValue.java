@@ -25,6 +25,7 @@
 package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.commons.lang.ToStringBuilder;
+import com.github.mjeanroy.dbunit.json.JsonsFactory;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -401,11 +402,30 @@ public final class DataSetBuilderRowValue {
 		}
 	}
 
+	private static final class JsonBinder implements Binder<Object, String> {
+		@Override
+		public String bindTo(Object input) {
+			if (input == null) {
+				return null;
+			}
+
+			return JsonsFactory.createDefaultSerializer().writeToString(
+				input
+			);
+		}
+
+		@Override
+		public String toString() {
+			return ToStringBuilder.create(this).build();
+		}
+	}
+
 	private static final Binder<Object, Object> IDENTITY_BINDER = new IdentityBinder();
 	private static final Binder<OffsetDateTime, Date> OFFSET_DATE_TIME_BINDER = new OffsetDateTimeBinder();
 	private static final Binder<LocalDateTime, Date> LOCALE_DATE_TIME_BINDER = new LocalDateTimeBinder();
 	private static final Binder<ZonedDateTime, Date> ZONED_DATE_TIME_BINDER = new ZonedDateTimeBinder();
 	private static final Binder<LocalDate, Date> LOCALE_DATE_BINDER = new LocalDateBinder();
+	private static final Binder<Object, String> JSON_BINDER = new JsonBinder();
 
 	private static final Map<Class<?>, Binder<?, ?>> binders;
 	static {
@@ -444,5 +464,9 @@ public final class DataSetBuilderRowValue {
 		throw new UnsupportedOperationException(
 			"Unsupported value type: " + value.getClass().getName()
 		);
+	}
+
+	static Binder<?, ?> jsonBinder() {
+		return JSON_BINDER;
 	}
 }

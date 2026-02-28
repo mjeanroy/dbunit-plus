@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.parsers.YamlDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
+import com.github.mjeanroy.dbunit.yaml.YamlsFactory;
 import org.dbunit.dataset.DataSetException;
 
 /**
@@ -85,7 +85,7 @@ public class YamlDataSetBuilder extends AbstractParseableDataSetBuilder<
 	@Override
 	YamlDatasetParser getDefaultParser() {
 		return new YamlDatasetParser(
-			YamlParserFactory.createDefault()
+			YamlsFactory.createDefaultParser()
 		);
 	}
 }

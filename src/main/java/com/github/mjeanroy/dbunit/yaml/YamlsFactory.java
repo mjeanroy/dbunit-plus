@@ -29,7 +29,7 @@ import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 /**
  * The goal of this factory is to create default instances of {@link YamlParser}.
  */
-public final class YamlParserFactory {
+public final class YamlsFactory {
 
 	private static final boolean JACKSON_YAML_AVAILABLE = ClassUtils.isPresent(
 		"com.fasterxml.jackson.databind.ObjectMapper",
@@ -41,7 +41,7 @@ public final class YamlParserFactory {
 	);
 
 	// Ensure non instantiation.
-	private YamlParserFactory() {
+	private YamlsFactory() {
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class YamlParserFactory {
 	 *
 	 * @return The created parser.
 	 */
-	public static YamlParser createDefault() {
+	public static YamlParser createDefaultParser() {
 		if (JACKSON_YAML_AVAILABLE) {
 			return JacksonYamlParser.getInstance();
 		}

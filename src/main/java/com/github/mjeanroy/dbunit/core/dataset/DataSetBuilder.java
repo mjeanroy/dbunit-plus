@@ -24,9 +24,17 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
+import com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.Binder;
 import org.dbunit.dataset.DefaultDataSet;
 import org.dbunit.dataset.IDataSet;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -45,7 +53,9 @@ import java.util.UUID;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.toSnakeCase;
 import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.extractMembers;
+import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.getFieldValueSafely;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.binder;
+import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.jsonBinder;
 
 /**
  * Fluent builder for creating DbUnit {@link org.dbunit.dataset.IDataSet} instances
@@ -167,16 +177,21 @@ public final class DataSetBuilder {
 	 * @throws com.github.mjeanroy.dbunit.exception.FieldAccessException If accessing a field value fails.
 	 */
 	public static DataSetBuilderRow rowFromObject(Object o) {
-		Map<String, Object> values = extractMembers(
+		Map<String, Field> values = extractMembers(
 			notNull(o, "Object instance must not be null")
 		);
 
 		List<DataSetBuilderRowValue> rowValues = new ArrayList<>(values.size());
 
-		for (Map.Entry<String, Object> entry : values.entrySet()) {
+		for (Map.Entry<String, Field> entry : values.entrySet()) {
 			String columnName = toSnakeCase(entry.getKey());
+			Field field = entry.getValue();
+			Object value = getFieldValueSafely(o, field);
+
 			rowValues.add(
-				column(columnName, entry.getValue())
+				field.isAnnotationPresent(JsonBinder.class) ?
+					column(columnName, value, jsonBinder()) :
+					column(columnName, value)
 			);
 		}
 
@@ -240,7 +255,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName) {
-		return new DataSetBuilderRowValue(columnName, null, binder(null));
+		return column(columnName, null, binder(null));
 	}
 
 	/**
@@ -252,7 +267,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Short value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -264,7 +279,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Integer value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -276,7 +291,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Long value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -288,7 +303,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Float value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -300,7 +315,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Double value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -312,7 +327,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Boolean value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -324,7 +339,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, BigInteger value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -336,7 +351,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, BigDecimal value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -348,7 +363,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, String value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -360,7 +375,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, UUID value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -372,7 +387,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, Date value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -384,7 +399,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, OffsetDateTime value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -396,7 +411,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, LocalDateTime value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -408,7 +423,7 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, ZonedDateTime value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
 	}
 
 	/**
@@ -420,11 +435,27 @@ public final class DataSetBuilder {
 	 * @return A new {@link DataSetBuilderRowValue}.
 	 */
 	public static DataSetBuilderRowValue column(String columnName, LocalDate value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
+	}
+
+	/**
+	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
+	 * and its value serialized as JSON.
+	 *
+	 * @param columnName Column name (must not be {@code null} or blank).
+	 * @param value Value to serialize as JSON.
+	 * @return A new {@link DataSetBuilderRowValue}.
+	 */
+	public static DataSetBuilderRowValue jsonColumn(String columnName, Object value) {
+		return column(columnName, value, jsonBinder());
 	}
 
 	private static DataSetBuilderRowValue column(String columnName, Object value) {
-		return new DataSetBuilderRowValue(columnName, value, binder(value));
+		return column(columnName, value, binder(value));
+	}
+
+	private static DataSetBuilderRowValue column(String columnName, Object value, Binder<?, ?> binder) {
+		return new DataSetBuilderRowValue(columnName, value, binder);
 	}
 
 	/**
@@ -498,5 +529,12 @@ public final class DataSetBuilder {
 		}
 
 		return dataSet;
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Inherited
+	@Documented
+	@Target({ ElementType.FIELD })
+	public @interface JsonBinder {
 	}
 }

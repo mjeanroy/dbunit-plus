@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.parsers.JsonDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.json.JsonParserFactory;
+import com.github.mjeanroy.dbunit.json.JsonsFactory;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
@@ -47,7 +47,7 @@ class JsonDataSetTest {
 	@BeforeEach
 	void setUp() {
 		parser = new JsonDatasetParser(
-			JsonParserFactory.createDefault()
+			JsonsFactory.createDefaultParser()
 		);
 	}
 

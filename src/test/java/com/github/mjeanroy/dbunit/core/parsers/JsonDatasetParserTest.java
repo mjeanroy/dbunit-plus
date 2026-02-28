@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.parsers;
 
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.json.JsonParser;
-import com.github.mjeanroy.dbunit.json.JsonParserFactory;
+import com.github.mjeanroy.dbunit.json.JsonsFactory;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import org.junit.jupiter.api.Test;
 
@@ -44,7 +44,7 @@ class JsonDatasetParserTest {
 	@Test
 	void it_should_parse_json_dataset() {
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_JSON).build();
-		JsonParser parser = JsonParserFactory.createDefault();
+		JsonParser parser = JsonsFactory.createDefaultParser();
 		JsonDatasetParser dataSetParser = new JsonDatasetParser(parser);
 
 		Map<String, Collection<Map<String, Object>>> dataSet = dataSetParser.parse(resource);

@@ -34,7 +34,7 @@ class YamlParserFactoryTest {
 
 	@Test
 	void it_should_create_jackson_yaml_parser_by_default() {
-		YamlParser parser = YamlParserFactory.createDefault();
+		YamlParser parser = YamlsFactory.createDefaultParser();
 		assertThat(parser).isExactlyInstanceOf(JacksonYamlParser.class);
 	}
 
@@ -44,7 +44,7 @@ class YamlParserFactoryTest {
 		"com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
 	})
 	void it_should_create_snake_yaml_parser_if_jackson_is_not_in_classpath() {
-		YamlParser parser = YamlParserFactory.createDefault();
+		YamlParser parser = YamlsFactory.createDefaultParser();
 		assertThat(parser).isExactlyInstanceOf(SnakeYamlParser.class);
 	}
 
@@ -53,7 +53,7 @@ class YamlParserFactoryTest {
 		"com.fasterxml.jackson.dataformat:jackson-dataformat-yaml",
 	})
 	void it_should_create_snake_yaml_parser_if_jackson_is_in_classpath_without_jackson_yaml() {
-		YamlParser parser = YamlParserFactory.createDefault();
+		YamlParser parser = YamlsFactory.createDefaultParser();
 		assertThat(parser).isExactlyInstanceOf(SnakeYamlParser.class);
 	}
 
@@ -64,7 +64,7 @@ class YamlParserFactoryTest {
 		"org.yaml:snakeyaml",
 	})
 	void it_should_fail_without_valid_implementation() {
-		assertThatThrownBy(YamlParserFactory::createDefault)
+		assertThatThrownBy(YamlsFactory::createDefaultParser)
 			.isInstanceOf(UnsupportedOperationException.class)
 			.hasMessage(
 				"Cannot create YAML parser, please add jackson (com.fasterxml.jackson.dataformat.jackson-dataformat-yaml) or SnakeYAML (org.yaml.snakeyaml) to your classpath"

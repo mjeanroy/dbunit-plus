@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.google.gson.Gson;
 import com.google.gson.ToNumberPolicy;
 
@@ -47,7 +48,7 @@ import java.util.Map;
  * instance via {@link #getInstance()}.
  * </p>
  */
-class GsonParser extends AbstractJsonParser {
+class GsonParser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
 	/**
 	 * Shared {@link Gson} instance used to deserialize JSON content.
@@ -91,5 +92,15 @@ class GsonParser extends AbstractJsonParser {
 	@Override
 	final Map<String, Object> doRead(Reader reader) {
 		return (Map<String, Object>) GSON.fromJson(reader, Map.class);
+	}
+
+	@Override
+	public String writeToString(Object object) {
+		try {
+			return GSON.toJson(object);
+		}
+		catch (Exception ex) {
+			throw new JsonException(ex);
+		}
 	}
 }

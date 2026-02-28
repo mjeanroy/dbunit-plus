@@ -70,13 +70,13 @@ public final class Reflections {
 	 *         {@code null}, an empty map is returned.
 	 * @throws FieldAccessException if a field value cannot be accessed via reflection.
 	 */
-	public static Map<String, Object> extractMembers(Object instance) {
+	public static Map<String, Field> extractMembers(Object instance) {
 		if (instance == null) {
 			return emptyMap();
 		}
 
 		Class<?> klazz = instance.getClass();
-		Map<String, Object> members = new LinkedHashMap<>();
+		Map<String, Field> members = new LinkedHashMap<>();
 
 		while (klazz != Object.class) {
 			for (Field field : klazz.getDeclaredFields()) {
@@ -85,7 +85,7 @@ public final class Reflections {
 					continue;
 				}
 
-				members.put(name, getValueSafely(instance, field));
+				members.put(name, field);
 			}
 
 			klazz = klazz.getSuperclass();
@@ -94,7 +94,7 @@ public final class Reflections {
 		return unmodifiableMap(members);
 	}
 
-	private static Object getValueSafely(Object instance, Field field) {
+	public static Object getFieldValueSafely(Object instance, Field field) {
 		boolean wasAccessible = field.isAccessible();
 		try {
 			field.setAccessible(true);

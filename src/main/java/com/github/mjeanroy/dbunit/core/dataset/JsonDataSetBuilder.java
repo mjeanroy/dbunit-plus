@@ -26,7 +26,7 @@ package com.github.mjeanroy.dbunit.core.dataset;
 
 import com.github.mjeanroy.dbunit.core.parsers.JsonDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
-import com.github.mjeanroy.dbunit.json.JsonParserFactory;
+import com.github.mjeanroy.dbunit.json.JsonsFactory;
 import org.dbunit.dataset.DataSetException;
 
 /**
@@ -86,7 +86,7 @@ public class JsonDataSetBuilder extends AbstractParseableDataSetBuilder<
 	@Override
 	JsonDatasetParser getDefaultParser() {
 		return new JsonDatasetParser(
-			JsonParserFactory.createDefault()
+			JsonsFactory.createDefaultParser()
 		);
 	}
 }

@@ -38,5 +38,6 @@ CREATE TABLE data_set_builder_it_test_table (
   offset_date_time_value DATETIME,
   local_date_time_value DATETIME,
   zoned_date_time_value DATETIME,
-  local_date_value DATE
+  local_date_value DATE,
+  json_value NVARCHAR(MAX)
 );

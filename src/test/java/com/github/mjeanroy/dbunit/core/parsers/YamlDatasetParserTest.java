@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.parsers;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
 import com.github.mjeanroy.dbunit.yaml.YamlParser;
-import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
+import com.github.mjeanroy.dbunit.yaml.YamlsFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ class YamlDatasetParserTest {
 	@Test
 	void it_should_parse_yaml_dataset() {
 		Resource resource = new ResourceMockBuilder().fromClasspath(USERS_YAML).build();
-		YamlParser parser = YamlParserFactory.createDefault();
+		YamlParser parser = YamlsFactory.createDefaultParser();
 		YamlDatasetParser dataSetParser = new YamlDatasetParser(parser);
 
 		Map<String, Collection<Map<String, Object>>> dataSet = dataSetParser.parse(resource);

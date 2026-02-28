@@ -27,7 +27,7 @@ package com.github.mjeanroy.dbunit.core.dataset;
 import com.github.mjeanroy.dbunit.core.parsers.YamlDatasetParser;
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.tests.builders.ResourceMockBuilder;
-import com.github.mjeanroy.dbunit.yaml.YamlParserFactory;
+import com.github.mjeanroy.dbunit.yaml.YamlsFactory;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.ITableIterator;
 import org.dbunit.dataset.ITableMetaData;
@@ -48,7 +48,7 @@ class YamlDataSetTest {
 	@BeforeEach
 	void setUp() {
 		parser = new YamlDatasetParser(
-			YamlParserFactory.createDefault()
+			YamlsFactory.createDefaultParser()
 		);
 	}
 

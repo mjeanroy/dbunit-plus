@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import com.github.mjeanroy.dbunit.exception.JsonException;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.util.JsonParserDelegate;
@@ -59,7 +60,7 @@ import java.util.Map;
  * {@link #getInstance()}.
  * </p>
  */
-class Jackson1Parser extends AbstractJsonParser implements JsonParser {
+class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
 	/**
 	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
@@ -101,6 +102,16 @@ class Jackson1Parser extends AbstractJsonParser implements JsonParser {
 	@Override
 	final Map<String, Object> doRead(Reader reader) throws Exception {
 		return (Map<String, Object>) OBJECT_MAPPER.readValue(reader, Map.class);
+	}
+
+	@Override
+	public String writeToString(Object object) {
+		try {
+			return OBJECT_MAPPER.writeValueAsString(object);
+		}
+		catch (Exception ex) {
+			throw new JsonException(ex);
+		}
 	}
 
 	private static final class CustomJsonFactory extends MappingJsonFactory {
