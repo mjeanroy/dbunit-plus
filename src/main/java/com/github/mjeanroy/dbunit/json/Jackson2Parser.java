@@ -73,6 +73,7 @@ class Jackson2Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 
 	static {
 		OBJECT_MAPPER.enable(DeserializationFeature.USE_LONG_FOR_INTS);
+		OBJECT_MAPPER.findAndRegisterModules();
 	}
 
 	/**

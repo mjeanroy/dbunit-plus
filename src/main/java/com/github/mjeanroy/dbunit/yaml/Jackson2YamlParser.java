@@ -53,9 +53,12 @@ class Jackson2YamlParser extends AbstractYamlParser implements YamlParser {
 	 * Shared {@link ObjectMapper} instance configured with
 	 * a {@link YAMLFactory} to parse YAML input.
 	 */
-	private static final ObjectMapper MAPPER = new ObjectMapper(
-		new YAMLFactory()
-	);
+	private static final ObjectMapper MAPPER;
+
+	static {
+		MAPPER = new ObjectMapper(new YAMLFactory());
+		MAPPER.findAndRegisterModules();
+	}
 
 	/**
 	 * Singleton instance of the parser.
