@@ -47,7 +47,7 @@ import java.util.Map;
  * {@link #getInstance()}.
  * </p>
  */
-class JacksonYamlParser extends AbstractYamlParser implements YamlParser {
+class Jackson2YamlParser extends AbstractYamlParser implements YamlParser {
 
 	/**
 	 * Shared {@link ObjectMapper} instance configured with
@@ -60,25 +60,25 @@ class JacksonYamlParser extends AbstractYamlParser implements YamlParser {
 	/**
 	 * Singleton instance of the parser.
 	 */
-	private static final JacksonYamlParser INSTANCE = new JacksonYamlParser();
+	private static final Jackson2YamlParser INSTANCE = new Jackson2YamlParser();
 
 	/**
 	 * Return the singleton instance of this parser.
 	 *
-	 * @return the shared {@link JacksonYamlParser} instance
+	 * @return the shared {@link Jackson2YamlParser} instance
 	 */
-	static JacksonYamlParser getInstance() {
+	static Jackson2YamlParser getInstance() {
 		return INSTANCE;
 	}
 
 	/**
-	 * Create a new {@link JacksonYamlParser}.
+	 * Create a new {@link Jackson2YamlParser}.
 	 *
 	 * <p>
 	 * Constructor is private to enforce singleton usage.
 	 * </p>
 	 */
-	private JacksonYamlParser() {
+	private Jackson2YamlParser() {
 	}
 
 	@SuppressWarnings("unchecked")

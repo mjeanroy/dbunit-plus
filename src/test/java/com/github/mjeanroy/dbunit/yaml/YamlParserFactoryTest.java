@@ -35,7 +35,7 @@ class YamlParserFactoryTest {
 	@Test
 	void it_should_create_jackson_yaml_parser_by_default() {
 		YamlParser parser = YamlsFactory.createDefaultParser();
-		assertThat(parser).isExactlyInstanceOf(JacksonYamlParser.class);
+		assertThat(parser).isExactlyInstanceOf(Jackson2YamlParser.class);
 	}
 
 	@Test

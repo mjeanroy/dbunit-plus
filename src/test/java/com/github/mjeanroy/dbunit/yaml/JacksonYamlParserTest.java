@@ -28,6 +28,6 @@ class JacksonYamlParserTest extends AbstractYamlParserTest {
 
 	@Override
 	YamlParser yamlParser() {
-		return JacksonYamlParser.getInstance();
+		return Jackson2YamlParser.getInstance();
 	}
 }

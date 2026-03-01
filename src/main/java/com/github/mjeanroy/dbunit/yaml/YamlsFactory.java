@@ -132,7 +132,7 @@ public final class YamlsFactory {
 
 	private static YamlParser detectDefault() {
 		if (JACKSON_YAML_AVAILABLE) {
-			return JacksonYamlParser.getInstance();
+			return Jackson2YamlParser.getInstance();
 		}
 
 		if (SNAKE_YAML_AVAILABLE) {
