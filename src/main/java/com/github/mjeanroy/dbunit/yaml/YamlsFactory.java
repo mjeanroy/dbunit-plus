@@ -25,11 +25,63 @@
 package com.github.mjeanroy.dbunit.yaml;
 
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
+import com.github.mjeanroy.dbunit.loggers.Logger;
+import com.github.mjeanroy.dbunit.loggers.Loggers;
+
+import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
- * The goal of this factory is to create default instances of {@link YamlParser}.
+ * Factory used to create the default {@link YamlParser} implementation.
+ *
+ * <p>
+ * This factory resolves a {@link YamlParser} using a two-step strategy:
+ * </p>
+ *
+ * <h2>1. Service Provider Interface (SPI)</h2>
+ * <p>
+ * The factory first attempts to discover user-defined implementations via
+ * {@link ServiceLoader}. If a provider is found on the classpath, it is
+ * returned immediately. This allows applications to override the default
+ * YAML implementation without modifying the library.
+ * </p>
+ *
+ * <h2>2. Classpath Auto-Detection</h2>
+ * <p>
+ * If no SPI provider is found, the factory falls back to classpath detection.
+ * The first available implementation in the following order is selected:
+ * </p>
+ * <ol>
+ *   <li>Jackson YAML module (if {@code com.fasterxml.jackson.dataformat.yaml.YAMLFactory} is present)</li>
+ *   <li>SnakeYAML (if {@code org.yaml.snakeyaml.Yaml} is present)</li>
+ * </ol>
+ *
+ * <p>
+ * Availability is determined using runtime classpath inspection.
+ * </p>
+ *
+ * <h2>Failure Behavior</h2>
+ * <p>
+ * If no SPI implementation is found and none of the supported YAML libraries
+ * are available on the classpath, an {@link UnsupportedOperationException}
+ * is thrown.
+ * </p>
+ *
+ * <h2>Thread-Safety</h2>
+ * <p>
+ * This factory is stateless and thread-safe.
+ * </p>
+ *
+ * <h2>Design Notes</h2>
+ * <p>
+ * Implementations are selected dynamically to avoid introducing a mandatory
+ * dependency on a specific YAML library. This enables flexible integration
+ * depending on the application's classpath configuration.
+ * </p>
  */
 public final class YamlsFactory {
+
+	private static final Logger log = Loggers.getLogger(YamlsFactory.class);
 
 	private static final boolean JACKSON_YAML_AVAILABLE = ClassUtils.isPresent(
 		"com.fasterxml.jackson.databind.ObjectMapper",
@@ -45,19 +97,40 @@ public final class YamlsFactory {
 	}
 
 	/**
-	 * Create default parser.
+	 * Create the default {@link YamlParser} implementation.
 	 *
-	 * Implementation will be selected using classpath detection:
-	 * <ul>
-	 *   <li>If Jackson2 is available on classpath, then it is selected.</li>
-	 *   <li>If Gson is available on classpath, then it is selected.</li>
-	 *   <li>If Jackson1 is available on classpath, then it is selected.</li>
-	 *   <li>If none of these dependencies are available, an instance of {@link UnsupportedOperationException} is thrown.</li>
-	 * </ul>
+	 * <p>
+	 * The resolution strategy first checks for SPI providers and then
+	 * falls back to classpath auto-detection.
+	 * </p>
 	 *
-	 * @return The created parser.
+	 * @return the resolved {@link YamlParser} implementation
+	 * @throws UnsupportedOperationException if no suitable implementation can be found on the classpath
 	 */
 	public static YamlParser createDefaultParser() {
+		// Try SPI first.
+		// If some custom implementations are declared and detected, use them.
+		log.debug("Looking for {}, trying SPI loaders", YamlParser.class);
+		ServiceLoader<YamlParser> loggerProviders = ServiceLoader.load(YamlParser.class);
+		Iterator<YamlParser> it = loggerProviders.iterator();
+		if (it.hasNext()) {
+			log.debug("Found SPI provider for '{}'", YamlParser.class);
+			return it.next();
+		}
+
+		log.debug("No SPI provider for '{}', fallback to default one", YamlParser.class);
+		YamlParser p = detectDefault();
+		if (p != null) {
+			return p;
+		}
+
+		throw new UnsupportedOperationException(
+			"Cannot create YAML parser, please add jackson (com.fasterxml.jackson.dataformat.jackson-dataformat-yaml) or " +
+			"SnakeYAML (org.yaml.snakeyaml) to your classpath"
+		);
+	}
+
+	private static YamlParser detectDefault() {
 		if (JACKSON_YAML_AVAILABLE) {
 			return JacksonYamlParser.getInstance();
 		}
@@ -66,9 +139,6 @@ public final class YamlsFactory {
 			return SnakeYamlParser.getInstance();
 		}
 
-		throw new UnsupportedOperationException(
-			"Cannot create YAML parser, please add jackson (com.fasterxml.jackson.dataformat.jackson-dataformat-yaml) or " +
-			"SnakeYAML (org.yaml.snakeyaml) to your classpath"
-		);
+		return null;
 	}
 }
