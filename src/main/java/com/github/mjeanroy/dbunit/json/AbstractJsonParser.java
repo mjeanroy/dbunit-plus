@@ -30,11 +30,60 @@ import java.io.Reader;
 import java.util.Map;
 
 /**
- * Abstract implementation of {@link JsonParser} that delegate to {@link #doRead(Reader reader)},
- * re-throwing any exceptions into {@link JsonException}.
+ * Base implementation of {@link JsonParser} and {@link JsonSerializer}.
+ *
+ * <p>
+ * This abstract class provides a template implementation for JSON parsing and
+ * serialization operations. It centralizes exception handling by delegating
+ * the actual work to protected abstract methods while ensuring that any
+ * checked or runtime exception is wrapped into a {@link JsonException}.
+ * </p>
+ *
+ * <p>
+ * Subclasses must implement:
+ * </p>
+ * <ul>
+ *   <li>{@link #doRead(Reader)} to parse a JSON input stream into a {@link Map}.</li>
+ *   <li>{@link #doWriteToString(Object)} to serialize an object into its JSON {@link String} representation.</li>
+ * </ul>
+ *
+ * <p>
+ * Both {@link #readObject(Reader)} and {@link #writeToString(Object)} are final
+ * to guarantee consistent exception handling across implementations.
+ * </p>
+ *
+ * <h2>Exception Handling</h2>
+ * <p>
+ * Any exception thrown by the underlying implementation methods is caught
+ * and rethrown as a {@link JsonException}. This ensures a consistent and
+ * simplified exception model for callers.
+ * </p>
+ *
+ * <h2>Usage</h2>
+ * <pre>{@code
+ * class MyJsonParser extends AbstractJsonParser {
+ *
+ *     @Override
+ *     Map<String, Object> doRead(Reader reader) throws Exception {
+ *         // Custom JSON parsing logic
+ *     }
+ *
+ *     @Override
+ *     String doWriteToString(Object o) throws Exception {
+ *         // Custom JSON serialization logic
+ *     }
+ * }
+ * }</pre>
+ *
+ * @see JsonParser
+ * @see JsonSerializer
+ * @see JsonException
  */
-abstract class AbstractJsonParser implements JsonParser {
+abstract class AbstractJsonParser implements JsonParser, JsonSerializer {
 
+	/**
+	 * Create a new parser instance.
+	 */
 	AbstractJsonParser() {
 	}
 
@@ -48,5 +97,43 @@ abstract class AbstractJsonParser implements JsonParser {
 		}
 	}
 
+	@Override
+	public final String writeToString(Object o) {
+		try {
+			return doWriteToString(o);
+		}
+		catch (Exception ex) {
+			throw new JsonException(ex);
+		}
+	}
+
+	/**
+	 * Template method used to parse JSON content from the given {@link Reader}.
+	 *
+	 * <p>
+	 * Implementations should perform the actual parsing logic in this method.
+	 * Any exception thrown will be caught and wrapped into a {@link JsonException}
+	 * by the caller.
+	 * </p>
+	 *
+	 * @param reader the input reader containing JSON content
+	 * @return the parsed JSON object as a {@link Map}
+	 * @throws Exception if any parsing error occurs
+	 */
 	abstract Map<String, Object> doRead(Reader reader) throws Exception;
+
+	/**
+	 * Template method used to serialize the given object into a JSON {@link String}.
+	 *
+	 * <p>
+	 * Implementations should perform the actual serialization logic in this method.
+	 * Any exception thrown will be caught and wrapped into a {@link JsonException}
+	 * by the caller.
+	 * </p>
+	 *
+	 * @param o the object to serialize
+	 * @return the JSON representation of the given object
+	 * @throws Exception if any serialization error occurs
+	 */
+	abstract String doWriteToString(Object o) throws Exception;
 }

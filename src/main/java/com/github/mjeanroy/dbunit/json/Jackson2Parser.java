@@ -26,7 +26,6 @@ package com.github.mjeanroy.dbunit.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mjeanroy.dbunit.exception.JsonException;
 
 import java.io.Reader;
 import java.util.Map;
@@ -102,12 +101,7 @@ class Jackson2Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 	}
 
 	@Override
-	public String writeToString(Object object) {
-		try {
-			return OBJECT_MAPPER.writeValueAsString(object);
-		}
-		catch (Exception ex) {
-			throw new JsonException(ex);
-		}
+	final String doWriteToString(Object object) throws Exception {
+		return OBJECT_MAPPER.writeValueAsString(object);
 	}
 }

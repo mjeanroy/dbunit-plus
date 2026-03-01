@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import com.github.mjeanroy.dbunit.exception.JsonException;
 import com.google.gson.Gson;
 import com.google.gson.ToNumberPolicy;
 
@@ -95,12 +94,7 @@ class GsonParser extends AbstractJsonParser implements JsonParser, JsonSerialize
 	}
 
 	@Override
-	public String writeToString(Object object) {
-		try {
-			return GSON.toJson(object);
-		}
-		catch (Exception ex) {
-			throw new JsonException(ex);
-		}
+	final String doWriteToString(Object object) {
+		return GSON.toJson(object);
 	}
 }

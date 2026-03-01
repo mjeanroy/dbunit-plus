@@ -24,7 +24,6 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-import com.github.mjeanroy.dbunit.exception.JsonException;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.util.JsonParserDelegate;
@@ -105,13 +104,8 @@ class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 	}
 
 	@Override
-	public String writeToString(Object object) {
-		try {
-			return OBJECT_MAPPER.writeValueAsString(object);
-		}
-		catch (Exception ex) {
-			throw new JsonException(ex);
-		}
+	final String doWriteToString(Object object) throws Exception {
+		return OBJECT_MAPPER.writeValueAsString(object);
 	}
 
 	private static final class CustomJsonFactory extends MappingJsonFactory {
