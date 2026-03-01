@@ -34,6 +34,7 @@ class JsonsFactoryTest {
 
 	@Test
 	@ModifiedClasspath(excludeJars = {
+		"tools.jackson.core:jackson-databind",
 		"com.fasterxml.jackson.core:jackson-databind",
 	})
 	void it_should_create_gson_parser_if_jackson2_is_not_in_classpath() {
@@ -43,6 +44,7 @@ class JsonsFactoryTest {
 
 	@Test
 	@ModifiedClasspath(excludeJars = {
+		"tools.jackson.core:jackson-databind",
 		"com.fasterxml.jackson.core:jackson-databind",
 		"com.google.code.gson:gson",
 	})
@@ -53,6 +55,7 @@ class JsonsFactoryTest {
 
 	@Test
 	@ModifiedClasspath(excludeJars = {
+		"tools.jackson.core:jackson-databind",
 		"com.fasterxml.jackson.core:jackson-databind",
 		"com.google.code.gson:gson",
 		"org.codehaus.jackson:jackson-mapper-asl",
