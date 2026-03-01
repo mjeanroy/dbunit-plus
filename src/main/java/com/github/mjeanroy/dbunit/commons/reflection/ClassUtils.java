@@ -65,6 +65,11 @@ public final class ClassUtils {
 			// the class not to be present.
 			return false;
 		}
+		catch (Error e) {
+			// In case we try to load a class that is not compatible with the current java version,
+			// we get an UnsupportedClassVersionError, which is not an exception.
+			return false;
+		}
 	}
 
 	/**
