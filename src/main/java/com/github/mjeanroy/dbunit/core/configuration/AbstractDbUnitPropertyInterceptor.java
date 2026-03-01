@@ -56,7 +56,7 @@ abstract class AbstractDbUnitPropertyInterceptor<T> implements DbUnitConfigInter
 	}
 
 	@Override
-	public void applyConfiguration(DatabaseConfig config) {
+	public final void applyConfiguration(DatabaseConfig config) {
 		config.setProperty(property, value);
 	}
 

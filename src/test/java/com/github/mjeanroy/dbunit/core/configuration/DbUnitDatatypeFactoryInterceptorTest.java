@@ -27,7 +27,6 @@ package com.github.mjeanroy.dbunit.core.configuration;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
-import org.dbunit.dataset.datatype.IDataTypeFactory;
 import org.dbunit.ext.h2.H2DataTypeFactory;
 import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
 import org.dbunit.ext.mysql.MySqlDataTypeFactory;
@@ -35,21 +34,10 @@ import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
 class DbUnitDatatypeFactoryInterceptorTest {
 
 	private static final String PROPERTY_NAME = "http://www.dbunit.org/properties/datatypeFactory";
-
-	@Test
-	void it_should_set_property() {
-		IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class);
-		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
-		DatabaseConfig config = new DatabaseConfig();
-		interceptor.applyConfiguration(config);
-
-		assertThat(config.getProperty(PROPERTY_NAME)).isSameAs(dataTypeFactory);
-	}
 
 	@Test
 	void it_should_instantiate_default_datatype_and_set_property() {
@@ -108,8 +96,7 @@ class DbUnitDatatypeFactoryInterceptorTest {
 
 	@Test
 	void it_should_implement_to_string() {
-		IDataTypeFactory dataTypeFactory = mock(IDataTypeFactory.class, "MockDatatypeFactory");
-		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(dataTypeFactory);
+		DbUnitDatatypeFactoryInterceptor interceptor = new DbUnitDatatypeFactoryInterceptor(DefaultDataTypeFactory.class);
 		assertThat(interceptor).hasToString(
 			"DbUnitDatatypeFactoryInterceptor{" +
 				"property: \"http://www.dbunit.org/properties/datatypeFactory\", " +

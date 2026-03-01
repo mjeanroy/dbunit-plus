@@ -28,7 +28,7 @@ import com.github.mjeanroy.dbunit.core.configuration.DbUnitConfigInterceptor;
 import com.github.mjeanroy.dbunit.core.jdbc.JdbcForeignKeyManager;
 import org.dbunit.database.DefaultMetadataHandler;
 import org.dbunit.database.IMetadataHandler;
-import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
+import org.dbunit.dataset.datatype.DataType;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
 
 import java.lang.annotation.Documented;
@@ -189,7 +189,7 @@ public @interface DbUnitConfig {
 	 *
 	 * @return The datatype factory.
 	 */
-	Class<? extends IDataTypeFactory> datatypeFactory() default DefaultDataTypeFactory.class;
+	Class<? extends IDataTypeFactory> datatypeFactory() default AutoDetectDatabaseFactory.class;
 
 	/**
 	 * Used to configure the handler used to control database metadata related methods.
@@ -208,4 +208,19 @@ public @interface DbUnitConfig {
 	 * @return The metadata handler implementation.
 	 */
 	Class<? extends IMetadataHandler> metadataHandler() default DefaultMetadataHandler.class;
+
+	final class AutoDetectDatabaseFactory implements IDataTypeFactory {
+		private AutoDetectDatabaseFactory() {
+		}
+
+		@Override
+		public DataType createDataType(int sqlType, String sqlTypeName) {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public DataType createDataType(int sqlType, String sqlTypeName, String tableName, String columnName) {
+			throw new UnsupportedOperationException();
+		}
+	}
 }

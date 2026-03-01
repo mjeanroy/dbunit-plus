@@ -136,6 +136,10 @@ public final class Strings {
 		return input == null ? null : input.trim();
 	}
 
+	public static String toLower(String input) {
+		return input == null ? null : input.toLowerCase();
+	}
+
 	/**
 	 * Substitute given input using given context.
 	 *

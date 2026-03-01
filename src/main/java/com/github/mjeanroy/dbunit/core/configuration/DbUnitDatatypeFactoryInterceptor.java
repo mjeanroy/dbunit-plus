@@ -25,15 +25,32 @@
 package com.github.mjeanroy.dbunit.core.configuration;
 
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
+import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import org.dbunit.database.DatabaseConfig;
+import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
 import org.dbunit.dataset.datatype.IDataTypeFactory;
+import org.dbunit.ext.h2.H2DataTypeFactory;
+import org.dbunit.ext.hsqldb.HsqldbDataTypeFactory;
+import org.dbunit.ext.mssql.MsSqlDataTypeFactory;
+import org.dbunit.ext.mysql.MySqlDataTypeFactory;
+import org.dbunit.ext.oracle.OracleDataTypeFactory;
+import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
+
+import java.sql.DatabaseMetaData;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
+import static com.github.mjeanroy.dbunit.commons.lang.Strings.toLower;
 
 /**
  * An interceptor that can specify the {@code "datatypeFactory"} property of DbUnit.
  *
  * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
  */
-public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitPropertyInterceptor<IDataTypeFactory> {
+public final class DbUnitDatatypeFactoryInterceptor implements DbUnitConfigInterceptor {
+
+	private final Class<? extends IDataTypeFactory> dataTypeFactoryClass;
 
 	/**
 	 * Create the interceptor.
@@ -41,15 +58,68 @@ public final class DbUnitDatatypeFactoryInterceptor extends AbstractDbUnitProper
 	 * @param dataTypeFactoryClass The datatype property class, that will be instantiated.
 	 */
 	public DbUnitDatatypeFactoryInterceptor(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
-		this(ClassUtils.instantiate(dataTypeFactoryClass));
+		this.dataTypeFactoryClass = notNull(dataTypeFactoryClass, "dataTypeFactoryClass must not be null");
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param dataTypeFactory The datatype factory instance.
-	 */
-	public DbUnitDatatypeFactoryInterceptor(IDataTypeFactory dataTypeFactory) {
-		super(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, dataTypeFactory);
+	@Override
+	public void applyConfiguration(DatabaseConfig config) {
+		// Nothing to do.
+		// The method below is called instead.
+	}
+
+	@Override
+	public void applyConfiguration(DatabaseConfig config, IDatabaseConnection dbConnection) {
+		config.setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, toDataTypeFactory(dbConnection));
+	}
+
+	private IDataTypeFactory toDataTypeFactory(IDatabaseConnection dbConnection) {
+		if (dataTypeFactoryClass != DbUnitConfig.AutoDetectDatabaseFactory.class) {
+			return ClassUtils.instantiate(dataTypeFactoryClass);
+		}
+
+		DatabaseProduct product = introspectDatabaseProduct(dbConnection);
+		return ClassUtils.instantiate(product.dataTypeFactoryClass);
+	}
+
+	private static DatabaseProduct introspectDatabaseProduct(IDatabaseConnection dbConnection) {
+		try {
+			DatabaseMetaData metaData = dbConnection.getConnection().getMetaData();
+			String productName = toLower(metaData.getDatabaseProductName());
+			if (isEmpty(productName)) {
+				return DatabaseProduct.UNKNOWN;
+			}
+
+			for (DatabaseProduct p : DatabaseProduct.values()) {
+				if (productName.contains(p.productName)) {
+					return p;
+				}
+			}
+
+			return DatabaseProduct.UNKNOWN;
+		} catch (Exception e) {
+			return DatabaseProduct.UNKNOWN;
+		}
+	}
+
+	enum DatabaseProduct {
+		H2("h2", H2DataTypeFactory.class),
+		HSQLDB("hsqldb", HsqldbDataTypeFactory.class),
+		MSSQL("mssql", MsSqlDataTypeFactory.class),
+		MARIADB("mariadb", MySqlDataTypeFactory.class),
+		MYSQL("mysql", MySqlDataTypeFactory.class),
+		POSTGRESQL("postgresql", PostgresqlDataTypeFactory.class),
+		ORACLE("oracle", OracleDataTypeFactory.class),
+		UNKNOWN("", DefaultDataTypeFactory.class);
+
+		private final String productName;
+		private final Class<? extends IDataTypeFactory> dataTypeFactoryClass;
+
+		DatabaseProduct(
+			String productName,
+			Class<? extends IDataTypeFactory> dataTypeFactoryClass
+		) {
+			this.productName = productName;
+			this.dataTypeFactoryClass = dataTypeFactoryClass;
+		}
 	}
 }
