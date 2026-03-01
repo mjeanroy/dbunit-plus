@@ -60,7 +60,9 @@ public final class ClassUtils {
 			Class.forName(className);
 			return true;
 		}
-		catch (ClassNotFoundException ex) {
+		catch (Exception ex) {
+			// If the class cannot be loaded, whatever the reason, we consider
+			// the class not to be present.
 			return false;
 		}
 	}
