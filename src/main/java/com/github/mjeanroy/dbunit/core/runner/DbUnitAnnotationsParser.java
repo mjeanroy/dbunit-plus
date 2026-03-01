@@ -24,6 +24,7 @@
 
 package com.github.mjeanroy.dbunit.core.runner;
 
+import com.github.mjeanroy.dbunit.commons.lang.SPI;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConnection;
@@ -62,7 +63,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.substitute;
@@ -192,10 +192,9 @@ final class DbUnitAnnotationsParser {
 			return null;
 		}
 
-		ServiceLoader<DataSetProvider> serviceLoader = ServiceLoader.load(DataSetProvider.class);
 		List<IDataSet> dataSets = new ArrayList<>();
 
-		for (DataSetProvider provider : serviceLoader) {
+		for (DataSetProvider provider : SPI.load(DataSetProvider.class)) {
 			try {
 				log.info("Loading dataset from provider: {}", provider);
 				IDataSet dataSet = provider.get();

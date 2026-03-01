@@ -24,10 +24,8 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
+import com.github.mjeanroy.dbunit.commons.lang.SPI;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
-
-import java.util.Iterator;
-import java.util.ServiceLoader;
 
 /**
  * Logger factory.
@@ -47,9 +45,7 @@ public final class Loggers {
 
 	static {
 		// First, discover using the ServiceProvider API.
-		ServiceLoader<LoggerProvider> loggerProviders = ServiceLoader.load(LoggerProvider.class);
-		Iterator<LoggerProvider> it = loggerProviders.iterator();
-		loggerProvider = it.hasNext() ? it.next() : null;
+		loggerProvider = SPI.loadFirst(LoggerProvider.class);
 	}
 
 	// Ensure non instantiation.

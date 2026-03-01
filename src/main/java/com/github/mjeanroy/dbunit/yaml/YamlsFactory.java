@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
+import com.github.mjeanroy.dbunit.commons.lang.SPI;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 
-import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -111,17 +111,16 @@ public final class YamlsFactory {
 		// Try SPI first.
 		// If some custom implementations are declared and detected, use them.
 		log.debug("Looking for {}, trying SPI loaders", YamlParser.class);
-		ServiceLoader<YamlParser> loggerProviders = ServiceLoader.load(YamlParser.class);
-		Iterator<YamlParser> it = loggerProviders.iterator();
-		if (it.hasNext()) {
+		YamlParser p1 = SPI.loadFirst(YamlParser.class);
+		if (p1 != null) {
 			log.debug("Found SPI provider for '{}'", YamlParser.class);
-			return it.next();
+			return p1;
 		}
 
 		log.debug("No SPI provider for '{}', fallback to default one", YamlParser.class);
-		YamlParser p = detectDefault();
-		if (p != null) {
-			return p;
+		YamlParser p2 = detectDefault();
+		if (p2 != null) {
+			return p2;
 		}
 
 		throw new UnsupportedOperationException(

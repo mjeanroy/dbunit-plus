@@ -24,11 +24,11 @@
 
 package com.github.mjeanroy.dbunit.json;
 
+import com.github.mjeanroy.dbunit.commons.lang.SPI;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
 
-import java.util.Iterator;
 import java.util.ServiceLoader;
 
 /**
@@ -136,17 +136,16 @@ public final class JsonsFactory {
 		// Try SPI first.
 		// If some custom implementations are declared and detected, use them.
 		log.debug("Looking for {}, trying SPI loaders", klazz);
-		ServiceLoader<T> loggerProviders = ServiceLoader.load(klazz);
-		Iterator<T> it = loggerProviders.iterator();
-		if (it.hasNext()) {
+		T p1 = SPI.loadFirst(klazz);
+		if (p1 != null) {
 			log.debug("Found SPI provider for '{}'", klazz);
-			return it.next();
+			return p1;
 		}
 
 		log.debug("No SPI provider for '{}', fallback to default one", klazz);
-		T p = detectDefault(klazz);
-		if (p != null) {
-			return p;
+		T p2 = detectDefault(klazz);
+		if (p2 != null) {
+			return p2;
 		}
 
 		throw new UnsupportedOperationException(
