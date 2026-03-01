@@ -86,6 +86,10 @@ public final class JsonsFactory {
 
 	private static final Logger log = Loggers.getLogger(JsonsFactory.class);
 
+	private static final boolean JACKSON3_AVAILABLE = ClassUtils.isPresent(
+		"tools.jackson.databind.ObjectMapper"
+	);
+
 	private static final boolean JACKSON2_AVAILABLE = ClassUtils.isPresent(
 		"com.fasterxml.jackson.databind.ObjectMapper"
 	);
@@ -155,6 +159,10 @@ public final class JsonsFactory {
 
 	@SuppressWarnings("unchecked")
 	private static <T> T detectDefault(Class<T> klazz) {
+		if (JACKSON3_AVAILABLE && klazz.isAssignableFrom(Jackson3Parser.class)) {
+			return (T) Jackson3Parser.getInstance();
+		}
+
 		if (JACKSON2_AVAILABLE && klazz.isAssignableFrom(Jackson2Parser.class)) {
 			return (T) Jackson2Parser.getInstance();
 		}
