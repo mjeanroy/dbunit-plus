@@ -48,19 +48,33 @@ jobs:
             distribution: 'zulu'
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-    - name: Set up JDK
-      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
-      with:
-        distribution: ${{ matrix.distribution }}
-        java-version: ${{ matrix.java }}
-        cache: 'maven'
-    - name: java -version
-      run: java -version
-    - name: mvn -version
-      run: ./mvnw -version
-    - name: Build
-      run: ./mvnw -B install -DskipTests
-    - name: Test
-      run: ./mvnw verify
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # Always compile on Java 25
+      # Then, the test suite will run on the targeted JRE
+      - name: Set up JDK for compilation
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        with:
+          distribution: ${{ matrix.distribution }}
+          java-version: 25
+          cache: 'maven'
+      - name: java -version
+        run: java -version
+      - name: mvn -version
+        run: ./mvnw -version
+      - name: Build
+        run: ./mvnw -B install -DskipTests
+
+      - name: Set up JDK for testing
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
+        with:
+          distribution: ${{ matrix.distribution }}
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+      - name: java -version
+        run: java -version
+      - name: mvn -version
+        run: ./mvnw -version
+      - name: Test
+        run: ./mvnw verify
