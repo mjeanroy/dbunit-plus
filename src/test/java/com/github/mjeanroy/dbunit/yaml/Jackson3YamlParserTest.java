@@ -24,10 +24,14 @@
 
 package com.github.mjeanroy.dbunit.yaml;
 
-class JacksonYamlParserTest extends AbstractYamlParserTest {
+import org.junit.jupiter.api.condition.EnabledForJreRange;
+import org.junit.jupiter.api.condition.JRE;
+
+@EnabledForJreRange(min = JRE.JAVA_17)
+class Jackson3YamlParserTest extends AbstractYamlParserTest {
 
 	@Override
 	YamlParser yamlParser() {
-		return Jackson2YamlParser.getInstance();
+		return Jackson3YamlParser.getInstance();
 	}
 }

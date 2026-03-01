@@ -83,7 +83,11 @@ public final class YamlsFactory {
 
 	private static final Logger log = Loggers.getLogger(YamlsFactory.class);
 
-	private static final boolean JACKSON_YAML_AVAILABLE = ClassUtils.isPresent(
+	private static final boolean JACKSON3_YAML_AVAILABLE = ClassUtils.isPresent(
+		"tools.jackson.dataformat.yaml.YAMLMapper"
+	);
+
+	private static final boolean JACKSON2_YAML_AVAILABLE = ClassUtils.isPresent(
 		"com.fasterxml.jackson.databind.ObjectMapper",
 		"com.fasterxml.jackson.dataformat.yaml.YAMLFactory"
 	);
@@ -130,7 +134,11 @@ public final class YamlsFactory {
 	}
 
 	private static YamlParser detectDefault() {
-		if (JACKSON_YAML_AVAILABLE) {
+		if (JACKSON3_YAML_AVAILABLE) {
+			return Jackson3YamlParser.getInstance();
+		}
+
+		if (JACKSON2_YAML_AVAILABLE) {
 			return Jackson2YamlParser.getInstance();
 		}
 
