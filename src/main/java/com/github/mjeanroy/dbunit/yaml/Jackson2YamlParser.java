@@ -50,29 +50,19 @@ import java.util.Map;
 class Jackson2YamlParser extends AbstractYamlParser implements YamlParser {
 
 	/**
-	 * Shared {@link ObjectMapper} instance configured with
-	 * a {@link YAMLFactory} to parse YAML input.
-	 */
-	private static final ObjectMapper MAPPER;
-
-	static {
-		MAPPER = new ObjectMapper(new YAMLFactory());
-		MAPPER.findAndRegisterModules();
-	}
-
-	/**
-	 * Singleton instance of the parser.
-	 */
-	private static final Jackson2YamlParser INSTANCE = new Jackson2YamlParser();
-
-	/**
 	 * Return the singleton instance of this parser.
 	 *
 	 * @return the shared {@link Jackson2YamlParser} instance
 	 */
 	static Jackson2YamlParser getInstance() {
-		return INSTANCE;
+		return Holder.INSTANCE;
 	}
+
+	/**
+	 * {@link ObjectMapper} instance configured with
+	 * a {@link YAMLFactory} to parse YAML input.
+	 */
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * Create a new {@link Jackson2YamlParser}.
@@ -81,12 +71,19 @@ class Jackson2YamlParser extends AbstractYamlParser implements YamlParser {
 	 * Constructor is private to enforce singleton usage.
 	 * </p>
 	 */
-	private Jackson2YamlParser() {
+	private Jackson2YamlParser(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	Map<String, Object> doRead(Reader reader) throws Exception {
-		return (Map<String, Object>) MAPPER.readValue(reader, Map.class);
+		return (Map<String, Object>) objectMapper.readValue(reader, Map.class);
+	}
+
+	private static final class Holder {
+		private static final Jackson2YamlParser INSTANCE = new Jackson2YamlParser(
+			new ObjectMapper(new YAMLFactory()).findAndRegisterModules()
+		);
 	}
 }

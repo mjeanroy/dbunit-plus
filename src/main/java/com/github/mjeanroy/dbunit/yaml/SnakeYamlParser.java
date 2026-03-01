@@ -48,23 +48,18 @@ import java.util.Map;
 class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
 
 	/**
-	 * Shared {@link Yaml} instance used to deserialize YAML content.
-	 */
-	private static final Yaml YAML = new Yaml();
-
-	/**
-	 * Singleton instance of the parser.
-	 */
-	private static final SnakeYamlParser INSTANCE = new SnakeYamlParser();
-
-	/**
 	 * Return the singleton instance of this parser.
 	 *
 	 * @return the shared {@link SnakeYamlParser} instance
 	 */
 	static SnakeYamlParser getInstance() {
-		return INSTANCE;
+		return Holder.INSTANCE;
 	}
+
+	/**
+	 * {@link Yaml} instance used to deserialize YAML content.
+	 */
+	private final Yaml yaml;
 
 	/**
 	 * Create a new {@link SnakeYamlParser}.
@@ -73,11 +68,18 @@ class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
 	 * Constructor is private to enforce singleton usage.
 	 * </p>
 	 */
-	private SnakeYamlParser() {
+	private SnakeYamlParser(Yaml yaml) {
+		this.yaml = yaml;
 	}
 
 	@Override
 	protected Map<String, Object> doRead(Reader reader) {
-		return YAML.load(reader);
+		return yaml.load(reader);
+	}
+
+	private static final class Holder {
+		private static final SnakeYamlParser INSTANCE = new SnakeYamlParser(
+			new Yaml()
+		);
 	}
 }

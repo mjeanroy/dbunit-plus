@@ -62,6 +62,15 @@ import java.util.Map;
 class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
 	/**
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link Jackson1Parser} instance.
+	 */
+	static Jackson1Parser getInstance() {
+		return Holder.INSTANCE;
+	}
+
+	/**
 	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
 	 *
 	 * <p>
@@ -69,23 +78,7 @@ class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 	 * numeric normalization during parsing.
 	 * </p>
 	 */
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper(
-		new CustomJsonFactory()
-	);
-
-	/**
-	 * Singleton instance of the parser.
-	 */
-	private static final Jackson1Parser INSTANCE = new Jackson1Parser();
-
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link Jackson1Parser} instance.
-	 */
-	static Jackson1Parser getInstance() {
-		return INSTANCE;
-	}
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * Create a new {@link Jackson1Parser}.
@@ -93,19 +86,22 @@ class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 	 * <p>
 	 * Constructor is private to enforce singleton usage.
 	 * </p>
+	 *
+	 * @param objectMapper The Jackson 1.X object mapper.
 	 */
-	private Jackson1Parser() {
+	private Jackson1Parser(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	final Map<String, Object> doRead(Reader reader) throws Exception {
-		return (Map<String, Object>) OBJECT_MAPPER.readValue(reader, Map.class);
+		return (Map<String, Object>) objectMapper.readValue(reader, Map.class);
 	}
 
 	@Override
 	final String doWriteToString(Object object) throws Exception {
-		return OBJECT_MAPPER.writeValueAsString(object);
+		return objectMapper.writeValueAsString(object);
 	}
 
 	private static final class CustomJsonFactory extends MappingJsonFactory {
@@ -177,5 +173,13 @@ class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 
 			return n;
 		}
+	}
+
+	private static final class Holder {
+		private static final Jackson1Parser INSTANCE = new Jackson1Parser(
+			new ObjectMapper(
+				new CustomJsonFactory()
+			)
+		);
 	}
 }

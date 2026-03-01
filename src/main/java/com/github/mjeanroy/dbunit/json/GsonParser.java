@@ -50,7 +50,16 @@ import java.util.Map;
 class GsonParser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
 	/**
-	 * Shared {@link Gson} instance used to deserialize JSON content.
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link GsonParser} instance.
+	 */
+	static GsonParser getInstance() {
+		return Holder.INSTANCE;
+	}
+
+	/**
+	 * {@link Gson} instance used to deserialize JSON content.
 	 *
 	 * <p>
 	 * Configured with {@link ToNumberPolicy#LONG_OR_DOUBLE} to preserve
@@ -58,24 +67,7 @@ class GsonParser extends AbstractJsonParser implements JsonParser, JsonSerialize
 	 * or {@link Double} otherwise.
 	 * </p>
 	 */
-	private static final Gson GSON = new Gson().newBuilder()
-		.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-		.setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
-		.create();
-
-	/**
-	 * Singleton instance of the parser.
-	 */
-	private static final GsonParser INSTANCE = new GsonParser();
-
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link GsonParser} instance.
-	 */
-	static GsonParser getInstance() {
-		return INSTANCE;
-	}
+	private final Gson gson;
 
 	/**
 	 * Create a new {@link GsonParser}.
@@ -83,18 +75,30 @@ class GsonParser extends AbstractJsonParser implements JsonParser, JsonSerialize
 	 * <p>
 	 * Constructor is private to enforce singleton usage.
 	 * </p>
+	 *
+	 * @param gson The gson instance to use.
 	 */
-	private GsonParser() {
+	private GsonParser(Gson gson) {
+		this.gson = gson;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	final Map<String, Object> doRead(Reader reader) {
-		return (Map<String, Object>) GSON.fromJson(reader, Map.class);
+		return (Map<String, Object>) gson.fromJson(reader, Map.class);
 	}
 
 	@Override
 	final String doWriteToString(Object object) {
-		return GSON.toJson(object);
+		return gson.toJson(object);
+	}
+
+	private static final class Holder {
+		private static final GsonParser INSTANCE = new GsonParser(
+			new Gson().newBuilder()
+				.setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+				.setNumberToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE)
+				.create()
+		);
 	}
 }

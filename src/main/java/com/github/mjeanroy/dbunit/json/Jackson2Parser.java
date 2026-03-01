@@ -57,33 +57,23 @@ import java.util.Map;
 class Jackson2Parser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
 	/**
-	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
+	 * Return the singleton instance of this parser.
+	 *
+	 * @return the shared {@link Jackson2Parser} instance.
+	 */
+	static Jackson2Parser getInstance() {
+		return Holder.INSTANCE;
+	}
+
+	/**
+	 * {@link ObjectMapper} instance used to deserialize JSON content.
 	 *
 	 * <p>
 	 * Configured to enable {@link DeserializationFeature#USE_LONG_FOR_INTS}
 	 * so that integral values are mapped to {@link Long}.
 	 * </p>
 	 */
-	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-	/**
-	 * Singleton instance of the parser.
-	 */
-	private static final Jackson2Parser INSTANCE = new Jackson2Parser();
-
-	static {
-		OBJECT_MAPPER.enable(DeserializationFeature.USE_LONG_FOR_INTS);
-		OBJECT_MAPPER.findAndRegisterModules();
-	}
-
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link Jackson2Parser} instance.
-	 */
-	static Jackson2Parser getInstance() {
-		return INSTANCE;
-	}
+	private final ObjectMapper objectMapper;
 
 	/**
 	 * Create a new {@link Jackson2Parser}.
@@ -92,17 +82,26 @@ class Jackson2Parser extends AbstractJsonParser implements JsonParser, JsonSeria
 	 * Constructor is private to enforce singleton usage.
 	 * </p>
 	 */
-	private Jackson2Parser() {
+	private Jackson2Parser(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	final Map<String, Object> doRead(Reader reader) throws Exception {
-		return (Map<String, Object>) OBJECT_MAPPER.readValue(reader, Map.class);
+		return (Map<String, Object>) objectMapper.readValue(reader, Map.class);
 	}
 
 	@Override
 	final String doWriteToString(Object object) throws Exception {
-		return OBJECT_MAPPER.writeValueAsString(object);
+		return objectMapper.writeValueAsString(object);
+	}
+
+	private static final class Holder {
+		private static final Jackson2Parser INSTANCE = new Jackson2Parser(
+			new ObjectMapper()
+				.enable(DeserializationFeature.USE_LONG_FOR_INTS)
+				.findAndRegisterModules()
+		);
 	}
 }
