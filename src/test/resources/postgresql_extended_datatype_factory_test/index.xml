@@ -33,5 +33,7 @@
       cidr_value="2001:4f8:3:ba::/64"
       macaddr_value="08:00:2b:01:02:03"
       macaddr8_value="08:00:2b:01:02:03:04:05"
+      tsvector_value="a fat cat sat on a mat and ate a fat rat"
+      tsquery_value="fat &amp; rat"
   />
 </dataset>

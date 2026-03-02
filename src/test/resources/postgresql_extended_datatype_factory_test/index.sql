@@ -32,5 +32,7 @@ CREATE TABLE postgresql_extended_datatype_factory_test (
   ipv6_value INET,
   cidr_value INET,
   macaddr_value MACADDR,
-  macaddr8_value MACADDR8
+  macaddr8_value MACADDR8,
+  tsvector_value TSVECTOR,
+  tsquery_value TSQUERY
 );
