@@ -26,5 +26,6 @@
   <postgresql_extended_datatype_factory_test
       json_value='{"id":1}'
       jsonb_value='{"name":"JohnDoe"}'
-      varchar_value="John Doe"/>
+      varchar_value="John Doe"
+      xml_value="&lt;person&gt;&lt;id&gt;1&lt;/id&gt;&lt;name&gt;John Doe&lt;/name&gt;&lt;/person&gt;"/>
 </dataset>

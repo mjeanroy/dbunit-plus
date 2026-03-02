@@ -75,7 +75,8 @@ public final class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeF
 	private static final Set<String> STRING_LIKE_DATA_TYPES = new HashSet<>(
 		asList(
 			"json",
-			"jsonb"
+			"jsonb",
+			"xml"
 		)
 	);
 

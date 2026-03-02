@@ -26,5 +26,6 @@ DROP TABLE IF EXISTS postgresql_extended_datatype_factory_test;
 CREATE TABLE postgresql_extended_datatype_factory_test (
   json_value JSON,
   jsonb_value JSONB,
-  varchar_value VARCHAR
+  varchar_value VARCHAR,
+  xml_value XML
 );
