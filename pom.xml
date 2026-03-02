@@ -481,11 +481,12 @@
       <scope>test</scope>
     </dependency>
 
+    <!-- Not with test scope for the extended postgresql datatype factory -->
     <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${postgresql.version}</version>
-      <scope>test</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>com.mysql</groupId>

@@ -27,26 +27,18 @@ package com.github.mjeanroy.dbunit.core.dataset;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
+import com.github.mjeanroy.dbunit.core.ext.PostgresqlExtendedDatatypeFactory;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
 import com.github.mjeanroy.dbunit.tests.db.JdbcQueries;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.datatype.AbstractDataType;
-import org.dbunit.dataset.datatype.DataType;
-import org.dbunit.dataset.datatype.DataTypeException;
-import org.dbunit.ext.postgresql.PostgresqlDataTypeFactory;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
-import org.postgresql.util.PGobject;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -54,8 +46,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 import java.util.UUID;
 
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilder.column;
@@ -82,7 +72,7 @@ class DataSetBuilderItTest {
 	@TestContainersTest(image = POSTGRES_13)
 	@DbUnitTestContainersTest
 	@DbUnitInit(sql = SQL_PATH + "/postgres.sql")
-	@DbUnitConfig(datatypeFactory = PostgresqlJsonAwareDataTypeFactory.class)
+	@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
 	class Postgres13Test extends BaseTest {
 	}
 
@@ -90,7 +80,7 @@ class DataSetBuilderItTest {
 	@TestContainersTest(image = POSTGRES_14)
 	@DbUnitTestContainersTest
 	@DbUnitInit(sql = SQL_PATH + "/postgres.sql")
-	@DbUnitConfig(datatypeFactory = PostgresqlJsonAwareDataTypeFactory.class)
+	@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
 	class Postgres14Test extends BaseTest {
 	}
 
@@ -98,7 +88,7 @@ class DataSetBuilderItTest {
 	@TestContainersTest(image = POSTGRES_15)
 	@DbUnitTestContainersTest
 	@DbUnitInit(sql = SQL_PATH + "/postgres.sql")
-	@DbUnitConfig(datatypeFactory = PostgresqlJsonAwareDataTypeFactory.class)
+	@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
 	class Postgres15Test extends BaseTest {
 	}
 
@@ -269,49 +259,6 @@ class DataSetBuilderItTest {
 
 		public void setName(String name) {
 			this.name = name;
-		}
-	}
-
-
-	private static final class PostgresqlJsonAwareDataTypeFactory extends PostgresqlDataTypeFactory {
-
-		@Override
-		public DataType createDataType(int sqlType, String sqlTypeName) throws DataTypeException {
-			String type = sqlTypeName == null ? null : sqlTypeName.toLowerCase(Locale.ROOT);
-
-			if (Objects.equals(type, "json") || Objects.equals(type, "jsonb")) {
-				return new StringLikeDataType(sqlTypeName);
-			}
-
-			return super.createDataType(sqlType, sqlTypeName);
-		}
-	}
-
-	private static final class StringLikeDataType extends AbstractDataType {
-
-		private final String name;
-
-		StringLikeDataType(String name) {
-			super(name, Types.OTHER, String.class, false);
-			this.name = Objects.requireNonNull(name);
-		}
-
-		@Override
-		public Object typeCast(Object obj) {
-			return obj.toString();
-		}
-
-		@Override
-		public Object getSqlValue(int column, ResultSet resultSet) throws SQLException {
-			return resultSet.getString(column);
-		}
-
-		@Override
-		public void setSqlValue(Object value, int column, PreparedStatement statement) throws SQLException {
-			PGobject jsonObj = new PGobject();
-			jsonObj.setType(name);
-			jsonObj.setValue(value == null ? null : value.toString());
-			statement.setObject(column, jsonObj);
 		}
 	}
 }
