@@ -22,22 +22,7 @@
 -- SOFTWARE.
 --
 
-DROP TABLE IF EXISTS data_set_builder_it_test_table;
-CREATE TABLE data_set_builder_it_test_table (
-  short_value INTEGER,
-  integer_value INTEGER,
-  long_value INTEGER,
-  text_value VARCHAR(100),
-  boolean_value BOOL,
-  float_value NUMERIC,
-  double_value NUMERIC,
-  big_integer_value INTEGER,
-  big_decimal_value NUMERIC,
-  uuid_value VARCHAR(36),
-  date_value TIMESTAMP,
-  offset_date_time_value TIMESTAMP,
-  local_date_time_value TIMESTAMP,
-  zoned_date_time_value TIMESTAMP,
-  local_date_value DATE,
-  json_value JSON
+DROP TABLE IF EXISTS mysql_extended_datatype_factory_test;
+CREATE TABLE mysql_extended_datatype_factory_test (
+  bit_value BIT
 );

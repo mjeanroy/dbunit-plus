@@ -72,6 +72,7 @@ import static com.github.mjeanroy.dbunit.core.jdbc.JdbcConfiguration.newJdbcConf
 import static com.github.mjeanroy.dbunit.core.sql.SqlScriptParser.parseScript;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -481,7 +482,7 @@ final class DbUnitAnnotationsParser {
 	 */
 	static Config readConfig(DbUnitConfig annotation) {
 		if (annotation == null) {
-			return new Config();
+			return new Config(defaultInterceptors());
 		}
 
 		String schema = annotation.schema();
@@ -526,4 +527,9 @@ final class DbUnitAnnotationsParser {
 		return new Config(schema, interceptors, fkManagers);
 	}
 
+	private static List<DbUnitConfigInterceptor> defaultInterceptors() {
+		return singletonList(
+			new DbUnitDatatypeFactoryInterceptor(DbUnitConfig.AutoDetectDataTypeFactory.class)
+		);
+	}
 }

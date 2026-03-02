@@ -132,6 +132,16 @@ public final class Strings {
 		return isEmpty(trimmedInput) ? null : trimmedInput;
 	}
 
+	/**
+	 * Turn given input to its lowercase version.
+	 *
+	 * @param input Input.
+	 * @return Lowercased input, or {@code null}.
+	 */
+	public static String toLower(String input) {
+		return input == null ? null : input.toLowerCase();
+	}
+
 	private static String trim(String input) {
 		return input == null ? null : input.trim();
 	}

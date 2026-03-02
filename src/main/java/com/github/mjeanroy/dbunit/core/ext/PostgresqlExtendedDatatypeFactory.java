@@ -84,7 +84,7 @@ public final class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeF
 		)
 	);
 
-	PostgresqlExtendedDatatypeFactory() {
+	public PostgresqlExtendedDatatypeFactory() {
 	}
 
 	@Override

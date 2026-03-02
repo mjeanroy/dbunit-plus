@@ -55,6 +55,7 @@ import com.github.mjeanroy.dbunit.tests.fixtures.WithReplacementsProvidersDataSe
 import com.github.mjeanroy.dbunit.tests.fixtures.WithXmlFilesDataSet;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DefaultMetadataHandler;
+import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.database.IMetadataHandler;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.datatype.DefaultDataTypeFactory;
@@ -70,6 +71,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Mockito.mock;
 
 class DbUnitAnnotationsParserTest {
 
@@ -271,6 +273,21 @@ class DbUnitAnnotationsParserTest {
 	}
 
 	@Test
+	void it_should_read_default_interceptor() {
+		Config config = DbUnitAnnotationsParser.readConfig(null);
+		List<DbUnitConfigInterceptor> interceptors = config.getInterceptors();
+
+		assertThat(interceptors).hasSize(1);
+		assertThat(interceptors.get(0)).isExactlyInstanceOf(DbUnitDatatypeFactoryInterceptor.class);
+
+		DbUnitDatatypeFactoryInterceptor interceptor = (DbUnitDatatypeFactoryInterceptor) interceptors.get(0);
+		Class<? extends IDataTypeFactory> dataTypeFactoryClass = readPrivate(interceptor, "dataTypeFactoryClass");
+		assertThat(dataTypeFactoryClass).isEqualTo(
+			DbUnitConfig.AutoDetectDataTypeFactory.class
+		);
+	}
+
+	@Test
 	void it_should_read_interceptor_with_default_interceptors() {
 		Class<TestClassWithDefaultDbUnitConfig> testClass = TestClassWithDefaultDbUnitConfig.class;
 		DbUnitConfig annotation = testClass.getAnnotation(DbUnitConfig.class);
@@ -418,7 +435,7 @@ class DbUnitAnnotationsParserTest {
 	) {
 		DatabaseConfig config = new DatabaseConfig();
 		for (DbUnitConfigInterceptor interceptor : interceptors) {
-			interceptor.applyConfiguration(config);
+			interceptor.applyConfiguration(config, mock(IDatabaseConnection.class));
 		}
 
 		assertThat(config.getProperty(DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS)).isEqualTo(allowEmptyFields);

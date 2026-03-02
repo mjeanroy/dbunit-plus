@@ -24,10 +24,8 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
 import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
-import com.github.mjeanroy.dbunit.core.ext.PostgresqlExtendedDatatypeFactory;
 import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
 import com.github.mjeanroy.dbunit.tests.db.JdbcQueries;
 import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
@@ -72,7 +70,6 @@ class DataSetBuilderItTest {
 	@TestContainersTest(image = POSTGRES_13)
 	@DbUnitTestContainersTest
 	@DbUnitInit(sql = SQL_PATH + "/postgres.sql")
-	@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
 	class Postgres13Test extends BaseTest {
 	}
 
@@ -80,7 +77,6 @@ class DataSetBuilderItTest {
 	@TestContainersTest(image = POSTGRES_14)
 	@DbUnitTestContainersTest
 	@DbUnitInit(sql = SQL_PATH + "/postgres.sql")
-	@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
 	class Postgres14Test extends BaseTest {
 	}
 
@@ -88,7 +84,6 @@ class DataSetBuilderItTest {
 	@TestContainersTest(image = POSTGRES_15)
 	@DbUnitTestContainersTest
 	@DbUnitInit(sql = SQL_PATH + "/postgres.sql")
-	@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
 	class Postgres15Test extends BaseTest {
 	}
 

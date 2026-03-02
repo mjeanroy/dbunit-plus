@@ -66,6 +66,15 @@ class StringsTest {
 	}
 
 	@Test
+	void it_should_lower_case() {
+		assertThat(Strings.toLower(null)).isNull();
+		assertThat(Strings.toLower("")).isEqualTo("");
+		assertThat(Strings.toLower("foo123")).isEqualTo("foo123");
+		assertThat(Strings.toLower("FOO123")).isEqualTo("foo123");
+		assertThat(Strings.toLower("FoO123")).isEqualTo("foo123");
+	}
+
+	@Test
 	void it_should_not_substitute_null() {
 		String input = null;
 		String prefix = "${";

@@ -24,30 +24,25 @@
 
 package com.github.mjeanroy.dbunit.core.ext;
 
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitConfig;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet;
-import com.github.mjeanroy.dbunit.core.annotations.DbUnitInit;
-import com.github.mjeanroy.dbunit.it.configuration.DbUnitTestContainersTest;
-import com.github.mjeanroy.dbunit.tests.jupiter.TestContainersTest;
-import org.junit.jupiter.api.Test;
+import org.dbunit.dataset.datatype.DataType;
+import org.dbunit.dataset.datatype.DataTypeException;
+import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 
-import java.sql.Connection;
+import java.util.Locale;
+import java.util.Objects;
 
-import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_15;
-import static org.assertj.core.api.Assertions.assertThat;
+public final class MySqlExtendedDatatypeFactory extends MySqlDataTypeFactory {
 
-@TestContainersTest(image = POSTGRES_15)
-@DbUnitTestContainersTest
-@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
-@DbUnitInit(sql = "classpath:/extended_datatype_factory_test/postgresql.sql")
-@DbUnitDataSet({
-	"classpath:/extended_datatype_factory_test/postgresql.xml",
-})
-class PostgresqlExtendedDatatypeFactoryTest {
+	public MySqlExtendedDatatypeFactory() {
+	}
 
-	@Test
-	void it_should_support_json_jsonb_varchar_column(Connection connection) {
-		assertThat(countFrom(connection, "postgresql_extended_datatype_factory_test")).isEqualTo(1);
+	@Override
+	public DataType createDataType(int sqlType, String sqlTypeName) throws DataTypeException {
+		String type = sqlTypeName == null ? null : sqlTypeName.toLowerCase(Locale.ROOT);
+		if (Objects.equals(type, "bit")) {
+			return DataType.BIT;
+		}
+
+		return super.createDataType(sqlType, sqlTypeName);
 	}
 }

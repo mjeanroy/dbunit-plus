@@ -34,20 +34,20 @@ import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
-import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.POSTGRES_15;
+import static com.github.mjeanroy.dbunit.tests.utils.TestContainersImages.MYSQL_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@TestContainersTest(image = POSTGRES_15)
+@TestContainersTest(image = MYSQL_8)
 @DbUnitTestContainersTest
-@DbUnitConfig(datatypeFactory = PostgresqlExtendedDatatypeFactory.class)
-@DbUnitInit(sql = "classpath:/extended_datatype_factory_test/postgresql.sql")
+@DbUnitConfig(datatypeFactory = MySqlExtendedDatatypeFactory.class)
+@DbUnitInit(sql = "classpath:/extended_datatype_factory_test/mysql.sql")
 @DbUnitDataSet({
-	"classpath:/extended_datatype_factory_test/postgresql.xml",
+	"classpath:/extended_datatype_factory_test/mysql.xml",
 })
-class PostgresqlExtendedDatatypeFactoryTest {
+class MysqlExtendedDatatypeFactoryTest {
 
 	@Test
 	void it_should_support_json_jsonb_varchar_column(Connection connection) {
-		assertThat(countFrom(connection, "postgresql_extended_datatype_factory_test")).isEqualTo(1);
+		assertThat(countFrom(connection, "mysql_extended_datatype_factory_test")).isEqualTo(1);
 	}
 }

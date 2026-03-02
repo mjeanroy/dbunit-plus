@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -39,7 +40,7 @@ class ConfigTest {
 
 	@Test
 	void it_should_create_empty_config() {
-		Config config = new Config();
+		Config config = new Config(emptyList());
 		assertThat(config.getSchema()).isNull();
 		assertThat(config.getInterceptors()).isEmpty();
 		assertThat(config.getFkManagers()).isEmpty();

@@ -56,8 +56,8 @@ final class Config {
 	 */
 	private final List<JdbcForeignKeyManager> fkManagers;
 
-	Config() {
-		this(null, emptyList(), emptyList());
+	Config(List<DbUnitConfigInterceptor> interceptors) {
+		this(null, interceptors, emptyList());
 	}
 
 	Config(
