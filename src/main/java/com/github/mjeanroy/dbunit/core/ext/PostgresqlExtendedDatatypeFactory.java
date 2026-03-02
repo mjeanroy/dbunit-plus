@@ -76,7 +76,9 @@ public final class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeF
 		asList(
 			"json",
 			"jsonb",
-			"xml"
+			"xml",
+			"macaddr",
+			"macaddr8"
 		)
 	);
 

@@ -27,5 +27,11 @@
       json_value='{"id":1}'
       jsonb_value='{"name":"JohnDoe"}'
       varchar_value="John Doe"
-      xml_value="&lt;person&gt;&lt;id&gt;1&lt;/id&gt;&lt;name&gt;John Doe&lt;/name&gt;&lt;/person&gt;"/>
+      xml_value="&lt;person&gt;&lt;id&gt;1&lt;/id&gt;&lt;name&gt;John Doe&lt;/name&gt;&lt;/person&gt;"
+      ipv4_value="10.1.2.3/32"
+      ipv6_value="2001:4f8:3:ba::/64"
+      cidr_value="2001:4f8:3:ba::/64"
+      macaddr_value="08:00:2b:01:02:03"
+      macaddr8_value="08:00:2b:01:02:03:04:05"
+  />
 </dataset>

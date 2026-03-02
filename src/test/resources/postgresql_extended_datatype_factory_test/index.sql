@@ -27,5 +27,10 @@ CREATE TABLE postgresql_extended_datatype_factory_test (
   json_value JSON,
   jsonb_value JSONB,
   varchar_value VARCHAR,
-  xml_value XML
+  xml_value XML,
+  ipv4_value INET,
+  ipv6_value INET,
+  cidr_value INET,
+  macaddr_value MACADDR,
+  macaddr8_value MACADDR8
 );
