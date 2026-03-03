@@ -47,7 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class PostgresqlExtendedDatatypeFactoryTest {
 
 	@Test
-	void it_should_support_json_jsonb_varchar_column(Connection connection) {
+	void it_should_support_extended_columns(Connection connection) {
 		assertThat(countFrom(connection, "postgresql_extended_datatype_factory_test")).isEqualTo(1);
 	}
 }

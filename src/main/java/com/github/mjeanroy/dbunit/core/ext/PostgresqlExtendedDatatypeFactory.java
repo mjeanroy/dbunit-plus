@@ -37,6 +37,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.HashSet;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
@@ -92,6 +93,10 @@ public final class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeF
 		String type = sqlTypeName == null ? null : sqlTypeName.toLowerCase(Locale.ROOT);
 
 		if (type != null && STRING_LIKE_DATA_TYPES.contains(type)) {
+			return new StringLikeDataType(sqlTypeName);
+		}
+
+		if (sqlType == Types.VARCHAR && !Objects.equals(type, "varchar")) {
 			return new StringLikeDataType(sqlTypeName);
 		}
 

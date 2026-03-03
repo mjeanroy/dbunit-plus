@@ -22,6 +22,9 @@
 -- SOFTWARE.
 --
 
+DROP TYPE IF EXISTS status;
+CREATE TYPE status AS ENUM ('ACTIVE', 'INACTIVE');
+
 DROP TABLE IF EXISTS postgresql_extended_datatype_factory_test;
 CREATE TABLE postgresql_extended_datatype_factory_test (
   json_value JSON,
@@ -34,5 +37,6 @@ CREATE TABLE postgresql_extended_datatype_factory_test (
   macaddr_value MACADDR,
   macaddr8_value MACADDR8,
   tsvector_value TSVECTOR,
-  tsquery_value TSQUERY
+  tsquery_value TSQUERY,
+  status_value status
 );
