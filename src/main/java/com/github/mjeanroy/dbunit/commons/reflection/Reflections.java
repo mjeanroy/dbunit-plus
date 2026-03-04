@@ -94,6 +94,14 @@ public final class Reflections {
 		return unmodifiableMap(members);
 	}
 
+	/**
+	 * Get value of given instance field, temporarily switching to an
+	 * accessible field to get the value.
+	 *
+	 * @param instance The instance.
+	 * @param field The field.
+	 * @return The field value.
+	 */
 	public static Object getFieldValueSafely(Object instance, Field field) {
 		boolean wasAccessible = field.isAccessible();
 		try {

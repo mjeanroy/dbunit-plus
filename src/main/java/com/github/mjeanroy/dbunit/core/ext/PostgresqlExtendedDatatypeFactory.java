@@ -85,6 +85,9 @@ public final class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeF
 		)
 	);
 
+	/**
+	 * Create factory.
+	 */
 	public PostgresqlExtendedDatatypeFactory() {
 	}
 

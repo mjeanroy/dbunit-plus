@@ -50,7 +50,8 @@ public final class Strings {
 	 * or non-alphabetic are left unchanged. If the input is {@code null} or empty,
 	 * the same value is returned unchanged.</p>
 	 *
-	 * <h2>Examples</h2>
+	 * <strong>Examples</strong>
+	 *
 	 * <ul>
 	 *   <li>{@code "firstName"} → {@code "first_name"}</li>
 	 *   <li>{@code "UserID"} → {@code "user_i_d"}</li>

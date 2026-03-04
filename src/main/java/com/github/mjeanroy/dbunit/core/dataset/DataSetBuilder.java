@@ -159,7 +159,7 @@ public final class DataSetBuilder {
 	 *
 	 * <p>If multiple fields with same name exists (for example in superclasses), the first value encountered is used.</p>
 	 *
-	 * <h2>Example</h2>
+	 * <h4>Example</h4>
 	 * <pre>{@code
 	 * class User {
 	 *     private final long id = 1L;
@@ -206,7 +206,8 @@ public final class DataSetBuilder {
 	 * The resulting {@link DataSetBuilderRow} preserves the order of entries in the map
 	 * if the map implementation maintains iteration order (e.g., {@link java.util.LinkedHashMap}).</p>
 	 *
-	 * <h2>Example</h2>
+	 * <strong>Example</strong>
+	 *
 	 * <pre>{@code
 	 * Map<String, Object> values = new LinkedHashMap<>();
 	 * values.put("id", 1);
@@ -531,6 +532,13 @@ public final class DataSetBuilder {
 		return dataSet;
 	}
 
+	/**
+	 * Annotate field that should be serialized as JSON when persisted to
+	 * the database using the {@link DataSetBuilder}.
+	 *
+	 * Note that the appropriate JSON library will automatically detected using
+	 * classpath detection, Jackson and GSON being currently supported.
+	 */
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@Documented

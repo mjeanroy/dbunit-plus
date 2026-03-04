@@ -209,6 +209,14 @@ public @interface DbUnitConfig {
 	 */
 	Class<? extends IMetadataHandler> metadataHandler() default DefaultMetadataHandler.class;
 
+	/**
+	 * Implementation of {@link IDataTypeFactory} that should not be used publicly
+	 * and where all methods will throw {@link UnsupportedOperationException}.
+	 *
+	 * This class should only be used through the {@link #datatypeFactory()} annotation method,
+	 * specifying that the test runner should load the {@link IDataTypeFactory} implementation
+	 * related to the underlying database.
+	 */
 	class AutoDetectDataTypeFactory implements IDataTypeFactory {
 		private AutoDetectDataTypeFactory() {
 		}

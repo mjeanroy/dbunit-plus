@@ -65,6 +65,8 @@ jobs:
         run: ./mvnw -version
       - name: Build
         run: ./mvnw -B install -DskipTests
+      - name: Javadoc
+        run: ./mvnw javadoc:javadoc
 
       - name: Set up JDK for testing
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0

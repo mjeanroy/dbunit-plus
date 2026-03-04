@@ -216,7 +216,7 @@ public final class DataSetBuilderRowValue {
 	}
 
 	/**
-	 * Get {@link OffsetDateTime} value.
+	 * Get {@link Date} value.
 	 *
 	 * @return Value (may be {@code null}).
 	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
@@ -225,6 +225,12 @@ public final class DataSetBuilderRowValue {
 		return getValueAs(Date.class);
 	}
 
+	/**
+	 * Get {@link OffsetDateTime} value.
+	 *
+	 * @return Value (may be {@code null}).
+	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
+	 */
 	public OffsetDateTime getOffsetDateTime() {
 		return getValueAs(OffsetDateTime.class);
 	}

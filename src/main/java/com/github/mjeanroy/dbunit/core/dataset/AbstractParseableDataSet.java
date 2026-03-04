@@ -182,7 +182,7 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 	/**
 	 * Gets resource.
 	 *
-	 * @return {@link #resource}.
+	 * @return The dataset resource.
 	 */
 	public Resource getResource() {
 		return resource;
