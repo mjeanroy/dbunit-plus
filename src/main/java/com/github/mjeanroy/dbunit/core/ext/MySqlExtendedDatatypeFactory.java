@@ -35,7 +35,7 @@ import java.util.Objects;
  * Extension of {@link MySqlDataTypeFactory} where {@code BIT} MySQL type
  * are handled as {@link DataType#BIT} instead of {@link DataType#TINYINT}.
  */
-public final class MySqlExtendedDatatypeFactory extends MySqlDataTypeFactory {
+public class MySqlExtendedDatatypeFactory extends MySqlDataTypeFactory {
 
 	/**
 	 * Create factory.

@@ -71,7 +71,7 @@ import static java.util.Arrays.asList;
  * All other SQL types are delegated to the default PostgreSQL implementation.
  * </p>
  */
-public final class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeFactory {
+public class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeFactory {
 
 	private static final Set<String> STRING_LIKE_DATA_TYPES = new HashSet<>(
 		asList(
