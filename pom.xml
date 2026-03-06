@@ -71,7 +71,7 @@
 
     <!-- Settings -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>1.8</java.version>
+    <java.version>8</java.version>
 
     <!-- Plugins -->
     <maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
@@ -588,6 +588,7 @@
           <encoding>${project.build.sourceEncoding}</encoding>
           <source>${java.version}</source>
           <target>${java.version}</target>
+          <release>${java.version}</release>
           <fork>true</fork>
         </configuration>
       </plugin>
