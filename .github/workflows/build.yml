@@ -62,10 +62,10 @@ jobs:
       - name: Build
         run: |
           ./mvnw -version
-          ./mvnw -B install -DskipTests
+          ./mvnw -B --color always install -DskipTests
 
       - name: Javadoc
-        run: ./mvnw javadoc:javadoc
+        run: ./mvnw -B --color always javadoc:javadoc
 
       - name: Set up JDK for testing
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
@@ -76,4 +76,4 @@ jobs:
       - name: Test
         run: |
           ./mvnw -version
-          ./mvnw verify
+          ./mvnw -B --color always verify
