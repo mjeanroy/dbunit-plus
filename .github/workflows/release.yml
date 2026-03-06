@@ -86,6 +86,7 @@ jobs:
           git config user.name "Mickael Jeanroy"
       - name: Release
         run: |
+          ./mvnw -version
           ./mvnw -B -U \
             release:prepare \
             release:perform \

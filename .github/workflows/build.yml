@@ -59,12 +59,11 @@ jobs:
           distribution: ${{ matrix.distribution }}
           java-version: 25
           cache: 'maven'
-      - name: java -version
-        run: java -version
-      - name: mvn -version
-        run: ./mvnw -version
       - name: Build
-        run: ./mvnw -B install -DskipTests
+        run: |
+          ./mvnw -version
+          ./mvnw -B install -DskipTests
+
       - name: Javadoc
         run: ./mvnw javadoc:javadoc
 
@@ -74,9 +73,7 @@ jobs:
           distribution: ${{ matrix.distribution }}
           java-version: ${{ matrix.java }}
           cache: 'maven'
-      - name: java -version
-        run: java -version
-      - name: mvn -version
-        run: ./mvnw -version
       - name: Test
-        run: ./mvnw verify
+        run: |
+          ./mvnw -version
+          ./mvnw verify
