@@ -41,33 +41,25 @@ import java.util.List;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotations;
 
-/**
- * Factory to create {@link DbUnitClassContext} from given input class.
- */
+/// Factory to create [DbUnitClassContext] from given input class.
 final class DbUnitClassContextFactory {
 
-	/**
-	 * A cache, using {@link ClassValue} under the hood.
-	 */
+	/// A cache, using [ClassValue] under the hood.
 	private static final DbUnitClassContextValue CACHE = new DbUnitClassContextValue();
 
 	// Ensure non instantiation.
 	private DbUnitClassContextFactory() {
 	}
 
-	/**
-	 * Extract {@link DbUnitClassContext} from given class.
-	 *
-	 * @param klass The input class.
-	 * @return The DbUnit context.
-	 */
+	/// Extract [DbUnitClassContext] from given class.
+	///
+	/// @param klass The input class.
+	/// @return The DbUnit context.
 	static DbUnitClassContext from(Class<?> klass) {
 		return CACHE.get(klass);
 	}
 
-	/**
-	 * The {@link ClassValue} implementation.
-	 */
+	/// The [ClassValue] implementation.
 	private static class DbUnitClassContextValue extends ClassValue<DbUnitClassContext> {
 		@Override
 		protected DbUnitClassContext computeValue(Class<?> type) {
@@ -89,12 +81,10 @@ final class DbUnitClassContextFactory {
 		}
 	}
 
-	/**
-	 * Read dbUnit dataSet from class test class annotation.
-	 *
-	 * @return Parsed dataSet.
-	 * @throws DbUnitException If dataSet parsing failed.
-	 */
+	/// Read dbUnit dataSet from class test class annotation.
+	///
+	/// @return Parsed dataSet.
+	/// @throws DbUnitException If dataSet parsing failed.
 	private static IDataSet readDataSet(Class<?> testClass) {
 		final List<DbUnitDataSet> annotations = findAnnotations(testClass, DbUnitDataSet.class);
 
@@ -109,55 +99,45 @@ final class DbUnitClassContextFactory {
 		return DbUnitAnnotationsParser.readDataSet(annotations, null);
 	}
 
-	/**
-	 * Read and parse SQL initialization scripts configured (with {@link DbUnitInit} annotation) on given class.
-	 *
-	 * @param testClass The tested class.
-	 */
+	/// Read and parse SQL initialization scripts configured (with [DbUnitInit] annotation) on given class.
+	///
+	/// @param testClass The tested class.
 	private static List<SqlScript> extractSqlScript(Class<?> testClass) {
 		DbUnitInit annotation = findAnnotation(testClass, DbUnitInit.class);
 		return DbUnitAnnotationsParser.extractSqlScript(annotation);
 	}
 
-	/**
-	 * Extract liquibase changelogs to execute when runner is initialized.
-	 *
-	 * @param testClass The tested class.
-	 */
+	/// Extract liquibase changelogs to execute when runner is initialized.
+	///
+	/// @param testClass The tested class.
 	private static List<LiquibaseChangeLog> extractLiquibaseChangeLogs(Class<?> testClass) {
 		DbUnitLiquibase annotation = findAnnotation(testClass, DbUnitLiquibase.class);
 		return DbUnitAnnotationsParser.extractLiquibaseChangeLogs(annotation);
 	}
 
-	/**
-	 * Extract {@link JdbcConnectionFactory} configuration from test annotated with {@link DbUnitConnection}.
-	 *
-	 * @param testClass The tested class.
-	 * @return The JDBC Connection Factory.
-	 */
+	/// Extract [JdbcConnectionFactory] configuration from test annotated with [DbUnitConnection].
+	///
+	/// @param testClass The tested class.
+	/// @return The JDBC Connection Factory.
 	private static JdbcConnectionFactory extractJdbcConnectionFactory(Class<?> testClass) {
 		DbUnitConnection annotation = findAnnotation(testClass, DbUnitConnection.class);
 		return DbUnitAnnotationsParser.extractJdbcConnectionFactory(annotation);
 	}
 
-	/**
-	 * Find replacements objects from given test class.
-	 *
-	 * @param testClass Test class.
-	 * @return The replacements values.
-	 */
+	/// Find replacements objects from given test class.
+	///
+	/// @param testClass Test class.
+	/// @return The replacements values.
 	private static List<Replacements> extractReplacements(Class<?> testClass) {
 		final List<DbUnitReplacements> annotations = Annotations.findAnnotations(testClass, DbUnitReplacements.class);
 		return DbUnitAnnotationsParser.extractReplacements(annotations);
 	}
 
-	/**
-	 * Read DbUnit configuration interceptors, returns empty list if no configuration is set (never {@code null}).
-	 *
-	 * @param testClass The class to scan for.
-	 * @return The list of interceptors.
-	 * @throws DbUnitException If instantiating the interceptor failed.
-	 */
+	/// Read DbUnit configuration interceptors, returns empty list if no configuration is set (never `null`).
+	///
+	/// @param testClass The class to scan for.
+	/// @return The list of interceptors.
+	/// @throws DbUnitException If instantiating the interceptor failed.
 	private static Config readConfig(Class<?> testClass) {
 		DbUnitConfig annotation = findAnnotation(testClass, DbUnitConfig.class);
 		return DbUnitAnnotationsParser.readConfig(annotation);

@@ -26,25 +26,19 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can enable/disable the {@code "batchedStatements"} feature of DbUnit.
- *
- * @see DatabaseConfig#FEATURE_BATCHED_STATEMENTS
- */
+/// An interceptor that can enable/disable the `"batchedStatements"` feature of DbUnit.
+///
+/// @see DatabaseConfig#FEATURE_BATCHED_STATEMENTS
 public final class DbUnitBatchedStatementsInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> {
 
-	/**
-	 * Create the interceptor, the feature is enabled by default.
-	 */
+	/// Create the interceptor, the feature is enabled by default.
 	public DbUnitBatchedStatementsInterceptor() {
 		this(true);
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param batchedStatements Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param batchedStatements Feature activation flag: `true` to enable feature, `false` otherwise.
 	public DbUnitBatchedStatementsInterceptor(boolean batchedStatements) {
 		super(DatabaseConfig.FEATURE_BATCHED_STATEMENTS, batchedStatements);
 	}

@@ -26,9 +26,7 @@ package com.github.mjeanroy.dbunit.tests.utils;
 
 import java.io.InputStream;
 
-/**
- * Static utilities & constants for test datasets.
- */
+/// Static utilities & constants for test datasets.
 public final class TestDatasets {
 
 	private TestDatasets() {

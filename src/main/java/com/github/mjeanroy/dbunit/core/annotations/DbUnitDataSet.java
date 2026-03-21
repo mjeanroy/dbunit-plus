@@ -33,48 +33,40 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Data set annotation used to specify which DbUnit dataset(s) should be loaded
- * before executing a test.
- *
- * <p>This annotation can be applied at different levels to define datasets
- * globally or locally:</p>
- * <ul>
- *   <li><b>Class</b> – applies to all test methods in the class.</li>
- *   <li><b>Method</b> – applies only to the annotated test method.</li>
- * </ul>
- *
- * <p>Multiple datasets can be specified, and they will be loaded in the order
- * declared. Each entry can be a classpath resource or any location supported
- * by the underlying DbUnit {@link org.dbunit.dataset.IDataSet} loader.</p>
- *
- * <p>Example usage:</p>
- * <pre>{@code
- * @DbUnitDataSet("/dataset/common.xml")
- * public class MyTest {
- *
- *   @Rule
- *   public DbUnitRule dbUnitRule = new DbUnitRule(connectionFactory);
- *
- *   @Test
- *   public void defaultDataSetIsLoaded() {
- *       // Uses /dataset/common.xml
- *   }
- *
- *   @Test
- *   @DbUnitDataSet("/dataset/override/table1.xml")
- *   public void methodSpecificDataSet() {
- *       // Uses /dataset/override/table1.xml
- *   }
- * }
- * }</pre>
- *
- * <p>Advanced: Instead of static files, you may provide one or more
- * {@link DataSetProvider} implementations through {@link #providers()} to
- * build datasets programmatically. Each provider class <strong>must declare a
- * public no-argument constructor</strong> so the framework can instantiate it
- * reflectively.</p>
- */
+/// Data set annotation used to specify which DbUnit dataset(s) should be loaded
+/// before executing a test.
+///
+/// This annotation can be applied at different levels to define datasets
+/// globally or locally:
+/// - **Class** – applies to all test methods in the class.
+/// - **Method** – applies only to the annotated test method.
+///
+/// Multiple datasets can be specified, and they will be loaded in the order
+/// declared. Each entry can be a classpath resource or any location supported
+/// by the underlying DbUnit [org.dbunit.dataset.IDataSet] loader.
+///
+/// Example usage:
+///
+/// ```
+/// class MyTest{
+///   DbUnitRule dbUnitRule = new DbUnitRule(connectionFactory);
+///
+///   void defaultDataSetIsLoaded(){
+///     // Uses /dataset/common.xml
+///   }
+///
+///   void methodSpecificDataSet(){
+///     // Uses /dataset/override/table1.xml
+///   }
+/// }
+/// ```
+///
+/// Advanced: Instead of static files, you may provide one or more
+/// [DataSetProvider] implementations through [#providers()] to
+/// build datasets programmatically.
+///
+/// Each provider class **must declare a public no-argument constructor**
+/// so the framework can instantiate it reflectively.
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -84,56 +76,48 @@ import java.lang.annotation.Target;
 })
 public @interface DbUnitDataSet {
 
-	/**
-	 * Path(s) to dataset files to load. These are typically classpath resources
-	 * such as {@code "/dataset/users.xml"}.
-	 *
-	 * @return one or more dataset file paths.
-	 */
+	/// Path(s) to dataset files to load. These are typically classpath resources
+	/// such as `"/dataset/users.xml"`.
+	///
+	/// @return one or more dataset file paths.
 	String[] value() default {};
 
-	/**
-	 * Optional programmatic dataset providers. Each provider must implement
-	 * {@link DataSetProvider} and have a public no-argument constructor.
-	 *
-	 * @return an array of dataset provider classes.
-	 */
+	/// Optional programmatic dataset providers. Each provider must implement
+	/// [DataSetProvider] and have a public no-argument constructor.
+	///
+	/// @return an array of dataset provider classes.
 	Class<? extends DataSetProvider>[] providers() default {};
 
-	/**
-	 * Enables discovery and loading of {@link com.github.mjeanroy.dbunit.core.dataset.DataSetProvider}
-	 * implementations through the standard Java {@link java.util.ServiceLoader} mechanism.
-	 *
-	 * <p>When set to {@code true} (the default), the framework will scan the classpath for
-	 * service declarations located at {@code META-INF/services/com.github.mjeanroy.dbunit.core.dataset.DataSetProvider}.
-	 * Each discovered provider is instantiated (requiring a public no-argument constructor)
-	 * and its {@link com.github.mjeanroy.dbunit.core.dataset.DataSetProvider#get()} method is
-	 * invoked to obtain an {@link org.dbunit.dataset.IDataSet}. All datasets returned by these
-	 * providers are then merged into the final dataset for the test.</p>
-	 *
-	 * <p>When set to {@code false}, no service-loader lookup is performed and only the
-	 * datasets specified by {@link #value()} and/or {@link #providers()} are considered.</p>
-	 *
-	 * <p><strong>Usage Note:</strong> This flag is optional. Disable it if you do not
-	 * rely on service-loader–based dataset providers or if you want to avoid any
-	 * runtime classpath scanning for performance.</p>
-	 *
-	 * @return {@code true} to automatically discover {@link DataSetProvider} services;
-	 *         {@code false} to skip service-loader discovery.
-	 */
+	/// Enables discovery and loading of [com.github.mjeanroy.dbunit.core.dataset.DataSetProvider]
+	/// implementations through the standard Java [java.util.ServiceLoader] mechanism.
+	///
+	/// When set to `true` (the default), the framework will scan the classpath for
+	/// service declarations located at `META-INF/services/com.github.mjeanroy.dbunit.core.dataset.DataSetProvider`.
+	///
+	/// Each discovered provider is instantiated (requiring a public no-argument constructor)
+	/// and its [com.github.mjeanroy.dbunit.core.dataset.DataSetProvider#get()] method is
+	/// invoked to obtain an [org.dbunit.dataset.IDataSet]. All datasets returned by these
+	/// providers are then merged into the final dataset for the test.
+	///
+	/// When set to `false`, no service-loader lookup is performed and only the
+	/// datasets specified by [#value()] and/or [#providers()] are considered.
+	///
+	/// **Usage Note:** This flag is optional. Disable it if you do not
+	/// rely on service-loader–based dataset providers or if you want to avoid any
+	/// runtime classpath scanning for performance.
+	///
+	/// @return `true` to automatically discover [DataSetProvider] services, `false` to skip service-loader discovery.
 	boolean useServiceLoader() default true;
 
-	/**
-	 * Indicates whether datasets defined on parent scopes (package or class)
-	 * should be merged with those declared on the current element.
-	 *
-	 * <p>When {@code false} (default), datasets defined here completely replace
-	 * any datasets from superclasses or package-level annotations.</p>
-	 *
-	 * <p>When {@code true}, datasets from parent annotations are inherited and
-	 * merged with the ones defined here.</p>
-	 *
-	 * @return {@code true} to merge with parent datasets; {@code false} to override.
-	 */
+	/// Indicates whether datasets defined on parent scopes (package or class)
+	/// should be merged with those declared on the current element.
+	///
+	/// When `false` (default), datasets defined here completely replace
+	/// any datasets from superclasses or package-level annotations.
+	///
+	/// When `true`, datasets from parent annotations are inherited and
+	/// merged with the ones defined here.
+	///
+	/// @return `true` to merge with parent datasets; `false` to override.
 	boolean inherit() default false;
 }

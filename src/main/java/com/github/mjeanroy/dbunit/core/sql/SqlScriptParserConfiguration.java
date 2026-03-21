@@ -30,92 +30,65 @@ import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 
-/**
- * Configuration for SQL scripts parser.
- * Default values are:
- * <ul>
- *   <li>Delimiter: {@code ;}</li>
- *   <li>Line comment: {@code --}</li>
- *   <li>Block comment: starts with {@code &#47;*} and ends with {@code *&#47;}</li>
- * </ul>
- *
- * This class is immutable, and so thread-safe.
- */
+/// Configuration for SQL scripts parser.
+///
+/// Default values are:
+/// - Delimiter: `;`
+/// - Line comment: `--`
+/// - Block comment: starts with `&#47;*` and ends with `*&#47;`
+///
+/// This class is immutable, and so thread-safe.
 public class SqlScriptParserConfiguration {
 
-	/**
-	 * Default SQL delimiter ({@code ;}).
-	 */
+	/// Default SQL delimiter (`;`).
 	public static final char DEFAULT_DELIMITER = ';';
 
-	/**
-	 * Default pattern to detect start of an SQL line comment ({@code --}).
-	 */
+	/// Default pattern to detect start of an SQL line comment (`--`).
 	private static final String DEFAULT_LINE_COMMENT = "--";
 
-	/**
-	 * Default pattern to detect start of an SQL block comment ({@code &#47;*}).
-	 */
+	/// Default pattern to detect start of an SQL block comment (`&#47;*`).
 	private static final String DEFAULT_START_BLOCK_COMMENT = "/*";
 
-	/**
-	 * Default pattern to detect end of an SQL line comment ({@code *&#47;}).
-	 */
+	/// Default pattern to detect end of an SQL line comment (`*&#47;`).
 	private static final String DEFAULT_END_BLOCK_COMMENT = "*/";
 
-	/**
-	 * Default configuration.
-	 */
+	/// Default configuration.
 	private static final SqlScriptParserConfiguration DEFAULT = new Builder().build();
 
-	/**
-	 * Get new builder instance.
-	 *
-	 * @return Builder.
-	 */
+	/// Get new builder instance.
+	///
+	/// @return Builder.
 	public static SqlScriptParserConfiguration.Builder builder() {
 		return new Builder();
 	}
 
-	/**
-	 * Get new builder instance.
-	 *
-	 * @return Builder.
-	 */
+	/// Get new builder instance.
+	///
+	/// @return Builder.
 	public static SqlScriptParserConfiguration defaultConfiguration() {
 		return DEFAULT;
 	}
 
-	/**
-	 * SQL statement delimiter.
-	 */
+	/// SQL statement delimiter.
 	private final char delimiter;
 
-	/**
-	 * SQL Line Comment (start with).
-	 */
+	/// SQL Line Comment (start with).
 	private final String lineComment;
 
-	/**
-	 * SQL Block Comment (start with).
-	 */
+	/// SQL Block Comment (start with).
 	private final String startBlockComment;
 
-	/**
-	 * SQL Block Comment (end with).
-	 */
+	/// SQL Block Comment (end with).
 	private final String endBlockComment;
 
-	/**
-	 * Create configuration.
-	 *
-	 * @param delimiter SQL statement delimiter.
-	 * @param lineComment SQL Line Comment.
-	 * @param startBlockComment SQL Block Comment (start with).
-	 * @param endBlockComment SQL Block Comment (end with).
-	 * @throws NullPointerException If one parameter is null.
-	 * @throws IllegalArgumentException If one parameter is empty or blank.
-	 */
+	/// Create configuration.
+	///
+	/// @param delimiter SQL statement delimiter.
+	/// @param lineComment SQL Line Comment.
+	/// @param startBlockComment SQL Block Comment (start with).
+	/// @param endBlockComment SQL Block Comment (end with).
+	/// @throws NullPointerException If one parameter is null.
+	/// @throws IllegalArgumentException If one parameter is empty or blank.
 	private SqlScriptParserConfiguration(char delimiter, String lineComment, String startBlockComment, String endBlockComment) {
 		this.delimiter = notBlank(delimiter, "SQL delimiter must be defined");
 		this.lineComment = notBlank(lineComment, "Pattern for line comment start must be defined");
@@ -123,38 +96,30 @@ public class SqlScriptParserConfiguration {
 		this.endBlockComment = notBlank(endBlockComment, "Pattern for block comment end must be defined");
 	}
 
-	/**
-	 * Gets {@link #delimiter}.
-	 *
-	 * @return {@link #delimiter}
-	 */
+	/// Gets [#delimiter].
+	///
+	/// @return Returns [#delimiter]
 	public char getDelimiter() {
 		return delimiter;
 	}
 
-	/**
-	 * Gets {@link #lineComment}.
-	 *
-	 * @return {@link #lineComment}
-	 */
+	/// Gets [#lineComment].
+	///
+	/// @return Returns [#lineComment]
 	public String getLineComment() {
 		return lineComment;
 	}
 
-	/**
-	 * Gets {@link #startBlockComment}.
-	 *
-	 * @return {@link #startBlockComment}
-	 */
+	/// Gets [#startBlockComment].
+	///
+	/// @return Returns [#startBlockComment]
 	public String getStartBlockComment() {
 		return startBlockComment;
 	}
 
-	/**
-	 * Gets {@link #endBlockComment}.
-	 *
-	 * @return {@link #endBlockComment}
-	 */
+	/// Gets [#endBlockComment].
+	///
+	/// @return Returns [#endBlockComment]
 	public String getEndBlockComment() {
 		return endBlockComment;
 	}
@@ -191,38 +156,26 @@ public class SqlScriptParserConfiguration {
 			.build();
 	}
 
-	/**
-	 * Builder for {@link SqlScriptParserConfiguration}.
-	 */
+	/// Builder for [SqlScriptParserConfiguration].
 	public static class Builder {
 
-		/**
-		 * SQL statement delimiter.
-		 * Default is {@code ;}.
-		 */
+		/// SQL statement delimiter.
+		/// Default is `;`.
 		private char delimiter;
 
-		/**
-		 * Pattern to detect start of an SQL line comment.
-		 * Default is {@code --}.
-		 */
+		/// Pattern to detect start of an SQL line comment.
+		/// Default is `--`.
 		private String lineComment;
 
-		/**
-		 * Pattern to detect start of an SQL block comment.
-		 * Default is {@code &#47;*}.
-		 */
+		/// Pattern to detect start of an SQL block comment.
+		/// Default is `&#47;*`.
 		private String startBlockComment;
 
-		/**
-		 * Pattern to detect stop of an SQL block comment.
-		 * Default is {@code *&#47;}.
-		 */
+		/// Pattern to detect stop of an SQL block comment.
+		/// Default is `*&#47;`.
 		private String endBlockComment;
 
-		/**
-		 * Create builder.
-		 */
+		/// Create builder.
 		private Builder() {
 			this.delimiter = DEFAULT_DELIMITER;
 			this.lineComment = DEFAULT_LINE_COMMENT;
@@ -230,55 +183,45 @@ public class SqlScriptParserConfiguration {
 			this.endBlockComment = DEFAULT_END_BLOCK_COMMENT;
 		}
 
-		/**
-		 * Override default SQL delimiter.
-		 *
-		 * @param delimiter New delimiter.
-		 * @return Builder.
-		 */
+		/// Override default SQL delimiter.
+		///
+		/// @param delimiter New delimiter.
+		/// @return Builder.
 		public Builder setDelimiter(char delimiter) {
 			this.delimiter = delimiter;
 			return this;
 		}
 
-		/**
-		 * Override default pattern to detect start of an SQL line comment.
-		 *
-		 * @param lineComment New pattern.
-		 * @return Builder.
-		 */
+		/// Override default pattern to detect start of an SQL line comment.
+		///
+		/// @param lineComment New pattern.
+		/// @return Builder.
 		public Builder setLineComment(String lineComment) {
 			this.lineComment = lineComment;
 			return this;
 		}
 
-		/**
-		 * Override default pattern to detect start of an SQL block comment.
-		 *
-		 * @param startBlockComment New pattern.
-		 * @return Builder.
-		 */
+		/// Override default pattern to detect start of an SQL block comment.
+		///
+		/// @param startBlockComment New pattern.
+		/// @return Builder.
 		public Builder setStartBlockComment(String startBlockComment) {
 			this.startBlockComment = startBlockComment;
 			return this;
 		}
 
-		/**
-		 * Override default pattern to detect end of an SQL block comment.
-		 *
-		 * @param endBlockComment New pattern.
-		 * @return Builder.
-		 */
+		/// Override default pattern to detect end of an SQL block comment.
+		///
+		/// @param endBlockComment New pattern.
+		/// @return Builder.
 		public Builder setEndBlockComment(String endBlockComment) {
 			this.endBlockComment = endBlockComment;
 			return this;
 		}
 
-		/**
-		 * Build new instance of {@link SqlScriptParserConfiguration}.
-		 *
-		 * @return New configuration.
-		 */
+		/// Build new instance of [SqlScriptParserConfiguration].
+		///
+		/// @return New configuration.
 		public SqlScriptParserConfiguration build() {
 			return new SqlScriptParserConfiguration(delimiter, lineComment, startBlockComment, endBlockComment);
 		}

@@ -26,57 +26,41 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.DataSetLoaderException;
 
-/**
- * Implementations of strategies to load resources.
- */
+/// Implementations of strategies to load resources.
 public enum ResourceLoader {
 
-	/**
-	 * Load file from classpath.
-	 */
+	/// Load file from classpath.
 	CLASSPATH(ClasspathResourceLoader.getInstance()),
 
-	/**
-	 * Load file from file system.
-	 */
+	/// Load file from file system.
 	FILE_SYSTEM(FileResourceLoader.getInstance()),
 
-	/**
-	 * Load file from HTTP url.
-	 */
+	/// Load file from HTTP url.
 	URL(UrlResourceLoader.getInstance());
 
-	/**
-	 * The loader strategy.
-	 */
+	/// The loader strategy.
 	private final ResourceLoaderStrategy strategy;
 
-	/**
-	 * Create loader.
-	 *
-	 * @param strategy The loader strategy.
-	 */
+	/// Create loader.
+	///
+	/// @param strategy The loader strategy.
 	ResourceLoader(ResourceLoaderStrategy strategy) {
 		this.strategy = strategy;
 	}
 
-	/**
-	 * Load given file path.
-	 *
-	 * @param name File path.
-	 * @return Loaded file.
-	 * @throws DataSetLoaderException If path cannot be loaded.
-	 */
+	/// Load given file path.
+	///
+	/// @param name File path.
+	/// @return Loaded file.
+	/// @throws DataSetLoaderException If path cannot be loaded.
 	public Resource load(String name) {
 		return strategy.load(name);
 	}
 
-	/**
-	 * Find loader according to given file pattern.
-	 *
-	 * @param value File pattern.
-	 * @return Matched loader.
-	 */
+	/// Find loader according to given file pattern.
+	///
+	/// @param value File pattern.
+	/// @return Matched loader.
 	public static ResourceLoader find(String value) {
 		for (ResourceLoader loader : ResourceLoader.values()) {
 			if (loader.strategy.match(value)) {

@@ -39,25 +39,17 @@ import java.util.Map;
 
 import static java.util.Collections.unmodifiableMap;
 
-/**
- * Abstract implementation of {@link DatasetParser} that create {@link Reader} from
- * given {@link Resource} and execute {@link #doParse(Reader)}.
- *
- * <p>
- *
- * Note that exceptions thrown from {@link #doParse(Reader)} method will automatically
- * be wrapped into {@link JsonException}.
- */
+/// Abstract implementation of [DatasetParser] that create [Reader] from
+/// given [Resource] and execute [#doParse(Reader)].
+///
+/// Note that exceptions thrown from [#doParse(Reader)] method will automatically
+/// be wrapped into [JsonException].
 abstract class AbstractDatasetParser implements DatasetParser {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(AbstractDatasetParser.class);
 
-	/**
-	 * Create default parser.
-	 */
+	/// Create default parser.
 	protected AbstractDatasetParser() {
 	}
 
@@ -105,16 +97,11 @@ abstract class AbstractDatasetParser implements DatasetParser {
 		return unmodifiableMap((Map<String, Collection<Map<String, Object>>>) input);
 	}
 
-	/**
-	 * Parse given {@link Reader}:
-	 *
-	 * <ol>
-	 *   <li>Read input.</li>
-	 *   <li>Create dataset model from it.</li>
-	 * </ol>
-	 *
-	 * @param reader The reader.
-	 * @return The dataset input.
-	 */
+	/// Parse given [Reader]:
+	/// 1. Read input.
+	/// 2. Create dataset model from it.
+	///
+	/// @param reader The reader.
+	/// @return The dataset input.
 	abstract Map<String, Object> doParse(Reader reader);
 }

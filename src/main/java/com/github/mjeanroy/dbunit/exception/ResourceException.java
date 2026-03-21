@@ -24,43 +24,33 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Error thrown when an error occurred when dealing with resources.
- */
+/// Error thrown when an error occurred when dealing with resources.
 public class ResourceException extends AbstractDbUnitException {
 
-	/**
-	 * Resource path.
-	 */
+	/// Resource path.
 	private final String path;
 
-	/**
-	 * Create exception with error message.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
-	 * @param message Error message.
-	 */
+	/// Create exception with error message.
+	///
+	/// @param path The path of the resource that cannot be loaded.
+	/// @param message Error message.
 	ResourceException(String path, String message) {
 		super(message);
 		this.path = path;
 	}
 
-	/**
-	 * Create exception with original cause.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
-	 * @param cause The original cause.
-	 */
+	/// Create exception with original cause.
+	///
+	/// @param path The path of the resource that cannot be loaded.
+	/// @param cause The original cause.
 	public ResourceException(String path, Exception cause) {
 		super(cause);
 		this.path = path;
 	}
 
-	/**
-	 * The resource path causing exception.
-	 *
-	 * @return Resource path.
-	 */
+	/// The resource path causing exception.
+	///
+	/// @return Resource path.
 	public String getPath() {
 		return path;
 	}

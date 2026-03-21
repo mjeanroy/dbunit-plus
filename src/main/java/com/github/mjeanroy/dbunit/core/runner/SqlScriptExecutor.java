@@ -35,32 +35,22 @@ import java.sql.SQLException;
 import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQueries;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Function to execute SQL scripts against SQL connection.
- *
- * <p />
- *
- * If an {@link SQLException} occurs, it will be wrapped into an instance
- * of {@link DbUnitException} exception.
- */
+/// Function to execute SQL scripts against SQL connection.
+///
+/// If an [SQLException] occurs, it will be wrapped into an instance
+/// of [DbUnitException] exception.
 class SqlScriptExecutor {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(SqlScriptExecutor.class);
 
-	/**
-	 * Factory to get new {@link Connection} before executing SQL scripts.
-	 */
+	/// Factory to get new [Connection] before executing SQL scripts.
 	private final JdbcConnectionFactory factory;
 
-	/**
-	 * Create function.
-	 *
-	 * @param factory Connection factory.
-	 * @throws NullPointerException If {@code factory} is {@code null}.
-	 */
+	/// Create function.
+	///
+	/// @param factory Connection factory.
+	/// @throws NullPointerException If `factory` is `null`.
 	SqlScriptExecutor(JdbcConnectionFactory factory) {
 		this.factory = notNull(factory, "JDBC Connection Factory must not be null");
 	}

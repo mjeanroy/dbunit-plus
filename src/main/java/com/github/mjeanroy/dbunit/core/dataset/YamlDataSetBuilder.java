@@ -29,46 +29,35 @@ import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.yaml.YamlsFactory;
 import org.dbunit.dataset.DataSetException;
 
-/**
- * Builder for {@link YamlDataSet} instances.
- *
- * <br>
- *
- * If not set, YAML parser will be created using classpath detection.
- * Supported implementations are (checked in order):
- * <ul>
- *   <li>Jackson</li>
- *   <li>SnakeYAML</li>
- * </ul>
- */
+/// Builder for [YamlDataSet] instances.
+///
+/// If not set, YAML parser will be created using classpath detection.
+///
+/// Supported implementations are (checked in order):
+/// - Jackson
+/// - SnakeYAML
 public class YamlDataSetBuilder extends AbstractParseableDataSetBuilder<
 	YamlDataSetBuilder,
 	YamlDatasetParser,
 	YamlDataSet
 > {
 
-	/**
-	 * Create builder.
-	 */
+	/// Create builder.
 	public YamlDataSetBuilder() {
 		super();
 	}
 
-	/**
-	 * Create builder with JSON resource.
-	 *
-	 * @param resource JSON resource.
-	 */
+	/// Create builder with JSON resource.
+	///
+	/// @param resource JSON resource.
 	public YamlDataSetBuilder(Resource resource) {
 		super(resource);
 	}
 
-	/**
-	 * Initialize JSON resource.
-	 *
-	 * @param resource JSON resource.
-	 * @return Builder.
-	 */
+	/// Initialize JSON resource.
+	///
+	/// @param resource JSON resource.
+	/// @return Builder.
 	public YamlDataSetBuilder setYamlFile(Resource resource) {
 		return setResource(resource);
 	}

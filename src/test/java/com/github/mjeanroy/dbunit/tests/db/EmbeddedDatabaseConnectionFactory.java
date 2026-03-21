@@ -32,16 +32,12 @@ import java.sql.SQLException;
 
 public class EmbeddedDatabaseConnectionFactory implements JdbcConnectionFactory {
 
-	/**
-	 * Embedded Database.
-	 */
+	/// Embedded Database.
 	private final EmbeddedDatabase db;
 
-	/**
-	 * Create factory.
-	 *
-	 * @param db Embedded Database.
-	 */
+	/// Create factory.
+	///
+	/// @param db Embedded Database.
 	public EmbeddedDatabaseConnectionFactory(EmbeddedDatabase db) {
 		this.db = db;
 	}

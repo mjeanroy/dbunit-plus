@@ -24,40 +24,30 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-/**
- * Cache of values identified by a key.
- *
- * It is important to note that:
- * <ul>
- *   <li>Keys should be immutable</li>
- *   <li>Null values should not be allowed</li>
- * </ul>
- *
- * @param <K> Type of key.
- * @param <V> Type of values.
- */
+/// Cache of values identified by a key.
+///
+/// It is important to note that:
+/// - Keys should be immutable
+/// - Null values should not be allowed
+///
+/// @param <K> Type of key.
+/// @param <V> Type of values.
 public interface Cache<K, V> {
 
-	/**
-	 * Get entry in cache.
-	 *
-	 * If entry is not in the cache, the cache value should be computed and
-	 * added to the cache.
-	 *
-	 * @param key Value identifier.
-	 * @return The cache value.
-	 */
+	/// Get entry in cache.
+	///
+	/// If entry is not in the cache, the cache value should be computed and
+	/// added to the cache.
+	///
+	/// @param key Value identifier.
+	/// @return The cache value.
 	V load(K key);
 
-	/**
-	 * Clear cache.
-	 */
+	/// Clear cache.
 	void clear();
 
-	/**
-	 * Get the size of the cache.
-	 *
-	 * @return Cache size.
-	 */
+	/// Get the size of the cache.
+	///
+	/// @return Cache size.
 	long size();
 }

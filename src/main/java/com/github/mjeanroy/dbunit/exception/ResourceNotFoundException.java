@@ -24,26 +24,20 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Error thrown when resource is not found.
- */
+/// Error thrown when resource is not found.
 public class ResourceNotFoundException extends ResourceException {
 
-	/**
-	 * Create exception with {@code path}.
-	 *
-	 * @param path The path of the resource that cannot be loaded.
-	 */
+	/// Create exception with `path`.
+	///
+	/// @param path The path of the resource that cannot be loaded.
 	public ResourceNotFoundException(String path) {
 		super(path, createMessage(path));
 	}
 
-	/**
-	 * Create error message.
-	 *
-	 * @param path The path.
-	 * @return The error message.
-	 */
+	/// Create error message.
+	///
+	/// @param path The path.
+	/// @return The error message.
 	private static String createMessage(String path) {
 		return String.format("Resource <%s> does not exist", path);
 	}

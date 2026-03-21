@@ -36,9 +36,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Static JDBC Utilities, should only be used internally.
- */
+/// Static JDBC Utilities, should only be used internally.
 public final class JdbcUtils {
 
 	private static final Logger log = Loggers.getLogger(JdbcUtils.class);
@@ -46,12 +44,10 @@ public final class JdbcUtils {
 	private JdbcUtils() {
 	}
 
-	/**
-	 * Load JDBC Driver.
-	 *
-	 * @param driverClassName Driver classname.
-	 * @throws JdbcException If JDBC driver cannot be loaded.
-	 */
+	/// Load JDBC Driver.
+	///
+	/// @param driverClassName Driver classname.
+	/// @throws JdbcException If JDBC driver cannot be loaded.
 	public static void loadDriver(String driverClassName) {
 		log.info("Loading driver: {}", driverClassName);
 
@@ -63,14 +59,12 @@ public final class JdbcUtils {
 		}
 	}
 
-	/**
-	 * Execute SQL Query and returns result.
-	 *
-	 * @param connection JDBC Connection.
-	 * @param query SQL Query.
-	 * @return JDBC Result Set.
-	 * @throws JdbcException If the SQL cannot be executed.
-	 */
+	/// Execute SQL Query and returns result.
+	///
+	/// @param connection JDBC Connection.
+	/// @param query SQL Query.
+	/// @return JDBC Result Set.
+	/// @throws JdbcException If the SQL cannot be executed.
 	public static ResultSet executeQuery(Connection connection, String query) {
 		log.debug("Executing query: {}", query);
 
@@ -88,15 +82,13 @@ public final class JdbcUtils {
 		}
 	}
 
-	/**
-	 * Execute SQL Query and returns mapped result.
-	 *
-	 * @param connection JDBC Connection.
-	 * @param query SQL Query.
-	 * @param mapFunction The resultset mapping function, executed for each returned rows.
-	 * @return Results.
-	 * @param <T> Type of results being returned.
-	 */
+	/// Execute SQL Query and returns mapped result.
+	///
+	/// @param connection JDBC Connection.
+	/// @param query SQL Query.
+	/// @param mapFunction The resultset mapping function, executed for each returned rows.
+	/// @return Results.
+	/// @param <T> Type of results being returned.
 	public static <T> List<T> executeQuery(Connection connection, String query, ResultSetMapFunction<T> mapFunction) {
 		log.debug("Executing query: {}", query);
 
@@ -121,12 +113,10 @@ public final class JdbcUtils {
 		}
 	}
 
-	/**
-	 * Execute SQL Queries in a batch statement.
-	 *
-	 * @param connection JDBC Connection.
-	 * @param queries SQL Queries.
-	 */
+	/// Execute SQL Queries in a batch statement.
+	///
+	/// @param connection JDBC Connection.
+	/// @param queries SQL Queries.
 	public static void executeQueries(Connection connection, Collection<String> queries) {
 		if (queries.isEmpty()) {
 			return;

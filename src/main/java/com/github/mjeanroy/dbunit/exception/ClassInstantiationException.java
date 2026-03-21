@@ -24,90 +24,69 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Exception thrown when a class cannot be instantiated because of:
- *
- * <ul>
- *   <li>Missing empty public constructor.</li>
- *   <li>The empty constructor is not public.</li>
- *   <li>Etc.</li>
- * </ul>
- */
+/// Exception thrown when a class cannot be instantiated because of:
+/// - Missing empty public constructor.
+/// - The empty constructor is not public.
+/// - Etc.
 public class ClassInstantiationException extends AbstractReflectionException {
 
-	/**
-	 * The class that cannot be instantiated.
-	 */
+	/// The class that cannot be instantiated.
 	private final Class<?> klass;
 
-	/**
-	 * Create the exception.
-	 *
-	 * @param klass Class that cannot be instantiated.
-	 * @param message Error message.
-	 */
+	/// Create the exception.
+	///
+	/// @param klass Class that cannot be instantiated.
+	/// @param message Error message.
 	private ClassInstantiationException(Class<?> klass, String message) {
 		super(message);
 		this.klass = klass;
 	}
 
-	/**
-	 * Create the exception.
-	 *
-	 * @param klass Class that cannot be instantiated.
-	 * @param cause The original cause.
-	 */
+	/// Create the exception.
+	///
+	/// @param klass Class that cannot be instantiated.
+	/// @param cause The original cause.
 	private ClassInstantiationException(Class<?> klass, Exception cause) {
 		super(cause);
 		this.klass = klass;
 	}
 
-	/**
-	 * Class that cannot be instantiated.
-	 *
-	 * @return The class.
-	 */
+	/// Class that cannot be instantiated.
+	///
+	/// @return The class.
 	public Class<?> getKlass() {
 		return klass;
 	}
 
-	/**
-	 * Create exception with a message saying that the empty public constructor is missing on given class.
-	 *
-	 * @param klass The class.
-	 * @return The exception.
-	 */
+	/// Create exception with a message saying that the empty public constructor is missing on given class.
+	///
+	/// @param klass The class.
+	/// @return The exception.
 	public static ClassInstantiationException missingConstructor(Class<?> klass) {
 		return new ClassInstantiationException(klass, message(klass));
 	}
 
-	/**
-	 * Create exception with given original cause.
-	 *
-	 * @param klass The class.
-	 * @param cause The original exception.
-	 * @return The exception.
-	 */
+	/// Create exception with given original cause.
+	///
+	/// @param klass The class.
+	/// @param cause The original exception.
+	/// @return The exception.
 	public static ClassInstantiationException instantiationException(Class<?> klass, Exception cause) {
 		return new ClassInstantiationException(klass, cause);
 	}
 
-	/**
-	 * Create exception with given original cause.
-	 *
-	 * @param cause The original exception.
-	 * @return The exception.
-	 */
+	/// Create exception with given original cause.
+	///
+	/// @param cause The original exception.
+	/// @return The exception.
 	public static ClassInstantiationException instantiationException(Exception cause) {
 		return new ClassInstantiationException(null, cause);
 	}
 
-	/**
-	 * Create message for {@link #missingConstructor(Class)} method.
-	 *
-	 * @param klass The class.
-	 * @return The error message.
-	 */
+	/// Create message for [#missingConstructor(Class)] method.
+	///
+	/// @param klass The class.
+	/// @return The error message.
 	private static String message(Class<?> klass) {
 		return String.format("Cannot instantiate class %s because it does not have given constructor", klass.getName());
 	}

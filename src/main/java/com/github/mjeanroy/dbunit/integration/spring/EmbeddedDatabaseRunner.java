@@ -31,60 +31,44 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * A standalone runner that can be used to start/stop embedded database.
- * This runner is framework agnostic and may be used on whatever test framework (JUnit 4, JUnit Jupiter, etc.).
- */
+/// A standalone runner that can be used to start/stop embedded database.
+/// This runner is framework agnostic and may be used on whatever test framework (JUnit 4, JUnit Jupiter, etc.).
 public class EmbeddedDatabaseRunner {
 
-	/**
-	 * Instance of {@link EmbeddedDatabase}.
-	 */
+	/// Instance of [EmbeddedDatabase].
 	private final EmbeddedDatabase db;
 
-	/**
-	 * Create runner.
-	 *
-	 * @param testClass The tested class.
-	 */
+	/// Create runner.
+	///
+	/// @param testClass The tested class.
 	public EmbeddedDatabaseRunner(Class<?> testClass) {
 		this(extractBuilder(testClass).build());
 	}
 
-	/**
-	 * Create rule.
-	 *
-	 * @param db Embedded database.
-	 */
+	/// Create rule.
+	///
+	/// @param db Embedded database.
 	public EmbeddedDatabaseRunner(EmbeddedDatabase db) {
 		this.db = notNull(db, "Embedded database must not be null");
 	}
 
-	/**
-	 * Create rule with default builder.
-	 */
+	/// Create rule with default builder.
 	public EmbeddedDatabaseRunner() {
 		this(new EmbeddedDatabaseBuilder().build());
 	}
 
-	/**
-	 * Execute the before test handler.
-	 */
+	/// Execute the before test handler.
 	public void before() {
 	}
 
-	/**
-	 * Execute the after test handler.
-	 */
+	/// Execute the after test handler.
 	public void after() {
 		this.db.shutdown();
 	}
 
-	/**
-	 * Gets currently created database instance.
-	 *
-	 * @return Database instance, may be {@code null} until rule has not been started.
-	 */
+	/// Gets currently created database instance.
+	///
+	/// @return Database instance, may be `null` until rule has not been started.
 	public EmbeddedDatabase getDb() {
 		return this.db;
 	}

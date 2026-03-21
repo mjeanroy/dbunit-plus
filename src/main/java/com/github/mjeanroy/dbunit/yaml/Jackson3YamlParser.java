@@ -29,44 +29,31 @@ import tools.jackson.dataformat.yaml.YAMLMapper;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * {@link YamlParser} implementation based on Jackson 3.x {@link YAMLMapper}.
- *
- * <p>
- * This parser delegates YAML deserialization to a statically configured
- * {@link YAMLMapper}. The YAML content is converted into
- * a {@code Map<String, Object>} representing the root YAML mapping.
- * </p>
- *
- * <p>
- * This implementation is thread-safe since it relies on a single shared
- * {@link YAMLMapper} instance and exposes a singleton instance via
- * {@link #getInstance()}.
- * </p>
- */
+/// [YamlParser] implementation based on Jackson 3.x [YAMLMapper].
+///
+/// This parser delegates YAML deserialization to a statically configured
+/// [YAMLMapper]. The YAML content is converted into
+/// a `Map<String, Object>` representing the root YAML mapping.
+///
+///
+/// This implementation is thread-safe since it relies on a single shared
+/// [YAMLMapper] instance and exposes a singleton instance via
+/// [#getInstance()].
 class Jackson3YamlParser extends AbstractYamlParser implements YamlParser {
 
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link Jackson3YamlParser} instance
-	 */
+	/// Return the singleton instance of this parser.
+	///
+	/// @return the shared [Jackson3YamlParser] instance
 	static Jackson3YamlParser getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * {@link YAMLMapper} instance configured.
-	 */
+	/// [YAMLMapper] instance configured.
 	private final YAMLMapper yamlMapper;
 
-	/**
-	 * Create a new {@link Jackson3YamlParser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 */
+	/// Create a new [Jackson3YamlParser].
+	///
+	/// Constructor is private to enforce singleton usage.
 	private Jackson3YamlParser(YAMLMapper yamlMapper) {
 		this.yamlMapper = yamlMapper;
 	}

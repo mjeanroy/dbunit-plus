@@ -28,20 +28,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * A {@link ReplacementsProvider} that will map following values to the current time (according to the system timezone):
- * <ul>
- *   <li>{@code current_time}</li>
- *   <li>{@code CURRENT_TIME}</li>
- *   <li>{@code current_time()}</li>
- *   <li>{@code CURRENT_TIME()}</li>
- * </ul>
- */
+/// A [ReplacementsProvider] that will map following values to the current time (according to the system timezone):
+/// - `current_time`
+/// - `CURRENT_TIME`
+/// - `current_time()`
+/// - `CURRENT_TIME()`
 public class CurrentTimeValueReplacementsProvider implements ReplacementsProvider {
 
-	/**
-	 * Create provider.
-	 */
+	/// Create provider.
 	public CurrentTimeValueReplacementsProvider() {
 	}
 

@@ -26,25 +26,19 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can enable/disable the {@code "qualifiedTableNames"} feature of DbUnit.
- *
- * @see DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES
- */
+/// An interceptor that can enable/disable the `"qualifiedTableNames"` feature of DbUnit.
+///
+/// @see DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES
 public final class DbUnitQualifiedTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> {
 
-	/**
-	 * Create the interceptor, the feature is enabled by default.
-	 */
+	/// Create the interceptor, the feature is enabled by default.
 	public DbUnitQualifiedTableNamesInterceptor() {
 		this(true);
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param qualifiedTableNames Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param qualifiedTableNames Feature activation flag: `true` to enable feature, `false` otherwise.
 	public DbUnitQualifiedTableNamesInterceptor(boolean qualifiedTableNames) {
 		super(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, qualifiedTableNames);
 	}

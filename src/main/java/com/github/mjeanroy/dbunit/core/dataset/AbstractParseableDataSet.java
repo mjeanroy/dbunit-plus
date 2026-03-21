@@ -49,34 +49,24 @@ import java.util.stream.Collectors;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Implementation of {@link IDataSet} with a parseable (JSON or YAML for example) file as input.
- */
+/// Implementation of [IDataSet] with a parseable (JSON or YAML for example) file as input.
 abstract class AbstractParseableDataSet extends AbstractDataSet {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(AbstractParseableDataSet.class);
 
-	/**
-	 * JSON File.
-	 */
+	/// JSON File.
 	private final Resource resource;
 
-	/**
-	 * List of tables in {@code file}.
-	 */
+	/// List of tables in `file`.
 	private final List<ITable> tables;
 
-	/**
-	 * Create JSON DataSet.
-	 *
-	 * @param resource Input resource.
-	 * @param caseSensitiveTableNames Case Insensitivity Flag.
-	 * @param parser JSON Parser (will be used to parser input resource).
-	 * @throws DataSetException If JSON parsing fail.
-	 */
+	/// Create JSON DataSet.
+	///
+	/// @param resource Input resource.
+	/// @param caseSensitiveTableNames Case Insensitivity Flag.
+	/// @param parser JSON Parser (will be used to parser input resource).
+	/// @throws DataSetException If JSON parsing fail.
 	AbstractParseableDataSet(
 		Resource resource,
 		boolean caseSensitiveTableNames,
@@ -93,28 +83,24 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 		this.tables = initialize(resource, parser);
 	}
 
-	/**
-	 * Create list of {@link ITable} from JSON resource.
-	 *
-	 * @param resource JSON Resource.
-	 * @param parser JSON Parser.
-	 * @return List of {@link ITable}.
-	 * @throws DataSetException If an error occurred during parsing.
-	 */
+	/// Create list of [ITable] from JSON resource.
+	///
+	/// @param resource JSON Resource.
+	/// @param parser JSON Parser.
+	/// @return List of [ITable].
+	/// @throws DataSetException If an error occurred during parsing.
 	private List<ITable> initialize(Resource resource, DatasetParser parser) throws DataSetException {
 		Map<String, Collection<Map<String, Object>>> tables = parse(resource, parser);
 		return readTables(tables);
 	}
 
-	/**
-	 * Parse JSON resource and produce map of table (i.e table names) with their rows (i.e list of
-	 * map with column name associated to the given value).
-	 *
-	 * @param resource JSON Resource.
-	 * @param parser JSON Parser.
-	 * @return List of tables.
-	 * @throws DataSetException If an error occurred during JSON parsing (invalid schema, etc.).
-	 */
+	/// Parse JSON resource and produce map of table (i.e table names) with their rows (i.e list of
+	/// map with column name associated to the given value).
+	///
+	/// @param resource JSON Resource.
+	/// @param parser JSON Parser.
+	/// @return List of tables.
+	/// @throws DataSetException If an error occurred during JSON parsing (invalid schema, etc.).
 	private Map<String, Collection<Map<String, Object>>> parse(Resource resource, DatasetParser parser) throws DataSetException {
 		try {
 			log.debug("Parsing resource: {}", resource);
@@ -126,13 +112,11 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 		}
 	}
 
-	/**
-	 * Read tables and produce instance of {@link ITable}.
-	 *
-	 * @param tables Table associated with their rows.
-	 * @return List of {@link ITable}.
-	 * @throws DataSetException If an error occurred during extraction.
-	 */
+	/// Read tables and produce instance of [ITable].
+	///
+	/// @param tables Table associated with their rows.
+	/// @return List of [ITable].
+	/// @throws DataSetException If an error occurred during extraction.
 	private List<ITable> readTables(Map<String, Collection<Map<String, Object>>> tables) throws DataSetException {
 		Set<Map.Entry<String, Collection<Map<String, Object>>>> entries = tables.entrySet();
 		List<ITable> results = new ArrayList<>(entries.size());
@@ -179,11 +163,9 @@ abstract class AbstractParseableDataSet extends AbstractDataSet {
 		return new DefaultTableIterator(tables.toArray(new ITable[0]), reverse);
 	}
 
-	/**
-	 * Gets resource.
-	 *
-	 * @return The dataset resource.
-	 */
+	/// Gets resource.
+	///
+	/// @return The dataset resource.
 	public Resource getResource() {
 		return resource;
 	}

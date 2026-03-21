@@ -31,19 +31,13 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-/**
- * Provide integration between spring {@link TransactionalTestExecutionListener} and
- * custom {@link DbUnitTestExecutionListener}:
- * <ol>
- *   <li>{@link TransactionalTestExecutionListener} will be executed first.</li>
- *   <li>{@link DbUnitTestExecutionListener} will be executed last.</li>
- * </ol>
- */
+/// Provide integration between spring [TransactionalTestExecutionListener] and
+/// custom [DbUnitTestExecutionListener]:
+/// 1. [TransactionalTestExecutionListener] will be executed first.
+/// 2. [DbUnitTestExecutionListener] will be executed last.
 public class TransactionalDbUnitTestExecutionListener extends CompositeTestExecutionListener {
 
-	/**
-	 * Create listeners with defaults {@link TestExecutionListener} list.
-	 */
+	/// Create listeners with defaults [TestExecutionListener] list.
 	public TransactionalDbUnitTestExecutionListener() {
 		super(listeners());
 	}

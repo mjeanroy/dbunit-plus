@@ -30,17 +30,13 @@ import com.github.mjeanroy.dbunit.exception.DataSetParserException;
 import java.util.Collection;
 import java.util.Map;
 
-/**
- * Dataset parser: read file and returns in-memory dataset representation.
- */
+/// Dataset parser: read file and returns in-memory dataset representation.
 public interface DatasetParser {
 
-	/**
-	 * Read File and return representation.
-	 *
-	 * @param resource Input resource.
-	 * @return DataSet representation.
-	 * @throws DataSetParserException If parse/read operation fail (invalid schema, unreadable file).
-	 */
+	/// Read File and return representation.
+	///
+	/// @param resource Input resource.
+	/// @return DataSet representation.
+	/// @throws DataSetParserException If parse/read operation fail (invalid schema, unreadable file).
 	Map<String, Collection<Map<String, Object>>> parse(Resource resource);
 }

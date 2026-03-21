@@ -56,101 +56,70 @@ import java.util.function.Function;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * A simple JUnit Jupiter extension for DbUnit.
- *
- * <br>
- *
- * Basically, this class will:
- *
- * <ul>
- *   <li>Read database configuration, configured with {@link DbUnitConnection}, <strong>before all</strong> tests.</li>
- *   <li>Run (optional) initialization scripts, configured with {@link DbUnitInit}, <strong>before all</strong> tests.</li>
- *   <li>Run (optional) liquibase changelogs, configured with {@link DbUnitLiquibase}, <strong>before all</strong> tests.</li>
- *   <li>Execute DbUnit SETUP operation, configured with {@link DbUnitSetup}, <strong>before each</strong> test.</li>
- *   <li>Load dataset, configured with {@link DbUnitDataSet}, <strong>before each</strong> test.</li>
- *   <li>Execute DbUnit TEARDOWN operation, configured with {@link DbUnitTearDown}, <strong>before each</strong> test.</li>
- * </ul>
- *
- * Note that is you are using Spring Test Framework in your application, this extension can be combined with {@link EmbeddedDatabaseExtension}
- * to initiate an embedded database (HSQL or H2 database).
- *
- * <br>
- *
- * This extension can also be used with {@link RegisterExtension} annotation as a static field or as an instance field.
- *
- * <br>
- *
- * Here is an example:
- *
- * <pre><code>
- *
- *   &#64;ExtendWith({EmbeddedDatabaseExtension.class, DbUnitExtension.class})
- *   &#64;DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
- *   &#64;bUnitDataSet("classpath:/dataset/xml")
- *   class MyDaoTest {
- *     &#64;Test
- *     void test1() {
- *       // ...
- *     }
- *   }
- *
- * </code></pre>
- *
- * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration">https://junit.org/junit5/docs/current/user-guide/#extensions-registration</a>
- * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-static-fields</a>
- * @see <a href="https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields">https://junit.org/junit5/docs/current/user-guide/#extensions-registration-programmatic-instance-fields</a>
- */
+/// A simple JUnit Jupiter extension for DbUnit.
+///
+/// Basically, this class will:
+/// - Read database configuration, configured with [DbUnitConnection], **before all** tests.
+/// - Run (optional) initialization scripts, configured with [DbUnitInit], **before all** tests.
+/// - Run (optional) liquibase changelogs, configured with [DbUnitLiquibase], **before all** tests.
+/// - Execute DbUnit SETUP operation, configured with [DbUnitSetup], **before each** test.
+/// - Load dataset, configured with [DbUnitDataSet], **before each** test.
+/// - Execute DbUnit TEARDOWN operation, configured with [DbUnitTearDown], **before each** test.
+///
+/// Note that is you are using Spring Test Framework in your application, this extension can be combined with [EmbeddedDatabaseExtension]
+/// to initiate an embedded database (HSQL or H2 database).
+///
+/// This extension can also be used with [RegisterExtension] annotation as a static field or as an instance field.
+///
+/// Here is an example:
+///
+/// ```
+///   @ExtendWith({EmbeddedDatabaseExtension.class, DbUnitExtension.class})
+///   @DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+///   @bUnitDataSet("classpath:/dataset/xml")
+///   class MyDaoTest {
+///     @Test
+///     void test1() {
+///       // ...
+///     }
+///   }
+/// ```
 public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-	/**
-	 * The namespace in which extension data will be stored.
-	 */
+	/// The namespace in which extension data will be stored.
 	private static final Namespace NAMESPACE = Namespace.create(DbUnitExtension.class.getName());
 
-	/**
-	 * The key of the {@link DbUnitRunner} instance in the internal store.
-	 */
+	/// The key of the [DbUnitRunner] instance in the internal store.
 	private static final String DB_UNIT_RUNNER_KEY = "dbUnitRunner";
 
-	/**
-	 * The JDBC Connection Factory to use.
-	 */
+	/// The JDBC Connection Factory to use.
 	private final JdbcConnectionFactory connectionFactory;
 
-	/**
-	 * Create the extension.
-	 */
+	/// Create the extension.
 	public DbUnitExtension() {
 		this.connectionFactory = null;
 	}
 
-	/**
-	 * Create rule using {@link JdbcConfiguration} instance.
-	 * This constructor should be used with {@link RegisterExtension} annotation.
-	 *
-	 * @param configuration JDBC Configuration.
-	 */
+	/// Create rule using [JdbcConfiguration] instance.
+	/// This constructor should be used with [RegisterExtension] annotation.
+	///
+	/// @param configuration JDBC Configuration.
 	public DbUnitExtension(JdbcConfiguration configuration) {
 		this(new JdbcDefaultConnectionFactory(configuration));
 	}
 
-	/**
-	 * Create rule using {@link JdbcConnectionFactory} to create SQL Connection.
-	 * This constructor should be used with {@link RegisterExtension} annotation.
-	 *
-	 * @param factory JDBC Configuration.
-	 */
+	/// Create rule using [JdbcConnectionFactory] to create SQL Connection.
+	/// This constructor should be used with [RegisterExtension] annotation.
+	///
+	/// @param factory JDBC Configuration.
 	public DbUnitExtension(JdbcConnectionFactory factory) {
 		this.connectionFactory = notNull(factory, "The JDBC Connection Factory must not be null");
 	}
 
-	/**
-	 * Create rule using {@link DataSource} to create SQL Connection.
-	 * This constructor should be used with {@link RegisterExtension} annotation.
-	 *
-	 * @param dataSource The datasource to use.
-	 */
+	/// Create rule using [DataSource] to create SQL Connection.
+	/// This constructor should be used with [RegisterExtension] annotation.
+	///
+	/// @param dataSource The datasource to use.
 	public DbUnitExtension(DataSource dataSource) {
 		this(new JdbcDataSourceConnectionFactory(dataSource));
 	}
@@ -206,44 +175,36 @@ public class DbUnitExtension implements BeforeAllCallback, AfterAllCallback, Bef
 		return dbUnitRunner.getConnection();
 	}
 
-	/**
-	 * Get or create DbUnit context from store internal store.
-	 *
-	 * @param testClass The extension context.
-	 * @param store The internal store.
-	 * @return The runner.
-	 */
+	/// Get or create DbUnit context from store internal store.
+	///
+	/// @param testClass The extension context.
+	/// @param store The internal store.
+	/// @return The runner.
 	private DbUnitRunner getOrInitializeDbUnitExtensionContext(Store store, Class<?> testClass) {
 		final DbUnitRunnerFactory dbUnitRunnerFactory = new DbUnitRunnerFactory(connectionFactory);
 		return store.getOrComputeIfAbsent(testClass, dbUnitRunnerFactory, DbUnitRunner.class);
 	}
 
-	/**
-	 * Get the tested class from given JUnit Jupiter extension context.
-	 *
-	 * @param extensionContext The extension context.
-	 * @return The tested class.
-	 */
+	/// Get the tested class from given JUnit Jupiter extension context.
+	///
+	/// @param extensionContext The extension context.
+	/// @return The tested class.
 	private static Class<?> getTestClass(ExtensionContext extensionContext) {
 		return extensionContext.getRequiredTestClass();
 	}
 
-	/**
-	 * Clear store from DbUnit runner previously created for given test class.
-	 *
-	 * @param store The internal store.
-	 * @param testClass The tested class.
-	 */
+	/// Clear store from DbUnit runner previously created for given test class.
+	///
+	/// @param store The internal store.
+	/// @param testClass The tested class.
 	private static void clearStore(Store store, Class<?> testClass) {
 		store.remove(testClass);
 	}
 
-	/**
-	 * Get the internal store from the test context.
-	 *
-	 * @param context The test context.
-	 * @return The internal store.
-	 */
+	/// Get the internal store from the test context.
+	///
+	/// @param context The test context.
+	/// @return The internal store.
 	private static Store getStore(ExtensionContext context) {
 		return context.getStore(NAMESPACE);
 	}

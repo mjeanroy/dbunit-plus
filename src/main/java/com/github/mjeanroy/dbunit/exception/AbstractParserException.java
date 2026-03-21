@@ -24,19 +24,14 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Wrap external parsing exception.
- *
- * This exception should provide a unique way to handle parser exception,
- * whatever the internal mapper library.
- */
+/// Wrap external parsing exception.
+/// This exception should provide a unique way to handle parser exception,
+/// whatever the internal mapper library.
 public abstract class AbstractParserException extends AbstractDbUnitException {
 
-	/**
-	 * Wrap {@link Exception}.
-	 *
-	 * @param e Original Exception.
-	 */
+	/// Wrap [Exception].
+	///
+	/// @param e Original Exception.
 	public AbstractParserException(Exception e) {
 		super(e);
 	}

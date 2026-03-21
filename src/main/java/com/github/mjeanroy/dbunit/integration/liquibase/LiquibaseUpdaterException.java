@@ -24,16 +24,12 @@
 
 package com.github.mjeanroy.dbunit.integration.liquibase;
 
-/**
- * Exception thrown if an error occurred during the liquibase update operation.
- */
+/// Exception thrown if an error occurred during the liquibase update operation.
 public class LiquibaseUpdaterException extends RuntimeException {
 
-	/**
-	 * Create exception.
-	 *
-	 * @param cause Original cause.
-	 */
+	/// Create exception.
+	///
+	/// @param cause Original cause.
 	LiquibaseUpdaterException(Exception cause) {
 		super(cause);
 	}

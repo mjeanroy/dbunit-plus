@@ -24,10 +24,6 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
-
-import java.io.File;
-
 import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.loggers.Logger;
 import com.github.mjeanroy.dbunit.loggers.Loggers;
@@ -36,9 +32,11 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.csv.CsvDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 
-/**
- * Set of data set implementation supported out of the box.
- */
+import java.io.File;
+
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
+
+/// Set of data set implementation supported out of the box.
 enum DataSetType {
 	JSON {
 		@Override
@@ -106,31 +104,25 @@ enum DataSetType {
 		}
 	};
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(DataSetType.class);
 
 	DataSetType() {
 	}
 
-	/**
-	 * Check if given resource match type.
-	 *
-	 * @param resource Resource.
-	 * @return {@code true} if resource match given type, {@code false} otherwise.
-	 */
+	/// Check if given resource match type.
+	///
+	/// @param resource Resource.
+	/// @return `true` if resource match given type, `false` otherwise.
 	public boolean match(Resource resource) {
 		notNull(resource, "File should not be null");
 		return doMatch(resource);
 	}
 
-	/**
-	 * Create data set from given resource.
-	 *
-	 * @param resource Resource.
-	 * @return Instance of {@link org.dbunit.dataset.IDataSet}.
-	 */
+	/// Create data set from given resource.
+	///
+	/// @param resource Resource.
+	/// @return Instance of [org.dbunit.dataset.IDataSet].
 	public IDataSet create(Resource resource) throws DataSetException {
 		notNull(resource, "File should not be null");
 		try {
@@ -146,19 +138,15 @@ enum DataSetType {
 		}
 	}
 
-	/**
-	 * Check if given file match data set type.
-	 *
-	 * @param resource Resource.
-	 * @return {@code true} if type match given file, {@code false} otherwise.
-	 */
+	/// Check if given file match data set type.
+	///
+	/// @param resource Resource.
+	/// @return `true` if type match given file, `false` otherwise.
 	abstract boolean doMatch(Resource resource);
 
-	/**
-	 * Check if given file match data set type.
-	 *
-	 * @param resource Resource.
-	 * @return {@code true} if type match given file, {@code false} otherwise.
-	 */
+	/// Check if given file match data set type.
+	///
+	/// @param resource Resource.
+	/// @return `true` if type match given file, `false` otherwise.
 	abstract IDataSet doCreate(Resource resource) throws Exception;
 }

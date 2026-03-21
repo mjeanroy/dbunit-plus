@@ -26,19 +26,15 @@ package com.github.mjeanroy.dbunit.commons.jdbc;
 
 import java.sql.ResultSet;
 
-/**
- * Functional interface used to map {@link ResultSet} to another data structure.
- *
- * @param <T> Mapped type.
- */
+/// Functional interface used to map [ResultSet] to another data structure.
+///
+/// @param <T> Mapped type.
 public interface ResultSetMapFunction<T> {
 
-	/**
-	 * Map {@code resultSet} to another type.
-	 *
-	 * @param resultSet Input.
-	 * @return Output.
-	 * @throws Exception If an error occurred during mapping.
-	 */
+	/// Map `resultSet` to another type.
+	///
+	/// @param resultSet Input.
+	/// @return Output.
+	/// @throws Exception If an error occurred during mapping.
 	T apply(ResultSet resultSet) throws Exception;
 }

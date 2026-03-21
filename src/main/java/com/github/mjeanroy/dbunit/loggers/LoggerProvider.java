@@ -24,16 +24,12 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
-/**
- * A logger provider, used to create loggers based on a given logger name.
- */
+/// A logger provider, used to create loggers based on a given logger name.
 public interface LoggerProvider {
 
-	/**
-	 * Create the logger.
-	 *
-	 * @param klass The logger name.
-	 * @return The logger instance.
-	 */
+	/// Create the logger.
+	///
+	/// @param klass The logger name.
+	/// @return The logger instance.
 	Logger getLogger(Class<?> klass);
 }

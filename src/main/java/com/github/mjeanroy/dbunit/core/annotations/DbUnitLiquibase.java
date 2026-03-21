@@ -31,33 +31,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * DbUnit liquibase integration: allow test to initialize database with
- * liquibase and load DbUnit data set next.
- *
- * This annotation can be used on:
- * <ul>
- *   <li>Class (i.e test class).</li>
- *   <li>Package (i.e package where test classes belongs)</li>
- * </ul>
- *
- * For example:
- *
- * <pre><code>
- *
- *   &#64;DbUnitLiquibase("/liquibase/changelogs.xml")
- *   &#64;DbUnitDataSet("/dataset/xml")
- *   public class TestClass {
- *     &#64;Rule
- *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
- *
- *     &#64;Test
- *     public void test1() {
- *     }
- *   }
- *
- * </code></pre>
- */
+/// DbUnit liquibase integration: allow test to initialize database with
+/// liquibase and load DbUnit data set next.
+///
+/// This annotation can be used on:
+///     - Class (i.e test class).
+///     - Package (i.e package where test classes belongs)
+///
+/// For example:
+///
+/// ```
+///   @DbUnitLiquibase("/liquibase/changelogs.xml")
+///   @DbUnitDataSet("/dataset/xml")
+///   public class TestClass {
+///     @Rule
+///     public DbUnitRule rule = new DbUnitRule(connectionFactory);
+///
+///     @Test
+///     public void test1() {
+///     }
+///   }
+/// ```
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -66,10 +60,8 @@ import java.lang.annotation.Target;
 })
 public @interface DbUnitLiquibase {
 
-	/**
-	 * List of liquibase change logs to run (in order).
-	 *
-	 * @return List of liquibase change logs.
-	 */
+	/// List of liquibase change logs to run (in order).
+	///
+	/// @return Liquibase change logs.
 	String[] value() default {};
 }

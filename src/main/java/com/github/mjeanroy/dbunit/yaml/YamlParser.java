@@ -27,20 +27,14 @@ package com.github.mjeanroy.dbunit.yaml;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * Read YAML inputs and return {@link Map} object.
- */
+/// Read YAML inputs and return [Map] object.
 public interface YamlParser {
 
-	/**
-	 * Read and deserialize YAML content from the given {@link Reader}.
-	 *
-	 * <p>
-	 * The YAML input must represent a mapping at the root level.
-	 * </p>
-	 *
-	 * @param reader the reader containing YAML content (must not be {@code null})
-	 * @return the parsed YAML object as a {@code Map<String, Object>}
-	 */
+	/// Read and deserialize YAML content from the given [Reader].
+	///
+	/// The YAML input must represent a mapping at the root level.
+	///
+	/// @param reader the reader containing YAML content (must not be `null`)
+	/// @return the parsed YAML object as a `Map<String, Object>`
 	Map<String, Object> readObject(Reader reader);
 }

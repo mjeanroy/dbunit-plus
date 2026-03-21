@@ -32,36 +32,26 @@ import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
-/**
- * Static Files Utilities.
- */
+/// Static Files Utilities.
 public final class Files {
 
-	/**
-	 * The default {@link Charset} name.
-	 */
+	/// The default [Charset] name.
 	public static final String DEFAULT_CHARSET = Charset.defaultCharset().displayName();
 
-	/**
-	 * The extension separator.
-	 */
+	/// The extension separator.
 	private static final char EXTENSION_SEPARATOR = '.';
 
-	/**
-	 * Folder separator.
-	 */
+	/// Folder separator.
 	private static final char FOLDER_SEPARATOR = '/';
 
 	// Ensure non instantiation.
 	private Files() {
 	}
 
-	/**
-	 * Get the filename of a full path.
-	 *
-	 * @param path The full path.
-	 * @return The filename.
-	 */
+	/// Get the filename of a full path.
+	///
+	/// @param path The full path.
+	/// @return The filename.
 	public static String extractFilename(String path) {
 		if (isEmpty(path)) {
 			return null;
@@ -71,12 +61,10 @@ public final class Files {
 		return parts.get(parts.size() - 1);
 	}
 
-	/**
-	 * Get file extension.
-	 *
-	 * @param fileName File name.
-	 * @return The extension, returns an empty string without extension.
-	 */
+	/// Get file extension.
+	///
+	/// @param fileName File name.
+	/// @return The extension, returns an empty string without extension.
 	public static String extractExtension(String fileName) {
 		if (fileName == null) {
 			return null;
@@ -90,19 +78,15 @@ public final class Files {
 		return fileName.substring(indexOfExt + 1);
 	}
 
-	/**
-	 * Ensure that a {@code path} ends with folder separator and returns
-	 * updated path.
-	 *
-	 * For example:
-	 * <ul>
-	 *   <li>{@code ensureTrailingSeparator("/tmp")} returns {@code /tmp/}</li>
-	 *   <li>{@code ensureTrailingSeparator("/tmp/")} returns {@code /tmp/}</li>
-	 * </ul>
-	 *
-	 * @param path The path.
-	 * @return The path, ending with folder separator.
-	 */
+	/// Ensure that a `path` ends with folder separator and returns
+	/// updated path.
+	///
+	/// For example:
+	/// - `ensureTrailingSeparator("/tmp")` returns `/tmp/`
+	/// - `ensureTrailingSeparator("/tmp/")` returns `/tmp/`
+	///
+	/// @param path The path.
+	/// @return The path, ending with folder separator.
 	public static String ensureTrailingSeparator(String path) {
 		if (isEmpty(path)) {
 			return path;
@@ -112,19 +96,15 @@ public final class Files {
 		return lastChar == FOLDER_SEPARATOR ? path : path + FOLDER_SEPARATOR;
 	}
 
-	/**
-	 * Ensure that a {@code path} starts with folder separator and returns
-	 * updated path.
-	 *
-	 * For example:
-	 * <ul>
-	 *   <li>{@code ensureRootSeparator("/tmp")} returns {@code "/tmp"}</li>
-	 *   <li>{@code ensureRootSeparator("tmp")} returns {@code "/tmp"}</li>
-	 * </ul>
-	 *
-	 * @param path The path.
-	 * @return The path, starting with folder separator.
-	 */
+	/// Ensure that a `path` starts with folder separator and returns
+	/// updated path.
+	///
+	/// For example:
+	/// - `ensureRootSeparator("/tmp")` returns `"/tmp"`
+	/// - `ensureRootSeparator("tmp")` returns `"/tmp"`
+	///
+	/// @param path The path.
+	/// @return The path, starting with folder separator.
 	public static String ensureRootSeparator(String path) {
 		if (isEmpty(path)) {
 			return path;
@@ -133,27 +113,22 @@ public final class Files {
 		return path.charAt(0) == FOLDER_SEPARATOR ? path : FOLDER_SEPARATOR + path;
 	}
 
-	/**
-	 * Check if a {@code path} is exactly the root path.
-	 *
-	 * @param path The path.
-	 * @return {@code true} if {@code path} is the root path, {@code false} otherwise.
-	 */
+	/// Check if a `path` is exactly the root path.
+	///
+	/// @param path The path.
+	/// @return `true` if `path` is the root path, `false` otherwise.
 	public static boolean isRootPath(String path) {
 		return path != null && path.length() == 1 && path.charAt(0) == FOLDER_SEPARATOR;
 	}
 
-	/**
-	 * Extract all parts of a given path.
-	 *
-	 * For example:
-	 * <ul>
-	 *   <li>{@code extractPaths("/tmp/foo"} returns a list containing {@code "tmp"} and {@code "foo"}.</li>
-	 *   <li>{@code extractPaths("/"} returns an empty list.</li>
-	 * </ul>
-	 * @param path The path.
-	 * @return A list containing all parts.
-	 */
+	/// Extract all parts of a given path.
+	///
+	/// For example:
+	/// - `extractPaths("/tmp/foo")` returns a list containing `"tmp"` and `"foo"`.
+	/// - `extractPaths("/")` returns an empty list.
+	///
+	/// @param path The path.
+	/// @return A list containing all parts.
 	public static List<String> extractPaths(String path) {
 		if (isEmpty(path)) {
 			return emptyList();

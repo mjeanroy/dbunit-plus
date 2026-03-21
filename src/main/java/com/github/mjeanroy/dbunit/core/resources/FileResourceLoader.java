@@ -26,39 +26,27 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import java.io.File;
 
-/**
- * Load {@link Resource} from the file system.
- */
+/// Load [Resource] from the file system.
 class FileResourceLoader extends AbstractResourceLoaderStrategy {
 
-	/**
-	 * Each resource must match this prefix, for example:
-	 * <ul>
-	 *   <li>{@code file:/foo.txt} must match</li>
-	 *   <li>{@code file/foo.txt} must not match</li>
-	 *   <li>{@code foo.txt} must not match</li>
-	 * </ul>
-	 */
+	/// Each resource must match this prefix, for example:
+	/// - `file:/foo.txt` must match
+	/// - `file/foo.txt` must not match
+	/// - `foo.txt` must not match
 	private static final String PREFIX = "file:";
 
-	/**
-	 * The singleton instance.
-	 */
+	/// The singleton instance.
 	private static final FileResourceLoader INSTANCE = new FileResourceLoader();
 
-	/**
-	 * Get the loader instance.
-	 *
-	 * @return Loader instance.
-	 */
+	/// Get the loader instance.
+	///
+	/// @return Loader instance.
 	static FileResourceLoader getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * Create the loader.
-	 * This constructor should not be called directly, use {@link #getInstance()} instead.
-	 */
+	/// Create the loader.
+	/// This constructor should not be called directly, use [#getInstance()] instead.
 	private FileResourceLoader() {
 		super(PREFIX);
 	}

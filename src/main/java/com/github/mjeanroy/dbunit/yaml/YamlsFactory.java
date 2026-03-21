@@ -31,54 +31,42 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.util.ServiceLoader;
 
-/**
- * Factory used to create the default {@link YamlParser} implementation.
- *
- * <p>
- * This factory resolves a {@link YamlParser} using a two-step strategy:
- * </p>
- *
- * <h2>1. Service Provider Interface (SPI)</h2>
- * <p>
- * The factory first attempts to discover user-defined implementations via
- * {@link ServiceLoader}. If a provider is found on the classpath, it is
- * returned immediately. This allows applications to override the default
- * YAML implementation without modifying the library.
- * </p>
- *
- * <h2>2. Classpath Auto-Detection</h2>
- * <p>
- * If no SPI provider is found, the factory falls back to classpath detection.
- * The first available implementation in the following order is selected:
- * </p>
- * <ol>
- *   <li>Jackson YAML module (if {@code com.fasterxml.jackson.dataformat.yaml.YAMLFactory} is present)</li>
- *   <li>SnakeYAML (if {@code org.yaml.snakeyaml.Yaml} is present)</li>
- * </ol>
- *
- * <p>
- * Availability is determined using runtime classpath inspection.
- * </p>
- *
- * <h2>Failure Behavior</h2>
- * <p>
- * If no SPI implementation is found and none of the supported YAML libraries
- * are available on the classpath, an {@link UnsupportedOperationException}
- * is thrown.
- * </p>
- *
- * <h2>Thread-Safety</h2>
- * <p>
- * This factory is stateless and thread-safe.
- * </p>
- *
- * <h2>Design Notes</h2>
- * <p>
- * Implementations are selected dynamically to avoid introducing a mandatory
- * dependency on a specific YAML library. This enables flexible integration
- * depending on the application's classpath configuration.
- * </p>
- */
+/// Factory used to create the default [YamlParser] implementation.
+///
+/// This factory resolves a [YamlParser] using a two-step strategy:
+///
+/// ## 1. Service Provider Interface (SPI)
+///
+/// The factory first attempts to discover user-defined implementations via
+/// [ServiceLoader]. If a provider is found on the classpath, it is
+/// returned immediately. This allows applications to override the default
+/// YAML implementation without modifying the library.
+///
+/// ## 2. Classpath Auto-Detection
+///
+/// If no SPI provider is found, the factory falls back to classpath detection.
+/// The first available implementation in the following order is selected:
+/// 1. Jackson 3 YAML module (if `tools.jackson.dataformat.yaml.YAMLMapper` is present)
+/// 2. Jackson 2 YAML module (if `com.fasterxml.jackson.dataformat.yaml.YAMLFactory` is present)
+/// 3. SnakeYAML (if `org.yaml.snakeyaml.Yaml` is present)
+///
+/// Availability is determined using runtime classpath inspection.
+///
+/// ## Failure Behavior
+///
+/// If no SPI implementation is found and none of the supported YAML libraries
+/// are available on the classpath, an [UnsupportedOperationException]
+/// is thrown.
+///
+/// ## Thread-Safety
+///
+/// This factory is stateless and thread-safe.
+///
+/// ## Design Notes
+///
+/// Implementations are selected dynamically to avoid introducing a mandatory
+/// dependency on a specific YAML library. This enables flexible integration
+/// depending on the application's classpath configuration.
 public final class YamlsFactory {
 
 	private static final Logger log = Loggers.getLogger(YamlsFactory.class);
@@ -100,17 +88,13 @@ public final class YamlsFactory {
 	private YamlsFactory() {
 	}
 
-	/**
-	 * Create the default {@link YamlParser} implementation.
-	 *
-	 * <p>
-	 * The resolution strategy first checks for SPI providers and then
-	 * falls back to classpath auto-detection.
-	 * </p>
-	 *
-	 * @return the resolved {@link YamlParser} implementation
-	 * @throws UnsupportedOperationException if no suitable implementation can be found on the classpath
-	 */
+	/// Create the default [YamlParser] implementation.
+	///
+	/// The resolution strategy first checks for SPI providers and then
+	/// falls back to classpath auto-detection.
+	///
+	/// @return the resolved [YamlParser] implementation
+	/// @throws UnsupportedOperationException if no suitable implementation can be found on the classpath
 	public static YamlParser createDefaultParser() {
 		// Try SPI first.
 		// If some custom implementations are declared and detected, use them.

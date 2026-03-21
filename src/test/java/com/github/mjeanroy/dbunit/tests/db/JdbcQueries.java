@@ -31,22 +31,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Static JDBC Queries utilities, to use in unit tests only.
- */
+/// Static JDBC Queries utilities, to use in unit tests only.
 public final class JdbcQueries {
 
 	// Ensure no instantiation.
 	private JdbcQueries() {
 	}
 
-	/**
-	 * Run SQL {@code "COUNT"} query against given table using given {@link Connection}.
-	 *
-	 * @param connection The SQL Connection.
-	 * @param tableName The table name.
-	 * @return The number of rows in given table.
-	 */
+	/// Run SQL `"COUNT"` query against given table using given [Connection].
+	///
+	/// @param connection The SQL Connection.
+	/// @param tableName The table name.
+	/// @return The number of rows in given table.
 	public static int countFrom(Connection connection, String tableName) {
 		try {
 			ResultSet result = connection.prepareStatement("SELECT COUNT(*) AS nb FROM " + tableName).executeQuery();
@@ -58,13 +54,11 @@ public final class JdbcQueries {
 		}
 	}
 
-	/**
-	 * Run SQL {@code "DELETE"} query against given table using given {@link Connection}.
-	 *
-	 * @param connection The SQL Connection.
-	 * @param tableName The table name.
-	 * @return The number of deleted rows.
-	 */
+	/// Run SQL `"DELETE"` query against given table using given [Connection].
+	///
+	/// @param connection The SQL Connection.
+	/// @param tableName The table name.
+	/// @return The number of deleted rows.
 	public static int deleteFrom(Connection connection, String tableName) {
 		try {
 			return connection.prepareStatement("DELETE FROM " + tableName).executeUpdate();
@@ -74,27 +68,23 @@ public final class JdbcQueries {
 		}
 	}
 
-	/**
-	 * Execute query and returns all results.
-	 * @param connection The database connection.
-	 * @param query The query to execute.
-	 * @param mapper The mapper function.
-	 * @param <T> Type of elements returned by the query.
-	 * @return The results.
-	 */
+	/// Execute query and returns all results.
+	/// @param connection The database connection.
+	/// @param query The query to execute.
+	/// @param mapper The mapper function.
+	/// @param <T> Type of elements returned by the query.
+	/// @return The results.
 	public static <T> T findOne(Connection connection, String query, ResultSetMapper<T> mapper) {
 		List<T> results = findAll(connection, query, mapper);
 		return ensureSingleResult(query, results);
 	}
 
-	/**
-	 * Ensure the result contains contains exactly one result.
-	 *
-	 * @param query The original query.
-	 * @param results The result list.
-	 * @param <T> Type of elements in the result list.
-	 * @return The single result.
-	 */
+	/// Ensure the result contains contains exactly one result.
+	///
+	/// @param query The original query.
+	/// @param results The result list.
+	/// @param <T> Type of elements in the result list.
+	/// @return The single result.
 	private static <T> T ensureSingleResult(String query, List<T> results) {
 		if (results.size() == 0) {
 			throw new AssertionError("No results returned for query: " + query);
@@ -107,14 +97,12 @@ public final class JdbcQueries {
 		return results.get(0);
 	}
 
-	/**
-	 * Execute query and returns all results.
-	 * @param connection The database connection.
-	 * @param query The query to execute.
-	 * @param mapper The mapper function.
-	 * @param <T> Type of elements returned by the query.
-	 * @return The results.
-	 */
+	/// Execute query and returns all results.
+	/// @param connection The database connection.
+	/// @param query The query to execute.
+	/// @param mapper The mapper function.
+	/// @param <T> Type of elements returned by the query.
+	/// @return The results.
 	public static <T> List<T> findAll(Connection connection, String query, ResultSetMapper<T> mapper) {
 		try {
 			PreparedStatement statement = connection.prepareStatement(query);
@@ -132,20 +120,16 @@ public final class JdbcQueries {
 		}
 	}
 
-	/**
-	 * A mapper that translate {@link ResultSet} to a valid object instance.
-	 *
-	 * @param <T> Type of object instance.
-	 */
+	/// A mapper that translate [ResultSet] to a valid object instance.
+	///
+	/// @param <T> Type of object instance.
 	public interface ResultSetMapper<T> {
 
-		/**
-		 * The mapper function.
-		 *
-		 * @param rs The result set.
-		 * @return The object instance.
-		 * @throws SQLException If an error occurred while querying result set.
-		 */
+		/// The mapper function.
+		///
+		/// @param rs The result set.
+		/// @return The object instance.
+		/// @throws SQLException If an error occurred while querying result set.
 		T map(ResultSet rs) throws SQLException;
 	}
 }

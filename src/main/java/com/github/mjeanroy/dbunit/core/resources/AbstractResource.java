@@ -26,24 +26,19 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import java.util.Collection;
 
-/**
- * Abstract implementation of {@link Resource}.
- * The method {@link #listResources()} is already implemented and just delegate to
- * the {@link #scanner}.
- */
+/// Abstract implementation of [Resource].
+///
+/// The method [#listResources()] is already implemented and just delegate to
+/// the [#scanner].
 abstract class AbstractResource implements Resource {
 
-	/**
-	 * The scanner used to list of sub-resources.
-	 * This scanner is used in {@link #listResources()} method.
-	 */
+	/// The scanner used to list of sub-resources.
+	/// This scanner is used in [#listResources()] method.
 	private final ResourceScanner scanner;
 
-	/**
-	 * Create resource.
-	 *
-	 * @param scanner The scanner.
-	 */
+	/// Create resource.
+	///
+	/// @param scanner The scanner.
 	AbstractResource(ResourceScanner scanner) {
 		this.scanner = scanner;
 	}

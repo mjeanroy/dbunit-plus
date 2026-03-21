@@ -26,20 +26,14 @@ package com.github.mjeanroy.dbunit.core.replacement;
 
 import java.util.Date;
 
-/**
- * A {@link ReplacementsProvider} that will map following values to the current date:
- * <ul>
- *   <li>{@code current_timestamp}</li>
- *   <li>{@code CURRENT_TIMESTAMP}</li>
- *   <li>{@code current_timestamp()}</li>
- *   <li>{@code CURRENT_TIMESTAMP()}</li>
- * </ul>
- */
+/// A [ReplacementsProvider] that will map following values to the current date:
+/// - `current_timestamp`
+/// - `CURRENT_TIMESTAMP`
+/// - `current_timestamp()`
+/// - `CURRENT_TIMESTAMP()`
 public class CurrentTimestampValueReplacementsProvider implements ReplacementsProvider {
 
-	/**
-	 * Create provider.
-	 */
+	/// Create provider.
 	public CurrentTimestampValueReplacementsProvider() {
 	}
 

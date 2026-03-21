@@ -26,25 +26,19 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can enable/disable the {@code "datatypeWarning"} feature of DbUnit.
- *
- * @see DatabaseConfig#FEATURE_DATATYPE_WARNING
- */
+/// An interceptor that can enable/disable the `"datatypeWarning"` feature of DbUnit.
+///
+/// @see DatabaseConfig#FEATURE_DATATYPE_WARNING
 public final class DbUnitDatatypeWarningInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> {
 
-	/**
-	 * Create the interceptor, the feature is disabled by default.
-	 */
+	/// Create the interceptor, the feature is disabled by default.
 	public DbUnitDatatypeWarningInterceptor() {
 		this(false);
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param datatypeWarning Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param datatypeWarning Feature activation flag: `true` to enable feature, `false` otherwise.
 	public DbUnitDatatypeWarningInterceptor(boolean datatypeWarning) {
 		super(DatabaseConfig.FEATURE_DATATYPE_WARNING, datatypeWarning);
 	}

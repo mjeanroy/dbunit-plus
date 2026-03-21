@@ -26,33 +26,26 @@ package com.github.mjeanroy.dbunit.cache;
 
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
-/**
- * Factory for {@link Cache} instances.
- */
+/// Factory for [Cache] instances.
 public final class CacheFactory {
 
-	/**
-	 * Flag to know if Guava is available in the classpath.
-	 */
+	/// Flag to know if Guava is available in the classpath.
 	private static final boolean GUAVA_AVAILABLE = ClassUtils.isPresent("com.google.common.cache.Cache");
 
 	// Ensure non instantiation.
 	private CacheFactory() {
 	}
 
-	/**
-	 * Create new cache.
-	 * Note that:
-	 * <ul>
-	 *   <li>If Guava is available, a {@link Cache} implemented with Guava is returned.</li>
-	 *   <li>If Guava is not available, a dependency-free {@link Cache} is returned.</li>
-	 * </ul>
-	 *
-	 * @param loader The cache loader.
-	 * @param <K> Type of keys in the cache.
-	 * @param <V> Type of values in the cache.
-	 * @return The new cache instance.
-	 */
+	/// Create new cache.
+	///
+	/// Note that:
+	/// - If Guava is available, a [Cache] implemented with Guava is returned.
+	/// - If Guava is not available, a dependency-free [Cache] is returned.
+	///
+	/// @param loader The cache loader.
+	/// @param <K> Type of keys in the cache.
+	/// @param <V> Type of values in the cache.
+	/// @return The new cache instance.
 	public static <K, V> Cache<K, V> newCache(CacheLoader<K, V> loader) {
 		return GUAVA_AVAILABLE ? new GuavaCache<>(loader) : new DefaultCache<>(loader);
 	}

@@ -26,29 +26,21 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 
 import java.sql.Connection;
 
-/**
- * Factory that should create instance of {@link Connection}. This
- * connection will be used to populate database.
- *
- * <br>
- *
- * <strong>Important:</strong> since instance of {@link Connection} are
- * not thread safe, implementations should produce a new instance
- * of {@link Connection} each calls
- */
+/// Factory that should create instance of [Connection]. This
+/// connection will be used to populate database.
+///
+/// **Important:** since instance of [Connection] are
+/// not thread safe, implementations should produce a new instance
+/// of [Connection] each calls
 public interface JdbcConnectionFactory {
 
-	/**
-	 * Create new instance of {@link Connection}.
-	 *
-	 * <br>
-	 *
-	 * Since {@link Connection} class is not thread-safe, implementation should
-	 * create a new connection ready to use in current thread.
-	 *
-	 * @return SQL Connection.
-	 * @throws com.github.mjeanroy.dbunit.exception.JdbcException If an error occurred while creating {@link Connection}.
-	 */
+	/// Create new instance of [Connection].
+	///
+	/// Since [Connection] class is not thread-safe, implementation should
+	/// create a new connection ready to use in current thread.
+	///
+	/// @return SQL Connection.
+	/// @throws com.github.mjeanroy.dbunit.exception.JdbcException If an error occurred while creating [Connection].
 	Connection getConnection();
 
 }

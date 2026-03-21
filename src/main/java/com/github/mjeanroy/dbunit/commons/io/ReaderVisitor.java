@@ -24,15 +24,11 @@
 
 package com.github.mjeanroy.dbunit.commons.io;
 
-/**
- * Visitor executed when a stream is read line by line.
- */
+/// Visitor executed when a stream is read line by line.
 public interface ReaderVisitor {
 
-	/**
-	 * Handle new line.
-	 *
-	 * @param line Line.
-	 */
+	/// Handle new line.
+	///
+	/// @param line Line.
 	void visit(String line);
 }

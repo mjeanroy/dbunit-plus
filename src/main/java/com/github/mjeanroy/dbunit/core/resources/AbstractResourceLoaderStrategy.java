@@ -35,36 +35,26 @@ import java.util.Set;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notBlank;
 import static java.util.Collections.singleton;
 
-/**
- * Abstract implementation of {@link ResourceLoaderStrategy}.
- */
+/// Abstract implementation of [ResourceLoaderStrategy].
 abstract class AbstractResourceLoaderStrategy implements ResourceLoaderStrategy {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(AbstractResourceLoaderStrategy.class);
 
-	/**
-	 * List of prefixes used to check if resource name match given loader.
-	 */
+	/// List of prefixes used to check if resource name match given loader.
 	private final Set<String> prefixes;
 
-	/**
-	 * Create loader with a single prefix.
-	 *
-	 * @param prefix Prefix.
-	 */
+	/// Create loader with a single prefix.
+	///
+	/// @param prefix Prefix.
 	AbstractResourceLoaderStrategy(String prefix) {
 		this.prefixes = singleton(prefix);
 	}
 
-	/**
-	 * Create loader with two prefixes.
-	 *
-	 * @param p1 First prefix.
-	 * @param p2 Second prefix.
-	 */
+	/// Create loader with two prefixes.
+	///
+	/// @param p1 First prefix.
+	/// @param p2 Second prefix.
 	AbstractResourceLoaderStrategy(String p1, String p2) {
 		this.prefixes = new HashSet<>();
 		this.prefixes.add(p1);
@@ -102,21 +92,17 @@ abstract class AbstractResourceLoaderStrategy implements ResourceLoaderStrategy 
 		return resource;
 	}
 
-	/**
-	 * Process loading.
-	 *
-	 * @param path Resource path.
-	 * @return The resource.
-	 * @throws Exception If an error occurred during loading.
-	 */
+	/// Process loading.
+	///
+	/// @param path Resource path.
+	/// @return The resource.
+	/// @throws Exception If an error occurred during loading.
 	abstract Resource doLoad(String path) throws Exception;
 
-	/**
-	 * Extract prefix from given {@code path}.
-	 *
-	 * @param path The path.
-	 * @return The prefix, {@code null} if prefix is not specified.
-	 */
+	/// Extract prefix from given `path`.
+	///
+	/// @param path The path.
+	/// @return The prefix, `null` if prefix is not specified.
 	String extractPrefix(String path) {
 		String lowerCaseName = path.toLowerCase();
 		for (String prefix : prefixes) {

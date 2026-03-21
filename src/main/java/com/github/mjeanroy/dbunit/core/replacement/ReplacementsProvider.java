@@ -24,15 +24,11 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
-/**
- * Replacements provider, used to create re-usable replacements objects.
- */
+/// Replacements provider, used to create re-usable replacements objects.
 public interface ReplacementsProvider {
 
-	/**
-	 * Create replacements values.
-	 *
-	 * @return The replacements values.
-	 */
+	/// Create replacements values.
+	///
+	/// @return The replacements values.
 	Replacements create();
 }

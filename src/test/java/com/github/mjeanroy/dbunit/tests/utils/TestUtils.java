@@ -35,20 +35,16 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Static Test Utilities.
- */
+/// Static Test Utilities.
 public final class TestUtils {
 
 	private TestUtils() {
 	}
 
-	/**
-	 * Get test resource file (related to the classpath).
-	 *
-	 * @param path File path.
-	 * @return The file handler.
-	 */
+	/// Get test resource file (related to the classpath).
+	///
+	/// @param path File path.
+	/// @return The file handler.
 	public static File getTestResource(String path) {
 		try {
 			URL url = TestUtils.class.getResource(path);
@@ -69,12 +65,10 @@ public final class TestUtils {
 		return new InputStreamReader(is, StandardCharsets.UTF_8);
 	}
 
-	/**
-	 * Read test resource file (related to the classpath).
-	 *
-	 * @param path File path.
-	 * @return File content.
-	 */
+	/// Read test resource file (related to the classpath).
+	///
+	/// @param path File path.
+	/// @return File content.
 	public static String readTestResource(String path) {
 		try {
 			URL url = TestUtils.class.getResource(path);
@@ -95,12 +89,10 @@ public final class TestUtils {
 		}
 	}
 
-	/**
-	 * Read {@link InputStream} until its end and returns the result as a {@link String}.
-	 *
-	 * @param stream Stream to read.
-	 * @return Stream content.
-	 */
+	/// Read [InputStream] until its end and returns the result as a [String].
+	///
+	/// @param stream Stream to read.
+	/// @return Stream content.
 	public static String readStream(InputStream stream) {
 		try {
 			InputStreamReader reader = new InputStreamReader(stream);
@@ -146,14 +138,12 @@ public final class TestUtils {
 		return null;
 	}
 
-	/**
-	 * Find and returns given method of given class.
-	 *
-	 * @param klass The class.
-	 * @param methodName The method name.
-	 * @param parameterTypes Optional parameter types.
-	 * @return The method.
-	 */
+	/// Find and returns given method of given class.
+	///
+	/// @param klass The class.
+	/// @param methodName The method name.
+	/// @param parameterTypes Optional parameter types.
+	/// @return The method.
 	public static Method lookupMethod(Class<?> klass, String methodName, Class<?>... parameterTypes) {
 		try {
 			return klass.getDeclaredMethod(methodName, parameterTypes);

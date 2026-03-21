@@ -30,19 +30,13 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import java.sql.Connection;
 
-/**
- * Abstract connection factory that can be used to automatically wrap exception.
- */
+/// Abstract connection factory that can be used to automatically wrap exception.
 public abstract class AbstractJdbcConnectionFactory implements JdbcConnectionFactory {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(AbstractJdbcConnectionFactory.class);
 
-	/**
-	 * Create new factory.
-	 */
+	/// Create new factory.
 	public AbstractJdbcConnectionFactory() {
 	}
 
@@ -59,11 +53,9 @@ public abstract class AbstractJdbcConnectionFactory implements JdbcConnectionFac
 		}
 	}
 
-	/**
-	 * Create SQL connection (thrown exception will be catch and wrap into {@link JdbcException}.
-	 *
-	 * @return SQL Connection.
-	 * @throws Exception If an error occurred during creation.
-	 */
+	/// Create SQL connection (thrown exception will be catch and wrap into [JdbcException].
+	///
+	/// @return SQL Connection.
+	/// @throws Exception If an error occurred during creation.
 	protected abstract Connection createConnection() throws Exception;
 }

@@ -30,14 +30,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-/**
- * A fake {@link Store} implementation using a map as internal implementation.
- */
+/// A fake [Store] implementation using a map as internal implementation.
 public class FakeStore implements Store {
 
-	/**
-	 * The internal map implementation.
-	 */
+	/// The internal map implementation.
 	private final Map<Object, Object> map;
 
 	FakeStore() {
@@ -86,20 +82,16 @@ public class FakeStore implements Store {
 		return (V) remove(key);
 	}
 
-	/**
-	 * Get current store size (number of stored entries).
-	 *
-	 * @return Store size.
-	 */
+	/// Get current store size (number of stored entries).
+	///
+	/// @return Store size.
 	public int size() {
 		return map.size();
 	}
 
-	/**
-	 * Check if store is empty.
-	 *
-	 * @return {@code true} if store is empty, {@code false} otherwise.
-	 */
+	/// Check if store is empty.
+	///
+	/// @return `true` if store is empty, `false` otherwise.
 	public boolean isEmpty() {
 		return size() == 0;
 	}

@@ -24,207 +24,163 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
-/**
- * Logger contract.
- */
+/// Logger contract.
 public interface Logger {
 
-	/**
-	 * Log message with TRACE level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * without arguments.
-	 *
-	 * @param message Message.
-	 */
+	/// Log message with TRACE level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// without arguments.
+	///
+	/// @param message Message.
 	void trace(String message);
 
-	/**
-	 * Log message with TRACE level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only one argument.
-	 *
-	 * @param message Message.
-	 * @param arg1 Message replacement.
-	 */
+	/// Log message with TRACE level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only one argument.
+	///
+	/// @param message Message.
+	/// @param arg1 Message replacement.
 	void trace(String message, Object arg1);
 
-	/**
-	 * Log message with TRACE level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only two arguments.
-	 *
-	 * @param message Message.
-	 * @param arg1 First message replacement.
-	 * @param arg2 Second message replacement.
-	 */
+	/// Log message with TRACE level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only two arguments.
+	///
+	/// @param message Message.
+	/// @param arg1 First message replacement.
+	/// @param arg2 Second message replacement.
 	void trace(String message, Object arg1, Object arg2);
 
-	/**
-	 * Log message with TRACE level.
-	 *
-	 * @param message Message.
-	 * @param args Message replacements.
-	 */
+	/// Log message with TRACE level.
+	///
+	/// @param message Message.
+	/// @param args Message replacements.
 	void trace(String message, Object... args);
 
-	/**
-	 * Log message with DEBUG level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * without arguments.
-	 *
-	 * @param message Message.
-	 */
+	/// Log message with DEBUG level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// without arguments.
+	///
+	/// @param message Message.
 	void debug(String message);
 
-	/**
-	 * Log message with DEBUG level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only one argument.
-	 *
-	 * @param message Message.
-	 * @param arg1 Message replacement.
-	 */
+	/// Log message with DEBUG level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only one argument.
+	///
+	/// @param message Message.
+	/// @param arg1 Message replacement.
 	void debug(String message, Object arg1);
 
-	/**
-	 * Log message with DEBUG level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only two arguments.
-	 *
-	 * @param message Message.
-	 * @param arg1 First message replacement.
-	 * @param arg2 Second message replacement.
-	 */
+	/// Log message with DEBUG level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only two arguments.
+	///
+	/// @param message Message.
+	/// @param arg1 First message replacement.
+	/// @param arg2 Second message replacement.
 	void debug(String message, Object arg1, Object arg2);
 
-	/**
-	 * Log message with DEBUG level.
-	 *
-	 * @param message Message.
-	 * @param args Message replacements.
-	 */
+	/// Log message with DEBUG level.
+	///
+	/// @param message Message.
+	/// @param args Message replacements.
 	void debug(String message, Object... args);
 
-	/**
-	 * Log message with INFO level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * without argument.
-	 *
-	 * @param message Message.
-	 */
+	/// Log message with INFO level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// without argument.
+	///
+	/// @param message Message.
 	void info(String message);
 
-	/**
-	 * Log message with INFO level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only one argument.
-	 *
-	 * @param message Message.
-	 * @param arg1 Message replacement.
-	 */
+	/// Log message with INFO level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only one argument.
+	///
+	/// @param message Message.
+	/// @param arg1 Message replacement.
 	void info(String message, Object arg1);
 
-	/**
-	 * Log message with INFO level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only two arguments.
-	 *
-	 * @param message Message.
-	 * @param arg1 First message replacement.
-	 * @param arg2 Second message replacement.
-	 */
+	/// Log message with INFO level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only two arguments.
+	///
+	/// @param message Message.
+	/// @param arg1 First message replacement.
+	/// @param arg2 Second message replacement.
 	void info(String message, Object arg1, Object arg2);
 
-	/**
-	 * Log message with INFO level.
-	 *
-	 * @param message Message.
-	 * @param args Message replacements.
-	 */
+	/// Log message with INFO level.
+	///
+	/// @param message Message.
+	/// @param args Message replacements.
 	void info(String message, Object... args);
 
-	/**
-	 * Log message with WARN level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * without argument.
-	 *
-	 * @param message Message.
-	 */
+	/// Log message with WARN level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// without argument.
+	///
+	/// @param message Message.
 	void warn(String message);
 
-	/**
-	 * Log message with WARN level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only one argument.
-	 *
-	 * @param message Message.
-	 * @param arg1 Message replacement.
-	 */
+	/// Log message with WARN level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only one argument.
+	///
+	/// @param message Message.
+	/// @param arg1 Message replacement.
 	void warn(String message, Object arg1);
 
-	/**
-	 * Log message with WARN level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only two arguments.
-	 *
-	 * @param message Message.
-	 * @param arg1 First message replacement.
-	 * @param arg2 Second message replacement.
-	 */
+	/// Log message with WARN level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only two arguments.
+	///
+	/// @param message Message.
+	/// @param arg1 First message replacement.
+	/// @param arg2 Second message replacement.
 	void warn(String message, Object arg1, Object arg2);
 
-	/**
-	 * Log message with WARN level.
-	 *
-	 * @param message Message.
-	 * @param args Message replacements.
-	 */
+	/// Log message with WARN level.
+	///
+	/// @param message Message.
+	/// @param args Message replacements.
 	void warn(String message, Object... args);
 
-	/**
-	 * Log message with ERROR level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * without arguments.
-	 *
-	 * @param message Message.
-	 */
+	/// Log message with ERROR level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// without arguments.
+	///
+	/// @param message Message.
 	void error(String message);
 
-	/**
-	 * Log message with ERROR level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only one argument.
-	 *
-	 * @param message Message.
-	 * @param arg1 Message replacement.
-	 */
+	/// Log message with ERROR level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only one argument.
+	///
+	/// @param message Message.
+	/// @param arg1 Message replacement.
 	void error(String message, Object arg1);
 
-	/**
-	 * Log message with ERROR level.
-	 * This methods avoid the cost of creation an array of object when it is called
-	 * with only two arguments.
-	 *
-	 * @param message Message.
-	 * @param arg1 First message replacement.
-	 * @param arg2 Second message replacement.
-	 */
+	/// Log message with ERROR level.
+	/// This methods avoid the cost of creation an array of object when it is called
+	/// with only two arguments.
+	///
+	/// @param message Message.
+	/// @param arg1 First message replacement.
+	/// @param arg2 Second message replacement.
 	void error(String message, Object arg1, Object arg2);
 
-	/**
-	 * Log message with ERROR level.
-	 *
-	 * @param message Message.
-	 * @param args Message replacements.
-	 */
+	/// Log message with ERROR level.
+	///
+	/// @param message Message.
+	/// @param args Message replacements.
 	void error(String message, Object... args);
 
-	/**
-	 * Log an exception (throwable) at the ERROR level with an
-	 * accompanying message.
-	 *
-	 * @param message The message accompanying the exception
-	 * @param t The exception (throwable) to log
-	 */
+	/// Log an exception (throwable) at the ERROR level with an
+	/// accompanying message.
+	///
+	/// @param message The message accompanying the exception
+	/// @param t The exception (throwable) to log
 	void error(String message, Throwable t);
 }

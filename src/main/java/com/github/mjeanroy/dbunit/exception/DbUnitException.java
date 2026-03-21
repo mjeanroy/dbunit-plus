@@ -24,30 +24,22 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * DbUnit exception.
- *
- * <br>
- *
- * This exception should be thrown by JUnit rule and DbUnit runner
- * when initialization failed because of bad configuration.
- */
+/// DbUnit exception.
+///
+/// This exception should be thrown by JUnit rule and DbUnit runner
+/// when initialization failed because of bad configuration.
 public class DbUnitException extends AbstractDbUnitException {
 
-	/**
-	 * Create exception.
-	 *
-	 * @param message Error message.
-	 */
+	/// Create exception.
+	///
+	/// @param message Error message.
 	public DbUnitException(String message) {
 		super(message);
 	}
 
-	/**
-	 * Wrap {@link Exception}.
-	 *
-	 * @param ex Original Exception.
-	 */
+	/// Wrap [Exception].
+	///
+	/// @param ex Original Exception.
 	public DbUnitException(Exception ex) {
 		super(ex);
 	}

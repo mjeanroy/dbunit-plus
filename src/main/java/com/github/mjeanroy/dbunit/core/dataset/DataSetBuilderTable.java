@@ -44,20 +44,14 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 import static java.util.Collections.unmodifiableList;
 
-/**
- * Immutable representation of a database table consisting of a name and an
- * ordered list of rows.
- */
+/// Immutable representation of a database table consisting of a name and an
+/// ordered list of rows.
 public final class DataSetBuilderTable {
 
-	/**
-	 * Table name.
-	 */
+	/// Table name.
 	private final String tableName;
 
-	/**
-	 * Table rows.
-	 */
+	/// Table rows.
 	private final List<DataSetBuilderRow> rows;
 
 	DataSetBuilderTable(String tableName, Collection<DataSetBuilderRow> rows) {
@@ -65,40 +59,32 @@ public final class DataSetBuilderTable {
 		this.rows = unmodifiableList(new ArrayList<>(rows));
 	}
 
-	/**
-	 * Returns the logical table name.
-	 *
-	 * @return Table name (never {@code null} or empty).
-	 */
+	/// Returns the logical table name.
+	///
+	/// @return Table name (never `null` or empty).
 	public String getTableName() {
 		return tableName;
 	}
 
-	/**
-	 * Returns the number of rows in this table.
-	 *
-	 * @return Row count.
-	 */
+	/// Returns the number of rows in this table.
+	///
+	/// @return Row count.
 	public int rowCount() {
 		return rows.size();
 	}
 
-	/**
-	 * Returns an unmodifiable list of all rows.
-	 *
-	 * @return List of rows.
-	 */
+	/// Returns an unmodifiable list of all rows.
+	///
+	/// @return List of rows.
 	public List<DataSetBuilderRow> getRows() {
 		return rows;
 	}
 
-	/**
-	 * Returns the row at the specified index.
-	 *
-	 * @param index Zero-based row index.
-	 * @return The matching row.
-	 * @throws IndexOutOfBoundsException if index is invalid.
-	 */
+	/// Returns the row at the specified index.
+	///
+	/// @param index Zero-based row index.
+	/// @return The matching row.
+	/// @throws IndexOutOfBoundsException if index is invalid.
 	public DataSetBuilderRow getRow(int index) {
 		if (index < 0 || index >= rows.size()) {
 			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + rows.size());
@@ -107,12 +93,10 @@ public final class DataSetBuilderTable {
 		return rows.get(index);
 	}
 
-	/**
-	 * Finds the first row matching the given predicate.
-	 *
-	 * @param predicate Test to apply to each row.
-	 * @return An {@link java.util.Optional} containing the first matching row, or empty if none match.
-	 */
+	/// Finds the first row matching the given predicate.
+	///
+	/// @param predicate Test to apply to each row.
+	/// @return An [java.util.Optional] containing the first matching row, or empty if none match.
 	public Optional<DataSetBuilderRow> getRow(Predicate<DataSetBuilderRow> predicate) {
 		return rows.stream().filter(predicate).findFirst();
 	}

@@ -36,9 +36,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
-/**
- * Implementation of {@link JdbcForeignKeyManager} for Postgres DBMS.
- */
+/// Implementation of [JdbcForeignKeyManager] for Postgres DBMS.
 public final class PostgresForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<PostgresForeignKeyManager.ForeignKey> {
 
 	private static final String C_NSPNAME = "nspname";
@@ -48,9 +46,7 @@ public final class PostgresForeignKeyManager extends AbstractJdbcDropCreateForei
 
 	private static final ForeignKeyMapFunction mapFunction = new ForeignKeyMapFunction();
 
-	/**
-	 * Create FK Manager.
-	 */
+	/// Create FK Manager.
 	public PostgresForeignKeyManager() {
 		super();
 	}

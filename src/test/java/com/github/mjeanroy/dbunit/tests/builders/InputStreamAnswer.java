@@ -29,31 +29,23 @@ import org.mockito.stubbing.Answer;
 
 import java.io.InputStream;
 
-/**
- * Mockito {@link Answer} that can be used to return instances
- * of {@link InputStream} returned by a {@link InputStreamFactory}.
- */
+/// Mockito [Answer] that can be used to return instances
+/// of [InputStream] returned by a [InputStreamFactory].
 class InputStreamAnswer implements Answer<InputStream> {
 
-	/**
-	 * Create answer.
-	 * @param factory The {@link InputStream} factory.
-	 * @return The mockito answer.
-	 */
+	/// Create answer.
+	/// @param factory The [InputStream] factory.
+	/// @return The mockito answer.
 	static InputStreamAnswer streamAnswer(InputStreamFactory factory) {
 		return new InputStreamAnswer(factory);
 	}
 
-	/**
-	 * The {@link InputStream} factory.
-	 */
+	/// The [InputStream] factory.
 	private final InputStreamFactory factory;
 
-	/**
-	 * Create mockito {@link Answer} with factory.
-	 *
-	 * @param factory The {@link InputStream} factory.
-	 */
+	/// Create mockito [Answer] with factory.
+	///
+	/// @param factory The [InputStream] factory.
 	private InputStreamAnswer(InputStreamFactory factory) {
 		this.factory = factory;
 	}

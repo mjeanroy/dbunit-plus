@@ -31,34 +31,26 @@ import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * {@link DatasetParser} implementation that parses datasets from JSON input.
- *
- * <p>
- * This parser delegates JSON deserialization to a provided
- * {@link JsonParser} implementation. The resulting {@code Map<String, Object>}
- * represents the raw dataset structure and is then processed to return
- * dataset as {@code Map<String, Collection<Map<String, Object>>>} instances.
- * </p>
- *
- * <p>
- * This class is immutable and thread-safe provided that the underlying
- * {@link JsonParser} implementation is itself thread-safe.
- * </p>
- */
+/// [DatasetParser] implementation that parses datasets from JSON input.
+///
+/// This parser delegates JSON deserialization to a provided
+/// [JsonParser] implementation. The resulting `Map<String, Object>`
+/// represents the raw dataset structure and is then processed to return
+/// dataset as `Map<String, Collection<Map<String, Object>>>` instances.
+///
+///
+/// This class is immutable and thread-safe provided that the underlying
+/// [JsonParser] implementation is itself thread-safe.
+///
 public final class JsonDatasetParser extends AbstractDatasetParser implements DatasetParser {
 
-	/**
-	 * Underlying JSON parser used to deserialize input content.
-	 */
+	/// Underlying JSON parser used to deserialize input content.
 	private final JsonParser parser;
 
-	/**
-	 * Create a new JSON dataset parser.
-	 *
-	 * @param parser the JSON parser to use (must not be {@code null})
-	 * @throws NullPointerException if {@code parser} is {@code null}
-	 */
+	/// Create a new JSON dataset parser.
+	///
+	/// @param parser the JSON parser to use (must not be `null`)
+	/// @throws NullPointerException if `parser` is `null`
 	public JsonDatasetParser(JsonParser parser) {
 		this.parser = notNull(parser, "JSON parser must not be null");
 	}

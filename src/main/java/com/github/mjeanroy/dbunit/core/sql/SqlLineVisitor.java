@@ -26,29 +26,22 @@ package com.github.mjeanroy.dbunit.core.sql;
 
 import com.github.mjeanroy.dbunit.commons.io.ReaderVisitor;
 
-/**
- * Visit line from SQL scripts.
- */
+/// Visit line from SQL scripts.
 class SqlLineVisitor implements ReaderVisitor {
 
-	/**
-	 * Parser Context.
-	 * Will be used during line parsing to handle character and
-	 * compute next state.
-	 */
+	/// Parser Context.
+	///
+	/// Will be used during line parsing to handle character and
+	/// compute next state.
 	private final SqlScriptParserContext ctx;
 
-	/**
-	 * Parser configuration (used to detect delimiter, etc.).
-	 */
+	/// Parser configuration (used to detect delimiter, etc.).
 	private final SqlScriptParserConfiguration configuration;
 
-	/**
-	 * Create visitor.
-	 *
-	 * @param ctx Parser context.
-	 * @param configuration Parser configuration.
-	 */
+	/// Create visitor.
+	///
+	/// @param ctx Parser context.
+	/// @param configuration Parser configuration.
 	SqlLineVisitor(SqlScriptParserContext ctx, SqlScriptParserConfiguration configuration) {
 		this.ctx = ctx;
 		this.configuration = configuration;

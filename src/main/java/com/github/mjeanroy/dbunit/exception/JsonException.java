@@ -24,19 +24,15 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Wrap external JSON parsing exception.
- *
- * This exception should provide a unique way to handler JSON exception,
- * whatever the internal mapper library.
- */
+/// Wrap external JSON parsing exception.
+///
+/// This exception should provide a unique way to handler JSON exception,
+/// whatever the internal mapper library.
 public class JsonException extends AbstractParserException {
 
-	/**
-	 * Wrap {@link Exception}.
-	 *
-	 * @param e Original Exception.
-	 */
+	/// Wrap [Exception].
+	///
+	/// @param e Original Exception.
 	public JsonException(Exception e) {
 		super(e);
 	}

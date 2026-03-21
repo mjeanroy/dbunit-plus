@@ -29,36 +29,30 @@ import com.github.mjeanroy.dbunit.core.resources.Resource;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
-/**
- * Implementation of {@link IDataSet} with JSON file as input.
- *
- * <p>
- *
- * A valid JSON file must respect this schema:
- *
- * <pre><code>
- *   {
- *     "table_name_1": [
- *       { "col1": 1, "col2": "value" }
- *     ],
- *
- *     "table_name_2": [
- *       { "col1": 1, "col2": "value" }
- *       { "col1": 2, "col2": "value" }
- *     ]
- *   }
- * </code></pre>
- */
+/// Implementation of [IDataSet] with JSON file as input.
+///
+/// A valid JSON file must respect this schema:
+///
+/// ```json
+///   {
+///     "table_name_1": [
+///       { "col1": 1, "col2": "value" }
+///     ],
+///
+///     "table_name_2": [
+///       { "col1": 1, "col2": "value" }
+///       { "col1": 2, "col2": "value" }
+///     ]
+///   }
+/// ```
 public class JsonDataSet extends AbstractParseableDataSet {
 
-	/**
-	 * Create JSON DataSet.
-	 *
-	 * @param resource Input resource.
-	 * @param caseSensitiveTableNames Case Insensitivity Flag.
-	 * @param parser JSON Parser (will be used to parser input resource).
-	 * @throws DataSetException If JSON parsing fail.
-	 */
+	/// Create JSON DataSet.
+	///
+	/// @param resource Input resource.
+	/// @param caseSensitiveTableNames Case Insensitivity Flag.
+	/// @param parser JSON Parser (will be used to parser input resource).
+	/// @throws DataSetException If JSON parsing fail.
 	JsonDataSet(
 		Resource resource,
 		boolean caseSensitiveTableNames,

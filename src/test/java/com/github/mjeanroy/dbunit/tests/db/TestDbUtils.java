@@ -29,82 +29,66 @@ import java.sql.Connection;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.countFrom;
 import static com.github.mjeanroy.dbunit.tests.db.JdbcQueries.deleteFrom;
 
-/**
- * Static test DB Utilities.
- */
+/// Static test DB Utilities.
 public final class TestDbUtils {
 
 	// Ensure non instantiation.
 	private TestDbUtils() {
 	}
 
-	/**
-	 * Count number of rows in `users` table.
-	 *
-	 * @param connection The SQL Connection to use.
-	 * @return The number of rows in table.
-	 */
+	/// Count number of rows in `users` table.
+	///
+	/// @param connection The SQL Connection to use.
+	/// @return The number of rows in table.
 	public static long countUsers(Connection connection) {
 		return countFrom(connection, "users");
 	}
 
-	/**
-	 * Count number of rows in `movies` table.
-	 *
-	 * @param connection The SQL Connection to use.
-	 * @return The number of rows in table.
-	 */
+	/// Count number of rows in `movies` table.
+	///
+	/// @param connection The SQL Connection to use.
+	/// @return The number of rows in table.
 	public static long countMovies(Connection connection) {
 		return countFrom(connection, "movies");
 	}
 
-	/**
-	 * Delete all rows in `users_movies` table.
-	 *
-	 * @param connection The SQL Connection to use.
-	 * @return The number of deleted rows.
-	 */
+	/// Delete all rows in `users_movies` table.
+	///
+	/// @param connection The SQL Connection to use.
+	/// @return The number of deleted rows.
 	public static long deleteUsersMovies(Connection connection) {
 		return deleteFrom(connection, "users_movies");
 	}
 
-	/**
-	 * Delete all rows in `movies` table.
-	 *
-	 * @param connection The SQL Connection to use.
-	 * @return The number of deleted rows.
-	 */
+	/// Delete all rows in `movies` table.
+	///
+	/// @param connection The SQL Connection to use.
+	/// @return The number of deleted rows.
 	public static long deleteMovies(Connection connection) {
 		return deleteFrom(connection, "movies");
 	}
 
-	/**
-	 * Delete all rows in `users` table.
-	 *
-	 * @param connection The SQL Connection to use.
-	 * @return The number of deleted rows.
-	 */
+	/// Delete all rows in `users` table.
+	///
+	/// @param connection The SQL Connection to use.
+	/// @return The number of deleted rows.
 	public static long deleteUsers(Connection connection) {
 		return deleteFrom(connection, "users");
 	}
 
-	/**
-	 * Count number of rows in `users_movies` table.
-	 *
-	 * @param connection The SQL Connection to use.
-	 * @return The number of rows in table.
-	 */
+	/// Count number of rows in `users_movies` table.
+	///
+	/// @param connection The SQL Connection to use.
+	/// @return The number of rows in table.
 	public static long countUsersMovies(Connection connection) {
 		return countFrom(connection, "users_movies");
 	}
 
-	/**
-	 * Find movie in database.
-	 *
-	 * @param connection The database connection.
-	 * @param id The user identifier.
-	 * @return The found user.
-	 */
+	/// Find movie in database.
+	///
+	/// @param connection The database connection.
+	/// @param id The user identifier.
+	/// @return The found user.
 	public static Movie findMovie(Connection connection, long id) {
 		String query = "SELECT * FROM movies WHERE id = " + id;
 		return JdbcQueries.findOne(connection, query, rs ->
@@ -116,61 +100,45 @@ public final class TestDbUtils {
 		);
 	}
 
-	/**
-	 * The movie entity.
-	 */
+	/// The movie entity.
 	public static class Movie {
-		/**
-		 * The movie identifier.
-		 */
+		/// The movie identifier.
 		private final long id;
 
-		/**
-		 * The movie title.
-		 */
+		/// The movie title.
 		private final String title;
 
-		/**
-		 * The movie synopsys.
-		 */
+		/// The movie synopsys.
 		private final String synopsys;
 
-		/**
-		 * Create movie.
-		 *
-		 * @param id New {@link #id}
-		 * @param title New {@link #title}
-		 * @param synopsys New {@link #synopsys}
-		 */
+		/// Create movie.
+		///
+		/// @param id New [#id]
+		/// @param title New [#title]
+		/// @param synopsys New [#synopsys]
 		private Movie(long id, String title, String synopsys) {
 			this.id = id;
 			this.title = title;
 			this.synopsys = synopsys;
 		}
 
-		/**
-		 * Get {@link #id}
-		 *
-		 * @return {@link #id}
-		 */
+		/// Get [#id]
+		///
+		/// @return Returns [#id]
 		public long getId() {
 			return id;
 		}
 
-		/**
-		 * Get {@link #title}
-		 *
-		 * @return {@link #title}
-		 */
+		/// Get [#title]
+		///
+		/// @return Returns [#title]
 		public String getTitle() {
 			return title;
 		}
 
-		/**
-		 * Get {@link #synopsys}
-		 *
-		 * @return {@link #synopsys}
-		 */
+		/// Get [#synopsys]
+		///
+		/// @return Returns [#synopsys]
 		public String getSynopsys() {
 			return synopsys;
 		}

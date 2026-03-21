@@ -26,18 +26,12 @@ package com.github.mjeanroy.dbunit.core.replacement;
 
 import java.util.Date;
 
-/**
- * A {@link ReplacementsProvider} that will map following valuesto the current date (i.e {@code new Date()}):
- * <ul>
- *   <li>{@code NOW()}</li>
- *   <li>{@code now()}</li>
- * </ul>
- */
+/// A [ReplacementsProvider] that will map following valuesto the current date (i.e `new Date()`):
+/// - `NOW()`
+/// - `now()`
 public class NowValueReplacementsProvider implements ReplacementsProvider {
 
-	/**
-	 * Create provider.
-	 */
+	/// Create provider.
 	public NowValueReplacementsProvider() {
 	}
 

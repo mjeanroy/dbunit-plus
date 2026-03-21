@@ -36,27 +36,19 @@ import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
-/**
- * Apply tear down operations to the test database.
- * This class is stateless and thread-safe.
- */
+/// Apply tear down operations to the test database.
+/// This class is stateless and thread-safe.
 class TearDownDbOperation implements DbOperation {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(TearDownDbOperation.class);
 
-	/**
-	 * Singleton Instance.
-	 */
+	/// Singleton Instance.
 	private static final TearDownDbOperation INSTANCE = new TearDownDbOperation();
 
-	/**
-	 * Get singleton instance.
-	 *
-	 * @return Instance.
-	 */
+	/// Get singleton instance.
+	///
+	/// @return Instance.
 	public static TearDownDbOperation getInstance() {
 		return INSTANCE;
 	}

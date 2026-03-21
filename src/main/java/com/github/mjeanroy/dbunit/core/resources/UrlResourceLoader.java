@@ -26,49 +26,33 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import java.net.URL;
 
-/**
- * Load {@link Resource} from URL.
- */
+/// Load [Resource] from URL.
 class UrlResourceLoader extends AbstractResourceLoaderStrategy {
 
-	/**
-	 * Each resource may match this prefix, for example:
-	 * <ul>
-	 *   <li>{@code http://path/foo.txt} should match</li>
-	 *   <li>{@code http/foo.txt} should not match</li>
-	 *   <li>{@code foo.txt} should not match</li>
-	 * </ul>
-	 */
+	/// Each resource may match this prefix, for example:
+	/// - `http://path/foo.txt` should match
+	/// - `http/foo.txt` should not match
+	/// - `foo.txt` should not match
 	private static final String PREFIX_1 = "http:";
 
-	/**
-	 * Each resource may match this prefix, for example:
-	 * <ul>
-	 *   <li>{@code https://path/foo.txt} should match</li>
-	 *   <li>{@code https/foo.txt} should not match</li>
-	 *   <li>{@code foo.txt} should not match</li>
-	 * </ul>
-	 */
+	/// Each resource may match this prefix, for example:
+	/// - `https://path/foo.txt` should match
+	/// - `https/foo.txt` should not match
+	/// - `foo.txt` should not match
 	private static final String PREFIX_2 = "https:";
 
-	/**
-	 * The singleton instance.
-	 */
+	/// The singleton instance.
 	private static final UrlResourceLoader INSTANCE = new UrlResourceLoader();
 
-	/**
-	 * Get the loader instance.
-	 *
-	 * @return Loader instance.
-	 */
+	/// Get the loader instance.
+	///
+	/// @return Loader instance.
 	static UrlResourceLoader getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * Create the loader.
-	 * This constructor should not be called directly, use {@link #getInstance()} instead.
-	 */
+	/// Create the loader.
+	/// This constructor should not be called directly, use [#getInstance()] instead.
 	private UrlResourceLoader() {
 		super(PREFIX_1, PREFIX_2);
 	}

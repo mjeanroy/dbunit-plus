@@ -37,20 +37,16 @@ import java.util.logging.Logger;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Wrapper for {@link DataSource}, that allows to add some logs when a new connection is created.
- */
+/// Wrapper for [DataSource], that allows to add some logs when a new connection is created.
 final class DataSourceProxy implements DataSource {
 
 	private static final com.github.mjeanroy.dbunit.loggers.Logger log = Loggers.getLogger(DataSourceProxy.class);
 
-	/**
-	 * Returns given {@code dataSource} if it is already a proxy, otherwise
-	 * wrap it in a proxy and returns the new proxy instance.
-	 *
-	 * @param dataSource Datasource.
-	 * @return The proxied datasource.
-	 */
+	/// Returns given `dataSource` if it is already a proxy, otherwise
+	/// wrap it in a proxy and returns the new proxy instance.
+	///
+	/// @param dataSource Datasource.
+	/// @return The proxied datasource.
 	static DataSourceProxy of(DataSource dataSource) {
 		if (dataSource instanceof DataSourceProxy) {
 			return (DataSourceProxy) dataSource;
@@ -59,16 +55,12 @@ final class DataSourceProxy implements DataSource {
 		return new DataSourceProxy(dataSource);
 	}
 
-	/**
-	 * The internal datasource.s
-	 */
+	/// The internal datasource.s
 	private final DataSource dataSource;
 
-	/**
-	 * Create the delegated datasource.
-	 *
-	 * @param dataSource Internal datasource.
-	 */
+	/// Create the delegated datasource.
+	///
+	/// @param dataSource Internal datasource.
 	private DataSourceProxy(DataSource dataSource) {
 		this.dataSource = notNull(dataSource, "DataSource must not be null");
 	}

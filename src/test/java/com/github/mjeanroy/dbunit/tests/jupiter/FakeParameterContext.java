@@ -32,14 +32,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * A fake {@link ParameterContext} implementation using a map as internal implementation.
- */
+/// A fake [ParameterContext] implementation using a map as internal implementation.
 public class FakeParameterContext implements ParameterContext {
 
-	/**
-	 * The internal map implementation.
-	 */
+	/// The internal map implementation.
 	private final Parameter parameter;
 
 	public FakeParameterContext(Parameter parameter) {

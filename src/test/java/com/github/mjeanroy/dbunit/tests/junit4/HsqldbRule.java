@@ -32,17 +32,13 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * Start and Stop embedded database.
- */
+/// Start and Stop embedded database.
 public class HsqldbRule extends ExternalResource {
 
 	private final String dbName;
 	private final boolean loadScript;
 
-	/**
-	 * Embedded Database.
-	 */
+	/// Embedded Database.
 	private EmbeddedDatabase db;
 
 	public HsqldbRule() {

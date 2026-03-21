@@ -31,48 +31,32 @@ import org.dbunit.dataset.DataSetException;
 
 import java.util.Comparator;
 
-/**
- * Builder for {@link DirectoryDataSet} instances.
- */
+/// Builder for [DirectoryDataSet] instances.
 public class DirectoryDataSetBuilder {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(DirectoryDataSetBuilder.class);
 
-	/**
-	 * Default Comparator.
-	 */
+	/// Default Comparator.
 	private static final ResourceComparator COMPARATOR = new ResourceComparator();
 
-	/**
-	 * Directory resource.
-	 */
+	/// Directory resource.
 	private Resource resource;
 
-	/**
-	 * File comparator.
-	 */
+	/// File comparator.
 	private Comparator<Resource> comparator;
 
-	/**
-	 * Check if table names is case insensitive (default is {@code false}.
-	 */
+	/// Check if table names is case insensitive (default is `false`.
 	private boolean caseSensitiveTableNames;
 
-	/**
-	 * Create builder.
-	 */
+	/// Create builder.
 	public DirectoryDataSetBuilder() {
 		this(null);
 	}
 
-	/**
-	 * Create build with directory.
-	 *
-	 * @param resource Directory.
-	 */
+	/// Create build with directory.
+	///
+	/// @param resource Directory.
 	public DirectoryDataSetBuilder(Resource resource) {
 		log.trace("Set resource: {}", resource);
 		this.resource = resource;
@@ -80,48 +64,40 @@ public class DirectoryDataSetBuilder {
 		this.comparator = COMPARATOR;
 	}
 
-	/**
-	 * Override directory path.
-	 *
-	 * @param resource New directory.
-	 * @return Builder.
-	 */
+	/// Override directory path.
+	///
+	/// @param resource New directory.
+	/// @return Builder.
 	public DirectoryDataSetBuilder setDirectory(Resource resource) {
 		log.trace("Set resource: {}", resource);
 		this.resource = resource;
 		return this;
 	}
 
-	/**
-	 * Override default comparator.
-	 *
-	 * @param comparator New comparator.
-	 * @return Builder.
-	 */
+	/// Override default comparator.
+	///
+	/// @param comparator New comparator.
+	/// @return Builder.
 	public DirectoryDataSetBuilder setComparator(Comparator<Resource> comparator) {
 		log.trace("Set comparator: {}", comparator);
 		this.comparator = comparator;
 		return this;
 	}
 
-	/**
-	 * Override case insensitive parameter.
-	 *
-	 * @param caseSensitiveTableNames New value.
-	 * @return Builder.
-	 */
+	/// Override case insensitive parameter.
+	///
+	/// @param caseSensitiveTableNames New value.
+	/// @return Builder.
 	public DirectoryDataSetBuilder setCaseSensitiveTableNames(boolean caseSensitiveTableNames) {
 		log.trace("Set caseSensitiveTableNames: {}", caseSensitiveTableNames);
 		this.caseSensitiveTableNames = caseSensitiveTableNames;
 		return this;
 	}
 
-	/**
-	 * Build data set.
-	 *
-	 * @return New DataSet.
-	 * @throws DataSetException If an error occurred during dataset creation.
-	 */
+	/// Build data set.
+	///
+	/// @return New DataSet.
+	/// @throws DataSetException If an error occurred during dataset creation.
 	public DirectoryDataSet build() throws DataSetException {
 		log.trace("Build instance of {}", getClass().getSimpleName());
 		log.trace(" - path: {}", resource);

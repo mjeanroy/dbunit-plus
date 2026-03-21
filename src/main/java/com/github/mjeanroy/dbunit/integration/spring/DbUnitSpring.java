@@ -37,30 +37,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * A meta-annotation to automatically integrate Spring with DbUnit.
- *
- * <br>
- * <br>
- *
- * Following listeners are automatically added to test execution context:
- *
- * <ul>
- *   <li>
- *     {@link DirtiesContextTestExecutionListener} to avoid sharing an embedded database (i.e shared resource) between tests that may
- *     modify shared state.
- *   </li>
- *   <li>
- *     {@link DependencyInjectionTestExecutionListener} to enable dependency injection inside test.
- *   </li>
- *   <li>
- *     {@link TransactionalTestExecutionListener} to run unit tests inside transaction.
- *   </li>
- *   <li>
- *     {@link DbUnitTestExecutionListener} to enable DbUnit.
- *   </li>
- * </ul>
- */
+/// A meta-annotation to automatically integrate Spring with DbUnit.
+///
+/// Following listeners are automatically added to test execution context:
+/// - [DirtiesContextTestExecutionListener] to avoid sharing an embedded database (i.e shared resource) between tests that may modify shared state.
+/// - [DependencyInjectionTestExecutionListener] to enable dependency injection inside test.
+/// - [TransactionalTestExecutionListener] to run unit tests inside transaction.
+/// - [DbUnitTestExecutionListener] to enable DbUnit.
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented

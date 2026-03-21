@@ -26,78 +26,54 @@ package com.github.mjeanroy.dbunit.core.operation;
 
 import org.dbunit.operation.DatabaseOperation;
 
-/**
- * Set of {@link DatabaseOperation} supported out of the box.
- */
+/// Set of [DatabaseOperation] supported out of the box.
 public enum DbUnitOperation {
 
-	/**
-	 * No Op.
-	 * @see DatabaseOperation#NONE
-	 */
+	/// No Op.
+	/// @see DatabaseOperation#NONE
 	NONE(DatabaseOperation.NONE),
 
-	/**
-	 * Clean database before inserting dataset.
-	 * @see DatabaseOperation#CLEAN_INSERT
-	 */
+	/// Clean database before inserting dataset.
+	/// @see DatabaseOperation#CLEAN_INSERT
 	CLEAN_INSERT(DatabaseOperation.CLEAN_INSERT),
 
-	/**
-	 * Deletes only the dataset contents from the database
-	 * @see DatabaseOperation#DELETE
-	 */
+	/// Deletes only the dataset contents from the database
+	/// @see DatabaseOperation#DELETE
 	DELETE(DatabaseOperation.DELETE),
 
-	/**
-	 * Deletes all rows of tables present in the specified dataset
-	 * @see DatabaseOperation#DELETE_ALL
-	 */
+	/// Deletes all rows of tables present in the specified dataset
+	/// @see DatabaseOperation#DELETE_ALL
 	DELETE_ALL(DatabaseOperation.DELETE_ALL),
 
-	/**
-	 * Inserts the dataset contents into the database.
-	 * @see DatabaseOperation#INSERT
-	 */
+	/// Inserts the dataset contents into the database.
+	/// @see DatabaseOperation#INSERT
 	INSERT(DatabaseOperation.INSERT),
 
-	/**
-	 * Truncate tables present in the specified dataset.
-	 * @see DatabaseOperation#TRUNCATE_TABLE
-	 */
+	/// Truncate tables present in the specified dataset.
+	/// @see DatabaseOperation#TRUNCATE_TABLE
 	TRUNCATE_TABLE(DatabaseOperation.TRUNCATE_TABLE),
 
-	/**
-	 * This operation literally refreshes dataset contents into the database.
-	 * @see DatabaseOperation#REFRESH
-	 */
+	/// This operation literally refreshes dataset contents into the database.
+	/// @see DatabaseOperation#REFRESH
 	REFRESH(DatabaseOperation.REFRESH),
 
-	/**
-	 * Updates the database from the dataset contents.
-	 * @see DatabaseOperation#UPDATE
-	 */
+	/// Updates the database from the dataset contents.
+	/// @see DatabaseOperation#UPDATE
 	UPDATE(DatabaseOperation.UPDATE);
 
-	/**
-	 * Internal DBUnit {@link DatabaseOperation}.
-	 */
+	/// Internal DBUnit [DatabaseOperation].
 	private final DatabaseOperation operation;
 
-	/**
-	 * Create instance.
-	 *
-	 * @param operation Database Operation.
-	 */
+	/// Create instance.
+	///
+	/// @param operation Database Operation.
 	DbUnitOperation(DatabaseOperation operation) {
 		this.operation = operation;
 	}
 
-	/**
-	 * Get DBUnit {@link DatabaseOperation} to execute.
-	 *
-	 * @return Operation to execute.
-	 */
+	/// Get DBUnit [DatabaseOperation] to execute.
+	///
+	/// @return Operation to execute.
 	public DatabaseOperation getOperation() {
 		return operation;
 	}

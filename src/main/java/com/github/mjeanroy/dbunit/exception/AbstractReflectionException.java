@@ -24,25 +24,19 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Exception thrown when a reflection error occurs.
- */
+/// Exception thrown when a reflection error occurs.
 abstract class AbstractReflectionException extends AbstractDbUnitException {
 
-	/**
-	 * Create the exception with custom error message.
-	 *
-	 * @param message The error message.
-	 */
+	/// Create the exception with custom error message.
+	///
+	/// @param message The error message.
 	AbstractReflectionException(String message) {
 		super(message);
 	}
 
-	/**
-	 * Create the exception.
-	 *
-	 * @param cause The original cause.
-	 */
+	/// Create the exception.
+	///
+	/// @param cause The original cause.
 	AbstractReflectionException(Exception cause) {
 		super(cause);
 	}

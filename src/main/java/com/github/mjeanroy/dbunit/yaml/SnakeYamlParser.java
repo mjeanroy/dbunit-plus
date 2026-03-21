@@ -29,45 +29,32 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * {@link YamlParser} implementation based on SnakeYAML.
- *
- * <p>
- * This parser delegates YAML deserialization to a shared
- * {@link Yaml} instance from the SnakeYAML library.
- * The YAML content is parsed into a {@code Map<String, Object>}
- * representing the root YAML mapping.
- * </p>
- *
- * <p>
- * This implementation is thread-safe provided that the underlying
- * {@link Yaml} instance is not reconfigured at runtime. A singleton
- * instance is exposed via {@link #getInstance()}.
- * </p>
- */
+/// [YamlParser] implementation based on SnakeYAML.
+///
+/// This parser delegates YAML deserialization to a shared
+/// [Yaml] instance from the SnakeYAML library.
+/// The YAML content is parsed into a `Map<String, Object>`
+/// representing the root YAML mapping.
+///
+///
+/// This implementation is thread-safe provided that the underlying
+/// [Yaml] instance is not reconfigured at runtime. A singleton
+/// instance is exposed via [#getInstance()].
 class SnakeYamlParser extends AbstractYamlParser implements YamlParser {
 
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link SnakeYamlParser} instance
-	 */
+	/// Return the singleton instance of this parser.
+	///
+	/// @return the shared [SnakeYamlParser] instance
 	static SnakeYamlParser getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * {@link Yaml} instance used to deserialize YAML content.
-	 */
+	/// [Yaml] instance used to deserialize YAML content.
 	private final Yaml yaml;
 
-	/**
-	 * Create a new {@link SnakeYamlParser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 */
+	/// Create a new [SnakeYamlParser].
+	///
+	/// Constructor is private to enforce singleton usage.
 	private SnakeYamlParser(Yaml yaml) {
 		this.yaml = yaml;
 	}

@@ -29,27 +29,19 @@ import org.dbunit.database.DatabaseConfig;
 
 import java.util.Objects;
 
-/**
- * An abstract and simple implementation of {@link DbUnitConfigInterceptor}.
- */
+/// An abstract and simple implementation of [DbUnitConfigInterceptor].
 abstract class AbstractDbUnitPropertyInterceptor<T> implements DbUnitConfigInterceptor {
 
-	/**
-	 * The property name.
-	 */
+	/// The property name.
 	private final String property;
 
-	/**
-	 * The property value.
-	 */
+	/// The property value.
 	private final T value;
 
-	/**
-	 * Create interceptor.
-	 *
-	 * @param property The property name.
-	 * @param value The property value.
-	 */
+	/// Create interceptor.
+	///
+	/// @param property The property name.
+	/// @param value The property value.
 	AbstractDbUnitPropertyInterceptor(String property, T value) {
 		this.property = property;
 		this.value = value;

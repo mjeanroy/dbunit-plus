@@ -31,15 +31,11 @@ import org.dbunit.ext.mysql.MySqlDataTypeFactory;
 import java.util.Locale;
 import java.util.Objects;
 
-/**
- * Extension of {@link MySqlDataTypeFactory} where {@code BIT} MySQL type
- * are handled as {@link DataType#BIT} instead of {@link DataType#TINYINT}.
- */
+/// Extension of [MySqlDataTypeFactory] where `BIT` MySQL type
+/// are handled as [DataType#BIT] instead of [DataType#TINYINT].
 public class MySqlExtendedDatatypeFactory extends MySqlDataTypeFactory {
 
-	/**
-	 * Create factory.
-	 */
+	/// Create factory.
 	public MySqlExtendedDatatypeFactory() {
 	}
 

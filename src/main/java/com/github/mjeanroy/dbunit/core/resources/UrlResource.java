@@ -39,27 +39,19 @@ import static com.github.mjeanroy.dbunit.commons.io.Files.extractFilename;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.noOpScanner;
 
-/**
- * Implementation of {@link Resource} backed by {@link URL} instance.
- */
+/// Implementation of [Resource] backed by [URL] instance.
 class UrlResource extends AbstractResource {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(UrlResource.class);
 
-	/**
-	 * The URL.
-	 */
+	/// The URL.
 	private final URL url;
 
-	/**
-	 * Create resource with {@link URL}.
-	 *
-	 * @param url The URL.
-	 * @throws NullPointerException If {@code url} is {@code null}.
-	 */
+	/// Create resource with [URL].
+	///
+	/// @param url The URL.
+	/// @throws NullPointerException If `url` is `null`.
 	UrlResource(URL url) {
 		super(noOpScanner());
 		this.url = notNull(url, "Resource URL must not be null");

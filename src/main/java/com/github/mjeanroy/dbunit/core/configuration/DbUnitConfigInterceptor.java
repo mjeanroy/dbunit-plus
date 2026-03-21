@@ -27,28 +27,22 @@ package com.github.mjeanroy.dbunit.core.configuration;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IDatabaseConnection;
 
-/**
- * An interceptor that can be used to apply some custom DbUnit configuration on a {@link DatabaseConfig} instance.
- * This can be used, for instance, to enable {@link DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES}.
- *
- * Note that the instance will be created using reflection, therefore implementations must define a public
- * empty constructor.
- */
+/// An interceptor that can be used to apply some custom DbUnit configuration on a [DatabaseConfig] instance.
+/// This can be used, for instance, to enable [DatabaseConfig#FEATURE_QUALIFIED_TABLE_NAMES].
+///
+/// Note that the instance will be created using reflection, therefore implementations must define a public
+/// empty constructor.
 public interface DbUnitConfigInterceptor {
 
-	/**
-	 * Apply customization on the database configuration instance.
-	 *
-	 * @param config The database configuration instance.
-	 */
+	/// Apply customization on the database configuration instance.
+	///
+	/// @param config The database configuration instance.
 	void applyConfiguration(DatabaseConfig config);
 
-	/**
-	 * Apply customization on the database configuration instance.
-	 *
-	 * @param config The database configuration instance.
-	 * @param dbConnection The database connection.
-	 */
+	/// Apply customization on the database configuration instance.
+	///
+	/// @param config The database configuration instance.
+	/// @param dbConnection The database connection.
 	default void applyConfiguration(DatabaseConfig config, IDatabaseConnection dbConnection) {
 		applyConfiguration(config);
 	}

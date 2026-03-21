@@ -30,20 +30,16 @@ import org.dbunit.IDatabaseTester;
 import java.lang.reflect.Method;
 import java.util.List;
 
-/**
- * Apply DbUnit database operation (setup or tear down).
- */
+/// Apply DbUnit database operation (setup or tear down).
 interface DbOperation {
 
-	/**
-	 * Apply database operation.
-	 *
-	 * @param testClass Test Class.
-	 * @param method Executed method.
-	 * @param dbTester DbUnit database.
-	 * @param fkManagers Foreign key managers, optional and may be empty.
-	 * @throws Exception If an error occurred.
-	 */
+	/// Apply database operation.
+	///
+	/// @param testClass Test Class.
+	/// @param method Executed method.
+	/// @param dbTester DbUnit database.
+	/// @param fkManagers Foreign key managers, optional and may be empty.
+	/// @throws Exception If an error occurred.
 	void apply(
 		Class<?> testClass,
 		Method method,

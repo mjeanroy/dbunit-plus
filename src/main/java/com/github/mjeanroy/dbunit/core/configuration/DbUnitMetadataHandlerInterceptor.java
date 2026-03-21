@@ -28,27 +28,21 @@ import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.IMetadataHandler;
 
-/**
- * An interceptor that can set the {@code "metadataHandler"} property of DbUnit.
- *
- * @see DatabaseConfig#PROPERTY_METADATA_HANDLER
- */
+/// An interceptor that can set the `"metadataHandler"` property of DbUnit.
+///
+/// @see DatabaseConfig#PROPERTY_METADATA_HANDLER
 public final class DbUnitMetadataHandlerInterceptor extends AbstractDbUnitPropertyInterceptor<IMetadataHandler> {
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param metadataHandlerClass The metadata handler implementation.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param metadataHandlerClass The metadata handler implementation.
 	public DbUnitMetadataHandlerInterceptor(Class<? extends IMetadataHandler> metadataHandlerClass) {
 		this(ClassUtils.instantiate(metadataHandlerClass));
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param metadataHandler The metadata handler.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param metadataHandler The metadata handler.
 	public DbUnitMetadataHandlerInterceptor(IMetadataHandler metadataHandler) {
 		super(DatabaseConfig.PROPERTY_METADATA_HANDLER, metadataHandler);
 	}

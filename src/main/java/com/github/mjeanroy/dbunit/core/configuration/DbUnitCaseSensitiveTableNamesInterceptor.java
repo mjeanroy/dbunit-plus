@@ -26,25 +26,19 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can enable/disable the {@code "caseSensitiveTableNames"} feature of DbUnit.
- *
- * @see DatabaseConfig#FEATURE_CASE_SENSITIVE_TABLE_NAMES
- */
+/// An interceptor that can enable/disable the `"caseSensitiveTableNames"` feature of DbUnit.
+///
+/// @see DatabaseConfig#FEATURE_CASE_SENSITIVE_TABLE_NAMES
 public final class DbUnitCaseSensitiveTableNamesInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> {
 
-	/**
-	 * Create the interceptor, the feature is enabled by default.
-	 */
+	/// Create the interceptor, the feature is enabled by default.
 	public DbUnitCaseSensitiveTableNamesInterceptor() {
 		this(true);
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param caseSensitiveTableNames Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param caseSensitiveTableNames Feature activation flag: `true` to enable feature, `false` otherwise.
 	public DbUnitCaseSensitiveTableNamesInterceptor(boolean caseSensitiveTableNames) {
 		super(DatabaseConfig.FEATURE_CASE_SENSITIVE_TABLE_NAMES, caseSensitiveTableNames);
 	}

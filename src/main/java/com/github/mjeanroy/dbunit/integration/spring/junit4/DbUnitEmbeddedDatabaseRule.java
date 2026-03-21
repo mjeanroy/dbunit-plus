@@ -36,42 +36,29 @@ import java.sql.SQLException;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * This rule provide a fine integration between spring embedded database
- * and dbunit:
- *
- * <ul>
- *   <li>Ensure that embedded database is started and available before dbUnit load dataSet.</li>
- *   <li>Shutdown database after test.</li>
- * </ul>
- */
+/// This rule provide a fine integration between spring embedded database
+/// and dbunit:
+/// - Ensure that embedded database is started and available before dbUnit load dataSet.
+/// - Shutdown database after test.
 public class DbUnitEmbeddedDatabaseRule implements TestRule {
 
-	/**
-	 * The embedded database to use, may be {@code null} (in this case, it will be initialized during
-	 * test setup).
-	 */
+	/// The embedded database to use, may be `null` (in this case, it will be initialized during
+	/// test setup).
 	private EmbeddedDatabase db;
 
-	/**
-	 * The embedded database rule, that will be used to get the initialized {@link EmbeddedDatabase} instance
-	 * or new {@link Connection}.
-	 */
+	/// The embedded database rule, that will be used to get the initialized [EmbeddedDatabase] instance
+	/// or new [Connection].
 	private EmbeddedDatabaseRule dbRule;
 
-	/**
-	 * Create rule, embedded database will be initialized with {@link EmbeddedDatabaseConfiguration} if defined on the test class,
-	 * or using a default embedded database.
-	 */
+	/// Create rule, embedded database will be initialized with [EmbeddedDatabaseConfiguration] if defined on the test class,
+	/// or using a default embedded database.
 	public DbUnitEmbeddedDatabaseRule() {
 		this.db = null;
 	}
 
-	/**
-	 * Create rule with given {@link EmbeddedDatabase}.
-	 *
-	 * @param db Embedded database.
-	 */
+	/// Create rule with given [EmbeddedDatabase].
+	///
+	/// @param db Embedded database.
 	public DbUnitEmbeddedDatabaseRule(EmbeddedDatabase db) {
 		this.db = notNull(db, "Embedded Database must not be null");
 	}
@@ -99,11 +86,9 @@ public class DbUnitEmbeddedDatabaseRule implements TestRule {
 		};
 	}
 
-	/**
-	 * Get embedded database, may return {@code null} if the database has not been initialized yet.
-	 *
-	 * @return Embedded database.
-	 */
+	/// Get embedded database, may return `null` if the database has not been initialized yet.
+	///
+	/// @return Embedded database.
 	public EmbeddedDatabase getDb() {
 		if (db != null) {
 			return db;
@@ -112,11 +97,9 @@ public class DbUnitEmbeddedDatabaseRule implements TestRule {
 		return dbRule == null ? null : dbRule.getDb();
 	}
 
-	/**
-	 * Return new database connection,  may return {@code null} if the database has not been initialized yet.
-	 *
-	 * @return New database connection.
-	 */
+	/// Return new database connection,  may return `null` if the database has not been initialized yet.
+	///
+	/// @return New database connection.
 	public Connection getConnection() {
 		try {
 			EmbeddedDatabase db = getDb();

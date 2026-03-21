@@ -51,52 +51,35 @@ import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 import static com.github.mjeanroy.dbunit.exception.ResourceNotValidException.invalidJarException;
 import static java.util.Collections.unmodifiableSet;
 
-/**
- * Implementation of {@link ResourceScanner} scanning JAR entry to get the list
- * of sub-resources.
- *
- * Note that the method {@link Resource#getPath()} must return a resource that resides in a JAR file.
- *
- * For example:
- * <ul>
- *   <li>{@code file:/tmp/foo.jar!/dataset/foo.xml} is a valid path.</li>
- *   <li>{@code file:/dataset/foo.xml} is <strong>not</strong> a valid path.</li>
- * </ul>
- */
+/// Implementation of [ResourceScanner] scanning JAR entry to get the list
+/// of sub-resources.
+///
+/// Note that the method [Resource#getPath()] must return a resource that resides in a JAR file.
+/// For example:
+/// - `file:/tmp/foo.jar!/dataset/foo.xml` is a valid path.
+/// - `file:/dataset/foo.xml` is **not** a valid path.
 class JarResourceScanner extends AbstractResourceScanner {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(JarResourceScanner.class);
 
-	/**
-	 * Separator used with protocol and path, for example: {@code file:/tmp/foo.jar!/dataset/foo.xml}.
-	 */
+	/// Separator used with protocol and path, for example: `file:/tmp/foo.jar!/dataset/foo.xml`.
 	private static final String PROTOCOL_SEPARATOR = "!";
 
-	/**
-	 * Singleton instance.
-	 */
+	/// Singleton instance.
 	private static final JarResourceScanner INSTANCE = new JarResourceScanner();
 
-	/**
-	 * Get the singleton instance.
-	 *
-	 * @return The instance.
-	 */
+	/// Get the singleton instance.
+	///
+	/// @return The instance.
 	static JarResourceScanner getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * Cache for JAR entries.
-	 */
+	/// Cache for JAR entries.
 	private final Cache<String, Set<String>> cache;
 
-	/**
-	 * Private constructor, use {@link #getInstance()} instead.
-	 */
+	/// Private constructor, use [#getInstance()] instead.
 	private JarResourceScanner() {
 		this.cache = CacheFactory.newCache(JarScanTask.INSTANCE);
 	}
@@ -156,15 +139,11 @@ class JarResourceScanner extends AbstractResourceScanner {
 		return resources;
 	}
 
-	/**
-	 * The goal of this task is to scan all JAR entries and returns
-	 * a {@link Set} of all entries.
-	 */
+	/// The goal of this task is to scan all JAR entries and returns
+	/// a [Set] of all entries.
 	private static class JarScanTask implements CacheLoader<String, Set<String>> {
 
-		/**
-		 * Singleton Instance.
-		 */
+		/// Singleton Instance.
 		private static final JarScanTask INSTANCE = new JarScanTask();
 
 		@Override

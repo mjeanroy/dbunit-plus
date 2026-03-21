@@ -47,22 +47,18 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.toLower;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 
-/**
- * An interceptor that can specify the {@code "datatypeFactory"} property of DbUnit.
- *
- * @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
- */
+/// An interceptor that can specify the `"datatypeFactory"` property of DbUnit.
+///
+/// @see DatabaseConfig#PROPERTY_DATATYPE_FACTORY
 public final class DbUnitDatatypeFactoryInterceptor implements DbUnitConfigInterceptor {
 
 	private static final Logger log = Loggers.getLogger(DbUnitDatatypeFactoryInterceptor.class);
 
 	private final Class<? extends IDataTypeFactory> dataTypeFactoryClass;
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param dataTypeFactoryClass The datatype property class.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param dataTypeFactoryClass The datatype property class.
 	public DbUnitDatatypeFactoryInterceptor(Class<? extends IDataTypeFactory> dataTypeFactoryClass) {
 		this.dataTypeFactoryClass = notNull(dataTypeFactoryClass, "DataType factory class must not be null");
 	}

@@ -31,60 +31,42 @@ import tools.jackson.databind.json.JsonMapper;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * {@link JsonParser} implementation based on Jackson 3.x
- * {@link ObjectMapper}.
- *
- * <p>
- * This parser delegates JSON deserialization to a statically configured
- * {@link ObjectMapper}. The mapper is configured to enable
- * {@link DeserializationFeature#USE_LONG_FOR_INTS}, ensuring that
- * integral numeric values are deserialized as {@link Long} instead of
- * {@link Integer}.
- * </p>
- *
- * <p>
- * This behavior guarantees consistent numeric handling across JSON
- * parser implementations, especially when interoperating with other
- * {@link JsonParser} implementations within the same codebase.
- * </p>
- *
- * <p>
- * This implementation is thread-safe as it relies on a single shared
- * {@link ObjectMapper} instance and exposes a singleton instance via
- * {@link #getInstance()}.
- * </p>
- */
+/// [JsonParser] implementation based on Jackson 3.x
+/// [ObjectMapper].
+///
+/// This parser delegates JSON deserialization to a statically configured
+/// [ObjectMapper]. The mapper is configured to enable
+/// [DeserializationFeature#USE_LONG_FOR_INTS], ensuring that
+/// integral numeric values are deserialized as [Long] instead of
+/// [Integer].
+///
+/// This behavior guarantees consistent numeric handling across JSON
+/// parser implementations, especially when interoperating with other
+/// [JsonParser] implementations within the same codebase.
+///
+/// This implementation is thread-safe as it relies on a single shared
+/// [ObjectMapper] instance and exposes a singleton instance via
+/// [#getInstance()].
 class Jackson3Parser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link Jackson3Parser} instance.
-	 */
+	/// Return the singleton instance of this parser.
+	///
+	/// @return the shared [Jackson3Parser] instance.
 	static Jackson3Parser getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * {@link com.fasterxml.jackson.databind.ObjectMapper} instance used to deserialize JSON content.
-	 *
-	 * <p>
-	 * Configured to enable {@link com.fasterxml.jackson.databind.DeserializationFeature#USE_LONG_FOR_INTS}
-	 * so that integral values are mapped to {@link Long}.
-	 * </p>
-	 */
+	/// [com.fasterxml.jackson.databind.ObjectMapper] instance used to deserialize JSON content.
+	///
+	/// Configured to enable [com.fasterxml.jackson.databind.DeserializationFeature#USE_LONG_FOR_INTS]
+	/// so that integral values are mapped to [Long].
 	private final ObjectMapper objectMapper;
 
-	/**
-	 * Create a new {@link Jackson3Parser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 *
-	 * @param objectMapper The {@link ObjectMapper} to use.
-	 */
+	/// Create a new [Jackson3Parser].
+	///
+	/// Constructor is private to enforce singleton usage.
+	///
+	/// @param objectMapper The [ObjectMapper] to use.
 	private Jackson3Parser(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 	}

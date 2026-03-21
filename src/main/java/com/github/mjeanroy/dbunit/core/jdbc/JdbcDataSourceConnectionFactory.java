@@ -30,22 +30,16 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.util.Objects;
 
-/**
- * Implementation of {@link JdbcConnectionFactory} to produce instance
- * of {@link Connection} from  given {@link DataSource}.
- */
+/// Implementation of [JdbcConnectionFactory] to produce instance
+/// of [Connection] from  given [DataSource].
 public class JdbcDataSourceConnectionFactory extends AbstractJdbcConnectionFactory {
 
-	/**
-	 * Connection DataSource.
-	 */
+	/// Connection DataSource.
 	private final DataSource dataSource;
 
-	/**
-	 * Create new factory.
-	 *
-	 * @param dataSource Connection DataSource.
-	 */
+	/// Create new factory.
+	///
+	/// @param dataSource Connection DataSource.
 	public JdbcDataSourceConnectionFactory(DataSource dataSource) {
 		super();
 		this.dataSource = DataSourceProxy.of(dataSource);
