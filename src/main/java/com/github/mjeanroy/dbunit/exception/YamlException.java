@@ -24,19 +24,15 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Wrap external YAML parsing exception.
- *
- * This exception should provide a unique way to handler YAML exception,
- * whatever the internal mapper library.
- */
+/// Wrap external YAML parsing exception.
+///
+/// This exception should provide a unique way to handler YAML exception,
+/// whatever the internal mapper library.
 public class YamlException extends AbstractParserException {
 
-	/**
-	 * Wrap {@link Exception}.
-	 *
-	 * @param e Original Exception.
-	 */
+	/// Wrap [Exception].
+	///
+	/// @param e Original Exception.
 	public YamlException(Exception e) {
 		super(e);
 	}

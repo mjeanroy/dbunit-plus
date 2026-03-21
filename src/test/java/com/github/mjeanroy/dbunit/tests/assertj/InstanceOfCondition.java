@@ -26,35 +26,27 @@ package com.github.mjeanroy.dbunit.tests.assertj;
 
 import org.assertj.core.api.Condition;
 
-/**
- * AssertJ {@link Condition} checking that a given value is an instance of
- * given class.
- *
- * @param <T> Type of value.
- */
+/// AssertJ [Condition] checking that a given value is an instance of
+/// given class.
+///
+/// @param <T> Type of value.
 public class InstanceOfCondition<T> extends Condition<T> {
 
-	/**
-	 * Create condition.
-	 *
-	 * @param klass Expected class.
-	 * @param <T> Type of value to check.
-	 * @return The condition.
-	 */
+	/// Create condition.
+	///
+	/// @param klass Expected class.
+	/// @param <T> Type of value to check.
+	/// @return The condition.
 	public static <T> InstanceOfCondition<T> isInstanceOf(Class<?> klass) {
 		return new InstanceOfCondition<>(klass);
 	}
 
-	/**
-	 * Expected class.
-	 */
+	/// Expected class.
 	private final Class<?> klass;
 
-	/**
-	 * Create condition.
-	 *
-	 * @param klass The class.
-	 */
+	/// Create condition.
+	///
+	/// @param klass The class.
 	private InstanceOfCondition(Class<?> klass) {
 		this.klass = klass;
 	}

@@ -33,76 +33,58 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.startsWith;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 
-/**
- * JDBC Configuration, defined by:
- * <ul>
- *   <li>URL Connection.</li>
- *   <li>User.</li>
- *   <li>Password.</li>
- * </ul>
- */
+/// JDBC Configuration, defined by:
+/// - URL Connection.
+/// - User.
+/// - Password.
 public class JdbcConfiguration {
 
-	/**
-	 * Create JDBC Configuration object.
-	 *
-	 * @param url JDBC Connection URL.
-	 * @param user JDBC Connection User.
-	 * @param password JDBC Connection Password.
-	 * @return JDBC Connection Configuration.
-	 * @throws NullPointerException If {@code url}, {@code user} or {@code password} are null.
-	 * @throws IllegalArgumentException If {@code url} or {@code user} are blank.
-	 */
+	/// Create JDBC Configuration object.
+	///
+	/// @param url JDBC Connection URL.
+	/// @param user JDBC Connection User.
+	/// @param password JDBC Connection Password.
+	/// @return JDBC Connection Configuration.
+	/// @throws NullPointerException If `url`, `user` or `password` are null.
+	/// @throws IllegalArgumentException If `url` or `user` are blank.
 	public static JdbcConfiguration newJdbcConfiguration(String url, String user, String password) {
 		return newJdbcConfiguration(null, url, user, password);
 	}
 
-	/**
-	 * Create JDBC Configuration object.
-	 *
-	 * @param driver JDBC Driver.
-	 * @param url JDBC Connection URL.
-	 * @param user JDBC Connection User.
-	 * @param password JDBC Connection Password.
-	 * @return JDBC Connection Configuration.
-	 * @throws NullPointerException If {@code url}, {@code user} or {@code password} are null.
-	 * @throws IllegalArgumentException If {@code url} or {@code user} are blank.
-	 */
+	/// Create JDBC Configuration object.
+	///
+	/// @param driver JDBC Driver.
+	/// @param url JDBC Connection URL.
+	/// @param user JDBC Connection User.
+	/// @param password JDBC Connection Password.
+	/// @return JDBC Connection Configuration.
+	/// @throws NullPointerException If `url`, `user` or `password` are null.
+	/// @throws IllegalArgumentException If `url` or `user` are blank.
 	public static JdbcConfiguration newJdbcConfiguration(String driver, String url, String user, String password) {
 		return new JdbcConfiguration(driver, url, user, password);
 	}
 
-	/**
-	 * JDBC Driver.
-	 */
+	/// JDBC Driver.
 	private final String driver;
 
-	/**
-	 * JDBC Connection URL.
-	 * URL should start with {@code jdbc:[driver]:[connection]}.
-	 */
+	/// JDBC Connection URL.
+	/// URL should start with `jdbc:[driver]:[connection]`.
 	private final String url;
 
-	/**
-	 * JDBC Connection User.
-	 */
+	/// JDBC Connection User.
 	private final String user;
 
-	/**
-	 * JDBC Connection Password.
-	 */
+	/// JDBC Connection Password.
 	private final String password;
 
-	/**
-	 * Create new configuration.
-	 *
-	 * @param driver JDBC Driver.
-	 * @param url JDBC Connection URL.
-	 * @param user JDBC Connection User.
-	 * @param password JDBC Connection Password.
-	 * @throws NullPointerException If {@code url}, {@code user} or {@code password} are null.
-	 * @throws IllegalArgumentException If {@code url} or {@code user} are blank.
-	 */
+	/// Create new configuration.
+	///
+	/// @param driver JDBC Driver.
+	/// @param url JDBC Connection URL.
+	/// @param user JDBC Connection User.
+	/// @param password JDBC Connection Password.
+	/// @throws NullPointerException If `url`, `user` or `password` are null.
+	/// @throws IllegalArgumentException If `url` or `user` are blank.
 	private JdbcConfiguration(
 		String driver,
 		String url,
@@ -115,38 +97,30 @@ public class JdbcConfiguration {
 		this.password = notNull(password, "Jdbc password should be set");
 	}
 
-	/**
-	 * Get {@link #driver}
-	 *
-	 * @return {@link #driver}
-	 */
+	/// Get [#driver]
+	///
+	/// @return [#driver]
 	public String getDriver() {
 		return driver;
 	}
 
-	/**
-	 * Gets {@link #url}.
-	 *
-	 * @return {@link #url}
-	 */
+	/// Gets [#url].
+	///
+	/// @return [#url]
 	public String getUrl() {
 		return url;
 	}
 
-	/**
-	 * Gets {@link #user}.
-	 *
-	 * @return {@link #user}
-	 */
+	/// Gets [#user].
+	///
+	/// @return [#user]
 	public String getUser() {
 		return user;
 	}
 
-	/**
-	 * Gets {@link #password}.
-	 *
-	 * @return {@link #password}
-	 */
+	/// Gets [#password].
+	///
+	/// @return [#password]
 	public String getPassword() {
 		return password;
 	}

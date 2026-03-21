@@ -24,35 +24,27 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Wrap external SQL exception.
- */
+/// Wrap external SQL exception.
 public class JdbcException extends AbstractDbUnitException {
 
-	/**
-	 * Wrap exception.
-	 *
-	 * @param e Original Exception.
-	 */
+	/// Wrap exception.
+	///
+	/// @param e Original Exception.
 	public JdbcException(Exception e) {
 		super(e);
 	}
 
-	/**
-	 * Wrap {@link java.sql.SQLException}.
-	 *
-	 * @param message Error message.
-	 */
+	/// Wrap [java.sql.SQLException].
+	///
+	/// @param message Error message.
 	public JdbcException(String message) {
 		super(message);
 	}
 
-	/**
-	 * Wrap {@link java.lang.Exception}.
-	 *
-	 * @param message Error message.
-	 * @param ex Original Exception.
-	 */
+	/// Wrap [java.lang.Exception].
+	///
+	/// @param message Error message.
+	/// @param ex Original Exception.
 	public JdbcException(String message, Exception ex) {
 		super(message, ex);
 	}

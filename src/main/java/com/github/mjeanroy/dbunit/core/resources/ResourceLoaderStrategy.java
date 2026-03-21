@@ -26,32 +26,24 @@ package com.github.mjeanroy.dbunit.core.resources;
 
 import com.github.mjeanroy.dbunit.exception.ResourceNotFoundException;
 
-/**
- * Load {@link Resource}.
- *
- * Resource location is implementation specific, for example:
- * <ul>
- *   <li>From classpath ({@link ClasspathResourceLoader})</li>
- *   <li>From file system ({@link FileResourceLoader})</li>
- *   <li>From URL ({@link UrlResourceLoader})</li>
- * </ul>
- */
+/// Load [Resource].
+///
+/// Resource location is implementation specific, for example:
+/// - From classpath ([ClasspathResourceLoader])
+/// - From file system ([FileResourceLoader])
+/// - From URL ([UrlResourceLoader])
 interface ResourceLoaderStrategy {
 
-	/**
-	 * Check if the path of the resource may be handled by this strategy.
-	 *
-	 * @param path Resource path.
-	 * @return {@code true} if resource may be loaded by this strategy, {@code false} otherwise.
-	 */
+	/// Check if the path of the resource may be handled by this strategy.
+	///
+	/// @param path Resource path.
+	/// @return `true` if resource may be loaded by this strategy, `false` otherwise.
 	boolean match(String path);
 
-	/**
-	 * Load resource.
-	 *
-	 * @param name Resource path.
-	 * @return The resource.
-	 * @throws ResourceNotFoundException If resource does not exist.
-	 */
+	/// Load resource.
+	///
+	/// @param name Resource path.
+	/// @return The resource.
+	/// @throws ResourceNotFoundException If resource does not exist.
 	Resource load(String name);
 }

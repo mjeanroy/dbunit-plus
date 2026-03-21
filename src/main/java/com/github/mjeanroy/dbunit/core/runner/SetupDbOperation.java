@@ -36,27 +36,19 @@ import java.util.List;
 
 import static com.github.mjeanroy.dbunit.commons.reflection.Annotations.findAnnotation;
 
-/**
- * Apply setup operations to the test database.
- * This class is stateless and thread-safe.
- */
+/// Apply setup operations to the test database.
+/// This class is stateless and thread-safe.
 class SetupDbOperation implements DbOperation {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(SetupDbOperation.class);
 
-	/**
-	 * Singleton Instance.
-	 */
+	/// Singleton Instance.
 	private static final SetupDbOperation INSTANCE = new SetupDbOperation();
 
-	/**
-	 * Get singleton instance.
-	 *
-	 * @return Instance.
-	 */
+	/// Get singleton instance.
+	///
+	/// @return Instance.
 	public static SetupDbOperation getInstance() {
 		return INSTANCE;
 	}

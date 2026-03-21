@@ -36,9 +36,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
-/**
- * Implementation of {@link JdbcForeignKeyManager} for Oracle DBMS.
- */
+/// Implementation of [JdbcForeignKeyManager] for Oracle DBMS.
 public final class OracleForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<OracleForeignKeyManager.ForeignKey> {
 
 	private static final String C_CONSTRAINT_NAME = "CONSTRAINT_NAME";
@@ -46,9 +44,7 @@ public final class OracleForeignKeyManager extends AbstractJdbcDropCreateForeign
 
 	private static final ForeignKeyMapFunction mapFunction = new ForeignKeyMapFunction();
 
-	/**
-	 * Create FK Manager.
-	 */
+	/// Create FK Manager.
 	public OracleForeignKeyManager() {
 	}
 

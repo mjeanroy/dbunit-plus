@@ -32,43 +32,33 @@ import java.util.Map;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Builder to create mock instances for {@link CacheLoader}.
- *
- * @param <T> Type of keys.
- * @param <V> Type of values.
- */
+/// Builder to create mock instances for [CacheLoader].
+///
+/// @param <T> Type of keys.
+/// @param <V> Type of values.
 public class CacheLoaderMockBuilder<T, V> {
 
-	/**
-	 * Map of loader entries.
-	 */
+	/// Map of loader entries.
 	private final Map<T, V> entries;
 
-	/**
-	 * Create builder.
-	 */
+	/// Create builder.
 	public CacheLoaderMockBuilder() {
 		this.entries = new HashMap<>();
 	}
 
-	/**
-	 * Add new entry to loader.
-	 *
-	 * @param key Type of keys.
-	 * @param value Type of values.
-	 * @return The builder.
-	 */
+	/// Add new entry to loader.
+	///
+	/// @param key Type of keys.
+	/// @param value Type of values.
+	/// @return The builder.
 	public CacheLoaderMockBuilder<T, V> add(T key, V value) {
 		this.entries.put(key, value);
 		return this;
 	}
 
-	/**
-	 * Create mock instance of {@link CacheLoader}.
-	 *
-	 * @return The mock instance.
-	 */
+	/// Create mock instance of [CacheLoader].
+	///
+	/// @return The mock instance.
 	@SuppressWarnings("unchecked")
 	public CacheLoader<T, V> build() {
 		try {

@@ -30,22 +30,16 @@ import java.io.InputStream;
 
 import static com.github.mjeanroy.dbunit.tests.utils.TestUtils.getTestResource;
 
-/**
- * Factory that will return instance of {@link InputStream} using a reference
- * to a file in the classpath.
- */
+/// Factory that will return instance of [InputStream] using a reference
+/// to a file in the classpath.
 class ClasspathInputStream implements InputStreamFactory {
 
-	/**
-	 * File path.
-	 */
+	/// File path.
 	private final String path;
 
-	/**
-	 * Create the {@link InputStream} with the path.
-	 *
-	 * @param path Path.
-	 */
+	/// Create the [InputStream] with the path.
+	///
+	/// @param path Path.
 	ClasspathInputStream(String path) {
 		this.path = path;
 	}

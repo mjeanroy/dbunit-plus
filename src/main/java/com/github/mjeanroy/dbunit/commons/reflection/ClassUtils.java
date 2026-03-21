@@ -35,26 +35,20 @@ import java.util.Arrays;
 import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.instantiationException;
 import static com.github.mjeanroy.dbunit.exception.ClassInstantiationException.missingConstructor;
 
-/**
- * Static Class Utilities.
- */
+/// Static Class Utilities.
 public final class ClassUtils {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(ClassUtils.class);
 
 	// Ensure non instantiation.
 	private ClassUtils() {
 	}
 
-	/**
-	 * Check if a given class is available on classpath.
-	 *
-	 * @param className Class FQN.
-	 * @return `true` if class is available, `false` otherwise.
-	 */
+	/// Check if a given class is available on classpath.
+	///
+	/// @param className Class FQN.
+	/// @return `true` if class is available, `false` otherwise.
 	public static boolean isPresent(String className) {
 		try {
 			Class.forName(className);
@@ -72,14 +66,12 @@ public final class ClassUtils {
 		}
 	}
 
-	/**
-	 * Check if given classes are available on classpath.
-	 *
-	 * @param c1 First Class FQN.
-	 * @param c2 Second Class FQN.
-	 * @param others Other Class FQN.
-	 * @return `true` if <strong>all</strong> classes are available, `false` otherwise.
-	 */
+	/// Check if given classes are available on classpath.
+	///
+	/// @param c1 First Class FQN.
+	/// @param c2 Second Class FQN.
+	/// @param others Other Class FQN.
+	/// @return `true` if **all** classes are available, `false` otherwise.
 	public static boolean isPresent(String c1, String c2, String... others) {
 		if (!isPresent(c1) || !isPresent(c2)) {
 			return false;
@@ -94,13 +86,11 @@ public final class ClassUtils {
 		return true;
 	}
 
-	/**
-	 * Instantiate class using full qualified class name.
-	 *
-	 * @param rawClass Fully qualified class name.
-	 * @param parameters Constructor parameters (null forbidden).
-	 * @return The instantiated object.
-	 */
+	/// Instantiate class using full qualified class name.
+	///
+	/// @param rawClass Fully qualified class name.
+	/// @param parameters Constructor parameters (null forbidden).
+	/// @return The instantiated object.
 	public static Object instantiate(String rawClass, Object... parameters) {
 		try {
 			Class<?> klass = Class.forName(rawClass);
@@ -111,15 +101,13 @@ public final class ClassUtils {
 		}
 	}
 
-	/**
-	 * Create new instance of given class using default empty constructor.
-	 *
-	 * @param klass The class.
-	 * @param parameters Constructor parameters (null forbidden).
-	 * @param <T> Instance type.
-	 * @return The new instance.
-	 * @throws ClassInstantiationException If an error occurred while instantiating class.
-	 */
+	/// Create new instance of given class using default empty constructor.
+	///
+	/// @param klass The class.
+	/// @param parameters Constructor parameters (null forbidden).
+	/// @param <T> Instance type.
+	/// @return The new instance.
+	/// @throws ClassInstantiationException If an error occurred while instantiating class.
 	@SuppressWarnings("deprecation")
 	public static <T> T instantiate(Class<T> klass, Object... parameters) {
 		Class<?>[] parameterTypes = toParameterTypes(parameters);
@@ -157,14 +145,12 @@ public final class ClassUtils {
 		return parameterTypes;
 	}
 
-	/**
-	 * Find empty public constructor of given class.
-	 *
-	 * @param klass The class.
-	 * @param <T> Class type.
-	 * @return The constructor method.
-	 * @throws ClassInstantiationException If the empty constructor does not exist.
-	 */
+	/// Find empty public constructor of given class.
+	///
+	/// @param klass The class.
+	/// @param <T> Class type.
+	/// @return The constructor method.
+	/// @throws ClassInstantiationException If the empty constructor does not exist.
 	@SuppressWarnings("unchecked")
 	private static <T> Constructor<T> findConstructor(Class<T> klass, Class<?>[] parameterTypes) {
 		Constructor<T>[] ctors = (Constructor<T>[]) klass.getDeclaredConstructors();

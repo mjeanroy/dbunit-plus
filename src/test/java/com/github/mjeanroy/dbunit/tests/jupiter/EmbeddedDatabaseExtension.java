@@ -45,10 +45,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
-/**
- * A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
- * before all/after all tests.
- */
+/// A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
+/// before all/after all tests.
 class EmbeddedDatabaseExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(EmbeddedDatabaseExtension.class);

@@ -27,66 +27,51 @@ package com.github.mjeanroy.dbunit.commons.lang;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-/**
- * Internal helper utilities around Java's {@link ServiceLoader} mechanism.
- *
- * <p>
- * This class provides small convenience methods to simplify loading
- * Service Provider Interface (SPI) implementations. It is intentionally
- * minimal and acts as a thin wrapper over {@link ServiceLoader}.
- * </p>
- *
- * <h2>Important</h2>
- * <p>
- * <strong>This class is for internal use only and is not part of the public API.</strong>
- * It may change, be moved, or be removed without notice in future versions.
- * External code should not depend on it.
- * </p>
- *
- * <h2>Design Notes</h2>
- * <p>
- * The helper centralizes common SPI lookup patterns used across the project,
- * such as retrieving the first available provider or iterating over all
- * available implementations.
- * </p>
- */
+/// Internal helper utilities around Java's [ServiceLoader] mechanism.
+///
+/// This class provides small convenience methods to simplify loading
+/// Service Provider Interface (SPI) implementations. It is intentionally
+/// minimal and acts as a thin wrapper over [ServiceLoader].
+///
+/// ## Important
+///
+/// **This class is for internal use only and is not part of the public API.**
+/// It may change, be moved, or be removed without notice in future versions.
+/// External code should not depend on it.
+///
+/// ## Design Notes
+///
+/// The helper centralizes common SPI lookup patterns used across the project,
+/// such as retrieving the first available provider or iterating over all
+/// available implementations.
+///
 public final class SPI {
 
-	/**
-	 * Hidden constructor to prevent instantiation.
-	 */
+	/// Hidden constructor to prevent instantiation.
 	private SPI() {
 	}
 
-	/**
-	 * Load the first available implementation of the given service type.
-	 *
-	 * <p>
-	 * This method delegates to {@link ServiceLoader} and returns the first
-	 * discovered provider, or {@code null} if no implementation is available.
-	 * </p>
-	 *
-	 * @param klazz the service interface or abstract class to load
-	 * @param <T> the service type
-	 * @return the first discovered implementation, or {@code null} if none are found
-	 */
+	/// Load the first available implementation of the given service type.
+	///
+	/// This method delegates to [ServiceLoader] and returns the first
+	/// discovered provider, or `null` if no implementation is available.
+	///
+	/// @param klazz the service interface or abstract class to load
+	/// @param <T> the service type
+	/// @return the first discovered implementation, or `null` if none are found
 	public static <T> T loadFirst(Class<T> klazz) {
 		Iterator<T> it = load(klazz).iterator();
 		return it.hasNext() ? it.next() : null;
 	}
 
-	/**
-	 * Load all available implementations of the given service type.
-	 *
-	 * <p>
-	 * The returned {@link Iterable} is backed by {@link ServiceLoader}
-	 * and loads providers lazily as they are iterated.
-	 * </p>
-	 *
-	 * @param klazz the service interface or abstract class to load
-	 * @param <T> the service type
-	 * @return an {@link Iterable} over all discovered implementations
-	 */
+	/// Load all available implementations of the given service type.
+	///
+	/// The returned [Iterable] is backed by [ServiceLoader]
+	/// and loads providers lazily as they are iterated.
+	///
+	/// @param klazz the service interface or abstract class to load
+	/// @param <T> the service type
+	/// @return an [Iterable] over all discovered implementations
 	public static <T> Iterable<T> load(Class<T> klazz) {
 		return ServiceLoader.load(klazz);
 	}

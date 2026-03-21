@@ -36,58 +36,40 @@ import java.util.Objects;
 
 import static java.util.Collections.unmodifiableList;
 
-/**
- * The DbUnit class context, containing initialization context, i.e:
- * <ul>
- *   <li>The DbUnit dataset.</li>
- *   <li>The JDBC Connection Factory.</li>
- *   <li>SQL Initialization Scripts.</li>
- *   <li>The liquibase changelogs.</li>
- *   <li>The list of dataset replacements.</li>
- *   <li>The list of configuration interceptors.</li>
- * </ul>
- */
+/// The DbUnit class context, containing initialization context, i.e:
+/// - The DbUnit dataset.
+/// - The JDBC Connection Factory.
+/// - SQL Initialization Scripts.
+/// - The liquibase changelogs.
+/// - The list of dataset replacements.
+/// - The list of configuration interceptors.
 final class DbUnitClassContext {
 
-	/**
-	 * The default dataset (may be overloaded by method), may be {@code null}.
-	 */
+	/// The default dataset (may be overloaded by method), may be `null`.
 	private final IDataSet dataSet;
 
-	/**
-	 * Global DBUnit configuration.
-	 */
+	/// Global DBUnit configuration.
 	private final Config config;
 
-	/**
-	 * The JDBC Connection factory.
-	 */
+	/// The JDBC Connection factory.
 	private final JdbcConnectionFactory connectionFactory;
 
-	/**
-	 * The list of initialization scripts to run.
-	 */
+	/// The list of initialization scripts to run.
 	private final List<SqlScript> initScripts;
 
-	/**
-	 * The list of liquibase changelogs to run.
-	 */
+	/// The list of liquibase changelogs to run.
 	private final List<LiquibaseChangeLog> liquibaseChangeLogs;
 
-	/**
-	 * The list of replacements values, may be empty.
-	 */
+	/// The list of replacements values, may be empty.
 	private final List<Replacements> replacements;
 
-	/**
-	 * Create the class context.
-	 *
-	 * @param dataSet The class dataset (may be {@code null}).
-	 * @param connectionFactory The custom JDBC connection factory.
-	 * @param initScripts The list of initialization scripts to run.
-	 * @param liquibaseChangeLogs The liquibase changelogs.
-	 * @param replacements The list of replacement value.
-	 */
+	/// Create the class context.
+	///
+	/// @param dataSet The class dataset (may be `null`).
+	/// @param connectionFactory The custom JDBC connection factory.
+	/// @param initScripts The list of initialization scripts to run.
+	/// @param liquibaseChangeLogs The liquibase changelogs.
+	/// @param replacements The list of replacement value.
 	DbUnitClassContext(
 		Config config,
 		IDataSet dataSet,
@@ -108,65 +90,51 @@ final class DbUnitClassContext {
 		return config;
 	}
 
-	/**
-	 * Get {@link #initScripts}
-	 *
-	 * @return {@link #initScripts}
-	 */
+	/// Get [#initScripts]
+	///
+	/// @return Returns [#initScripts]
 	List<SqlScript> getInitScripts() {
 		return initScripts;
 	}
 
-	/**
-	 * Get {@link #liquibaseChangeLogs}
-	 *
-	 * @return {@link #liquibaseChangeLogs}
-	 */
+	/// Get [#liquibaseChangeLogs]
+	///
+	/// @return Returns [#liquibaseChangeLogs]
 	List<LiquibaseChangeLog> getLiquibaseChangeLogs() {
 		return liquibaseChangeLogs;
 	}
 
-	/**
-	 * Get {@link #dataSet}
-	 *
-	 * @return {@link #dataSet}
-	 */
+	/// Get [#dataSet]
+	///
+	/// @return Returns [#dataSet]
 	IDataSet getDataSet() {
 		return dataSet;
 	}
 
-	/**
-	 * Get {@link #connectionFactory}
-	 *
-	 * @return {@link #connectionFactory}
-	 */
+	/// Get [#connectionFactory]
+	///
+	/// @return Returns [#connectionFactory]
 	JdbcConnectionFactory getConnectionFactory() {
 		return connectionFactory;
 	}
 
-	/**
-	 * Get {@link #replacements}
-	 *
-	 * @return {@link #replacements}
-	 */
+	/// Get [#replacements]
+	///
+	/// @return Returns [#replacements]
 	List<Replacements> getReplacements() {
 		return replacements;
 	}
 
-	/**
-	 * Get database schema to use with {@link org.dbunit.database.DatabaseConnection}
-	 *
-	 * @return Database schema.
-	 */
+	/// Get database schema to use with [org.dbunit.database.DatabaseConnection]
+	///
+	/// @return Database schema.
 	String getSchema() {
 		return config.getSchema();
 	}
 
-	/**
-	 * Get DBUnit interceptors.
-	 *
-	 * @return DBUnit interceptors.
-	 */
+	/// Get DBUnit interceptors.
+	///
+	/// @return DBUnit interceptors.
 	List<DbUnitConfigInterceptor> getInterceptors() {
 		return config.getInterceptors();
 	}

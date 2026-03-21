@@ -26,21 +26,15 @@ package com.github.mjeanroy.dbunit.loggers;
 
 import org.slf4j.LoggerFactory;
 
-/**
- * Implementation of {@link Logger} backed by SLF4J ({@link org.slf4j.Logger} instances).
- */
+/// Implementation of [Logger] backed by SLF4J ([org.slf4j.Logger] instances).
 class Slf4jLogger implements Logger {
 
-	/**
-	 * SLF4J instance.
-	 */
+	/// SLF4J instance.
 	private final org.slf4j.Logger log;
 
-	/**
-	 * Create logger.
-	 *
-	 * @param klass The logger instance identifier.
-	 */
+	/// Create logger.
+	///
+	/// @param klass The logger instance identifier.
 	Slf4jLogger(Class<?> klass) {
 		this.log = LoggerFactory.getLogger(klass);
 	}

@@ -27,34 +27,22 @@ package com.github.mjeanroy.dbunit.tests.builders;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Builder for {@link URL} instances.
- */
+/// Builder for [URL] instances.
 public class UrlBuilder {
 
-	/**
-	 * URL protocol.
-	 */
+	/// URL protocol.
 	private String protocol;
 
-	/**
-	 * URL host.
-	 */
+	/// URL host.
 	private String host;
 
-	/**
-	 * URL port.
-	 */
+	/// URL port.
 	private int port;
 
-	/**
-	 * URL path.
-	 */
+	/// URL path.
 	private String path;
 
-	/**
-	 * Create URL with default settings.
-	 */
+	/// Create URL with default settings.
 	public UrlBuilder() {
 		this.protocol = "http";
 		this.host = "localhost";
@@ -62,55 +50,45 @@ public class UrlBuilder {
 		this.path = "/";
 	}
 
-	/**
-	 * Set URL protocol.
-	 *
-	 * @param protocol The protocol.
-	 * @return The builder.
-	 */
+	/// Set URL protocol.
+	///
+	/// @param protocol The protocol.
+	/// @return The builder.
 	public UrlBuilder setProtocol(String protocol) {
 		this.protocol = protocol;
 		return this;
 	}
 
-	/**
-	 * Set URL port.
-	 *
-	 * @param port The port.
-	 * @return The builder.
-	 */
+	/// Set URL port.
+	///
+	/// @param port The port.
+	/// @return The builder.
 	public UrlBuilder setPort(int port) {
 		this.port = port;
 		return this;
 	}
 
-	/**
-	 * Set URL host.
-	 *
-	 * @param host The host.
-	 * @return The builder.
-	 */
+	/// Set URL host.
+	///
+	/// @param host The host.
+	/// @return The builder.
 	public UrlBuilder setHost(String host) {
 		this.host = host;
 		return this;
 	}
 
-	/**
-	 * Set URL path.
-	 *
-	 * @param path The path.
-	 * @return The builder.
-	 */
+	/// Set URL path.
+	///
+	/// @param path The path.
+	/// @return The builder.
 	public UrlBuilder setPath(String path) {
 		this.path = path;
 		return this;
 	}
 
-	/**
-	 * Create {@link URL} instance.
-	 *
-	 * @return {@link URL} instance.
-	 */
+	/// Create [URL] instance.
+	///
+	/// @return [URL] instance.
 	public URL build() {
 		try {
 			return new URL(protocol, host, port, path);

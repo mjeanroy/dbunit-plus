@@ -24,16 +24,12 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Exception thrown when DataSet cannot be loaded.
- */
+/// Exception thrown when DataSet cannot be loaded.
 public class DataSetLoaderException extends AbstractDbUnitException {
 
-	/**
-	 * Wrap original exception.
-	 *
-	 * @param ex Original Exception.
-	 */
+	/// Wrap original exception.
+	///
+	/// @param ex Original Exception.
 	public DataSetLoaderException(Exception ex) {
 		super(ex);
 	}

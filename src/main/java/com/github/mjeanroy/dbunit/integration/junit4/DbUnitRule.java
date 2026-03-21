@@ -37,46 +37,34 @@ import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 
-/**
- * JUnit Rule to setup DbUnit database for each tests.
- */
+/// JUnit Rule to setup DbUnit database for each tests.
 public class DbUnitRule implements TestRule {
 
-	/**
-	 * Factory to create instance of {@link Connection} for each test.
-	 */
+	/// Factory to create instance of [Connection] for each test.
 	private final JdbcConnectionFactory connectionFactory;
 
-	/**
-	 * Create rule using {@link JdbcConfiguration} instance.
-	 *
-	 * @param configuration JDBC Configuration.
-	 */
+	/// Create rule using [JdbcConfiguration] instance.
+	///
+	/// @param configuration JDBC Configuration.
 	public DbUnitRule(JdbcConfiguration configuration) {
 		this(new JdbcDefaultConnectionFactory(configuration));
 	}
 
-	/**
-	 * Create rule using {@link JdbcConnectionFactory} to create SQL Connection.
-	 *
-	 * @param factory JDBC Configuration.
-	 */
+	/// Create rule using [JdbcConnectionFactory] to create SQL Connection.
+	///
+	/// @param factory JDBC Configuration.
 	public DbUnitRule(JdbcConnectionFactory factory) {
 		this.connectionFactory = factory;
 	}
 
-	/**
-	 * Create rule using {@code dataSource} to get database {@link Connection}.
-	 *
-	 * @param dataSource The dataSource.
-	 */
+	/// Create rule using `dataSource` to get database [Connection].
+	///
+	/// @param dataSource The dataSource.
 	public DbUnitRule(DataSource dataSource) {
 		this(new JdbcDataSourceConnectionFactory(dataSource));
 	}
 
-	/**
-	 * Create rule, extract {@link JdbcConnectionFactory} from test class annotations.
-	 */
+	/// Create rule, extract [JdbcConnectionFactory] from test class annotations.
 	public DbUnitRule() {
 		this.connectionFactory = null;
 	}

@@ -30,39 +30,27 @@ import java.net.URL;
 
 import static com.github.mjeanroy.dbunit.core.resources.Resources.toFile;
 
-/**
- * Load {@link Resource} from the classpath.
- */
+/// Load [Resource] from the classpath.
 class ClasspathResourceLoader extends AbstractResourceLoaderStrategy {
 
-	/**
-	 * Each resource must match this prefix, for example:
-	 * <ul>
-	 *   <li>{@code classpath:/foo.txt} match</li>
-	 *   <li>{@code classpath/foo.txt} does not match</li>
-	 *   <li>{@code foo.txt} does not match</li>
-	 * </ul>
-	 */
+	/// Each resource must match this prefix, for example:
+	/// - `classpath:/foo.txt` match
+	/// - `classpath/foo.txt` does not match
+	/// - `foo.txt` does not match
 	private static final String PREFIX = "classpath:";
 
-	/**
-	 * The singleton instance.
-	 */
+	/// The singleton instance.
 	private static final ClasspathResourceLoader INSTANCE = new ClasspathResourceLoader();
 
-	/**
-	 * Get the loader instance.
-	 *
-	 * @return Loader instance.
-	 */
+	/// Get the loader instance.
+	///
+	/// @return Loader instance.
 	static ClasspathResourceLoader getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * Create the loader.
-	 * This constructor should not be called directly, use {@link #getInstance()} instead.
-	 */
+	/// Create the loader.
+	/// This constructor should not be called directly, use [#getInstance()] instead.
 	private ClasspathResourceLoader() {
 		super(PREFIX);
 	}

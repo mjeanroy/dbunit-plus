@@ -40,9 +40,7 @@ import static com.github.mjeanroy.dbunit.commons.io.Io.readLines;
 import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQueries;
 import static com.github.mjeanroy.dbunit.commons.lang.Objects.firstNonNull;
 
-/**
- * Run SQL scripts against SQL {@link java.sql.Connection}.
- */
+/// Run SQL scripts against SQL [java.sql.Connection].
 public final class SqlScriptParser {
 
 	private static final Logger log = Loggers.getLogger(SqlScriptParser.class);
@@ -51,14 +49,12 @@ public final class SqlScriptParser {
 	private SqlScriptParser() {
 	}
 
-	/**
-	 * Parse SQL scripts and return list of SQL query.
-	 *
-	 * @param stream Stream input.
-	 * @param configuration Parsing configuration.
-	 * @return List of query parsed in given input.
-	 * @throws SqlParserException If an error occurred during parsing.
-	 */
+	/// Parse SQL scripts and return list of SQL query.
+	///
+	/// @param stream Stream input.
+	/// @param configuration Parsing configuration.
+	/// @return List of query parsed in given input.
+	/// @throws SqlParserException If an error occurred during parsing.
 	public static List<String> parseScript(InputStream stream, SqlScriptParserConfiguration configuration) {
 		SqlScriptParserContext ctx = new SqlScriptParserContext();
 
@@ -76,27 +72,23 @@ public final class SqlScriptParser {
 		return ctx.getQueries();
 	}
 
-	/**
-	 * Parse SQL scripts and return list of SQL query.
-	 *
-	 * @param path SQL file path.
-	 * @param configuration Parsing configuration.
-	 * @return List of query parsed in given input.
-	 * @throws SqlParserException If an error occurred during parsing.
-	 */
+	/// Parse SQL scripts and return list of SQL query.
+	///
+	/// @param path SQL file path.
+	/// @param configuration Parsing configuration.
+	/// @return List of query parsed in given input.
+	/// @throws SqlParserException If an error occurred during parsing.
 	public static List<String> parseScript(String path, SqlScriptParserConfiguration configuration) {
 		ResourceLoader loader = firstNonNull(ResourceLoader.find(path), ResourceLoader.CLASSPATH);
 		return parseScript(loader.load(path), configuration);
 	}
 
-	/**
-	 * Parse SQL scripts file and return list of SQL query.
-	 *
-	 * @param sqlFile SQL File.
-	 * @param configuration Parsing configuration.
-	 * @return List of query parsed in given input.
-	 * @throws SqlParserException If an error occurred during parsing.
-	 */
+	/// Parse SQL scripts file and return list of SQL query.
+	///
+	/// @param sqlFile SQL File.
+	/// @param configuration Parsing configuration.
+	/// @return List of query parsed in given input.
+	/// @throws SqlParserException If an error occurred during parsing.
 	public static List<String> parseScript(Resource sqlFile, SqlScriptParserConfiguration configuration) {
 		try (InputStream stream = sqlFile.openStream()) {
 			return parseScript(stream, configuration);
@@ -107,40 +99,34 @@ public final class SqlScriptParser {
 		}
 	}
 
-	/**
-	 * Parse SQL scripts and execute queries one by one (if a query failed, next queries are not executed).
-	 *
-	 * @param connection SQL Connection.
-	 * @param stream Stream of SQL Script.
-	 * @param configuration SQL parser configuration.
-	 * @throws SQLException If a query failed.
-	 */
+	/// Parse SQL scripts and execute queries one by one (if a query failed, next queries are not executed).
+	///
+	/// @param connection SQL Connection.
+	/// @param stream Stream of SQL Script.
+	/// @param configuration SQL parser configuration.
+	/// @throws SQLException If a query failed.
 	public static void executeScript(Connection connection, InputStream stream, SqlScriptParserConfiguration configuration) throws SQLException {
 		List<String> queries = parseScript(stream, configuration);
 		executeQueries(connection, queries);
 	}
 
-	/**
-	 * Parse SQL scripts file and execute queries one by one (if a query failed, next queries are not executed).
-	 *
-	 * @param connection SQL Connection.
-	 * @param sqlFile SQL Script.
-	 * @param configuration SQL parser configuration.
-	 * @throws SQLException If a query failed.
-	 */
+	/// Parse SQL scripts file and execute queries one by one (if a query failed, next queries are not executed).
+	///
+	/// @param connection SQL Connection.
+	/// @param sqlFile SQL Script.
+	/// @param configuration SQL parser configuration.
+	/// @throws SQLException If a query failed.
 	public static void executeScript(Connection connection, Resource sqlFile, SqlScriptParserConfiguration configuration) throws SQLException {
 		List<String> queries = parseScript(sqlFile, configuration);
 		executeQueries(connection, queries);
 	}
 
-	/**
-	 * Parse SQL scripts file and execute queries one by one (if a query failed, next queries are not executed).
-	 *
-	 * @param connection SQL connection.
-	 * @param sqlFilePath SQL scripts path.
-	 * @param configuration SQL parser configuration.
-	 * @throws SQLException If a query failed.
-	 */
+	/// Parse SQL scripts file and execute queries one by one (if a query failed, next queries are not executed).
+	///
+	/// @param connection SQL connection.
+	/// @param sqlFilePath SQL scripts path.
+	/// @param configuration SQL parser configuration.
+	/// @throws SQLException If a query failed.
 	public static void executeScript(Connection connection, String sqlFilePath, SqlScriptParserConfiguration configuration) throws SQLException {
 		List<String> queries = parseScript(sqlFilePath, configuration);
 		executeQueries(connection, queries);

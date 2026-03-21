@@ -31,73 +31,52 @@ import org.junit.Rule;
 import org.junit.rules.ExternalResource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 
-/**
- * A JUnit 4 {@link Rule} that can be used to start/stop embedded database.
- *
- * <br>
- *
- * Note that:
- *
- * <ul>
- *   <li>
- *     When used as a {@link ClassRule}, the embedded database will be started before all tests,
- *     and stopped after all tests.
- *   </li>
- *   <li>
- *     When used as a {@link Rule}, the embedded database will be started before each test,
- *     and stopped after each test.
- *   </li>
- * </ul>
- *
- * Here is an example using the {@link ClassRule} annotation:
- *
- * <pre><code>
- *   public class MyDaoTest {
- *     &#64;ClassRule
- *     public static EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(
- *       new EmbeddedDatabaseBuilder()
- *         .generateUniqueName(true)
- *         .addScript("classpath:/sql/init.sql")
- *         .addScript("classpath:/sql/data.sql")
- *         .build()
- *     );
- *
- *     &#64;Test
- *     public void test1() throws Exception {
- *       Assert.assertEquals(2, count(rule.getDb().getConnection()));
- *     }
- *   }
- * </code></pre>
- */
+/// A JUnit 4 [Rule] that can be used to start/stop embedded database.
+///
+/// Note that:
+/// -  When used as a [ClassRule], the embedded database will be started before all tests, and stopped after all tests.
+/// - When used as a [Rule], the embedded database will be started before each test, and stopped after each test.
+///
+/// Here is an example using the [ClassRule] annotation:
+///
+/// ```
+///   public class MyDaoTest {
+///     @ClassRule
+///     public static EmbeddedDatabaseRule rule = new EmbeddedDatabaseRule(
+///       new EmbeddedDatabaseBuilder()
+///         .generateUniqueName(true)
+///         .addScript("classpath:/sql/init.sql")
+///         .addScript("classpath:/sql/data.sql")
+///         .build()
+///     );
+///
+///     @Test
+///     public void test1() throws Exception {
+///       Assert.assertEquals(2, count(rule.getDb().getConnection()));
+///     }
+///   }
+/// ```
 public class EmbeddedDatabaseRule extends ExternalResource {
 
-	/**
-	 * Instance of {@link EmbeddedDatabase}.
-	 */
+	/// Instance of [EmbeddedDatabase].
 	private final EmbeddedDatabaseRunner dbRunner;
 
-	/**
-	 * Create rule.
-	 *
-	 * @param db Embedded database.
-	 */
+	/// Create rule.
+	///
+	/// @param db Embedded database.
 	public EmbeddedDatabaseRule(EmbeddedDatabase db) {
 		this.dbRunner = new EmbeddedDatabaseRunner(db);
 	}
 
-	/**
-	 * Create rule with default builder.
-	 */
+	/// Create rule with default builder.
 	public EmbeddedDatabaseRule() {
 		this.dbRunner = new EmbeddedDatabaseRunner();
 	}
 
-	/**
-	 * Create rule and lookup for {@link EmbeddedDatabaseConfiguration} in the {@code testClass}
-	 * to initialize the embedded database.
-	 *
-	 * @param testClass The tested class.
-	 */
+	/// Create rule and lookup for [EmbeddedDatabaseConfiguration] in the `testClass`
+	/// to initialize the embedded database.
+	///
+	/// @param testClass The tested class.
 	public EmbeddedDatabaseRule(Class<?> testClass) {
 		this.dbRunner = new EmbeddedDatabaseRunner(testClass);
 	}
@@ -112,11 +91,9 @@ public class EmbeddedDatabaseRule extends ExternalResource {
 		dbRunner.after();
 	}
 
-	/**
-	 * Gets currently created database instance.
-	 *
-	 * @return Database instance, may be {@code null} until rule has been initialized.
-	 */
+	/// Gets currently created database instance.
+	///
+	/// @return Database instance, may be `null` until rule has been initialized.
 	public EmbeddedDatabase getDb() {
 		return dbRunner.getDb();
 	}

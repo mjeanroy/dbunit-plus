@@ -33,33 +33,27 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * DbUnit initialization: allow user to run SQL scripts before
- * loading DbUnit data set.
- *
- * This annotation can be used on:
- * <ul>
- *   <li>Class (i.e test class).</li>
- *   <li>Package (i.e package where test classes belongs)</li>
- * </ul>
- *
- * For example:
- *
- * <pre><code>
- *
- *   &#64;DbUnitInit(sql = "/sql/schema.sql")
- *   &#64;DbUnitDataSet("/dataset/xml")
- *   public class TestClass {
- *     &#64;Rule
- *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
- *
- *     &#64;Test
- *     public void test1() {
- *     }
- *   }
- *
- * </code></pre>
- */
+/// DbUnit initialization: allow user to run SQL scripts before
+/// loading DbUnit data set.
+///
+/// This annotation can be used on:
+/// - Class (i.e test class).
+/// - Package (i.e package where test classes belongs)
+///
+/// For example:
+///
+/// ```
+///   @DbUnitInit(sql = "/sql/schema.sql")
+///   @DbUnitDataSet("/dataset/xml")
+///   public class TestClass {
+///     @Rule
+///     public DbUnitRule rule = new DbUnitRule(connectionFactory);
+///
+///     @Test
+///     public void test1() {
+///     }
+///   }
+/// ```
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -68,17 +62,13 @@ import java.lang.annotation.Target;
 })
 public @interface DbUnitInit {
 
-	/**
-	 * Set of SQL scripts to load
-	 *
-	 * @return SQL scripts file to load.
-	 */
+	/// Set of SQL scripts to load
+	///
+	/// @return SQL scripts file to load.
 	String[] sql() default {};
 
-	/**
-	 * Delimiter for these set of SQL scripts.
-	 *
-	 * @return Delimiter.
-	 */
+	/// Delimiter for these set of SQL scripts.
+	///
+	/// @return Delimiter.
 	char delimiter() default SqlScriptParserConfiguration.DEFAULT_DELIMITER;
 }

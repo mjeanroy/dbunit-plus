@@ -27,24 +27,18 @@ package com.github.mjeanroy.dbunit.cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.LoadingCache;
 
-/**
- * {@link Cache} implementation using Guava {@link LoadingCache}.
- *
- * @param <K> Type of keys in the cache.
- * @param <V> Type of values.
- */
+/// [Cache] implementation using Guava [LoadingCache].
+///
+/// @param <K> Type of keys in the cache.
+/// @param <V> Type of values.
 class GuavaCache<K, V> implements Cache<K, V> {
 
-	/**
-	 * Internal Guava cache.
-	 */
+	/// Internal Guava cache.
 	private final LoadingCache<K, V> cache;
 
-	/**
-	 * Create cache.
-	 *
-	 * @param loader Loader used to compute values in the cache.
-	 */
+	/// Create cache.
+	///
+	/// @param loader Loader used to compute values in the cache.
 	GuavaCache(CacheLoader<K, V> loader) {
 		this.cache = CacheBuilder.newBuilder().build(new GuavaCacheLoaderAdapter<>(loader));
 	}
@@ -64,12 +58,10 @@ class GuavaCache<K, V> implements Cache<K, V> {
 		return cache.size();
 	}
 
-	/**
-	 * Simple adapter to translate {@link CacheLoader} to Guava {@link com.google.common.cache.CacheLoader}.
-	 *
-	 * @param <K> Type of keys.
-	 * @param <V> Type of values.
-	 */
+	/// Simple adapter to translate [CacheLoader] to Guava [com.google.common.cache.CacheLoader].
+	///
+	/// @param <K> Type of keys.
+	/// @param <V> Type of values.
 	private static class GuavaCacheLoaderAdapter<K, V> extends com.google.common.cache.CacheLoader<K, V> {
 		private final CacheLoader<K, V> loader;
 

@@ -27,25 +27,21 @@ package com.github.mjeanroy.dbunit.commons.lang;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isBlank;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 
-/**
- * Static PreConditions Utilities.
- */
+/// Static PreConditions Utilities.
 public final class PreConditions {
 
 	// Ensure non instantiation.
 	private PreConditions() {
 	}
 
-	/**
-	 * Ensure that given {@code value} is not {@code null}.
-	 *
-	 * @param value Value to check.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @param <T> Type of value.
-	 * @return Value if it is not null.
-	 * @throws NullPointerException If {@code value} is null.
-	 */
+	/// Ensure that given `value` is not `null`.
+	///
+	/// @param value Value to check.
+	/// @param message Error message.
+	/// @param params Optional error message parameters.
+	/// @param <T> Type of value.
+	/// @return Value if it is not null.
+	/// @throws NullPointerException If `value` is null.
 	public static <T> T notNull(T value, String message, Object... params) {
 		if (value == null) {
 			throw new NullPointerException(format(message, params));
@@ -53,16 +49,14 @@ public final class PreConditions {
 		return value;
 	}
 
-	/**
-	 * Ensure that given {@code value} is not {@code null}, empty.
-	 *
-	 * @param value Value to check.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @return Value if it is not {@code null}, empty.
-	 * @throws NullPointerException If {@code value} is null.
-	 * @throws IllegalArgumentException If {@code value} is empty.
-	 */
+	/// Ensure that given `value` is not `null`, empty.
+	///
+	/// @param value Value to check.
+	/// @param message Error message.
+	/// @param params Optional error message parameters.
+	/// @return Value if it is not `null`, empty.
+	/// @throws NullPointerException If `value` is null.
+	/// @throws IllegalArgumentException If `value` is empty.
 	public static String notEmpty(String value, String message, Object... params) {
 		notNull(value, message, params);
 
@@ -73,16 +67,14 @@ public final class PreConditions {
 		return value;
 	}
 
-	/**
-	 * Ensure that given {@code value} is not {@code null}, empty or blank.
-	 *
-	 * @param value Value to check.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @return Value if it is not {@code null}, empty or blank.
-	 * @throws NullPointerException If {@code value} is null.
-	 * @throws IllegalArgumentException If {@code value} is empty or blank.
-	 */
+	/// Ensure that given `value` is not `null`, empty or blank.
+	///
+	/// @param value Value to check.
+	/// @param message Error message.
+	/// @param params Optional error message parameters.
+	/// @return Value if it is not `null`, empty or blank.
+	/// @throws NullPointerException If `value` is null.
+	/// @throws IllegalArgumentException If `value` is empty or blank.
 	public static String notBlank(String value, String message, Object... params) {
 		notNull(value, message, params);
 
@@ -93,16 +85,14 @@ public final class PreConditions {
 		return value;
 	}
 
-	/**
-	 * Ensure that given {@code value} is not blank.
-	 *
-	 * @param value Value to check.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @return Value if it is not {@code null}, empty or blank.
-	 * @throws NullPointerException If {@code value} is null.
-	 * @throws IllegalArgumentException If {@code value} is empty or blank.
-	 */
+	/// Ensure that given `value` is not blank.
+	///
+	/// @param value Value to check.
+	/// @param message Error message.
+	/// @param params Optional error message parameters.
+	/// @return Value if it is not `null`, empty or blank.
+	/// @throws NullPointerException If `value` is null.
+	/// @throws IllegalArgumentException If `value` is empty or blank.
 	public static char notBlank(char value, String message, Object... params) {
 		if (Character.isWhitespace(value)) {
 			throw new IllegalArgumentException(format(message, params));
@@ -111,18 +101,16 @@ public final class PreConditions {
 		return value;
 	}
 
-	/**
-	 * Ensure that given {@code value} is not {@code null}, empty or blank and starts with
-	 * given {@code prefix}.
-	 *
-	 * @param value Value to check.
-	 * @param prefix The prefix to look for.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 * @return Value if it is not {@code null}, empty or blank.
-	 * @throws NullPointerException If {@code value} is null.
-	 * @throws IllegalArgumentException If {@code value} is empty, blank, or does not start with {@code prefix}.
-	 */
+	/// Ensure that given `value` is not `null`, empty or blank and starts with
+	/// given `prefix`.
+	///
+	/// @param value Value to check.
+	/// @param prefix The prefix to look for.
+	/// @param message Error message.
+	/// @param params Optional error message parameters.
+	/// @return Value if it is not `null`, empty or blank.
+	/// @throws NullPointerException If `value` is null.
+	/// @throws IllegalArgumentException If `value` is empty, blank, or does not start with `prefix`.
 	public static String startsWith(String value, String prefix, String message, Object... params) {
 		notBlank(prefix, "Prefix should be defined");
 		notBlank(value, message, params);
@@ -132,13 +120,11 @@ public final class PreConditions {
 		return value;
 	}
 
-	/**
-	 * Check argument condition and throw {@link IllegalArgumentException} if {@code condition} is {@code false}.
-	 *
-	 * @param condition The result of the condition to verify.
-	 * @param message Error message.
-	 * @param params Optional error message parameters.
-	 */
+	/// Check argument condition and throw [IllegalArgumentException] if `condition` is `false`.
+	///
+	/// @param condition The result of the condition to verify.
+	/// @param message Error message.
+	/// @param params Optional error message parameters.
 	public static void checkArgument(boolean condition, String message, Object... params) {
 		if (!condition) {
 			throw new IllegalArgumentException(format(message, params));

@@ -27,26 +27,22 @@ package com.github.mjeanroy.dbunit.core.jdbc;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * Instance of {@link JdbcForeignKeyManager} that will auto-detect the underlying implementation
- * to use based on the JDBC connection URL.
- *
- * @see PostgresForeignKeyManager
- * @see MySQLForeignKeyManager
- * @see MariaDBForeignKeyManager
- * @see MsSQLForeignKeyManager
- * @see OracleForeignKeyManager
- * @see H2ForeignKeyManager
- * @see HsqldbForeignKeyManager
- */
+/// Instance of [JdbcForeignKeyManager] that will auto-detect the underlying implementation
+/// to use based on the JDBC connection URL.
+///
+/// @see PostgresForeignKeyManager
+/// @see MySQLForeignKeyManager
+/// @see MariaDBForeignKeyManager
+/// @see MsSQLForeignKeyManager
+/// @see OracleForeignKeyManager
+/// @see H2ForeignKeyManager
+/// @see HsqldbForeignKeyManager
 public final class AutoDetectForeignKeyManager implements JdbcForeignKeyManager {
 
 	private JdbcDriver driver;
 	private JdbcForeignKeyManager fkManager;
 
-	/**
-	 * Create foreign key manager.
-	 */
+	/// Create foreign key manager.
 	public AutoDetectForeignKeyManager() {
 		super();
 	}

@@ -29,10 +29,8 @@ import com.github.mjeanroy.dbunit.exception.YamlException;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * Abstract implementation of {@link YamlParser} that create {@link Map} from
- * given YAML Inputs.
- */
+/// Abstract implementation of [YamlParser] that create [Map] from
+/// given YAML Inputs.
 abstract class AbstractYamlParser implements YamlParser {
 
 	AbstractYamlParser() {

@@ -33,16 +33,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Database operation to execute before test is executed.
- *
- * This annotation can be used on:
- * <ul>
- *   <li>Method (i.e test method).</li>
- *   <li>Class (i.e test class).</li>
- *   <li>Package (i.e package where test classes belongs)</li>
- * </ul>
- */
+/// Database operation to execute before test is executed.
+///
+/// This annotation can be used on:
+/// - Method (i.e test method).
+/// - Class (i.e test class).
+/// - Package (i.e package where test classes belongs)
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -52,10 +48,8 @@ import java.lang.annotation.Target;
 })
 public @interface DbUnitSetup {
 
-	/**
-	 * Operation to load before test.
-	 *
-	 * @return Set of operation.
-	 */
+	/// Operation to load before test.
+	///
+	/// @return Set of operation.
 	DbUnitOperation value() default DbUnitOperation.CLEAN_INSERT;
 }

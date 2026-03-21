@@ -34,39 +34,27 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-/**
- * Implementation of {@link ResourceScanner} scanning a file directory to get the list
- * of sub-resources (use {@link File#listFiles()} internally.
- *
- * <br>
- *
- * Note that the method {@link Resource#toFile()} <strong>must</strong> return a
- * valid {@link File} instance.
- */
+/// Implementation of [ResourceScanner] scanning a file directory to get the list
+/// of sub-resources (use [File#listFiles()] internally.
+///
+/// Note that the method [Resource#toFile()] **must** return a
+/// valid [File] instance.
 class FileResourceScanner extends AbstractResourceScanner {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(FileResourceScanner.class);
 
-	/**
-	 * Singleton instance.
-	 */
+	/// Singleton instance.
 	private static final FileResourceScanner INSTANCE = new FileResourceScanner();
 
-	/**
-	 * Get the singleton instance.
-	 *
-	 * @return The instance.
-	 */
+	/// Get the singleton instance.
+	///
+	/// @return The instance.
 	static FileResourceScanner getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * Private constructor, use {@link #getInstance()} instead.
-	 */
+	/// Private constructor, use [#getInstance()] instead.
 	private FileResourceScanner() {
 	}
 

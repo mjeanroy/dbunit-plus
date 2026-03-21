@@ -31,41 +31,31 @@ import org.junit.runners.model.InitializationError;
 
 import java.util.List;
 
-/**
- * Implementation of JUnit {@link org.junit.runner.Runner} to fill and clear
- * database between each tests.
- *
- * <br>
- *
- * Basically, this class add {@link DbUnitRule} to the test class when this runner is
- * initialized.
- *
- * <br>
- *
- * DbUnit configuration should be set using {@link DbUnitConnection} configuration:
- *
- * <pre><code>
- *
- *   &#64;RunWith(DbUnitJunitRunner.class)
- *   &#64;DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
- *   &#64;bUnitDataSet("classpath:/dataset/xml")
- *   public class MyDaoTest {
- *     &#64;Test
- *     public void test1() {
- *       // ...
- *     }
- *   }
- *
- * </code></pre>
- */
+/// Implementation of JUnit [org.junit.runner.Runner] to fill and clear
+/// database between each tests.
+///
+/// Basically, this class add [DbUnitRule] to the test class when this runner is
+/// initialized.
+///
+/// DbUnit configuration should be set using [DbUnitConnection] configuration:
+///
+/// ```
+///   @RunWith(DbUnitJunitRunner.class)
+///   @DbUnitConnection(url = "jdbc:hsqldb:mem:testdb", user = "SA", password = "")
+///   @bUnitDataSet("classpath:/dataset/xml")
+///   public class MyDaoTest {
+///     @Test
+///     public void test1() {
+///       // ...
+///     }
+///   }
+/// ```
 public class DbUnitJunitRunner extends BlockJUnit4ClassRunner {
 
-	/**
-	 * Create runner.
-	 *
-	 * @param klass Running class.
-	 * @throws InitializationError If an error occurred while creating Jdbc connection factory.
-	 */
+	/// Create runner.
+	///
+	/// @param klass Running class.
+	/// @throws InitializationError If an error occurred while creating Jdbc connection factory.
 	public DbUnitJunitRunner(Class<?> klass) throws InitializationError {
 		super(klass);
 	}

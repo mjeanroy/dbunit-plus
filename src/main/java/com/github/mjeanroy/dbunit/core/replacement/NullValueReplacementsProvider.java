@@ -24,16 +24,12 @@
 
 package com.github.mjeanroy.dbunit.core.replacement;
 
-/**
- * A {@link ReplacementsProvider} that will map {@code "[NULL]"} or {@code "[null]"} to {@code null}.
- */
+/// A [ReplacementsProvider] that will map `"[NULL]"` or `"[null]"` to `null`.
 public class NullValueReplacementsProvider implements ReplacementsProvider {
 
 	private static final Replacements REPLACEMENTS = Replacements.builder().put("[NULL]").put("[null]").build();
 
-	/**
-	 * Create provider.
-	 */
+	/// Create provider.
 	public NullValueReplacementsProvider() {
 	}
 

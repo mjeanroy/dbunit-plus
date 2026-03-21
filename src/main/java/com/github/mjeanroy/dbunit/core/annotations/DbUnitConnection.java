@@ -31,9 +31,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Set the DBUnit connection configuration.
- */
+/// Set the DBUnit connection configuration.
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -42,32 +40,24 @@ import java.lang.annotation.Target;
 })
 public @interface DbUnitConnection {
 
-	/**
-	 * Database driver to use: default is the empty string and the driver will automatically
-	 * be selected, based on the connection URL.
-	 *
-	 * @return Database driver.
-	 */
+	/// Database driver to use: default is the empty string and the driver will automatically
+	/// be selected, based on the connection URL.
+	///
+	/// @return Database driver.
 	String driver() default "";
 
-	/**
-	 * Get JDBC Connection URL.
-	 *
-	 * @return Connection URL.
-	 */
+	/// Get JDBC Connection URL.
+	///
+	/// @return Connection URL.
 	String url();
 
-	/**
-	 * Get JDBC user name.
-	 *
-	 * @return User.
-	 */
+	/// Get JDBC user name.
+	///
+	/// @return User.
 	String user();
 
-	/**
-	 * Get JDBC password.
-	 *
-	 * @return Password.
-	 */
+	/// Get JDBC password.
+	///
+	/// @return Password.
 	String password();
 }

@@ -59,10 +59,8 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 
-/**
- * A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
- * before all/after all tests.
- */
+/// A custom and simple JUnit Jupiter extension to start and shutdown an embedded database
+/// before all/after all tests.
 class TestContainersExtension implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback, AfterEachCallback, ExecutionCondition, ParameterResolver {
 
 	private static final Namespace NAMESPACE = Namespace.create(TestContainersExtension.class);

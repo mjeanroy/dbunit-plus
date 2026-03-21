@@ -42,31 +42,24 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.checkArgumen
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetFactory.createDataSet;
 
-/**
- * Directory dataSet.
- * This dataSet implementation will scan directory, extract all files
- * and create appropriate dataSet implementation for each files.
- */
+/// Directory dataSet.
+///
+/// This dataSet implementation will scan directory, extract all files
+/// and create appropriate dataSet implementation for each files.
 public class DirectoryDataSet implements IDataSet {
 
-	/**
-	 * Directory.
-	 */
+	/// Directory.
 	private final Resource resource;
 
-	/**
-	 * Internal data set.
-	 */
+	/// Internal data set.
 	private final CompositeDataSet dataSet;
 
-	/**
-	 * Create dataSet.
-	 *
-	 * @param resource Directory.
-	 * @param caseSensitiveTableNames Case sensitivity flag.
-	 * @param comparator File comparator, used to sort files in given order.
-	 * @throws DataSetException If an error occurred during dataset creation.
-	 */
+	/// Create dataSet.
+	///
+	/// @param resource Directory.
+	/// @param caseSensitiveTableNames Case sensitivity flag.
+	/// @param comparator File comparator, used to sort files in given order.
+	/// @throws DataSetException If an error occurred during dataset creation.
 	DirectoryDataSet(Resource resource, boolean caseSensitiveTableNames, Comparator<Resource> comparator) throws DataSetException {
 		notNull(comparator, "Comparator should not be null");
 		checkArgument(resource.isDirectory(), "Resource should be a directory");
@@ -123,11 +116,9 @@ public class DirectoryDataSet implements IDataSet {
 		return dataSet.isCaseSensitiveTableNames();
 	}
 
-	/**
-	 * Get {@link #resource}.
-	 *
-	 * @return {@link #resource}
-	 */
+	/// Get [#resource].
+	///
+	/// @return Returns [#resource]
 	public Resource getResource() {
 		return resource;
 	}

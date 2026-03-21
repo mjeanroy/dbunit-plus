@@ -52,69 +52,49 @@ import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Generic class to run DbUnit before/after test method invocation.
- */
+/// Generic class to run DbUnit before/after test method invocation.
 public class DbUnitRunner {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(DbUnitRunner.class);
 
-	/**
-	 * Test Class.
-	 */
+	/// Test Class.
 	private final Class<?> testClass;
 
-	/**
-	 * The test class context, containing initialization context.
-	 */
+	/// The test class context, containing initialization context.
 	private final DbUnitClassContext ctx;
 
-	/**
-	 * Factory used to retrieve SQL connection before and
-	 * after execution of test method.
-	 */
+	/// Factory used to retrieve SQL connection before and
+	/// after execution of test method.
 	private final JdbcConnectionFactory factory;
 
-	/**
-	 * Create runner.
-	 *
-	 * <br>
-	 *
-	 * DbUnit DataSet will be automatically detected:
-	 * <ol>
-	 *   <li>If method to launch contains {@link DbUnitDataSet} annotation, it is used.</li>
-	 *   <li>If {@link DbUnitDataSet} annotation is not found, a log is displayed, but runner <strong>will not failed.</strong></li>
-	 * </ol>
-	 *
-	 * @param testClass Class to test.
-	 * @param factory Factory to get new SQL connection before and after test methods.
-	 * @throws DbUnitException If dataSet parsing failed.
-	 */
+	/// Create runner.
+	///
+	/// DbUnit DataSet will be automatically detected:
+	/// 1. If method to launch contains [DbUnitDataSet] annotation, it is used.
+	/// 2. If [DbUnitDataSet] annotation is not found, a log is displayed, but runner **will not failed.**
+	///
+	/// @param testClass Class to test.
+	/// @param factory Factory to get new SQL connection before and after test methods.
+	/// @throws DbUnitException If dataSet parsing failed.
 	public DbUnitRunner(Class<?> testClass, JdbcConnectionFactory factory) {
 		this(testClass, notNull(factory, "JDBC Connection Factory must be specified"), DbUnitClassContextFactory.from(testClass));
 	}
 
-	/**
-	 * Create runner.
-	 *
-	 * @param testClass Class to test.
-	 * @param dataSource DataSource to get new SQL connection before and after test methods.
-	 * @throws DbUnitException If dataSet parsing failed.
-	 * @see #DbUnitRunner
-	 */
+	/// Create runner.
+	///
+	/// @param testClass Class to test.
+	/// @param dataSource DataSource to get new SQL connection before and after test methods.
+	/// @throws DbUnitException If dataSet parsing failed.
+	/// @see #DbUnitRunner
 	public DbUnitRunner(Class<?> testClass, DataSource dataSource) {
 		this(testClass, new JdbcDataSourceConnectionFactory(notNull(dataSource, "DataSource must not be null")));
 	}
 
-	/**
-	 * Create runner and extract the JDBC Connection factory from the {@code testClass} that should
-	 * be annotated with {@link DbUnitConnection}.
-	 *
-	 * @param testClass The tested class.
-	 */
+	/// Create runner and extract the JDBC Connection factory from the `testClass` that should
+	/// be annotated with [DbUnitConnection].
+	///
+	/// @param testClass The tested class.
 	public DbUnitRunner(Class<?> testClass) {
 		this(testClass, null, DbUnitClassContextFactory.from(testClass));
 	}
@@ -129,48 +109,38 @@ public class DbUnitRunner {
 		runLiquibase(this.factory);
 	}
 
-	/**
-	 * Load data set before test execution:
-	 * <ol>
-	 *   <li>Get new SQL connection.</li>
-	 *   <li>Load DataSet and execute setup operation.</li>
-	 *   <li>Close SQL connection.</li>
-	 * </ol>
-	 *
-	 * @param testMethod Method to execute.
-	 */
+	/// Load data set before test execution:
+	/// <ol>
+	///     - Get new SQL connection.
+	///     - Load DataSet and execute setup operation.
+	///     - Close SQL connection.
+	/// </ol>
+	///
+	/// @param testMethod Method to execute.
 	public void beforeTest(Method testMethod) {
 		setupOrTearDown(testMethod, SetupDbOperation.getInstance());
 	}
 
-	/**
-	 * Unload data set after test execution:
-	 * <ol>
-	 *   <li>Get new SQL connection.</li>
-	 *   <li>Remove DataSet and execute tear down operation.</li>
-	 *   <li>Close SQL connection.</li>
-	 * </ol>
-	 *
-	 * @param testMethod Executed method.
-	 */
+	/// Unload data set after test execution:
+	/// 1. Get new SQL connection.
+	/// 2. Remove DataSet and execute tear down operation.
+	/// 3. Close SQL connection.
+	///
+	/// @param testMethod Executed method.
 	public void afterTest(Method testMethod) {
 		setupOrTearDown(testMethod, TearDownDbOperation.getInstance());
 	}
 
-	/**
-	 * Get {@link #factory}
-	 *
-	 * @return {@link #factory}
-	 */
+	/// Get [#factory]
+	///
+	/// @return Returns [#factory]
 	public JdbcConnectionFactory getFactory() {
 		return factory;
 	}
 
-	/**
-	 * Get JDBC Connection to the target database.
-	 *
-	 * @return SQL Connection.
-	 */
+	/// Get JDBC Connection to the target database.
+	///
+	/// @return SQL Connection.
 	public Connection getConnection() {
 		return factory.getConnection();
 	}
@@ -242,26 +212,23 @@ public class DbUnitRunner {
 		}
 	}
 
-	/**
-	 * Read DbUnit configuration interceptor, returns {@code null} if no configuration is set.
-	 *
-	 * @param method The method to scan for.
-	 * @return The interceptor, {@code null} if it is not configured.
-	 * @throws DbUnitException If instantiating the interceptor failed.
-	 */
+	/// Read DbUnit configuration interceptor, returns `null` if no configuration is set.
+	///
+	/// @param method The method to scan for.
+	/// @return The interceptor, `null` if it is not configured.
+	/// @throws DbUnitException If instantiating the interceptor failed.
 	private Config readConfig(Method method) {
 		DbUnitConfig annotation = Annotations.findAnnotation(method, DbUnitConfig.class);
 		return annotation == null ? ctx.getConfig() : DbUnitAnnotationsParser.readConfig(annotation);
 	}
 
-	/**
-	 * Read DbUnit from tested method.
-	 * If method is not annotated with {@link DbUnitDataSet}, dataSet from
-	 * class annotation is returned.
-	 *
-	 * @param method Tested method.
-	 * @return DataSet.
-	 */
+	/// Read DbUnit from tested method.
+	///
+	/// If method is not annotated with [DbUnitDataSet], dataSet from
+	/// class annotation is returned.
+	///
+	/// @param method Tested method.
+	/// @return DataSet.
 	private IDataSet readDataSet(Method method) {
 		final IDataSet parentDataSet = ctx.getDataSet();
 		if (method == null) {
@@ -273,13 +240,12 @@ public class DbUnitRunner {
 		return isAnnotated ? DbUnitAnnotationsParser.readDataSet(annotations, parentDataSet) : parentDataSet;
 	}
 
-	/**
-	 * Run SQL initialization scripts when runner is initialized.
-	 * If a scripts failed, then entire process is stopped and an instance
-	 * of {@link DbUnitException} if thrown.
-	 *
-	 * @param factory The JDBC Connection Factory.
-	 */
+	/// Run SQL initialization scripts when runner is initialized.
+	///
+	/// If a scripts failed, then entire process is stopped and an instance
+	/// of [DbUnitException] if thrown.
+	///
+	/// @param factory The JDBC Connection Factory.
 	private void runSqlScript(JdbcConnectionFactory factory) {
 		SqlScriptExecutor executor = new SqlScriptExecutor(factory);
 		ctx.getInitScripts().forEach(
@@ -287,13 +253,12 @@ public class DbUnitRunner {
 		);
 	}
 
-	/**
-	 * Run liquibase changelogs scripts when runner is initialized.
-	 * If a scripts failed, then entire process is stopped and an instance
-	 * of {@link DbUnitException} if thrown.
-	 *
-	 * @param factory The JDBC Connection Factory.
-	 */
+	/// Run liquibase changelogs scripts when runner is initialized.
+	///
+	/// If a scripts failed, then entire process is stopped and an instance
+	/// of [DbUnitException] if thrown.
+	///
+	/// @param factory The JDBC Connection Factory.
 	private void runLiquibase(JdbcConnectionFactory factory) {
 		LiquibaseChangeLogExecutor executor = new LiquibaseChangeLogExecutor(factory);
 		ctx.getLiquibaseChangeLogs().forEach(
@@ -301,14 +266,13 @@ public class DbUnitRunner {
 		);
 	}
 
-	/**
-	 * Choose connection factory to use: the one given in parameter or the one from the DbUnit test context.
-	 * If no connection factory can be found, a {@link DbUnitException} will be thrown.
-	 *
-	 * @param connectionFactory The (explicit) connection factory.
-	 * @param ctx The DbUnit test context.
-	 * @return The connection factory.
-	 */
+	/// Choose connection factory to use: the one given in parameter or the one from the DbUnit test context.
+	///
+	/// If no connection factory can be found, a [DbUnitException] will be thrown.
+	///
+	/// @param connectionFactory The (explicit) connection factory.
+	/// @param ctx The DbUnit test context.
+	/// @return The connection factory.
 	private static JdbcConnectionFactory readConnectionFactory(JdbcConnectionFactory connectionFactory, DbUnitClassContext ctx) {
 		if (connectionFactory != null) {
 			return connectionFactory;

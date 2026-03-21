@@ -29,47 +29,36 @@ import com.github.mjeanroy.dbunit.core.resources.Resource;
 import com.github.mjeanroy.dbunit.json.JsonsFactory;
 import org.dbunit.dataset.DataSetException;
 
-/**
- * Builder for {@link JsonDataSet} instances.
- *
- * <br>
- *
- * If not set, JSON parser will be created using classpath detection.
- * Supported implementations are (checked in order):
- * <ul>
- *   <li>Jackson 2</li>
- *   <li>Gson</li>
- *   <li>Jackson 1</li>
- * </ul>
- */
+/// Builder for [JsonDataSet] instances.
+///
+/// If not set, JSON parser will be created using classpath detection.
+///
+/// Supported implementations are (checked in order):
+/// - Jackson 2
+/// - Gson
+/// - Jackson 1
 public class JsonDataSetBuilder extends AbstractParseableDataSetBuilder<
 	JsonDataSetBuilder,
 	JsonDatasetParser,
 	JsonDataSet
 > {
 
-	/**
-	 * Create builder.
-	 */
+	/// Create builder.
 	public JsonDataSetBuilder() {
 		super();
 	}
 
-	/**
-	 * Create builder with JSON resource.
-	 *
-	 * @param resource JSON resource.
-	 */
+	/// Create builder with JSON resource.
+	///
+	/// @param resource JSON resource.
 	public JsonDataSetBuilder(Resource resource) {
 		super(resource);
 	}
 
-	/**
-	 * Initialize JSON resource.
-	 *
-	 * @param resource JSON resource.
-	 * @return Builder.
-	 */
+	/// Initialize JSON resource.
+	///
+	/// @param resource JSON resource.
+	/// @return Builder.
 	public JsonDataSetBuilder setJsonFile(Resource resource) {
 		return setResource(resource);
 	}

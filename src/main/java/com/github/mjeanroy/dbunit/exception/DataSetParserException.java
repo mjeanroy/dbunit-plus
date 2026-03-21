@@ -24,16 +24,12 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Exception thrown when DataSet cannot be parsed.
- */
+/// Exception thrown when DataSet cannot be parsed.
 public class DataSetParserException extends AbstractDbUnitException {
 
-	/**
-	 * Wrap original exception.
-	 *
-	 * @param ex Original Exception.
-	 */
+	/// Wrap original exception.
+	///
+	/// @param ex Original Exception.
 	public DataSetParserException(Exception ex) {
 		super(ex);
 	}

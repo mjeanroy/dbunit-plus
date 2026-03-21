@@ -37,15 +37,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Specify DBUnit test using:
- * <ul>
- *   <li>All dataset files located in: {@code /dataset}</li>
- *   <li>Default setup operation: {@link DbUnitOperation#CLEAN_INSERT}.</li>
- *   <li>Default teardown operation: {@link DbUnitOperation#TRUNCATE_TABLE}.</li>
- *   <li>Default value replacers ({@link NullValueReplacementsProvider}, {@link NowValueReplacementsProvider}, {@link CurrentTimestampValueReplacementsProvider} and {@link CurrentTimeValueReplacementsProvider}).</li>
- * </ul>
- */
+/// Specify DBUnit test using:
+/// - All dataset files located in: `/dataset`
+/// - Default setup operation: [DbUnitOperation#CLEAN_INSERT].
+/// - Default teardown operation: [DbUnitOperation#TRUNCATE_TABLE].
+/// - Default value replacers ([NullValueReplacementsProvider], [NowValueReplacementsProvider], [CurrentTimestampValueReplacementsProvider] and [CurrentTimeValueReplacementsProvider]).
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented

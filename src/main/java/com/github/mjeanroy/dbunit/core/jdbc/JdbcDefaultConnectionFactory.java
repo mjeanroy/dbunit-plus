@@ -33,22 +33,16 @@ import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 
-/**
- * Implementation of {@link JdbcConnectionFactory} to produce instance
- * of {@link Connection} from {@link JdbcConfiguration}.
- */
+/// Implementation of [JdbcConnectionFactory] to produce instance
+/// of [Connection] from [JdbcConfiguration].
 public class JdbcDefaultConnectionFactory extends AbstractJdbcConnectionFactory {
 
-	/**
-	 * JDBC Configuration.
-	 */
+	/// JDBC Configuration.
 	private final JdbcConfiguration configuration;
 
-	/**
-	 * Create new factory.
-	 *
-	 * @param configuration JDBC Configuration.
-	 */
+	/// Create new factory.
+	///
+	/// @param configuration JDBC Configuration.
 	public JdbcDefaultConnectionFactory(JdbcConfiguration configuration) {
 		super();
 		this.configuration = configuration;

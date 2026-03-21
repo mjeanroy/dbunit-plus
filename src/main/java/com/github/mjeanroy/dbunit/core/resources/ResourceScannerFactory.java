@@ -24,38 +24,30 @@
 
 package com.github.mjeanroy.dbunit.core.resources;
 
-/**
- * Static factories for {@link ResourceScanner}.
- */
+/// Static factories for [ResourceScanner].
 final class ResourceScannerFactory {
 
 	// Ensure non instantiation.
 	private ResourceScannerFactory() {
 	}
 
-	/**
-	 * Get file-system scanner.
-	 *
-	 * @return File Scanner.
-	 */
+	/// Get file-system scanner.
+	///
+	/// @return File Scanner.
 	static ResourceScanner fileScanner() {
 		return FileResourceScanner.getInstance();
 	}
 
-	/**
-	 * Get JAR scanner.
-	 *
-	 * @return JAR Scanner.
-	 */
+	/// Get JAR scanner.
+	///
+	/// @return JAR Scanner.
 	static ResourceScanner jarScanner() {
 		return JarResourceScanner.getInstance();
 	}
 
-	/**
-	 * Get NO-OP Scanner.
-	 *
-	 * @return No-Op scanner.
-	 */
+	/// Get NO-OP Scanner.
+	///
+	/// @return No-Op scanner.
 	static ResourceScanner noOpScanner() {
 		return NoOpResourceScanner.getInstance();
 	}

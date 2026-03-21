@@ -30,23 +30,19 @@ import com.github.mjeanroy.dbunit.exception.ResourceNotValidException;
 
 import java.util.Collection;
 
-/**
- * Scanner that can be used to get the list of sub-resources
- * of a given {@link Resource}.
- *
- * A scanner must always returns a non {@code null} list and the type of {@link Resource} is
- * implementation dependent (may be a {@link FileResource}, a {@link ClasspathResource}, etc.).
- */
+/// Scanner that can be used to get the list of sub-resources
+/// of a given [Resource].
+///
+/// A scanner must always returns a non `null` list and the type of [Resource] is
+/// implementation dependent (may be a [FileResource], a [ClasspathResource], etc.).
 interface ResourceScanner {
 
-	/**
-	 * Scan {@code resource} and returns the list of sub-resources.
-	 *
-	 * @param resource Resource to scan.
-	 * @return List of sub-resources.
-	 * @throws ResourceNotFoundException If {@code resource} does not exist.
-	 * @throws ResourceNotValidException If {@code resource} cannot be scanned.
-	 * @throws ResourceException If an unknown error is thrown.
-	 */
+	/// Scan `resource` and returns the list of sub-resources.
+	///
+	/// @param resource Resource to scan.
+	/// @return List of sub-resources.
+	/// @throws ResourceNotFoundException If `resource` does not exist.
+	/// @throws ResourceNotValidException If `resource` cannot be scanned.
+	/// @throws ResourceException If an unknown error is thrown.
 	Collection<Resource> scan(Resource resource);
 }

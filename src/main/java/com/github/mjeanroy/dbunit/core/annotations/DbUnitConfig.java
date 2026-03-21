@@ -38,42 +38,36 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation that can be used to customize DBUnit configuration
- * property when the DbUnit connection will be created.
- *
- * <p>
- *
- * For example:
- *
- * <pre><code>
- *
- *  &#64;DbUnitConfig(DefaultConfig.class)
- *   public class TestClass {
- *     &#64;Rule
- *     public DbUnitRule rule = new DbUnitRule(connectionFactory);
- *
- *     &#64;Test
- *     public void test1() {
- *     }
- *
- *     &#64;Test
- *     &#64;DbUnitDataSet("/dataset/xml/table1.xml")
- *     public void test2() {
- *     }
- *
- *     public static class DefaultConfig implements DbUnitConfigInterceptor {
- *       &#64;Override
- *       public void applyConfiguration(DatabaseConfig config) {
- *         config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
- *       }
- *     }
- *   }
- *
- * </code></pre>
- *
- * @see org.dbunit.database.DatabaseConfig
- */
+/// Annotation that can be used to customize DBUnit configuration
+/// property when the DbUnit connection will be created.
+///
+/// For example:
+///
+/// ```
+///  @DbUnitConfig(DefaultConfig.class)
+///  public class TestClass {
+///    @Rule
+///    public DbUnitRule rule = new DbUnitRule(connectionFactory);
+///
+///    @Test
+///    public void test1() {
+///    }
+///
+///    @Test
+///    @DbUnitDataSet("/dataset/xml/table1.xml")
+///    public void test2() {
+///    }
+///
+///    public static class DefaultConfig implements DbUnitConfigInterceptor {
+///      @Override
+///      public void applyConfiguration(DatabaseConfig config) {
+///        config.setProperty(DatabaseConfig.FEATURE_QUALIFIED_TABLE_NAMES, true);
+///      }
+///    }
+///  }
+/// ```
+///
+/// @see org.dbunit.database.DatabaseConfig
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
@@ -83,140 +77,101 @@ import java.lang.annotation.Target;
 })
 public @interface DbUnitConfig {
 
-	/**
-	 * Schema to use with DBUnit Connection.
-	 *
-	 * @return Schema.
-	 */
+	/// Schema to use with DBUnit Connection.
+	///
+	/// @return Schema.
 	String schema() default "";
 
-	/**
-	 * List of foreign key manager that can be used to:
-	 *
-	 * <ul>
-	 *   <li>Disable foreign keys before setup/teardown operations.</li>
-	 *   <li>Re-enable foreign keys after setup/teardown operations.</li>
-	 * </ul>
-	 *
-	 * @return Array of foreign key managers, each class must have an empty constructor to be initialized.
-	 * @see JdbcForeignKeyManager
-	 */
+	/// List of foreign key manager that can be used to:
+	/// - Disable foreign keys before setup/teardown operations.
+	/// - Re-enable foreign keys after setup/teardown operations.
+	///
+	/// @return Array of foreign key managers, each class must have an empty constructor to be initialized.
+	/// @see JdbcForeignKeyManager
 	Class<? extends JdbcForeignKeyManager>[] fkManagers() default {};
 
-	/**
-	 * The interceptor class that will be instantiated and executed before applying DbUnit dataset.
-	 *
-	 * @return The interceptor class.
-	 */
+	/// The interceptor class that will be instantiated and executed before applying DbUnit dataset.
+	///
+	/// @return The interceptor class.
 	Class<? extends DbUnitConfigInterceptor>[] value() default {};
 
-	/**
-	 * Enable or disable case sensitive table names.
-	 * If enabled, Dbunit handles all table names in a case sensitive way, default is {@code false}.
-	 *
-	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Enable or disable case sensitive table names, as specified in [DBUnit properties](http://www.dbunit.org/properties.html)
+	/// If enabled, Dbunit handles all table names in a case sensitive way, default is `false`.
+	///
+	/// @return Feature activation flag.
 	boolean caseSensitiveTableNames() default false;
 
-	/**
-	 * Enable or disable multiple schemas support.
-	 * If enabled, Dbunit access tables with names fully qualified by schema using this format: {@code "SCHEMA.TABLE"}.
-	 *
-	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Enable or disable multiple schemas support, as specified in [DBUnit properties](http://www.dbunit.org/properties.html).
+	/// If enabled, Dbunit access tables with names fully qualified by schema using this format: `"SCHEMA.TABLE"`.
+	///
+	/// @return Feature activation flag.
 	boolean qualifiedTableNames() default false;
 
-	/**
-	 * Enable or disable usage of JDBC batched statement by DbUnit, default is {@code false}.
-	 *
-	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Enable or disable usage of JDBC batched statement by DbUnit, default is `false`,
+	/// as specified in [DBUnit properties](http://www.dbunit.org/properties.html).
+	///
+	/// @return Feature activation flag.
 	boolean batchedStatements() default false;
 
-	/**
-	 * Enable or disable empty fields in dataset.
-	 *
-	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Enable or disable empty fields in dataset, as specified in [DBUnit properties](http://www.dbunit.org/properties.html).
+	///
+	/// @return Feature activation flag.
 	boolean allowEmptyFields() default false;
 
-	/**
-	 * Enable or disable the warning message displayed when DbUnit encounter an unsupported data type.
-	 *
-	 * @return Feature activation flag.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Enable or disable the warning message displayed when DbUnit encounter an unsupported data type, as
+	/// specified in [DBUnit properties](http://www.dbunit.org/properties.html).
+	///
+	/// @return Feature activation flag.
 	boolean datatypeWarning() default true;
 
-	/**
-	 * Integer object giving the statement fetch size for loading data into a result set table.
-	 *
-	 * @return The fetch size.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Integer object giving the statement fetch size for loading data into a result set table, as
+	/// specified in [DBUnit properties](http://www.dbunit.org/properties.html).
+	///
+	/// @return The fetch size.
 	int fetchSize() default 100;
 
-	/**
-	 * Integer object giving the size of batch updates.
-	 *
-	 * @return The batch size.
-	 * @see <a href="http://www.dbunit.org/properties.html">http://www.dbunit.org/properties.html</a>
-	 */
+	/// Integer object giving the size of batch updates, as
+	/// specified in [DBUnit properties](http://www.dbunit.org/properties.html).
+	///
+	/// @return The batch size.
 	int batchSize() default 100;
 
-	/**
-	 * Used to configure the DataType factory. You can replace the default factory to add support for non-standard database vendor data types.
-	 *
-	 * The following factories are currently available:
-	 * <ul>
-	 *   <li>{@code org.dbunit.ext.db2.Db2DataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.h2.H2DataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.hsqldb.HsqldbDataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.mckoi.MckoiDataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.mssql.MsSqlDataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.mysql.MySqlDataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.oracle.OracleDataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.oracle.Oracle10DataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.postgresql.PostgresqlDataTypeFactory}</li>
-	 *   <li>{@code org.dbunit.ext.netezza.NetezzaDataTypeFactory}</li>
-	 * </ul>
-	 *
-	 * Note that the {@link IDataTypeFactory} specified here must have a no-args constructor.
-	 *
-	 * @return The datatype factory.
-	 */
+	/// Used to configure the DataType factory. You can replace the default factory to add support for non-standard database vendor data types.
+	/// The following factories are currently available:
+	/// - [org.dbunit.ext.db2.Db2DataTypeFactory]
+	/// - [org.dbunit.ext.h2.H2DataTypeFactory]
+	/// - [org.dbunit.ext.hsqldb.HsqldbDataTypeFactory]
+	/// - [org.dbunit.ext.mckoi.MckoiDataTypeFactory]
+	/// - [org.dbunit.ext.mssql.MsSqlDataTypeFactory]
+	/// - [org.dbunit.ext.mysql.MySqlDataTypeFactory]
+	/// - [org.dbunit.ext.oracle.OracleDataTypeFactory]
+	/// - [org.dbunit.ext.oracle.Oracle10DataTypeFactory]
+	/// - [org.dbunit.ext.postgresql.PostgresqlDataTypeFactory]
+	/// - [org.dbunit.ext.netezza.NetezzaDataTypeFactory]
+	///
+	/// Note that the [IDataTypeFactory] specified here must have a no-args constructor.
+	///
+	/// @return The datatype factory.
 	Class<? extends IDataTypeFactory> datatypeFactory() default AutoDetectDataTypeFactory.class;
 
-	/**
-	 * Used to configure the handler used to control database metadata related methods.
-	 *
-	 * The following RDBMS specific handlers are currently available:
-	 * <ul>
-	 *   <li>{@code org.dbunit.ext.db2.Db2MetadataHandler}</li>
-	 *   <li>{@code org.dbunit.ext.mysql.MySqlMetadataHandler}</li>
-	 *   <li>{@code org.dbunit.ext.netezza.NetezzaMetadataHandler}</li>
-	 * </ul>
-	 *
-	 * For all others the default handler should do the job: {@link DefaultMetadataHandler}.
-	 *
-	 * Note that the {@link IMetadataHandler} specified here must have a no-args constructor.
-	 *
-	 * @return The metadata handler implementation.
-	 */
+	/// Used to configure the handler used to control database metadata related methods.
+	/// The following RDBMS specific handlers are currently available:
+	/// - [org.dbunit.ext.db2.Db2MetadataHandler]
+	/// - [org.dbunit.ext.mysql.MySqlMetadataHandler]
+	/// - [org.dbunit.ext.netezza.NetezzaMetadataHandler]
+	///
+	/// For all others the default handler should do the job: [DefaultMetadataHandler].
+	/// Note that the [IMetadataHandler] specified here must have a no-args constructor.
+	///
+	/// @return The metadata handler implementation.
 	Class<? extends IMetadataHandler> metadataHandler() default DefaultMetadataHandler.class;
 
-	/**
-	 * Implementation of {@link IDataTypeFactory} that should not be used publicly
-	 * and where all methods will throw {@link UnsupportedOperationException}.
-	 *
-	 * This class should only be used through the {@link #datatypeFactory()} annotation method,
-	 * specifying that the test runner should load the {@link IDataTypeFactory} implementation
-	 * related to the underlying database.
-	 */
+	/// Implementation of [IDataTypeFactory] that should not be used publicly
+	/// and where all methods will throw [UnsupportedOperationException].
+	///
+	/// This class should only be used through the [#datatypeFactory()] annotation method,
+	/// specifying that the test runner should load the [IDataTypeFactory] implementation
+	/// related to the underlying database.
 	class AutoDetectDataTypeFactory implements IDataTypeFactory {
 		private AutoDetectDataTypeFactory() {
 		}

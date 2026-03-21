@@ -26,25 +26,19 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can enable/disable the {@code "allowEmptyFields"} feature of DbUnit.
- *
- * @see DatabaseConfig#FEATURE_ALLOW_EMPTY_FIELDS
- */
+/// An interceptor that can enable/disable the `"allowEmptyFields"` feature of DbUnit.
+///
+/// @see DatabaseConfig#FEATURE_ALLOW_EMPTY_FIELDS
 public final class DbUnitAllowEmptyFieldsInterceptor extends AbstractDbUnitPropertyInterceptor<Boolean> {
 
-	/**
-	 * Create the interceptor, the feature is enabled by default.
-	 */
+	/// Create the interceptor, the feature is enabled by default.
 	public DbUnitAllowEmptyFieldsInterceptor() {
 		this(true);
 	}
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param allowEmptyFields Feature activation flag: {@code true} to enable feature, {@code false} otherwise.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param allowEmptyFields Feature activation flag: `true` to enable feature, `false` otherwise.
 	public DbUnitAllowEmptyFieldsInterceptor(boolean allowEmptyFields) {
 		super(DatabaseConfig.FEATURE_ALLOW_EMPTY_FIELDS, allowEmptyFields);
 	}

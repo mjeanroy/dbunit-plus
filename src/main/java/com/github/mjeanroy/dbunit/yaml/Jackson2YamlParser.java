@@ -30,47 +30,33 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * {@link YamlParser} implementation based on Jackson 2.x
- * {@link ObjectMapper} with {@link YAMLFactory}.
- *
- * <p>
- * This parser delegates YAML deserialization to a statically configured
- * {@link ObjectMapper} backed by a {@link YAMLFactory}. The YAML content
- * is converted into a {@code Map<String, Object>} representing the root
- * YAML mapping.
- * </p>
- *
- * <p>
- * This implementation is thread-safe since it relies on a single shared
- * {@link ObjectMapper} instance and exposes a singleton instance via
- * {@link #getInstance()}.
- * </p>
- */
+/// [YamlParser] implementation based on Jackson 2.x
+/// [ObjectMapper] with [YAMLFactory].
+///
+/// This parser delegates YAML deserialization to a statically configured
+/// [ObjectMapper] backed by a [YAMLFactory]. The YAML content
+/// is converted into a `Map<String, Object>` representing the root
+/// YAML mapping.
+///
+/// This implementation is thread-safe since it relies on a single shared
+/// [ObjectMapper] instance and exposes a singleton instance via
+/// [#getInstance()].
 class Jackson2YamlParser extends AbstractYamlParser implements YamlParser {
 
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link Jackson2YamlParser} instance
-	 */
+	/// Return the singleton instance of this parser.
+	///
+	/// @return the shared [Jackson2YamlParser] instance
 	static Jackson2YamlParser getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * {@link ObjectMapper} instance configured with
-	 * a {@link YAMLFactory} to parse YAML input.
-	 */
+	/// [ObjectMapper] instance configured with
+	/// a [YAMLFactory] to parse YAML input.
 	private final ObjectMapper objectMapper;
 
-	/**
-	 * Create a new {@link Jackson2YamlParser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 */
+	/// Create a new [Jackson2YamlParser].
+	///
+	/// Constructor is private to enforce singleton usage.
 	private Jackson2YamlParser(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 	}

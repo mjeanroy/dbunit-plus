@@ -24,27 +24,21 @@
 
 package com.github.mjeanroy.dbunit.commons.lang;
 
-/**
- * Static Objects Utilities.
- */
+/// Static Objects Utilities.
 public final class Objects {
 
 	// Ensure non instantiation.
 	private Objects() {
 	}
 
-	/**
-	 * Get first non {@code null} value:
-	 * <ol>
-	 *   <li>If {@code o1} is not {@code null}, it is returned.</li>
-	 *   <li>Otherwise, return {@code o2}.</li>
-	 * </ol>
-	 *
-	 * @param o1 First value.
-	 * @param o2 Second value.
-	 * @param <T> Type of values.
-	 * @return First non {@code null} value.
-	 */
+	/// Get first non `null` value:
+	/// - If `o1` is not `null`, it is returned.
+	/// - Otherwise, return `o2`.
+	///
+	/// @param o1 First value.
+	/// @param o2 Second value.
+	/// @param <T> Type of values.
+	/// @return First non `null` value.
 	public static <T> T firstNonNull(T o1, T o2) {
 		return o1 == null ? o2 : o1;
 	}

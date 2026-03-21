@@ -26,18 +26,14 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can set the {@code "fetchSize"} property of DbUnit.
- *
- * @see DatabaseConfig#PROPERTY_FETCH_SIZE
- */
+/// An interceptor that can set the `"fetchSize"` property of DbUnit.
+///
+/// @see DatabaseConfig#PROPERTY_FETCH_SIZE
 public final class DbUnitFetchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> {
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param fetchSize The fetch size value.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param fetchSize The fetch size value.
 	public DbUnitFetchSizeInterceptor(int fetchSize) {
 		super(DatabaseConfig.PROPERTY_FETCH_SIZE, fetchSize);
 	}

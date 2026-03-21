@@ -35,60 +35,43 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Map;
 
-/**
- * {@link JsonParser} implementation based on Jackson 1.x
- * {@link ObjectMapper}.
- *
- * <p>
- * This parser delegates JSON deserialization to a statically configured
- * {@link ObjectMapper} instance backed by a custom {@link MappingJsonFactory}.
- * The custom factory ensures that all created {@link org.codehaus.jackson.JsonParser}
- * instances are wrapped in a {@link CustomJsonParser} in order to normalize
- * numeric values.
- * </p>
- *
- * <p>
- * Integer and {@link Short} numeric values are automatically converted to
- * {@link Long} to ensure consistent number handling across JSON parsing
- * implementations.
- * </p>
- *
- * <p>
- * This implementation is thread-safe as it relies on a single shared
- * {@link ObjectMapper} instance and exposes a singleton instance via
- * {@link #getInstance()}.
- * </p>
- */
+/// [JsonParser] implementation based on Jackson 1.x
+/// [ObjectMapper].
+///
+/// This parser delegates JSON deserialization to a statically configured
+/// [ObjectMapper] instance backed by a custom [MappingJsonFactory].
+/// The custom factory ensures that all created [org.codehaus.jackson.JsonParser]
+/// instances are wrapped in a [CustomJsonParser] in order to normalize
+/// numeric values.
+///
+/// Integer and [Short] numeric values are automatically converted to
+/// [Long] to ensure consistent number handling across JSON parsing
+/// implementations.
+///
+///
+/// This implementation is thread-safe as it relies on a single shared
+/// [ObjectMapper] instance and exposes a singleton instance via
+/// [#getInstance()].
 class Jackson1Parser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link Jackson1Parser} instance.
-	 */
+	/// Return the singleton instance of this parser.
+	///
+	/// @return the shared [Jackson1Parser] instance.
 	static Jackson1Parser getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * Shared {@link ObjectMapper} instance used to deserialize JSON content.
-	 *
-	 * <p>
-	 * The mapper is configured with a {@link CustomJsonFactory} to ensure
-	 * numeric normalization during parsing.
-	 * </p>
-	 */
+	/// Shared [ObjectMapper] instance used to deserialize JSON content.
+	///
+	/// The mapper is configured with a [CustomJsonFactory] to ensure
+	/// numeric normalization during parsing.
 	private final ObjectMapper objectMapper;
 
-	/**
-	 * Create a new {@link Jackson1Parser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 *
-	 * @param objectMapper The Jackson 1.X object mapper.
-	 */
+	/// Create a new [Jackson1Parser].
+	///
+	/// Constructor is private to enforce singleton usage.
+	///
+	/// @param objectMapper The Jackson 1.X object mapper.
 	private Jackson1Parser(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
 	}

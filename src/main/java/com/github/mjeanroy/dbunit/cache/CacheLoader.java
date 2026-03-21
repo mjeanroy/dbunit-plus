@@ -24,22 +24,18 @@
 
 package com.github.mjeanroy.dbunit.cache;
 
-/**
- * Cache loader: the role of a loader is to compute the value
- * to store in a cache.
- *
- * @param <K> Type of entry.
- * @param <V> Type of value.
- */
+/// Cache loader: the role of a loader is to compute the value
+/// to store in a cache.
+///
+/// @param <K> Type of entry.
+/// @param <V> Type of value.
 public interface CacheLoader<K, V> {
 
-	/**
-	 * Compute value to store in a cache.
-	 * Implementations should not allow {@code null} values.
-	 *
-	 * @param key Cache entry.
-	 * @return Cache value.
-	 * @throws Exception If an error occurred during computation.
-	 */
+	/// Compute value to store in a cache.
+	/// Implementations should not allow `null` values.
+	///
+	/// @param key Cache entry.
+	/// @return Cache value.
+	/// @throws Exception If an error occurred during computation.
 	V load(K key) throws Exception;
 }

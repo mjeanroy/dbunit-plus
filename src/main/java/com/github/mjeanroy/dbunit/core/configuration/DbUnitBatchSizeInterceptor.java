@@ -26,18 +26,14 @@ package com.github.mjeanroy.dbunit.core.configuration;
 
 import org.dbunit.database.DatabaseConfig;
 
-/**
- * An interceptor that can set the {@code "batchSize"} property of DbUnit.
- *
- * @see DatabaseConfig#PROPERTY_BATCH_SIZE
- */
+/// An interceptor that can set the `"batchSize"` property of DbUnit.
+///
+/// @see DatabaseConfig#PROPERTY_BATCH_SIZE
 public final class DbUnitBatchSizeInterceptor extends AbstractDbUnitPropertyInterceptor<Integer> {
 
-	/**
-	 * Create the interceptor.
-	 *
-	 * @param batchSize The batch size value.
-	 */
+	/// Create the interceptor.
+	///
+	/// @param batchSize The batch size value.
 	public DbUnitBatchSizeInterceptor(int batchSize) {
 		super(DatabaseConfig.PROPERTY_BATCH_SIZE, batchSize);
 	}

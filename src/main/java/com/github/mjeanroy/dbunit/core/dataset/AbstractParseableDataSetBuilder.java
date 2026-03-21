@@ -36,38 +36,26 @@ abstract class AbstractParseableDataSetBuilder<
 	DATASET extends AbstractParseableDataSet
 > {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(AbstractParseableDataSetBuilder.class);
 
-	/**
-	 * Dataset Resource.
-	 */
+	/// Dataset Resource.
 	private Resource resource;
 
-	/**
-	 * The Dataset Parser (will be used to parse dataset file).
-	 */
+	/// The Dataset Parser (will be used to parse dataset file).
 	private PARSER parser;
 
-	/**
-	 * Check if table names is case insensitive (default is {@code false}.
-	 */
+	/// Check if table names is case insensitive (default is `false`.
 	private boolean caseSensitiveTableNames;
 
-	/**
-	 * Create builder.
-	 */
+	/// Create builder.
 	AbstractParseableDataSetBuilder() {
 		this(null);
 	}
 
-	/**
-	 * Create builder with given resource.
-	 *
-	 * @param resource The dataset resource.
-	 */
+	/// Create builder with given resource.
+	///
+	/// @param resource The dataset resource.
 	AbstractParseableDataSetBuilder(Resource resource) {
 		log.trace("Set resource: {}", resource);
 		this.resource = resource;
@@ -75,48 +63,40 @@ abstract class AbstractParseableDataSetBuilder<
 		this.parser = null;
 	}
 
-	/**
-	 * Initialize resource.
-	 *
-	 * @param resource The dataset resource.
-	 * @return Builder.
-	 */
+	/// Initialize resource.
+	///
+	/// @param resource The dataset resource.
+	/// @return Builder.
 	public T setResource(Resource resource) {
 		log.trace("Set resource: {}", resource);
 		this.resource = resource;
 		return self();
 	}
 
-	/**
-	 * Override default parser.
-	 *
-	 * @param parser The parser.
-	 * @return Builder.
-	 */
+	/// Override default parser.
+	///
+	/// @param parser The parser.
+	/// @return Builder.
 	public T setParser(PARSER parser) {
 		log.trace("Set parser: {}", parser);
 		this.parser = parser;
 		return self();
 	}
 
-	/**
-	 * Override default case sensitivity flag.
-	 *
-	 * @param caseSensitiveTableNames Value for case sensitivity flag.
-	 * @return Builder.
-	 */
+	/// Override default case sensitivity flag.
+	///
+	/// @param caseSensitiveTableNames Value for case sensitivity flag.
+	/// @return Builder.
 	public T setCaseSensitiveTableNames(boolean caseSensitiveTableNames) {
 		log.trace("Set caseSensitiveTableNames: {}", caseSensitiveTableNames);
 		this.caseSensitiveTableNames = caseSensitiveTableNames;
 		return self();
 	}
 
-	/**
-	 * Create instance of {@link AbstractParseableDataSet}.
-	 *
-	 * @return Instance of {@link AbstractParseableDataSet}.
-	 * @throws DataSetException If an error occurred during data set creation.
-	 */
+	/// Create instance of [AbstractParseableDataSet].
+	///
+	/// @return Instance of [AbstractParseableDataSet].
+	/// @throws DataSetException If an error occurred during data set creation.
 	public final DATASET build() throws DataSetException {
 		PARSER parser = getParser();
 		if (parser == null) {
@@ -134,44 +114,34 @@ abstract class AbstractParseableDataSetBuilder<
 
 	}
 
-	/**
-	 * Create DataSet instance.
-	 *
-	 * @return The newly created dataset.
-	 * @throws DataSetException If an error occurred during data set creation.
-	 */
+	/// Create DataSet instance.
+	///
+	/// @return The newly created dataset.
+	/// @throws DataSetException If an error occurred during data set creation.
 	abstract DATASET build(PARSER parser, Resource resource, boolean caseSensitiveTableNames) throws DataSetException;
 
-	/**
-	 * Get the default dataset parser.
-	 *
-	 * @return Default dataset parser.
-	 */
+	/// Get the default dataset parser.
+	///
+	/// @return Default dataset parser.
 	abstract PARSER getDefaultParser();
 
-	/**
-	 * Get {@link #parser}
-	 *
-	 * @return {@link #parser}
-	 */
+	/// Get [#parser]
+	///
+	/// @return Returns [#parser]
 	PARSER getParser() {
 		return parser;
 	}
 
-	/**
-	 * Get {@link #resource}
-	 *
-	 * @return {@link #resource}
-	 */
+	/// Get [#resource]
+	///
+	/// @return Returns [#resource]
 	Resource getResource() {
 		return resource;
 	}
 
-	/**
-	 * Get {@link #caseSensitiveTableNames}
-	 *
-	 * @return {@link #caseSensitiveTableNames}
-	 */
+	/// Get [#caseSensitiveTableNames]
+	///
+	/// @return Returns [#caseSensitiveTableNames]
 	boolean isCaseSensitiveTableNames() {
 		return caseSensitiveTableNames;
 	}

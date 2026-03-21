@@ -34,9 +34,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 
-/**
- * Set of Common JDBC Drivers.
- */
+/// Set of Common JDBC Drivers.
 enum JdbcDriver {
 
 	MYSQL("mysql", asList("com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver")) {
@@ -88,50 +86,38 @@ enum JdbcDriver {
 		}
 	};
 
-	/**
-	 * JDBC id (visible in JDBC Connection: jdbc:[id]:[connection).
-	 */
+	/// JDBC id (visible in JDBC Connection: `jdbc:[id]:[connection]`.
 	private final String id;
 
-	/**
-	 * JDBC Driver Name (class to load).
-	 */
+	/// JDBC Driver Name (class to load).
 	private final List<String> driverClassNames;
 
-	/**
-	 * Create JDBC Driver.
-	 *
-	 * @param id JDBC id.
-	 * @param driverName JDBC Driver Name.
-	 */
+	/// Create JDBC Driver.
+	///
+	/// @param id JDBC id.
+	/// @param driverName JDBC Driver Name.
 	JdbcDriver(String id, String driverName) {
 		this.id = id;
 		this.driverClassNames = singletonList(driverName);
 	}
 
-	/**
-	 * Create JDBC Driver using list of potential drivers.
-	 *
-	 * @param id JDBC id.
-	 * @param driverNames JDBC Driver Names.
-	 */
+	/// Create JDBC Driver using list of potential drivers.
+	///
+	/// @param id JDBC id.
+	/// @param driverNames JDBC Driver Names.
 	JdbcDriver(String id, Collection<String> driverNames) {
 		this.id = id;
 		this.driverClassNames = new ArrayList<>(driverNames);
 	}
 
-	/**
-	 * Create new {@link JdbcForeignKeyManager} for this specific database.
-	 *
-	 * @return New {@link JdbcForeignKeyManager} instance.
-	 */
+	/// Create new [JdbcForeignKeyManager] for this specific database.
+	///
+	/// @return New [JdbcForeignKeyManager] instance.
 	abstract JdbcForeignKeyManager fkManager();
 
-	/**
-	 * Load JDBC Driver.
-	 *
-	 * @throws JdbcException If driver cannot be loaded.
-	 */
+	/// Load JDBC Driver.
+	///
+	/// @throws JdbcException If driver cannot be loaded.
 	public void loadDriver() {
 		for (String driverClassName : driverClassNames) {
 			boolean success = tryDriver(driverClassName);
@@ -155,24 +141,20 @@ enum JdbcDriver {
 		}
 	}
 
-	/**
-	 * Check if given {@code url} match JDBC driver.
-	 * For instance, if {@code url} is {@code jdbc:mysql:[connection]}, then we know if
-	 * appropriate driver is MySQL.
-	 *
-	 * @param url JDBC Connection.
-	 * @return {@code true} if JDBC Url match the driver, {@code false} otherwise.
-	 */
+	/// Check if given `url` match JDBC driver.
+	/// For instance, if `url` is `jdbc:mysql:[connection]`, then we know if
+	/// appropriate driver is MySQL.
+	///
+	/// @param url JDBC Connection.
+	/// @return `true` if JDBC Url match the driver, `false` otherwise.
 	public boolean match(String url) {
 		return url.startsWith("jdbc:" + id);
 	}
 
-	/**
-	 * Find JDBC driver based on the connection URL.
-	 *
-	 * @param connectionUrl JDBC Connection URL.
-	 * @return The driver, {@code null} if no driver matches.
-	 */
+	/// Find JDBC driver based on the connection URL.
+	///
+	/// @param connectionUrl JDBC Connection URL.
+	/// @return The driver, `null` if no driver matches.
 	static JdbcDriver findOne(String connectionUrl) {
 		for (JdbcDriver driver : JdbcDriver.values()) {
 			if (driver.match(connectionUrl)) {
@@ -183,12 +165,10 @@ enum JdbcDriver {
 		return null;
 	}
 
-	/**
-	 * Load JDBC driver based on the JDBC Connection URL.
-	 *
-	 * @param connectionUrl JDBC Connection URL.
-	 * @throws JdbcException If no driver matches given connection URL.
-	 */
+	/// Load JDBC driver based on the JDBC Connection URL.
+	///
+	/// @param connectionUrl JDBC Connection URL.
+	/// @throws JdbcException If no driver matches given connection URL.
 	static void loadDriver(String connectionUrl) {
 		JdbcDriver jdbcDriver = findOne(connectionUrl);
 

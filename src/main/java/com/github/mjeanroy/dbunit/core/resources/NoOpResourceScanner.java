@@ -28,28 +28,20 @@ import java.util.Collection;
 
 import static java.util.Collections.emptyList;
 
-/**
- * Implementation of {@link ResourceScanner} that <strong>always</strong> returns an empty list.
- */
+/// Implementation of [ResourceScanner] that **always** returns an empty list.
 class NoOpResourceScanner extends AbstractResourceScanner {
 
-	/**
-	 * Singleton instance.
-	 */
+	/// Singleton instance.
 	private static final NoOpResourceScanner INSTANCE = new NoOpResourceScanner();
 
-	/**
-	 * Get the singleton instance.
-	 *
-	 * @return The instance.
-	 */
+	/// Get the singleton instance.
+	///
+	/// @return The instance.
 	static NoOpResourceScanner getInstance() {
 		return INSTANCE;
 	}
 
-	/**
-	 * Private constructor, use {@link #getInstance()} instead.
-	 */
+	/// Private constructor, use [#getInstance()] instead.
 	private NoOpResourceScanner() {
 	}
 

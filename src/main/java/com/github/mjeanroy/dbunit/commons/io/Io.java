@@ -32,28 +32,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-/**
- * Static IO Utilities.
- */
+/// Static IO Utilities.
 public final class Io {
 
-	/**
-	 * Class Logger.
-	 */
 	private static final Logger log = Loggers.getLogger(Io.class);
 
 	// Ensure non instantiation.
 	private Io() {
 	}
 
-	/**
-	 * Read {@code reader} instance line by line and execute {@code visitor} for
-	 * each line.
-	 *
-	 * @param stream Reader instance.
-	 * @param visitor Visitor, used to handle line.
-	 * @throws IOException If an error occurred while reading a line.
-	 */
+	/// Read `reader` instance line by line and execute `visitor` for
+	/// each line.
+	///
+	/// @param stream Reader instance.
+	/// @param visitor Visitor, used to handle line.
+	/// @throws IOException If an error occurred while reading a line.
 	public static void readLines(InputStream stream, ReaderVisitor visitor) throws IOException {
 		try (
 				InputStreamReader reader = new InputStreamReader(stream);

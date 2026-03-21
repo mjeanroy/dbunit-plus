@@ -26,15 +26,11 @@ package com.github.mjeanroy.dbunit.tests.builders;
 
 import java.io.InputStream;
 
-/**
- * Factory used to created instance of {@link InputStream}.
- */
+/// Factory used to created instance of [InputStream].
 interface InputStreamFactory {
 
-	/**
-	 * Create {@link InputStream}.
-	 *
-	 * @return New {@link InputStream}.
-	 */
+	/// Create [InputStream].
+	///
+	/// @return New [InputStream].
 	InputStream create();
 }

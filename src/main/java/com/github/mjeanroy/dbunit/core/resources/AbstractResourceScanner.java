@@ -34,23 +34,18 @@ import java.util.Collection;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableCollection;
 
-/**
- * Abstract implementation of {@link ResourceScanner}.
- * This implementation requires the method {@link #doScan(Resource)} to be
- * implemented.
- *
- * Note that:
- * <ul>
- *   <li>The method {@link #scan(Resource)} will always return an unmodifiable collection.</li>
- *   <li>A resource that is not a directory will always return an empty list.</li>
- *   <li>If the {@code resource} to scan does not exist, a {@link ResourceNotFoundException} will be thrown.</li>
- * </ul>
- */
+/// Abstract implementation of [ResourceScanner].
+///
+/// This implementation requires the method [#doScan(Resource)] to be
+/// implemented.
+///
+/// Note that:
+/// - The method [#scan(Resource)] will always return an unmodifiable collection.
+/// - A resource that is not a directory will always return an empty list.
+/// - If the `resource` to scan does not exist, a [ResourceNotFoundException] will be thrown.
 abstract class AbstractResourceScanner implements ResourceScanner {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(AbstractResourceScanner.class);
 
 	@Override
@@ -81,15 +76,13 @@ abstract class AbstractResourceScanner implements ResourceScanner {
 		}
 	}
 
-	/**
-	 * Scan the sub-resource of the {@code resource}.
-	 *
-	 * It is guaranteed that, when called, the {@code resource} is always
-	 * a directory.
-	 *
-	 * @param resource The resource.
-	 * @return The list of sub-resources.
-	 * @throws Exception If an error occurred during scanning.
-	 */
+	/// Scan the sub-resource of the `resource`.
+	///
+	/// It is guaranteed that, when called, the `resource` is always
+	/// a directory.
+	///
+	/// @param resource The resource.
+	/// @return The list of sub-resources.
+	/// @throws Exception If an error occurred during scanning.
 	abstract Collection<Resource> doScan(Resource resource) throws Exception;
 }

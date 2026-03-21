@@ -30,54 +30,41 @@ import com.google.gson.ToNumberPolicy;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * Implementation of {@link JsonParser} using Google {@link Gson}
- * as internal implementation.
- *
- * <p>
- * This parser delegates JSON deserialization to an internal {@link Gson}
- * instance configured to use {@link ToNumberPolicy#LONG_OR_DOUBLE} for
- * numeric conversions. This ensures that JSON numeric values are parsed
- * as {@link Long} when possible, or {@link Double} otherwise.
- * </p>
- *
- * <p>
- * This implementation is thread-safe since it relies on a single,
- * statically initialized {@link Gson} instance and exposes a singleton
- * instance via {@link #getInstance()}.
- * </p>
- */
+/// Implementation of [JsonParser] using Google [Gson]
+/// as internal implementation.
+///
+/// This parser delegates JSON deserialization to an internal [Gson]
+/// instance configured to use [ToNumberPolicy#LONG_OR_DOUBLE] for
+/// numeric conversions. This ensures that JSON numeric values are parsed
+/// as [Long] when possible, or [Double] otherwise.
+///
+/// This implementation is thread-safe since it relies on a single,
+/// statically initialized [Gson] instance and exposes a singleton
+/// instance via [#getInstance()].
+///
 class GsonParser extends AbstractJsonParser implements JsonParser, JsonSerializer {
 
-	/**
-	 * Return the singleton instance of this parser.
-	 *
-	 * @return the shared {@link GsonParser} instance.
-	 */
+	/// Return the singleton instance of this parser.
+	///
+	/// @return the shared [GsonParser] instance.
 	static GsonParser getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * {@link Gson} instance used to deserialize JSON content.
-	 *
-	 * <p>
-	 * Configured with {@link ToNumberPolicy#LONG_OR_DOUBLE} to preserve
-	 * numeric precision by converting numbers to {@link Long} when possible,
-	 * or {@link Double} otherwise.
-	 * </p>
-	 */
+	/// [Gson] instance used to deserialize JSON content.
+	///
+	/// Configured with [ToNumberPolicy#LONG_OR_DOUBLE] to preserve
+	/// numeric precision by converting numbers to [Long] when possible,
+	/// or [Double] otherwise.
+	///
 	private final Gson gson;
 
-	/**
-	 * Create a new {@link GsonParser}.
-	 *
-	 * <p>
-	 * Constructor is private to enforce singleton usage.
-	 * </p>
-	 *
-	 * @param gson The gson instance to use.
-	 */
+	/// Create a new [GsonParser].
+	///
+	/// Constructor is private to enforce singleton usage.
+	///
+	///
+	/// @param gson The gson instance to use.
 	private GsonParser(Gson gson) {
 		this.gson = gson;
 	}

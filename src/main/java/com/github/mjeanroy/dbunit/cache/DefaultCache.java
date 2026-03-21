@@ -34,29 +34,21 @@ import java.util.concurrent.FutureTask;
 
 import static com.github.mjeanroy.dbunit.commons.lang.Exceptions.launderThrowable;
 
-/**
- * Dependency free {@link Cache} implementation.
- *
- * @param <K> Type of keys.
- * @param <V> Type of values.
- */
+/// Dependency free [Cache] implementation.
+///
+/// @param <K> Type of keys.
+/// @param <V> Type of values.
 class DefaultCache<K, V> implements Cache<K, V> {
 
-	/**
-	 * Internal cache.
-	 */
+	/// Internal cache.
 	private final ConcurrentMap<K, Future<V>> map;
 
-	/**
-	 * Cache loader, used to compute values in the cache.
-	 */
+	/// Cache loader, used to compute values in the cache.
 	private final CacheLoader<K, V> loader;
 
-	/**
-	 * Create cache.
-	 *
-	 * @param loader The cache loader.
-	 */
+	/// Create cache.
+	///
+	/// @param loader The cache loader.
 	DefaultCache(CacheLoader<K, V> loader) {
 		this.map = new ConcurrentHashMap<>();
 		this.loader = loader;
@@ -115,30 +107,22 @@ class DefaultCache<K, V> implements Cache<K, V> {
 		return map.size();
 	}
 
-	/**
-	 * Adapter used to translate {@link CacheLoader} to JDK {@link Callable}.
-	 *
-	 * @param <K> Type of keys.
-	 * @param <V> Type of values.
-	 */
+	/// Adapter used to translate [CacheLoader] to JDK [Callable].
+	///
+	/// @param <K> Type of keys.
+	/// @param <V> Type of values.
 	private static class CallableLoaderAdapter<K, V> implements Callable<V> {
 
-		/**
-		 * The key that should be translated to a given value.
-		 */
+		/// The key that should be translated to a given value.
 		private final K key;
 
-		/**
-		 * Cache loader.
-		 */
+		/// Cache loader.
 		private final CacheLoader<K, V> loader;
 
-		/**
-		 * Create adapter.
-		 *
-		 * @param key The key.
-		 * @param loader The loader.
-		 */
+		/// Create adapter.
+		///
+		/// @param key The key.
+		/// @param loader The loader.
 		private CallableLoaderAdapter(K key, CacheLoader<K, V> loader) {
 			this.key = key;
 			this.loader = loader;

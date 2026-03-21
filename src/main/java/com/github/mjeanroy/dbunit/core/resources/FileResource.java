@@ -34,22 +34,16 @@ import java.io.InputStream;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.fileScanner;
 
-/**
- * Implementation of {@link Resource} backed by a given {@link File} handler.
- */
+/// Implementation of [Resource] backed by a given [File] handler.
 class FileResource extends AbstractResource {
 
-	/**
-	 * The file.
-	 */
+	/// The file.
 	private final File file;
 
-	/**
-	 * Create resource.
-	 *
-	 * @param file The file.
-	 * @throws NullPointerException If {@code file} is {@code null}.
-	 */
+	/// Create resource.
+	///
+	/// @param file The file.
+	/// @throws NullPointerException If `file` is `null`.
 	FileResource(File file) {
 		super(fileScanner());
 		this.file = notNull(file, "Resource file must not be null");

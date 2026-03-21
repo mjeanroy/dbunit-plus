@@ -24,15 +24,11 @@
 
 package com.github.mjeanroy.dbunit.loggers;
 
-/**
- * Implementation of {@link Logger} that does nothing.
- * Used when no appropriate implement can be selected.
- */
+/// Implementation of [Logger] that does nothing.
+/// Used when no appropriate implement can be selected.
 class NoopLogger implements Logger {
 
-	/**
-	 * Create logger.
-	 */
+	/// Create logger.
 	NoopLogger() {
 	}
 

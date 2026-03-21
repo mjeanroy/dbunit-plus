@@ -51,20 +51,16 @@ import java.util.concurrent.Executor;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Wrapper for {@link DataSource}, that allows to add some logs when a new connection is created.
- */
+/// Wrapper for [DataSource], that allows to add some logs when a new connection is created.
 final class ConnectionProxy implements Connection {
 
 	private static final Logger log = Loggers.getLogger(ConnectionProxy.class);
 
-	/**
-	 * Returns given {@code connection} if it is already a proxy, otherwise
-	 * wrap it in a proxy and returns the new proxy instance.
-	 *
-	 * @param connection Connection.
-	 * @return The proxied connection.
-	 */
+	/// Returns given `connection` if it is already a proxy, otherwise
+	/// wrap it in a proxy and returns the new proxy instance.
+	///
+	/// @param connection Connection.
+	/// @return The proxied connection.
 	static ConnectionProxy of(Connection connection) {
 		if (connection instanceof ConnectionProxy) {
 			return (ConnectionProxy) connection;

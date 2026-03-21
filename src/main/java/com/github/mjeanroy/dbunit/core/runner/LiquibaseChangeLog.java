@@ -30,31 +30,23 @@ import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * A liquibase changelog, identified by a file path.
- */
+/// A liquibase changelog, identified by a file path.
 final class LiquibaseChangeLog {
 
-	/**
-	 * The changelog file path.
-	 */
+	/// The changelog file path.
 	private final String changeLog;
 
-	/**
-	 * Create the liquibase changelog.
-	 *
-	 * @param changeLog The changelog.
-	 * @throws NullPointerException If {@code changeLog} is {@code null}.
-	 */
+	/// Create the liquibase changelog.
+	///
+	/// @param changeLog The changelog.
+	/// @throws NullPointerException If `changeLog` is `null`.
 	LiquibaseChangeLog(String changeLog) {
 		this.changeLog = notNull(changeLog, "Liquibase ChangeLog must not be null");
 	}
 
-	/**
-	 * Get {@link #changeLog}
-	 *
-	 * @return {@link #changeLog}
-	 */
+	/// Get [#changeLog]
+	///
+	/// @return [#changeLog]
 	String getChangeLog() {
 		return changeLog;
 	}

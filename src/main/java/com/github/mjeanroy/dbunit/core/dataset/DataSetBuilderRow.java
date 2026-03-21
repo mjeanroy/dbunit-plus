@@ -46,15 +46,11 @@ import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 
-/**
- * Immutable representation of a single row in a dataset table.
- * Each column name appears at most once.
- */
+/// Immutable representation of a single row in a dataset table.
+/// Each column name appears at most once.
 public final class DataSetBuilderRow {
 
-	/**
-	 * Row values.
-	 */
+	/// Row values.
 	private final Map<String, DataSetBuilderRowValue> values;
 
 	DataSetBuilderRow(Collection<DataSetBuilderRowValue> columns) {
@@ -73,193 +69,161 @@ public final class DataSetBuilderRow {
 		this.values = unmodifiableMap(values);
 	}
 
-	/**
-	 * Get value to bind to DBUnit {@link org.dbunit.dataset.Column}.
-	 *
-	 * @param columnName Column name.
-	 * @return Value to bind to (may be {@code null}).
-	 */
+	/// Get value to bind to DBUnit [org.dbunit.dataset.Column].
+	///
+	/// @param columnName Column name.
+	/// @return Value to bind to (may be `null`).
 	Object bindValue(String columnName) {
 		DataSetBuilderRowValue rowValue = getRowValue(columnName);
 		return rowValue == null ? null : rowValue.bindValue();
 	}
 
-	/**
-	 * Returns the {@link Short} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Short}.
-	 */
+	/// Returns the [Short] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Short].
 	public Short getShort(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getShort);
 	}
 
-	/**
-	 * Returns the {@link Integer} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Integer}.
-	 */
+	/// Returns the [Integer] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Integer].
 	public Integer getInteger(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getInteger);
 	}
 
-	/**
-	 * Returns the {@link Long} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Long}.
-	 */
+	/// Returns the [Long] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Long].
 	public Long getLong(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getLong);
 	}
 
-	/**
-	 * Returns the {@link Float} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Float}.
-	 */
+	/// Returns the [Float] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Float].
 	public Float getFloat(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getFloat);
 	}
 
-	/**
-	 * Returns the {@link Double} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Double}.
-	 */
+	/// Returns the [Double] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Double].
 	public Double getDouble(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getDouble);
 	}
 
-	/**
-	 * Returns the {@link BigInteger} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link BigInteger}.
-	 */
+	/// Returns the [BigInteger] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [BigInteger].
 	public BigInteger getBigInteger(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getBigInteger);
 	}
 
-	/**
-	 * Returns the {@link BigDecimal} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link BigDecimal}.
-	 */
+	/// Returns the [BigDecimal] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [BigDecimal].
 	public BigDecimal getBigDecimal(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getBigDecimal);
 	}
 
-	/**
-	 * Returns the {@link Boolean} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Boolean}.
-	 */
+	/// Returns the [Boolean] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Boolean].
 	public Boolean getBoolean(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getBoolean);
 	}
 
-	/**
-	 * Returns the {@link String} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link String}.
-	 */
+	/// Returns the [String] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [String].
 	public String getString(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getString);
 	}
 
-	/**
-	 * Returns the {@link Date} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link Date}.
-	 */
+	/// Returns the [Date] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [Date].
 	public Date getDate(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getDate);
 	}
 
-	/**
-	 * Returns the {@link OffsetDateTime} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link OffsetDateTime}.
-	 */
+	/// Returns the [OffsetDateTime] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [OffsetDateTime].
 	public OffsetDateTime getOffsetDateTime(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getOffsetDateTime);
 	}
 
-	/**
-	 * Returns the {@link LocalDateTime} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link LocalDateTime}.
-	 */
+	/// Returns the [LocalDateTime] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [LocalDateTime].
 	public LocalDateTime getLocalDateTime(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getLocalDateTime);
 	}
 
-	/**
-	 * Returns the {@link ZonedDateTime} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link ZonedDateTime}.
-	 */
+	/// Returns the [ZonedDateTime] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [ZonedDateTime].
 	public ZonedDateTime getZonedDateTime(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getZonedDateTime);
 	}
 
-	/**
-	 * Returns the {@link LocalDate} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link LocalDate}.
-	 */
+	/// Returns the [LocalDate] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [LocalDate].
 	public LocalDate getLocalDate(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getLocalDate);
 	}
 
-	/**
-	 * Returns the {@link UUID} value associated with the specified column.
-	 *
-	 * @param columnName Name of the column.
-	 * @return Column value, or {@code null} if the column does not exist or has a null value.
-	 * @throws IllegalArgumentException if {@code columnName} is blank.
-	 * @throws UnsupportedOperationException If value cannot casted to a {@link UUID}.
-	 */
+	/// Returns the [UUID] value associated with the specified column.
+	///
+	/// @param columnName Name of the column.
+	/// @return Column value, or `null` if the column does not exist or has a null value.
+	/// @throws IllegalArgumentException if `columnName` is blank.
+	/// @throws UnsupportedOperationException If value cannot casted to a [UUID].
 	public UUID getUUID(String columnName) {
 		return get(columnName, DataSetBuilderRowValue::getUUID);
 	}
@@ -274,11 +238,9 @@ public final class DataSetBuilderRow {
 		return values.get(normalizedColumnName);
 	}
 
-	/**
-	 * Get all column names in this row.
-	 *
-	 * @return Column names.
-	 */
+	/// Get all column names in this row.
+	///
+	/// @return Column names.
 	public Set<String> getColumnNames() {
 		return unmodifiableSet(values.keySet());
 	}

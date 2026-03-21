@@ -24,17 +24,13 @@
 
 package com.github.mjeanroy.dbunit.core.dataset;
 
-/**
- * Function used to create instance of object of type {@code T}.
- *
- * @param <T> Type of object to create.
- */
+/// Function used to create instance of object of type `T`.
+///
+/// @param <T> Type of object to create.
 interface FactoryFunction<T> {
 
-	/**
-	 * Create new instance of object.
-	 *
-	 * @return New created instance.
-	 */
+	/// Create new instance of object.
+	///
+	/// @return New created instance.
 	T apply();
 }

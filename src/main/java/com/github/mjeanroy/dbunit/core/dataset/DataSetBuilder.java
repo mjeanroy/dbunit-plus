@@ -57,78 +57,71 @@ import static com.github.mjeanroy.dbunit.commons.reflection.Reflections.getField
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.binder;
 import static com.github.mjeanroy.dbunit.core.dataset.DataSetBuilderRowValue.jsonBinder;
 
-/**
- * Fluent builder for creating DbUnit {@link org.dbunit.dataset.IDataSet} instances
- * entirely in Java code.
- *
- * <p>This class provides a convenient, immutable DSL to assemble datasets without
- * writing XML files. You can declare tables, rows, and column values using
- * static factory methods and then call {@link #build()} to obtain a ready-to-use
- * {@link org.dbunit.dataset.DefaultDataSet} for DbUnit tests.</p>
- *
- * <h2>Basic usage</h2>
- *
- * <pre>{@code
- * IDataSet dataSet = DataSetBuilder.builder()
- *     .table(
- *         DataSetBuilder.table("users",
- *             DataSetBuilder.row(
- *                 DataSetBuilder.column("id", 1),
- *                 DataSetBuilder.column("name", "John Doe")
- *             ),
- *             DataSetBuilder.row(
- *                 DataSetBuilder.column("id", 2),
- *                 DataSetBuilder.column("name", "Jane Doe")
- *             )
- *         )
- *     )
- *     .build();
- * }</pre>
- *
- * <p>The builder supports merging: calling {@link #addTable(DataSetBuilderTable)} with the
- * same table name multiple times appends new rows to the existing table.</p>
- *
- * <h2>Thread-safety</h2>
- * <p>The builder itself is mutable until {@link #build()} is invoked. After a
- * {@code DataSetTable}, {@code DataSetRow}, or {@code DataSetRowValue} is
- * created, those objects are immutable and safe to share.</p>
- *
- * <p><strong>Note:</strong> All helper factory methods perform
- * null/empty checks and throw {@link IllegalArgumentException} if arguments
- * are invalid.</p>
- */
+/// Fluent builder for creating DbUnit [org.dbunit.dataset.IDataSet] instances
+/// entirely in Java code.
+///
+/// This class provides a convenient, immutable DSL to assemble datasets without
+/// writing XML files. You can declare tables, rows, and column values using
+/// static factory methods and then call [#build()] to obtain a ready-to-use
+/// [org.dbunit.dataset.DefaultDataSet] for DbUnit tests.
+///
+/// ## Basic usage
+///
+/// ```
+/// IDataSet dataSet = DataSetBuilder.builder()
+///   .table(
+///     DataSetBuilder.table("users",
+///       DataSetBuilder.row(
+///         DataSetBuilder.column("id", 1),
+///         DataSetBuilder.column("name", "John Doe")
+///       ),
+///       DataSetBuilder.row(
+///         DataSetBuilder.column("id", 2),
+///         DataSetBuilder.column("name", "Jane Doe")
+///       )
+///     )
+///   )
+///   .build();
+/// ```
+///
+/// The builder supports merging: calling [#addTable(DataSetBuilderTable)] with the
+/// same table name multiple times appends new rows to the existing table.
+///
+/// ## Thread-safety
+///
+/// The builder itself is mutable until [#build()] is invoked. After a
+/// `DataSetTable`, `DataSetRow`, or `DataSetRowValue` is
+/// created, those objects are immutable and safe to share.
+///
+/// **Note:** All helper factory methods perform
+/// null/empty checks and throw [IllegalArgumentException] if arguments
+/// are invalid.
 public final class DataSetBuilder {
 
-	/**
-	 * Creates a new, empty {@code DataSetBuilder}.
-	 *
-	 * @return a fresh builder instance.
-	 */
+	/// Creates a new, empty `DataSetBuilder`.
+	///
+	/// @return a fresh builder instance.
 	public static DataSetBuilder builder() {
 		return new DataSetBuilder();
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderTable} from a table name and a
-	 * collection of rows.
-	 *
-	 * @param tableName Name of the table (must not be {@code null} or blank).
-	 * @param rows Rows to include (must not be {@code null}).
-	 * @return A new {@link DataSetBuilderTable}.
-	 */
+	/// Creates a new immutable [DataSetBuilderTable] from a table name and a
+	/// collection of rows.
+	///
+	/// @param tableName Name of the table (must not be `null` or blank).
+	/// @param rows Rows to include (must not be `null`).
+	/// @return A new [DataSetBuilderTable].
 	public static DataSetBuilderTable table(String tableName, Collection<DataSetBuilderRow> rows) {
 		return new DataSetBuilderTable(tableName, rows);
 	}
 
-	/**
-	 * Creates a new {@link DataSetBuilderTable} from a table name and a first row plus
-	 * optional additional rows.
-	 *
-	 * @param tableName Table name.
-	 * @param row First row.
-	 * @param others Optional additional rows.
-	 * @return A new {@link DataSetBuilderTable}.
-	 */
+	/// Creates a new [DataSetBuilderTable] from a table name and a first row plus
+	/// optional additional rows.
+	///
+	/// @param tableName Table name.
+	/// @param row First row.
+	/// @param others Optional additional rows.
+	/// @return A new [DataSetBuilderTable].
 	public static DataSetBuilderTable table(String tableName, DataSetBuilderRow row, DataSetBuilderRow... others) {
 		List<DataSetBuilderRow> rows = new ArrayList<>(others.length + 1);
 		rows.add(row);
@@ -136,46 +129,44 @@ public final class DataSetBuilder {
 		return table(tableName, rows);
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRow} from a collection of column values.
-	 *
-	 * @param values Collection of column values.
-	 * @return A new {@link DataSetBuilderRow}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRow] from a collection of column values.
+	///
+	/// @param values Collection of column values.
+	/// @return A new [DataSetBuilderRow].
 	public static DataSetBuilderRow row(Collection<DataSetBuilderRowValue> values) {
 		return new DataSetBuilderRow(values);
 	}
 
-	/**
-	 * Creates a {@link DataSetBuilderRow} by introspecting the members (public and privates) of a given object.
-	 *
-	 * <p>This convenience method uses reflection to extract readable fields or
-	 * properties from the supplied instance.
-	 * Each discovered member name is automatically converted to <em>snake_case</em>, and its current value
-	 * is used as the column value.</p>
-	 *
-	 * <p>The resulting {@code DataSetRow} contains one {@link DataSetBuilderRowValue} per
-	 * discovered member.</p>
-	 *
-	 * <p>If multiple fields with same name exists (for example in superclasses), the first value encountered is used.</p>
-	 *
-	 * <h4>Example</h4>
-	 * <pre>{@code
-	 * class User {
-	 *     private final long id = 1L;
-	 *     private final String firstName = "John";
-	 *     private final String lastName = "Doe";
-	 * }
-	 *
-	 * DataSetRow row = DataSetBuilder.rowFromObject(new User());
-	 * // Produces columns: "id" -> 1L, "first_name" -> "John", last_name -> "Doe"
-	 * }</pre>
-	 *
-	 * @param o The object instance to introspect (must not be {@code null}).
-	 * @return a new {@link DataSetBuilderRow} containing one column/value pair for each extracted member of {@code o}.
-	 * @throws NullPointerException If {@code o} is {@code null}.
-	 * @throws com.github.mjeanroy.dbunit.exception.FieldAccessException If accessing a field value fails.
-	 */
+	/// Creates a [DataSetBuilderRow] by introspecting the members (public and privates) of a given object.
+	///
+	/// This convenience method uses reflection to extract readable fields or
+	/// properties from the supplied instance.
+	///
+	/// Each discovered member name is automatically converted to _snake_case_, and its current value
+	/// is used as the column value.
+	///
+	/// The resulting `DataSetRow` contains one [DataSetBuilderRowValue] per
+	/// discovered member.
+	///
+	/// If multiple fields with same name exists (for example in superclasses), the first value encountered is used.
+	///
+	/// **Example**
+	///
+	/// ```
+	/// class User{
+	///   private final long id = 1L;
+	///   private final String firstName = "John";
+	///   private final String lastName = "Doe";
+	/// }
+	///
+	/// // Produces columns: "id" -> 1L, "first_name" -> "John", last_name -> "Doe"`
+	/// DataSetRow row = DataSetBuilder.rowFromObject(new User());
+	/// ```
+	///
+	/// @param o The object instance to introspect (must not be `null`).
+	/// @return a new [DataSetBuilderRow] containing one column/value pair for each extracted member of `o`.
+	/// @throws NullPointerException If `o` is `null`.
+	/// @throws com.github.mjeanroy.dbunit.exception.FieldAccessException If accessing a field value fails.
 	public static DataSetBuilderRow rowFromObject(Object o) {
 		Map<String, Field> values = extractMembers(
 			notNull(o, "Object instance must not be null")
@@ -198,28 +189,26 @@ public final class DataSetBuilder {
 		return row(rowValues);
 	}
 
-	/**
-	 * Creates a {@link DataSetBuilderRow} from a map of column names to values.
-	 *
-	 * <p>Each entry in the provided map is converted into a {@link DataSetBuilderRowValue},
-	 * where the map key is used as the column name and the map value as the column value.
-	 * The resulting {@link DataSetBuilderRow} preserves the order of entries in the map
-	 * if the map implementation maintains iteration order (e.g., {@link java.util.LinkedHashMap}).</p>
-	 *
-	 * <strong>Example</strong>
-	 *
-	 * <pre>{@code
-	 * Map<String, Object> values = new LinkedHashMap<>();
-	 * values.put("id", 1);
-	 * values.put("name", "Alice");
-	 * DataSetRow row = DataSetBuilder.rowFromMap(values);
-	 * }</pre>
-	 *
-	 * @param values A non-null map containing column names and their corresponding values.
-	 * @return a new {@link DataSetBuilderRow} containing one {@link DataSetBuilderRowValue} per
-	 *         entry in the map.
-	 * @throws NullPointerException if {@code values} is {@code null} or contains any {@code null} keys.
-	 */
+	/// Creates a [DataSetBuilderRow] from a map of column names to values.
+	///
+	/// Each entry in the provided map is converted into a [DataSetBuilderRowValue],
+	/// where the map key is used as the column name and the map value as the column value.
+	/// The resulting [DataSetBuilderRow] preserves the order of entries in the map
+	/// if the map implementation maintains iteration order (e.g., [java.util.LinkedHashMap]).
+	///
+	/// **Example**
+	///
+	/// ```
+	/// Map<String, Object> values = new LinkedHashMap<>();
+	/// values.put("id", 1);
+	/// values.put("name", "Alice");
+	///
+	/// DataSetRow row = DataSetBuilder.rowFromMap(values);
+	/// ```
+	///
+	/// @param values A non-null map containing column names and their corresponding values.
+	/// @return a new [DataSetBuilderRow] containing one [DataSetBuilderRowValue] per entry in the map.
+	/// @throws NullPointerException if `values` is `null` or contains any `null` keys.
 	public static DataSetBuilderRow row(Map<String, Object> values) {
 		List<DataSetBuilderRowValue> rowValues = new ArrayList<>(
 			notNull(values, "Map values must not be null").size()
@@ -234,13 +223,11 @@ public final class DataSetBuilder {
 		return row(rowValues);
 	}
 
-	/**
-	 * Creates a new {@link DataSetBuilderRow} from a first column value plus optional additional ones.
-	 *
-	 * @param value First column value.
-	 * @param others Optional additional values.
-	 * @return A new {@link DataSetBuilderRow}.
-	 */
+	/// Creates a new [DataSetBuilderRow] from a first column value plus optional additional ones.
+	///
+	/// @param value First column value.
+	/// @param others Optional additional values.
+	/// @return A new [DataSetBuilderRow].
 	public static DataSetBuilderRow row(DataSetBuilderRowValue value, DataSetBuilderRowValue... others) {
 		Collection<DataSetBuilderRowValue> values = new ArrayList<>(others.length + 1);
 		values.add(value);
@@ -248,205 +235,171 @@ public final class DataSetBuilder {
 		return row(values);
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * with {@code NULL} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// with `NULL` value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName) {
 		return column(columnName, null, binder(null));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Short} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Short] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Short value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Integer} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Integer] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Integer value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Long} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Long] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Long value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Float} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Float] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Float value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Double} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Double] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Double value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Boolean} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Boolean] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Boolean value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link BigInteger} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [BigInteger] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, BigInteger value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link BigDecimal} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [BigDecimal] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, BigDecimal value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link String} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [String] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, String value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link UUID} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [UUID] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, UUID value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link Date} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [Date] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, Date value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link OffsetDateTime} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [OffsetDateTime] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, OffsetDateTime value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link LocalDateTime} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [LocalDateTime] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, LocalDateTime value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link ZonedDateTime} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [ZonedDateTime] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, ZonedDateTime value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its {@link LocalDate} value.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to assign (may be {@code null}).
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its [LocalDate] value.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to assign (may be `null`).
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue column(String columnName, LocalDate value) {
 		return column(columnName, value, binder(value));
 	}
 
-	/**
-	 * Creates a new immutable {@link DataSetBuilderRowValue} representing a single column
-	 * and its value serialized as JSON.
-	 *
-	 * @param columnName Column name (must not be {@code null} or blank).
-	 * @param value Value to serialize as JSON.
-	 * @return A new {@link DataSetBuilderRowValue}.
-	 */
+	/// Creates a new immutable [DataSetBuilderRowValue] representing a single column
+	/// and its value serialized as JSON.
+	///
+	/// @param columnName Column name (must not be `null` or blank).
+	/// @param value Value to serialize as JSON.
+	/// @return A new [DataSetBuilderRowValue].
 	public static DataSetBuilderRowValue jsonColumn(String columnName, Object value) {
 		return column(columnName, value, jsonBinder());
 	}
@@ -459,22 +412,18 @@ public final class DataSetBuilder {
 		return new DataSetBuilderRowValue(columnName, value, binder);
 	}
 
-	/**
-	 * List of tables.
-	 */
+	/// List of tables.
 	private final Map<String, DataSetBuilderTable> tables;
 
 	private DataSetBuilder() {
 		this.tables = new LinkedHashMap<>();
 	}
 
-	/**
-	 * Adds or merges a table into this builder.
-	 * If a table with the same name already exists, the rows of the new table are appended.
-	 *
-	 * @param table Table to add (must not be {@code null}).
-	 * @return This builder for chaining.
-	 */
+	/// Adds or merges a table into this builder.
+	/// If a table with the same name already exists, the rows of the new table are appended.
+	///
+	/// @param table Table to add (must not be `null`).
+	/// @return This builder for chaining.
 	public DataSetBuilder addTable(DataSetBuilderTable table) {
 		String tableName = notNull(table, "Table must not be null").getTableName();
 
@@ -488,40 +437,34 @@ public final class DataSetBuilder {
 		return this;
 	}
 
-	/**
-	 * Adds or merges a table into this builder.
-	 * If a table with the same name already exists, the rows of the new table are appended.
-	 *
-	 * @param tableName Table name.
-	 * @param rows Table rows.
-	 * @return This builder for chaining.
-	 */
+	/// Adds or merges a table into this builder.
+	/// If a table with the same name already exists, the rows of the new table are appended.
+	///
+	/// @param tableName Table name.
+	/// @param rows Table rows.
+	/// @return This builder for chaining.
 	public DataSetBuilder addTable(String tableName, Collection<DataSetBuilderRow> rows) {
 		return addTable(table(tableName, rows));
 	}
 
-	/**
-	 * Adds or merges a table into this builder.
-	 * If a table with the same name already exists, the rows of the new table are appended.
-	 *
-	 * @param tableName Table name.
-	 * @param row First row.
-	 * @param others Optional other rows.
-	 * @return This builder for chaining.
-	 */
+	/// Adds or merges a table into this builder.
+	/// If a table with the same name already exists, the rows of the new table are appended.
+	///
+	/// @param tableName Table name.
+	/// @param row First row.
+	/// @param others Optional other rows.
+	/// @return This builder for chaining.
 	public DataSetBuilder addTable(String tableName, DataSetBuilderRow row, DataSetBuilderRow... others) {
 		return addTable(table(tableName, row, others));
 	}
 
-	/**
-	 * Builds a {@link org.dbunit.dataset.DefaultDataSet} containing all tables
-	 * added to this builder.
-	 *
-	 * Subsequent modifications to the builder do not affect the returned dataset.
-	 *
-	 * @return a new {@link org.dbunit.dataset.IDataSet} instance.
-	 * @throws Exception if any underlying table conversion fails.
-	 */
+	/// Builds a [org.dbunit.dataset.DefaultDataSet] containing all tables
+	/// added to this builder.
+	///
+	/// Subsequent modifications to the builder do not affect the returned dataset.
+	///
+	/// @return a new [org.dbunit.dataset.IDataSet] instance.
+	/// @throws Exception if any underlying table conversion fails.
 	public IDataSet build() throws Exception {
 		DefaultDataSet dataSet = new DefaultDataSet();
 
@@ -532,13 +475,10 @@ public final class DataSetBuilder {
 		return dataSet;
 	}
 
-	/**
-	 * Annotate field that should be serialized as JSON when persisted to
-	 * the database using the {@link DataSetBuilder}.
-	 *
-	 * Note that the appropriate JSON library will automatically detected using
-	 * classpath detection, Jackson and GSON being currently supported.
-	 */
+	/// Annotate field that should be serialized as JSON when persisted to
+	/// the database using the [DataSetBuilder].
+	/// Note that the appropriate JSON library will automatically detected using
+	/// classpath detection, Jackson and GSON being currently supported.
 	@Retention(RetentionPolicy.RUNTIME)
 	@Inherited
 	@Documented

@@ -33,35 +33,31 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation that define the list of {@link com.github.mjeanroy.dbunit.core.replacement.Replacements} to use during
- * test suite. These replacements are created by given {@link #providers()} (note that these providers must have an
- * empty public constructor).
- */
+/// Annotation that define the list of [com.github.mjeanroy.dbunit.core.replacement.Replacements]
+/// to use during test suite.
+///
+/// These replacements are created by given [#providers()] (note that these providers must have an
+/// empty public constructor).
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Target(ElementType.TYPE)
 @Inherited
 public @interface DbUnitReplacements {
 
-	/**
-	 * The list of providers to use.
-	 *
-	 * @return List of providers.
-	 */
+	/// The list of providers to use.
+	///
+	/// @return Providers.
 	Class<? extends ReplacementsProvider>[] providers();
 
-	/**
-	 * A flag indicating if given annotation should be merged with "parent" annotations. For example, a method can
-	 * define additional replacements providers to load.
-	 *
-	 * The default value is {@code false}, this means that the providers for the annotated class
-	 * will <em>shadow</em> and effectively replace any datasets defined by superclasses.
-	 *
-	 * If {@code true}, this means that an annotated class will <em>inherit</em>
-	 * the datasets defined by test superclasses (or meta-annotations).
-	 *
-	 * @return The inherit flag value.
-	 */
+	/// A flag indicating if given annotation should be merged with "parent" annotations. For example, a method can
+	/// define additional replacements providers to load.
+	///
+	/// The default value is `false`, this means that the providers for the annotated class
+	/// will **shadow** and effectively replace any datasets defined by superclasses.
+	///
+	/// If `true`, this means that an annotated class will **inherit**
+	/// the datasets defined by test superclasses (or meta-annotations).
+	///
+	/// @return The inherit flag value.
 	boolean inherit() default false;
 }

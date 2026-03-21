@@ -43,28 +43,18 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 
-/**
- * A fake {@link ExtensionContext}
- */
+/// A fake [ExtensionContext]
 public class FakeExtensionContext implements ExtensionContext {
-	/**
-	 * The test context stores.
-	 */
+	/// The test context stores.
 	private final Map<Namespace, FakeStore> stores;
 
-	/**
-	 * The test unique identifier.
-	 */
+	/// The test unique identifier.
 	private final String id;
 
-	/**
-	 * The tested instance.
-	 */
+	/// The tested instance.
 	private final Object testInstance;
 
-	/**
-	 * The tested method, may be {@code null}.
-	 */
+	/// The tested method, may be `null`.
 	private final Method testMethod;
 
 	public FakeExtensionContext(Object testInstance, Method testMethod) {
@@ -226,12 +216,10 @@ public class FakeExtensionContext implements ExtensionContext {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * Get the single created store, or fail with {@link AssertionError} otherwise (no store, or more than
-	 * one store created).
-	 *
-	 * @return The single created store.
-	 */
+	/// Get the single created store, or fail with [AssertionError] otherwise (no store, or more than
+	/// one store created).
+	///
+	/// @return The single created store.
 	public FakeStore getSingleStore() {
 		int size = stores.size();
 		if (size != 1) {

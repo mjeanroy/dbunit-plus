@@ -31,26 +31,18 @@ import com.github.mjeanroy.dbunit.loggers.Loggers;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Function to execute liquibase update scripts against SQL connection.
- */
+/// Function to execute liquibase update scripts against SQL connection.
 class LiquibaseChangeLogExecutor {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(LiquibaseChangeLogExecutor.class);
 
-	/**
-	 * Factory to get new {@link java.sql.Connection} before executing liquibase change sets.
-	 */
+	/// Factory to get new [java.sql.Connection] before executing liquibase change sets.
 	private final JdbcConnectionFactory factory;
 
-	/**
-	 * Create function.
-	 *
-	 * @param factory Connection factory.
-	 */
+	/// Create function.
+	///
+	/// @param factory Connection factory.
 	LiquibaseChangeLogExecutor(JdbcConnectionFactory factory) {
 		this.factory = notNull(factory, "JDBC Connection factory must not be null");
 	}

@@ -24,23 +24,17 @@
 
 package com.github.mjeanroy.dbunit.json;
 
-/**
- * Contract for JSON serializers that convert Java objects into
- * their JSON string representation.
- *
- * <p>
- * Implementations are responsible for taking any Java object and
- * serializing it into a JSON-formatted {@link String}.
- * </p>
- */
+/// Contract for JSON serializers that convert Java objects into
+/// their JSON string representation.
+///
+/// Implementations are responsible for taking any Java object and
+/// serializing it into a JSON-formatted [String].
 public interface JsonSerializer {
 
-	/**
-	 * Serialize the given Java object into a JSON string.
-	 *
-	 * @param object the object to serialize (may be {@code null})
-	 * @return a JSON-formatted string representing the object
-	 */
+	/// Serialize the given Java object into a JSON string.
+	///
+	/// @param object the object to serialize (may be `null`)
+	/// @return a JSON-formatted string representing the object
 	String writeToString(Object object);
 }
 

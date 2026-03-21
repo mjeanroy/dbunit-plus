@@ -31,25 +31,17 @@ import org.springframework.test.context.TestExecutionListener;
 
 import java.util.List;
 
-/**
- * Allow execution of several {@link TestExecutionListener} in the right order.
- */
+/// Allow execution of several [TestExecutionListener] in the right order.
 class CompositeTestExecutionListener implements TestExecutionListener {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(CompositeTestExecutionListener.class);
 
-	/**
-	 * Set of listener to execute before test execution.
-	 */
+	/// Set of listener to execute before test execution.
 	private final TestExecutionListener[] listeners;
 
-	/**
-	 * Set of listeners to execute after test execution: basically only the original listeners in
-	 * reverse order.
-	 */
+	/// Set of listeners to execute after test execution: basically only the original listeners in
+	/// reverse order.
 	private final TestExecutionListener[] reverseListeners;
 
 	CompositeTestExecutionListener(List<TestExecutionListener> listeners) {

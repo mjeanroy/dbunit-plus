@@ -29,34 +29,28 @@ import com.github.mjeanroy.dbunit.core.resources.Resource;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.IDataSet;
 
-/**
- * Implementation of {@link IDataSet} with YAML file as input.
- *
- * <p>
- *
- * A valid YAML file must respect this schema:
- *
- * <pre><code>
- *   table_name_1:
- *     - col1: 1
- *       col2: "value
- *   table_name_2:
- *     - col1: 1
- *       col2: "value"
- *     - col1: 2
- *       col2: "value"
- * </code></pre>
- */
+/// Implementation of [IDataSet] with YAML file as input.
+///
+/// A valid YAML file must respect this schema:
+///
+/// ```yml
+///   table_name_1:
+///     - col1: 1
+///       col2: "value
+///   table_name_2:
+///     - col1: 1
+///       col2: "value"
+///     - col1: 2
+///       col2: "value"
+/// ```
 public class YamlDataSet extends AbstractParseableDataSet {
 
-	/**
-	 * Create YAML DataSet.
-	 *
-	 * @param resource Input resource.
-	 * @param caseSensitiveTableNames Case Insensitivity Flag.
-	 * @param parser JSON Parser (will be used to parser input resource).
-	 * @throws DataSetException If JSON parsing fail.
-	 */
+	/// Create YAML DataSet.
+	///
+	/// @param resource Input resource.
+	/// @param caseSensitiveTableNames Case Insensitivity Flag.
+	/// @param parser JSON Parser (will be used to parser input resource).
+	/// @throws DataSetException If JSON parsing fail.
 	YamlDataSet(
 		Resource resource,
 		boolean caseSensitiveTableNames,

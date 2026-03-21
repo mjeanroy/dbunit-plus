@@ -24,16 +24,12 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Exception thrown when a field cannot be accessed.
- */
+/// Exception thrown when a field cannot be accessed.
 public class FieldAccessException extends AbstractReflectionException {
 
-	/**
-	 * Create the exception.
-	 *
-	 * @param cause The original cause.
-	 */
+	/// Create the exception.
+	///
+	/// @param cause The original cause.
 	public FieldAccessException(Exception cause) {
 		super(cause);
 	}

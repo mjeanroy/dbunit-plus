@@ -50,50 +50,37 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.instantiate;
 import static com.github.mjeanroy.dbunit.commons.reflection.ClassUtils.isPresent;
 
-/**
- * Run liquibase change sets against SQL connection.
- */
+/// Run liquibase change sets against SQL connection.
 public class LiquibaseUpdater {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(LiquibaseUpdater.class);
 
-	/**
-	 * Liquibase change log path:
-	 * <ol>
-	 *   <li>If {@code path} is prefixed with {@code classpath:}, then file will be loaded from classpath.</li>
-	 *   <li>If {@code path} is prefixed with {@code file:}, then file will be loaded from file system.</li>
-	 *   <li>If {@code path} is prefixed with {@code http[s]:}, then file will be loaded from URL.</li>
-	 *   <li>If {@code path} is not prefixed with anything, then default is classpath loading.</li>
-	 * </ol>
-	 */
+	/// Liquibase change log path:
+	/// 1. If `path` is prefixed with `classpath:`, then file will be loaded from classpath.
+	/// 2. If `path` is prefixed with `file:`, then file will be loaded from file system.
+	/// 3. If `path` is prefixed with `http[s]:`, then file will be loaded from URL.
+	/// 4. If `path` is not prefixed with anything, then default is classpath loading.
 	private final String changeLog;
 
-	/**
-	 * Factory used to get instance of {@link Connection}.
-	 */
+	/// Factory used to get instance of [Connection].
 	private final JdbcConnectionFactory factory;
 
-	/**
-	 * Create updater.
-	 * @param changeLog Change Log path.
-	 * @param factory JDBC Factory.
-	 * @throws NullPointerException If {@code changeLog} or {@code factory} is null.
-	 * @throws IllegalArgumentException If {@code changeLog} is empty or blank.
-	 */
+	/// Create updater.
+	///
+	/// @param changeLog Change Log path.
+	/// @param factory JDBC Factory.
+	/// @throws NullPointerException If `changeLog` or `factory` is null.
+	/// @throws IllegalArgumentException If `changeLog` is empty or blank.
 	public LiquibaseUpdater(String changeLog, JdbcConnectionFactory factory) {
 		this.changeLog = notBlank(changeLog, "Change log path must be defined");
 		this.factory = notNull(factory, "JDBC factory must not be null");
 	}
 
-	/**
-	 * Run liquibase update with {@code dbunit} and {@code test} contexts.
-	 * If an error occurred, an instance of {@link DbUnitException} will be thrown.
-	 *
-	 * @throws DbUnitException If an error occurred while running update.
-	 */
+	/// Run liquibase update with `dbunit` and `test` contexts.
+	/// If an error occurred, an instance of [DbUnitException] will be thrown.
+	///
+	/// @throws DbUnitException If an error occurred while running update.
 	public void update() {
 		try (Connection connection = factory.getConnection()) {
 			runLiquibaseUpdate(connection);

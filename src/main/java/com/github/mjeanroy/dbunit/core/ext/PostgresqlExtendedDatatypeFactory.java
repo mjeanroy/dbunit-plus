@@ -43,34 +43,23 @@ import java.util.Set;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static java.util.Arrays.asList;
 
-/**
- * Extended {@link PostgresqlDataTypeFactory} that provides custom handling for
- * PostgreSQL string-like types such as {@code json}, {@code jsonb}, and {@code varchar}.
- *
- * <p>
- * By default, {@link PostgresqlDataTypeFactory} does not treat certain PostgreSQL
- * specific types (notably {@code json} and {@code jsonb}) as simple string-based
- * types when interacting with DBUnit. This implementation overrides the
- * {@link #createDataType(int, String)} method to map these types to a dedicated
- * {@link StringLikeDataType}, ensuring:
- * </p>
- *
- * <ul>
- *   <li>Values are read using {@link ResultSet#getString(int)}.</li>
- *   <li>Values are written using {@link org.postgresql.util.PGobject}.</li>
- *   <li>Type casting is consistently performed via {@link Object#toString()}.</li>
- * </ul>
- *
- * <p>
- * This is particularly useful when working with PostgreSQL {@code json}/{@code jsonb}
- * columns in DBUnit datasets, avoiding type mismatches and ensuring proper
- * parameter binding in prepared statements.
- * </p>
- *
- * <p>
- * All other SQL types are delegated to the default PostgreSQL implementation.
- * </p>
- */
+/// Extended [PostgresqlDataTypeFactory] that provides custom handling for
+/// PostgreSQL string-like types such as `json`, `jsonb`, and `varchar`.
+///
+/// By default, [PostgresqlDataTypeFactory] does not treat certain PostgreSQL
+/// specific types (notably `json` and `jsonb`) as simple string-based
+/// types when interacting with DBUnit. This implementation overrides the
+/// [#createDataType(int, String)] method to map these types to a dedicated
+/// [StringLikeDataType], ensuring:
+/// - Values are read using [ResultSet#getString(int)].
+/// - Values are written using [org.postgresql.util.PGobject].
+/// - Type casting is consistently performed via [Object#toString()].
+///
+/// This is particularly useful when working with PostgreSQL `json`/`jsonb`
+/// columns in DBUnit datasets, avoiding type mismatches and ensuring proper
+/// parameter binding in prepared statements.
+///
+/// All other SQL types are delegated to the default PostgreSQL implementation.
 public class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeFactory {
 
 	private static final Set<String> STRING_LIKE_DATA_TYPES = new HashSet<>(
@@ -85,9 +74,7 @@ public class PostgresqlExtendedDatatypeFactory extends PostgresqlDataTypeFactory
 		)
 	);
 
-	/**
-	 * Create factory.
-	 */
+	/// Create factory.
 	public PostgresqlExtendedDatatypeFactory() {
 	}
 

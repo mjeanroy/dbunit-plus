@@ -24,28 +24,16 @@
 
 package com.github.mjeanroy.dbunit.core.sql;
 
-/**
- * State of parsing: will handle next character parsing.
- * For instance:
- * <ul>
- *   <li>
- *     If current state is {@link #BLOCK_COMMENT}, then next characters will be ignored until comment is stopped.
- *   </li>
- *   <li>
- *     If current state is {@link #VARCHAR}, then next characters will be added (no matter if string contains pattern for line
- *     comment comment) until varchar is stopped.
- *   </li>
- *   <li>
- *     Etc.
- *   </li>
- * </ul>
- */
+/// State of parsing: will handle next character parsing.
+/// For instance:
+/// - If current state is [#BLOCK_COMMENT], then next characters will be ignored until comment is stopped.
+/// - If current state is [#VARCHAR], then next characters will be added (no matter if string contains pattern for line
+///   comment comment) until varchar is stopped.
+/// - Etc.
 enum SqlQueryState {
 
-	/**
-	 * Handle varchar SQL section: append character and stop varchar section
-	 * if closed quote is detected.
-	 */
+	/// Handle varchar SQL section: append character and stop varchar section
+	/// if closed quote is detected.
 	VARCHAR {
 		@Override
 		int handleToken(String line, int position, SqlScriptParserContext ctx, SqlScriptParserConfiguration configuration) {
@@ -72,10 +60,8 @@ enum SqlQueryState {
 		}
 	},
 
-	/**
-	 * Handle block comment section: ignore character and stop block comment section
-	 * if end of comment is detected.
-	 */
+	/// Handle block comment section: ignore character and stop block comment section
+	/// if end of comment is detected.
 	BLOCK_COMMENT {
 		@Override
 		int handleToken(String line, int position, SqlScriptParserContext ctx, SqlScriptParserConfiguration configuration) {
@@ -89,10 +75,8 @@ enum SqlQueryState {
 		}
 	},
 
-	/**
-	 * Handle escape section: append character no matter what is the character and
-	 * stop escape section.
-	 */
+	/// Handle escape section: append character no matter what is the character and
+	/// stop escape section.
 	ESCAPE {
 		@Override
 		int handleToken(String line, int position, SqlScriptParserContext ctx, SqlScriptParserConfiguration configuration) {
@@ -102,17 +86,13 @@ enum SqlQueryState {
 		}
 	},
 
-	/**
-	 * Handle next character:
-	 * <ol>
-	 *   <li>If it is the beginning of a line comment, end of the line is ignored.</li>
-	 *   <li>If it is the beginning of a block comment, ignore character and start new block section.</li>
-	 *   <li>If it is the escaped character, append it and start new escape section.</li>
-	 *   <li>If it is the beginning of a varchar (single or double quote), append it and start new varchar section.</li>
-	 *   <li>If it is the SQL delimiter, append it and flush current query.</li>
-	 *   <li>Otherwise, append character and go to the next one.</li>
-	 * </ol>
-	 */
+	/// Handle next character:
+	/// 1. If it is the beginning of a line comment, end of the line is ignored.
+	/// 2. If it is the beginning of a block comment, ignore character and start new block section.
+	/// 3. If it is the escaped character, append it and start new escape section.
+	/// 4. If it is the beginning of a varchar (single or double quote), append it and start new varchar section.
+	/// 5. If it is the SQL delimiter, append it and flush current query.
+	/// 6. Otherwise, append character and go to the next one.
 	DEFAULT {
 		@Override
 		int handleToken(String line, int position, SqlScriptParserContext ctx, SqlScriptParserConfiguration configuration) {

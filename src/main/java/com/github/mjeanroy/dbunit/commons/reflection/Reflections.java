@@ -33,43 +33,36 @@ import java.util.Map;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 
-/**
- * Internal reflection utilities used by the dbUnit extension.
- *
- * <p><strong>Warning:</strong> This class is part of the internal implementation and
- * is <em>not</em> considered public API. It may change or be removed at any time
- * without notice, and should not be used directly in external code.</p>
- */
+/// Internal reflection utilities used by the dbUnit extension.
+///
+/// **Warning:** This class is part of the internal implementation and
+/// is _not_ considered public API. It may change or be removed at any time
+/// without notice, and should not be used directly in external code.
 public final class Reflections {
 
 	private Reflections() {
 	}
 
-	/**
-	 * Extracts all declared field values from the given object instance,
-	 * including fields inherited from superclasses (up to but excluding
-	 * {@link Object}).
-	 *
-	 * <p>The returned map preserves the encounter order of the fields as they
-	 * are discovered in the class hierarchy (starting from the concrete class
-	 * and moving up to its superclasses). Field names are used as keys and
-	 * their corresponding values are the map values.</p>
-	 *
-	 * <p>If a field with the same name exists in both a subclass and a superclass,
-	 * the value from the subclass takes precedence. The returned map is
-	 * unmodifiable; attempts to modify it will result in
-	 * {@link UnsupportedOperationException}.</p>
-	 *
-	 * <p><strong>Internal API:</strong> This method is intended for internal use only
-	 * and is not part of the public API. Its behavior and signature may change
-	 * without notice.</p>
-	 *
-	 * @param instance The object to introspect; may be {@code null}.
-	 * @return An unmodifiable map containing field names as keys and their values
-	 *         as retrieved from the given instance. If {@code instance} is
-	 *         {@code null}, an empty map is returned.
-	 * @throws FieldAccessException if a field value cannot be accessed via reflection.
-	 */
+	/// Extracts all declared field values from the given object instance,
+	/// including fields inherited from superclasses (up to but excluding [Object]).
+	///
+	/// The returned map preserves the encounter order of the fields as they
+	/// are discovered in the class hierarchy (starting from the concrete class
+	/// and moving up to its superclasses). Field names are used as keys and
+	/// their corresponding values are the map values.
+	///
+	/// If a field with the same name exists in both a subclass and a superclass,
+	/// the value from the subclass takes precedence. The returned map is
+	/// unmodifiable; attempts to modify it will result in [UnsupportedOperationException].
+	///
+	/// **Internal API:** This method is intended for internal use only
+	/// and is not part of the public API. Its behavior and signature may change
+	/// without notice.
+	///
+	/// @param instance The object to introspect; may be `null`.
+	/// @return An unmodifiable map containing field names as keys and their values
+	///         as retrieved from the given instance. If `instance` is `null`, an empty map is returned.
+	/// @throws FieldAccessException if a field value cannot be accessed via reflection.
 	public static Map<String, Field> extractMembers(Object instance) {
 		if (instance == null) {
 			return emptyMap();
@@ -94,14 +87,12 @@ public final class Reflections {
 		return unmodifiableMap(members);
 	}
 
-	/**
-	 * Get value of given instance field, temporarily switching to an
-	 * accessible field to get the value.
-	 *
-	 * @param instance The instance.
-	 * @param field The field.
-	 * @return The field value.
-	 */
+	/// Get value of given instance field, temporarily switching to an
+	/// accessible field to get the value.
+	///
+	/// @param instance The instance.
+	/// @param field The field.
+	/// @return The field value.
 	public static Object getFieldValueSafely(Object instance, Field field) {
 		boolean wasAccessible = field.isAccessible();
 		try {

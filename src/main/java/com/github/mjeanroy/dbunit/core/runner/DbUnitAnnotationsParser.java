@@ -75,49 +75,37 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableMap;
 
-/**
- * DbUnit+ parsers.
- */
+/// DbUnit+ parsers.
 final class DbUnitAnnotationsParser {
 
 	private static final String SUBSTITUTION_PREFIX = "${";
 	private static final String SUBSTITUTION_SUFFIX = "}";
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(DbUnitAnnotationsParser.class);
 
 	// Ensure non instantiation.
 	private DbUnitAnnotationsParser() {
 	}
 
-	/**
-	 * Builds a combined DbUnit {@link org.dbunit.dataset.IDataSet} from the
-	 * configuration supplied by a {@link com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet}
-	 * annotation.
-	 *
-	 * <p>This method inspects both sources defined in the annotation:</p>
-	 * <ul>
-	 *   <li><strong>Providers</strong> – classes implementing  {@link com.github.mjeanroy.dbunit.core.dataset.DataSetProvider} that construct datasets programmatically.</li>
-	 *   <li><strong>Paths</strong> – string paths to static dataset files (for example, XML files on the classpath).</li>
-	 * </ul>
-	 *
-	 * <p>The resulting dataset is determined as follows:</p>
-	 * <ol>
-	 *   <li>If neither providers nor paths are specified, {@code null} is returned.</li>
-	 *   <li>If only one source is present, the dataset from that source is returned.</li>
-	 *   <li>
-	 *     If both sources are present, their datasets are merged into a single
-	 *     composite dataset using {@code DataSetFactory.createDataSet} in the
-	 *     order of provider data first, followed by path data.
-	 *   </li>
-	 * </ol>
-	 *
-	 * @param annotation The {@code @DbUnitDataSet} annotation whose configuration supplies the dataset sources.
-	 * @return a fully constructed {@link org.dbunit.dataset.IDataSet}, or {@code null} if no providers or paths are defined.
-	 * @throws DbUnitException any provider throws an exception or if merging/reading a dataset fails.
-	 */
+	/// Builds a combined DbUnit [org.dbunit.dataset.IDataSet] from the
+	/// configuration supplied by a [com.github.mjeanroy.dbunit.core.annotations.DbUnitDataSet]
+	/// annotation.
+	///
+	/// This method inspects both sources defined in the annotation:
+	/// - **Providers** – classes implementing  [com.github.mjeanroy.dbunit.core.dataset.DataSetProvider] that construct datasets programmatically.
+	/// - **Paths** – string paths to static dataset files (for example, XML files on the classpath).
+	///
+	/// The resulting dataset is determined as follows:
+	/// 1. If neither providers nor paths are specified, `null` is returned.
+	/// 2. If only one source is present, the dataset from that source is returned.
+	/// 3. If both sources are present, their datasets are merged into a single
+	///    composite dataset using `DataSetFactory.createDataSet` in the
+	///    order of provider data first, followed by path data.
+	///
+	/// @param annotation The `@DbUnitDataSet` annotation whose configuration supplies the dataset sources.
+	/// @return a fully constructed [org.dbunit.dataset.IDataSet], or `null` if no providers or paths are defined.
+	/// @throws DbUnitException any provider throws an exception or if merging/reading a dataset fails.
 	static IDataSet readDataSet(DbUnitDataSet annotation) {
 		if (annotation == null) {
 			return null;
@@ -157,35 +145,36 @@ final class DbUnitAnnotationsParser {
 		}
 	}
 
-	/**
-	 * Loads and merges {@link IDataSet} instances discovered via the {@link java.util.ServiceLoader} mechanism.
-	 *
-	 * <p>This method is invoked when the supplied {@link DbUnitDataSet} annotation
-	 * is configured to use the service loader (i.e. {@link DbUnitDataSet#useServiceLoader()}
-	 * returns {@code true}). It scans the runtime classpath for all
-	 * {@link DataSetProvider} service implementations declared under
-	 * {@code META-INF/services/com.github.mjeanroy.dbunit.core.dataset.DataSetProvider},
-	 * instantiates each provider, calls its {@link DataSetProvider#get()} method,
-	 * and merges the returned datasets into a single composite {@link IDataSet}.</p>
-	 *
-	 * <p>If no providers are discovered or if {@code useServiceLoader} is
-	 * {@code false}, this method returns {@code null}.</p>
-	 *
-	 * <p><strong>Error Handling:</strong>
-	 * If a provider cannot be instantiated, or if its {@code get()} method throws
-	 * an exception, the error is logged and wrapped in a {@link DbUnitException}.
-	 * Likewise, if merging the resulting datasets fails, a {@link DbUnitException}
-	 * is thrown.</p>
-	 *
-	 * @param annotation The {@link DbUnitDataSet} annotation controlling service-loader usage; never {@code null}.
-	 * @return A merged {@link IDataSet} composed of all datasets returned by
-	 *         discovered {@link DataSetProvider}s, or {@code null} if no providers
-	 *         are found or service loading is disabled.
-	 * @throws DbUnitException if a provider cannot be instantiated, if a provider's {@link DataSetProvider#get()}
-	 *                         invocation fails, or if the merged dataset cannot be created.
-	 * @see java.util.ServiceLoader
-	 * @see DataSetProvider
-	 */
+	/// Loads and merges [IDataSet] instances discovered via the [java.util.ServiceLoader] mechanism.
+	///
+	/// This method is invoked when the supplied [DbUnitDataSet] annotation
+	/// is configured to use the service loader (i.e. [DbUnitDataSet#useServiceLoader()]
+	/// returns `true`).
+	///
+	/// It scans the runtime classpath for all
+	/// [DataSetProvider] service implementations declared under
+	/// `META-INF/services/com.github.mjeanroy.dbunit.core.dataset.DataSetProvider`,
+	/// instantiates each provider, calls its [DataSetProvider#get()] method,
+	/// and merges the returned datasets into a single composite [IDataSet].
+	///
+	/// If no providers are discovered or if `useServiceLoader` is
+	/// `false`, this method returns `null`.
+	///
+	/// **Error Handling:**
+	///
+	/// If a provider cannot be instantiated, or if its `get()` method throws
+	/// an exception, the error is logged and wrapped in a [DbUnitException].
+	/// Likewise, if merging the resulting datasets fails, a [DbUnitException]
+	/// is thrown.
+	///
+	/// @param annotation The [DbUnitDataSet] annotation controlling service-loader usage; never `null`.
+	/// @return A merged [IDataSet] composed of all datasets returned by
+	///         discovered [DataSetProvider]s, or `null` if no providers
+	///         are found or service loading is disabled.
+	/// @throws DbUnitException if a provider cannot be instantiated, if a provider's [DataSetProvider#get()]
+	///                         invocation fails, or if the merged dataset cannot be created.
+	/// @see java.util.ServiceLoader
+	/// @see DataSetProvider
 	private static IDataSet parseDataSetProvidersFromServiceLoader(DbUnitDataSet annotation) {
 		log.debug("Parsing dataset providers from service loader");
 		if (!annotation.useServiceLoader()) {
@@ -228,16 +217,14 @@ final class DbUnitAnnotationsParser {
 		}
 	}
 
-	/**
-	 * Builds a dataset by invoking each {@link DataSetProvider} declared in the
-	 * given annotation.
-	 *
-	 * Returns {@code null} if no providers are specified.
-	 *
-	 * @param annotation The dataset annotation (never {@code null}).
-	 * @return A merged {@link IDataSet} from all providers, or {@code null} if none are declared.
-	 * @throws DbUnitException if any provider cannot be instantiated or its {@code get()} method fails.
-	 */
+	/// Builds a dataset by invoking each [DataSetProvider] declared in the
+	/// given annotation.
+	///
+	/// Returns `null` if no providers are specified.
+	///
+	/// @param annotation The dataset annotation (never `null`).
+	/// @return A merged [IDataSet] from all providers, or `null` if none are declared.
+	/// @throws DbUnitException if any provider cannot be instantiated or its `get()` method fails.
 	private static IDataSet parseDataSetProviders(DbUnitDataSet annotation) {
 		log.debug("Parsing data set providers");
 		Class<? extends DataSetProvider>[] providers = annotation.providers();
@@ -282,14 +269,12 @@ final class DbUnitAnnotationsParser {
 		}
 	}
 
-	/**
-	 * Builds a dataset by loading the resource paths declared in the annotation.
-	 * Returns {@code null} if no paths are specified.
-	 *
-	 * @param annotation The dataset annotation (never {@code null}).
-	 * @return A merged {@link IDataSet} from the configured resource paths, or {@code null} if none are declared.
-	 * @throws DbUnitException If any resource cannot be read or parsed.
-	 */
+	/// Builds a dataset by loading the resource paths declared in the annotation.
+	/// Returns `null` if no paths are specified.
+	///
+	/// @param annotation The dataset annotation (never `null`).
+	/// @return A merged [IDataSet] from the configured resource paths, or `null` if none are declared.
+	/// @throws DbUnitException If any resource cannot be read or parsed.
 	private static IDataSet parseDataSetPaths(DbUnitDataSet annotation) {
 		log.info("Parsing dataset paths");
 		String[] paths = annotation.value();
@@ -308,19 +293,14 @@ final class DbUnitAnnotationsParser {
 		}
 	}
 
-	/**
-	 * Read dbUnit list of dataSet from annotations, and merge it with parent dataset if:
-	 *
-	 * <ul>
-	 *   <li>The input annotations should inherit from given parent dataset.</li>
-	 *   <li>The parent dataset is not {@code null}.</li>
-	 * </ul>
-	 *
-	 * @param annotations The configured annotations.
-	 * @param parentDataSet The parent dataset.
-	 * @return Parsed dataSet.
-	 * @throws DbUnitException If dataSet parsing failed.
-	 */
+	/// Read dbUnit list of dataSet from annotations, and merge it with parent dataset if:
+	/// - The input annotations should inherit from given parent dataset.
+	/// - The parent dataset is not `null`.
+	///
+	/// @param annotations The configured annotations.
+	/// @param parentDataSet The parent dataset.
+	/// @return Parsed dataSet.
+	/// @throws DbUnitException If dataSet parsing failed.
 	static IDataSet readDataSet(List<DbUnitDataSet> annotations, IDataSet parentDataSet) {
 		final List<IDataSet> dataSets = new ArrayList<>(annotations.size());
 
@@ -354,12 +334,10 @@ final class DbUnitAnnotationsParser {
 		}
 	}
 
-	/**
-	 * Read and parse SQL initialization scripts configured (with {@link DbUnitInit} annotation).
-	 *
-	 * @param annotation The configured annotation.
-	 * @return The list of SQL Scripts.
-	 */
+	/// Read and parse SQL initialization scripts configured (with [DbUnitInit] annotation).
+	///
+	/// @param annotation The configured annotation.
+	/// @return The list of SQL Scripts.
 	static List<SqlScript> extractSqlScript(DbUnitInit annotation) {
 		if (annotation == null) {
 			return emptyList();
@@ -374,12 +352,10 @@ final class DbUnitAnnotationsParser {
 			.collect(Collectors.toList());
 	}
 
-	/**
-	 * Extract liquibase changelogs to execute when runner is initialized.
-	 *
-	 * @param annotation The configured class.
-	 * @return The list of liquibase changelogs.
-	 */
+	/// Extract liquibase changelogs to execute when runner is initialized.
+	///
+	/// @param annotation The configured class.
+	/// @return The list of liquibase changelogs.
 	static List<LiquibaseChangeLog> extractLiquibaseChangeLogs(DbUnitLiquibase annotation) {
 		if (annotation == null) {
 			return emptyList();
@@ -390,12 +366,10 @@ final class DbUnitAnnotationsParser {
 			.collect(Collectors.toList());
 	}
 
-	/**
-	 * Extract {@link JdbcConnectionFactory} configuration from {@link DbUnitConnection}.
-	 *
-	 * @param annotation The annotation.
-	 * @return The JDBC Connection Factory.
-	 */
+	/// Extract [JdbcConnectionFactory] configuration from [DbUnitConnection].
+	///
+	/// @param annotation The annotation.
+	/// @return The JDBC Connection Factory.
 	static JdbcConnectionFactory extractJdbcConnectionFactory(DbUnitConnection annotation) {
 		if (annotation == null) {
 			return null;
@@ -413,26 +387,22 @@ final class DbUnitAnnotationsParser {
 		);
 	}
 
-	/**
-	 * Evaluate given input against given environment: if the string contains a "substituted string",
-	 * it will be replaced with value provided in given environment.
-	 *
-	 * Note: a substituted string, is a string surrounded by {@link #SUBSTITUTION_PREFIX} and {@link #SUBSTITUTION_SUFFIX}.
-	 *
-	 * @param value Value to evaluate.
-	 * @param env Environment.
-	 * @return The evaluated string.
-	 */
+	/// Evaluate given input against given environment: if the string contains a "substituted string",
+	/// it will be replaced with value provided in given environment.
+	///
+	/// Note: a substituted string, is a string surrounded by [#SUBSTITUTION_PREFIX] and [#SUBSTITUTION_SUFFIX].
+	///
+	/// @param value Value to evaluate.
+	/// @param env Environment.
+	/// @return The evaluated string.
 	private static String evaluate(String value, Map<String, String> env) {
 		return substitute(value, SUBSTITUTION_PREFIX, SUBSTITUTION_SUFFIX, env);
 	}
 
-	/**
-	 * Build environment, based on environment variables and system properties.
-	 * Note that system properties takes precedence over environment variables.
-	 *
-	 * @return Environment.
-	 */
+	/// Build environment, based on environment variables and system properties.
+	/// Note that system properties takes precedence over environment variables.
+	///
+	/// @return Environment.
 	private static Map<String, String> buildEnv() {
 		Map<String, String> env = new HashMap<>(System.getenv());
 
@@ -443,12 +413,10 @@ final class DbUnitAnnotationsParser {
 		return unmodifiableMap(env);
 	}
 
-	/**
-	 * Extract replacements from given providers configuration.
-	 *
-	 * @param annotations The replacements configuration.
-	 * @return The list of replacements, may be empty.
-	 */
+	/// Extract replacements from given providers configuration.
+	///
+	/// @param annotations The replacements configuration.
+	/// @return The list of replacements, may be empty.
 	static List<Replacements> extractReplacements(List<DbUnitReplacements> annotations) {
 		if (annotations.isEmpty()) {
 			return emptyList();
@@ -473,13 +441,11 @@ final class DbUnitAnnotationsParser {
 		return replacements;
 	}
 
-	/**
-	 * Read DbUnit configuration interceptors, returns empty list if no configuration is set (never {@code null}).
-	 *
-	 * @param annotation The configured annotation.
-	 * @return The list of interceptors.
-	 * @throws DbUnitException If instantiating the interceptor failed.
-	 */
+	/// Read DbUnit configuration interceptors, returns empty list if no configuration is set (never `null`).
+	///
+	/// @param annotation The configured annotation.
+	/// @return The list of interceptors.
+	/// @throws DbUnitException If instantiating the interceptor failed.
 	static Config readConfig(DbUnitConfig annotation) {
 		if (annotation == null) {
 			return new Config(defaultInterceptors());

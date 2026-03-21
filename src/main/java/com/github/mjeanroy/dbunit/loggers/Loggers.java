@@ -27,9 +27,7 @@ package com.github.mjeanroy.dbunit.loggers;
 import com.github.mjeanroy.dbunit.commons.lang.SPI;
 import com.github.mjeanroy.dbunit.commons.reflection.ClassUtils;
 
-/**
- * Logger factory.
- */
+/// Logger factory.
 public final class Loggers {
 
 	private static final String SLF4J_CLASS = "org.slf4j.Logger";
@@ -38,9 +36,7 @@ public final class Loggers {
 	private static final String LOG4J_CLASS = "org.apache.logging.log4j.Logger";
 	private static final boolean LOG4J_AVAILABLE = ClassUtils.isPresent(LOG4J_CLASS);
 
-	/**
-	 * The custom logger provider provided using the Service Provider Interface.
-	 */
+	/// The custom logger provider provided using the Service Provider Interface.
 	private static final LoggerProvider loggerProvider;
 
 	static {
@@ -52,12 +48,10 @@ public final class Loggers {
 	private Loggers() {
 	}
 
-	/**
-	 * Create logger.
-	 *
-	 * @param klass Class.
-	 * @return The logger.
-	 */
+	/// Create logger.
+	///
+	/// @param klass Class.
+	/// @return The logger.
 	public static Logger getLogger(Class<?> klass) {
 		// First, discover using the ServiceProvider API.
 		if (loggerProvider != null) {

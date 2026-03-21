@@ -36,10 +36,8 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
-/**
- * Implementation of {@link JdbcForeignKeyManager} for database implementing the standard {@code INFORMATION_SCHEMA} system
- * used to introspect database.
- */
+/// Implementation of [JdbcForeignKeyManager] for database implementing the standard `INFORMATION_SCHEMA` system
+/// used to introspect database.
 public final class InformationSchemaForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<InformationSchemaForeignKeyManager.ForeignKeyConstraint> {
 
 	private static final String C_CONSTRAINT_SCHEMA = "CONSTRAINT_SCHEMA";
@@ -56,9 +54,7 @@ public final class InformationSchemaForeignKeyManager extends AbstractJdbcDropCr
 
 	private static final ForeignKeyConstraintsMapFunction mapFunction = new ForeignKeyConstraintsMapFunction();
 
-	/**
-	 * Create FK Manager.
-	 */
+	/// Create FK Manager.
 	public InformationSchemaForeignKeyManager() {
 	}
 

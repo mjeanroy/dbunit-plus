@@ -31,9 +31,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Static Strings Utilities.
- */
+/// Static Strings Utilities.
 public final class Strings {
 
 	private static final Logger log = Loggers.getLogger(Strings.class);
@@ -42,27 +40,22 @@ public final class Strings {
 	private Strings() {
 	}
 
-	/**
-	 * Converts a string from camel-case or mixed-case style to lower-snake-case.
-	 *
-	 * <p>Each uppercase character in the input is replaced with an underscore
-	 * followed by its lowercase equivalent. Characters that are already lowercase
-	 * or non-alphabetic are left unchanged. If the input is {@code null} or empty,
-	 * the same value is returned unchanged.</p>
-	 *
-	 * <strong>Examples</strong>
-	 *
-	 * <ul>
-	 *   <li>{@code "firstName"} → {@code "first_name"}</li>
-	 *   <li>{@code "UserID"} → {@code "user_i_d"}</li>
-	 *   <li>{@code "already_snake"} → {@code "already_snake"}</li>
-	 *   <li>{@code ""} → {@code ""}</li>
-	 *   <li>{@code null} → {@code null}</li>
-	 * </ul>
-	 *
-	 * @param value The input string to convert; may be {@code null} or empty.
-	 * @return A new string in lower-snake-case, or the original value if {@code value} is {@code null} or empty.
-	 */
+	/// Converts a string from camel-case or mixed-case style to lower-snake-case.
+	///
+	/// Each uppercase character in the input is replaced with an underscore
+	/// followed by its lowercase equivalent. Characters that are already lowercase
+	/// or non-alphabetic are left unchanged. If the input is `null` or empty,
+	/// the same value is returned unchanged.
+	///
+	/// **Examples**
+	/// - `"firstName"` → `"first_name"`
+	/// - `"UserID"` → `"user_i_d"`
+	///  `"already_snake"` → `"already_snake"`
+	/// - `""` → `""`
+	/// - `null` → `null`
+	///
+	/// @param value The input string to convert; may be `null` or empty.
+	/// @return A new string in lower-snake-case, or the original value if `value` is `null` or empty.
 	public static String toSnakeCase(String value) {
 		if (isEmpty(value)) {
 			return value;
@@ -82,32 +75,26 @@ public final class Strings {
 		return sb.toString();
 	}
 
-	/**
-	 * Check if string is not empty (i.e not {@code null} and contains characters).
-	 *
-	 * @param value The string value.
-	 * @return {@code true} if {@code value} is not {@code null} and not empty, {@code false} otherwise.
-	 */
+	/// Check if string is not empty (i.e not `null` and contains characters).
+	///
+	/// @param value The string value.
+	/// @return `true` if `value` is not `null` and not empty, `false` otherwise.
 	public static boolean isNotEmpty(String value) {
 		return value != null && !value.isEmpty();
 	}
 
-	/**
-	 * Check if string is empty (i.e {@code null} or an empty string).
-	 *
-	 * @param value The string value.
-	 * @return {@code true} if {@code value} is {@code null} or empty, {@code false} otherwise.
-	 */
+	/// Check if string is empty (i.e `null` or an empty string).
+	///
+	/// @param value The string value.
+	/// @return `true` if `value` is `null` or empty, `false` otherwise.
 	public static boolean isEmpty(String value) {
 		return value == null || value.isEmpty();
 	}
 
-	/**
-	 * Check if string is blank (i.e not {@code null}, empty or contains only whitespace characters).
-	 *
-	 * @param value The string value.
-	 * @return {@code true} if {@code value} is blank, {@code false} otherwise.
-	 */
+	/// Check if string is blank (i.e not `null`, empty or contains only whitespace characters).
+	///
+	/// @param value The string value.
+	/// @return `true` if `value` is blank, `false` otherwise.
 	public static boolean isBlank(String value) {
 		if (isEmpty(value)) {
 			return true;
@@ -122,23 +109,19 @@ public final class Strings {
 		return true;
 	}
 
-	/**
-	 * Trim given input and returns {@code null} if trimmed input is empty.
-	 *
-	 * @param input Input.
-	 * @return Trimmed input, or {@code null}.
-	 */
+	/// Trim given input and returns `null` if trimmed input is empty.
+	///
+	/// @param input Input.
+	/// @return Trimmed input, or `null`.
 	public static String trimToNull(String input) {
 		String trimmedInput = trim(input);
 		return isEmpty(trimmedInput) ? null : trimmedInput;
 	}
 
-	/**
-	 * Turn given input to its lowercase version.
-	 *
-	 * @param input Input.
-	 * @return Lowercased input, or {@code null}.
-	 */
+	/// Turn given input to its lowercase version.
+	///
+	/// @param input Input.
+	/// @return Lowercased input, or `null`.
 	public static String toLower(String input) {
 		return input == null ? null : input.toLowerCase();
 	}
@@ -147,29 +130,23 @@ public final class Strings {
 		return input == null ? null : input.trim();
 	}
 
-	/**
-	 * Substitute given input using given context.
-	 *
-	 * For example, suppose:
-	 * <ul>
-	 *   <li>{@code prefix = "[" }</li>
-	 *   <li>{@code suffix = "]" }</li>
-	 * </ul>
-	 *
-	 * And given input: {@code "Hello [name]"}.
-	 *
-	 * The {@code "name"} placeholder will be replaced using given context:
-	 * <ul>
-	 *   <li>If {@code "name"} is available in given context, value will be used.</li>
-	 *   <li>Otherwise, the empty string will be used as context value.</li>
-	 * </ul>
-	 *
-	 * @param input Input.
-	 * @param prefix Placeholder prefix.
-	 * @param suffix Placeholder suffix.
-	 * @param variables Context.
-	 * @return The substituted value.
-	 */
+	/// Substitute given input using given context.
+	///
+	/// For example, suppose:
+	/// - `prefix = "["`
+	/// - `suffix = "]"`
+	///
+	/// And given input: `"Hello [name]"`.
+	///
+	/// The `"name"` placeholder will be replaced using given context:
+	/// - If `"name"` is available in given context, value will be used.
+	/// - Otherwise, the empty string will be used as context value.
+	///
+	/// @param input Input.
+	/// @param prefix Placeholder prefix.
+	/// @param suffix Placeholder suffix.
+	/// @param variables Context.
+	/// @return The substituted value.
 	public static String substitute(String input, String prefix, String suffix, Map<String, String> variables) {
 		if (isEmpty(input)) {
 			return input;

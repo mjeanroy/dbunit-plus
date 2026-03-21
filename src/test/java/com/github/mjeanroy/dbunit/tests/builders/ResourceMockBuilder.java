@@ -40,61 +40,41 @@ import static java.util.Collections.addAll;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Builder used to created mock instance of {@link Resource}.
- */
+/// Builder used to created mock instance of [Resource].
 public class ResourceMockBuilder {
 
-	/**
-	 * Factory that will create instance of {@link Reader}.
-	 */
+	/// Factory that will create instance of [Reader].
 	private InputStreamFactory readerFactory;
 
-	/**
-	 * Resource name.
-	 */
+	/// Resource name.
 	private String filename;
 
-	/**
-	 * Resource path.
-	 */
+	/// Resource path.
 	private String path;
 
-	/**
-	 * Resource file.
-	 */
+	/// Resource file.
 	private File file;
 
-	/**
-	 * Directory flag.
-	 */
+	/// Directory flag.
 	private boolean directory;
 
-	/**
-	 * Exist flag.
-	 */
+	/// Exist flag.
 	private boolean exists;
 
-	/**
-	 * List of sub-resources.
-	 */
+	/// List of sub-resources.
 	private final List<Resource> subResources;
 
-	/**
-	 * Create resource.
-	 */
+	/// Create resource.
 	public ResourceMockBuilder() {
 		this.exists = true;
 		this.subResources = new LinkedList<>();
 	}
 
-	/**
-	 * Initialize {@link Resource} reader and file from a resource in the
-	 * classpath.
-	 *
-	 * @param path Path (related to classpath).
-	 * @return The builder.
-	 */
+	/// Initialize [Resource] reader and file from a resource in the
+	/// classpath.
+	///
+	/// @param path Path (related to classpath).
+	/// @return The builder.
 	public ResourceMockBuilder fromClasspath(String path) {
 		this.readerFactory = new ClasspathInputStream(path);
 		this.file = getTestResource(path);
@@ -105,101 +85,83 @@ public class ResourceMockBuilder {
 		return this;
 	}
 
-	/**
-	 * Initialize {@link Resource} reader from a resource in an
-	 * external JAR.
-	 *
-	 * @param path Path.
-	 * @return The builder.
-	 */
+	/// Initialize [Resource] reader from a resource in an
+	/// external JAR.
+	///
+	/// @param path Path.
+	/// @return The builder.
 	public ResourceMockBuilder fromJar(String path) {
 		this.readerFactory = new ClasspathInputStream(path);
 		this.path = getClass().getResource(path).getPath();
 		return this;
 	}
 
-	/**
-	 * Initialize {@link Resource} reader.
-	 *
-	 * @param stream Reader.
-	 * @return The builder.
-	 */
+	/// Initialize [Resource] reader.
+	///
+	/// @param stream Reader.
+	/// @return The builder.
 	public ResourceMockBuilder withReader(InputStream stream) {
 		this.readerFactory = new IdentityInputStream(stream);
 		this.file = null;
 		return this;
 	}
 
-	/**
-	 * Set name.
-	 *
-	 * @param filename Resource name.
-	 * @return The builder.
-	 */
+	/// Set name.
+	///
+	/// @param filename Resource name.
+	/// @return The builder.
 	public ResourceMockBuilder setFilename(String filename) {
 		this.filename = filename;
 		return this;
 	}
 
-	/**
-	 * Set path.
-	 *
-	 * @param path Resource path.
-	 * @return The builder.
-	 */
+	/// Set path.
+	///
+	/// @param path Resource path.
+	/// @return The builder.
 	public ResourceMockBuilder setPath(String path) {
 		this.path = path;
 		return this;
 	}
 
-	/**
-	 * Set directory flag to {@code true}.
-	 *
-	 * @return The builder.
-	 */
+	/// Set directory flag to `true`.
+	///
+	/// @return The builder.
 	public ResourceMockBuilder setDirectory() {
 		this.directory = true;
 		return this;
 	}
 
-	/**
-	 * Set directory flag to {@code false}.
-	 *
-	 * @return The builder.
-	 */
+	/// Set directory flag to `false`.
+	///
+	/// @return The builder.
 	public ResourceMockBuilder setFile() {
 		this.directory = false;
 		return this;
 	}
 
-	/**
-	 * Set exists flag.
-	 *
-	 * @param exists Exist flag value.
-	 * @return The builder.
-	 */
+	/// Set exists flag.
+	///
+	/// @param exists Exist flag value.
+	/// @return The builder.
 	public ResourceMockBuilder setExists(boolean exists) {
 		this.exists = exists;
 		return this;
 	}
 
-	/**
-	 * Add new sub-resources.
-	 * @param resource First resource.
-	 * @param others Other resources.
-	 * @return The builder.
-	 */
+	/// Add new sub-resources.
+	/// @param resource First resource.
+	/// @param others Other resources.
+	/// @return The builder.
 	public ResourceMockBuilder addSubResources(Resource resource, Resource... others) {
 		this.subResources.add(resource);
 		addAll(subResources, others);
 		return this;
 	}
 
-	/**
-	 * Create resource.
-	 *
-	 * @return The resource.
-	 */
+	/// Create resource.
+	///
+	/// @return The resource.
 	public Resource build() {
 		try {
 			Resource resource = mock(Resource.class, "MockResource");

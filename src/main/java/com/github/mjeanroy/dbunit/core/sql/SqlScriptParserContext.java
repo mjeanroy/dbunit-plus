@@ -33,139 +33,101 @@ import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
 
-/**
- * Current parsing context.
- */
+/// Current parsing context.
 class SqlScriptParserContext {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(SqlScriptParserContext.class);
 
-	/**
-	 * List of parsed queries.
-	 */
+	/// List of parsed queries.
 	private final List<String> queries;
 
-	/**
-	 * Current state: will handle the parsing for the next character.
-	 */
+	/// Current state: will handle the parsing for the next character.
 	private SqlQueryState state;
 
-	/**
-	 * Current parsed query (this query is not yet in the list of parsed
-	 * query).
-	 */
+	/// Current parsed query (this query is not yet in the list of parsed
+	/// query).
 	private StringBuilder query;
 
-	/**
-	 * Open quote character, used to detect end of varchar value.
-	 */
+	/// Open quote character, used to detect end of varchar value.
 	private Character openQuote;
 
-	/**
-	 * Create new context.
-	 */
+	/// Create new context.
 	SqlScriptParserContext() {
 		this.queries = new LinkedList<>();
 		initialize();
 	}
 
-	/**
-	 * Reset instance to default values.
-	 */
+	/// Reset instance to default values.
 	private void initialize() {
 		this.query = new StringBuilder();
 		this.openQuote = null;
 		this.state = SqlQueryState.DEFAULT;
 	}
 
-	/**
-	 * Start escaping, state is updated to {@link SqlQueryState#ESCAPE}.
-	 */
+	/// Start escaping, state is updated to [SqlQueryState#ESCAPE].
 	void startEscaping() {
 		this.state = SqlQueryState.ESCAPE;
 	}
 
-	/**
-	 * Stop escaping, state is updated to {@link SqlQueryState#DEFAULT}.
-	 */
+	/// Stop escaping, state is updated to [SqlQueryState#DEFAULT].
 	void stopEscaping() {
 		this.state = SqlQueryState.VARCHAR;
 	}
 
-	/**
-	 * Start a block comment, state is updated to {@link SqlQueryState#DEFAULT}.
-	 */
+	/// Start a block comment, state is updated to [SqlQueryState#DEFAULT].
 	void startBlockComment() {
 		this.state = SqlQueryState.BLOCK_COMMENT;
 	}
 
-	/**
-	 * Stop a block comment, state is updated to {@link SqlQueryState#DEFAULT}.
-	 */
+	/// Stop a block comment, state is updated to [SqlQueryState#DEFAULT].
 	void stopBlockComment() {
 		this.state = SqlQueryState.DEFAULT;
 	}
 
-	/**
-	 * Start a varchar, state is updated to {@link SqlQueryState#VARCHAR}.
-	 */
+	/// Start a varchar, state is updated to [SqlQueryState#VARCHAR].
 	void startVarchar(char quote) {
 		this.openQuote = quote;
 		this.state = SqlQueryState.VARCHAR;
 	}
 
-	/**
-	 * Stop a varchar, state is updated to {@link SqlQueryState#DEFAULT}.
-	 */
+	/// Stop a varchar, state is updated to [SqlQueryState#DEFAULT].
 	void stopVarchar() {
 		this.openQuote = null;
 		this.state = SqlQueryState.DEFAULT;
 	}
 
-	/**
-	 * Get value of open quote character.
-	 * This value will be null, except if current state is {@link SqlQueryState#VARCHAR}.
-	 *
-	 * @return Value of last open quote.
-	 */
+	/// Get value of open quote character.
+	/// This value will be null, except if current state is [SqlQueryState#VARCHAR].
+	///
+	/// @return Value of last open quote.
 	Character getOpenQuote() {
 		return openQuote;
 	}
 
-	/**
-	 * Append new character to the currently parsed query.
-	 *
-	 * @param character New character.
-	 */
+	/// Append new character to the currently parsed query.
+	///
+	/// @param character New character.
 	void append(char character) {
 		this.query.append(character);
 	}
 
-	/**
-	 * Get list of parsed queries (may be empty, never {@code null}).
-	 *
-	 * @return Parsed queries.
-	 */
+	/// Get list of parsed queries (may be empty, never `null`).
+	///
+	/// @return Parsed queries.
 	List<String> getQueries() {
 		return unmodifiableList(queries);
 	}
 
-	/**
-	 * Get current state of parsing.
-	 *
-	 * @return State.
-	 */
+	/// Get current state of parsing.
+	///
+	/// @return State.
 	SqlQueryState getState() {
 		return this.state;
 	}
 
-	/**
-	 * Flush current pending query.
-	 * <strong>Important: </strong> empty (or blank) query will never be added to the list of parsed queries.
-	 */
+	/// Flush current pending query.
+	/// **Important: ** empty (or blank) query will never be added to the list of parsed queries.
 	void flush() {
 		if (state != SqlQueryState.DEFAULT) {
 			throw new SqlParserException("Cannot flush query: " + query);

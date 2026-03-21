@@ -24,36 +24,28 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Abstract representation of library exception.
- * This exception should provide an unique way to cache low level exception.
- */
+/// Abstract representation of library exception.
+/// This exception should provide an unique way to cache low level exception.
 abstract class AbstractDbUnitException extends RuntimeException {
 
-	/**
-	 * Wrap original exception.
-	 *
-	 * @param ex Original Exception.
-	 */
+	/// Wrap original exception.
+	///
+	/// @param ex Original Exception.
 	AbstractDbUnitException(Exception ex) {
 		super(ex);
 	}
 
-	/**
-	 * Create new exception.
-	 *
-	 * @param message Exception message.
-	 */
+	/// Create new exception.
+	///
+	/// @param message Exception message.
 	AbstractDbUnitException(String message) {
 		super(message);
 	}
 
-	/**
-	 * Create new exception.
-	 *
-	 * @param message Exception message.
-	 * @param ex Original Exception.
-	 */
+	/// Create new exception.
+	///
+	/// @param message Exception message.
+	/// @param ex Original Exception.
 	AbstractDbUnitException(String message, Exception ex) {
 		super(message, ex);
 	}

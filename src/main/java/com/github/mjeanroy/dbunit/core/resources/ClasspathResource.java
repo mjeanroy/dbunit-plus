@@ -43,27 +43,19 @@ import static com.github.mjeanroy.dbunit.commons.lang.Strings.isEmpty;
 import static com.github.mjeanroy.dbunit.core.resources.ResourceScannerFactory.jarScanner;
 import static com.github.mjeanroy.dbunit.core.resources.Resources.isJarURL;
 
-/**
- * Implementation of {@link Resource} backed by a resource available in the classpath.
- */
+/// Implementation of [Resource] backed by a resource available in the classpath.
 class ClasspathResource extends AbstractResource {
 
-	/**
-	 * Class logger.
-	 */
+	/// Class logger.
 	private static final Logger log = Loggers.getLogger(ClasspathResource.class);
 
-	/**
-	 * Resource URL.
-	 */
+	/// Resource URL.
 	private final URL url;
 
-	/**
-	 * Create resource with {@link URL}.
-	 * @param url Resource URL.
-	 * @throws NullPointerException If {@code url} is {@code null}.
-	 * @throws IllegalArgumentException If {@code url} does not resides in a JAR.
-	 */
+	/// Create resource with [URL].
+	/// @param url Resource URL.
+	/// @throws NullPointerException If `url` is `null`.
+	/// @throws IllegalArgumentException If `url` does not resides in a JAR.
 	ClasspathResource(URL url) {
 		super(jarScanner());
 

@@ -44,25 +44,17 @@ import java.util.UUID;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 
-/**
- * Immutable value object representing a single column name and its value.
- */
+/// Immutable value object representing a single column name and its value.
 public final class DataSetBuilderRowValue {
 
-	/**
-	 * The column name.
-	 */
+	/// The column name.
 	private final String columnName;
 
-	/**
-	 * Column value.
-	 */
+	/// Column value.
 	private final Object value;
 
-	/**
-	 * A binder used to serialize input value to a value
-	 * supported by DBUnit {@link org.dbunit.dataset.Column}.
-	 */
+	/// A binder used to serialize input value to a value
+	/// supported by DBUnit [org.dbunit.dataset.Column].
 	private final Binder<?, ?> binder;
 
 	DataSetBuilderRowValue(String columnName, Object value, Binder<?, ?> binder) {
@@ -71,116 +63,94 @@ public final class DataSetBuilderRowValue {
 		this.value = value;
 	}
 
-	/**
-	 * Returns the column name.
-	 *
-	 * @return Column name (never {@code null} or blank).
-	 */
+	/// Returns the column name.
+	///
+	/// @return Column name (never `null` or blank).
 	public String getColumnName() {
 		return columnName;
 	}
 
-	/**
-	 * Returns the stored value for this column.
-	 *
-	 * @return Value (may be {@code null}).
-	 */
+	/// Returns the stored value for this column.
+	///
+	/// @return Value (may be `null`).
 	public Object getValue() {
 		return value;
 	}
 
-	/**
-	 * Get value to bind to DBUnit {@link org.dbunit.dataset.Column}.
-	 *
-	 * @return Value to bind to (may be {@code null}).
-	 */
+	/// Get value to bind to DBUnit [org.dbunit.dataset.Column].
+	///
+	/// @return Value to bind to (may be `null`).
 	@SuppressWarnings("unchecked")
 	Object bindValue() {
 		return value == null ? null : ((Binder<Object, Object>) binder).bindTo(value);
 	}
 
-	/**
-	 * Get {@link Short} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Short}.
-	 */
+	/// Get [Short] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Short].
 	public Short getShort() {
 		Number nb = getValueAs(Number.class);
 		return nb == null ? null : nb.shortValue();
 	}
 
-	/**
-	 * Get {@link Integer} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Integer}.
-	 */
+	/// Get [Integer] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Integer].
 	public Integer getInteger() {
 		Number nb = getValueAs(Number.class);
 		return nb == null ? null : nb.intValue();
 	}
 
-	/**
-	 * Get {@link Long} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Long}.
-	 */
+	/// Get [Long] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Long].
 	public Long getLong() {
 		Number nb = getValueAs(Number.class);
 		return nb == null ? null : nb.longValue();
 	}
 
-	/**
-	 * Get {@link Float} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Float}.
-	 */
+	/// Get [Float] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Float].
 	public Float getFloat() {
 		Number nb = getValueAs(Number.class);
 		return nb == null ? null : nb.floatValue();
 	}
 
-	/**
-	 * Get {@link Double} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Double}.
-	 */
+	/// Get [Double] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Double].
 	public Double getDouble() {
 		Number nb = getValueAs(Number.class);
 		return nb == null ? null : nb.doubleValue();
 	}
 
-	/**
-	 * Get {@link Boolean} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Boolean}.
-	 */
+	/// Get [Boolean] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Boolean].
 	public Boolean getBoolean() {
 		return getValueAs(Boolean.class);
 	}
 
-	/**
-	 * Get {@link String} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link String}.
-	 */
+	/// Get [String] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [String].
 	public String getString() {
 		Object o = getValueAs(Object.class);
 		return o == null ? null : o.toString();
 	}
 
-	/**
-	 * Get {@link BigInteger} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link BigInteger}.
-	 */
+	/// Get [BigInteger] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [BigInteger].
 	public BigInteger getBigInteger() {
 		Number nb = getValueAs(Number.class);
 
@@ -195,12 +165,10 @@ public final class DataSetBuilderRowValue {
 		return BigInteger.valueOf(nb.longValue());
 	}
 
-	/**
-	 * Get {@link BigDecimal} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link BigDecimal}.
-	 */
+	/// Get [BigDecimal] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [BigDecimal].
 	public BigDecimal getBigDecimal() {
 		Number nb = getValueAs(Number.class);
 
@@ -215,62 +183,50 @@ public final class DataSetBuilderRowValue {
 		return BigDecimal.valueOf(nb.doubleValue());
 	}
 
-	/**
-	 * Get {@link Date} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
-	 */
+	/// Get [Date] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Date].
 	public Date getDate() {
 		return getValueAs(Date.class);
 	}
 
-	/**
-	 * Get {@link OffsetDateTime} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
-	 */
+	/// Get [OffsetDateTime] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Date].
 	public OffsetDateTime getOffsetDateTime() {
 		return getValueAs(OffsetDateTime.class);
 	}
 
-	/**
-	 * Get {@link LocalDateTime} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
-	 */
+	/// Get [LocalDateTime] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Date].
 	public LocalDateTime getLocalDateTime() {
 		return getValueAs(LocalDateTime.class);
 	}
 
-	/**
-	 * Get {@link ZonedDateTime} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
-	 */
+	/// Get [ZonedDateTime] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Date].
 	public ZonedDateTime getZonedDateTime() {
 		return getValueAs(ZonedDateTime.class);
 	}
 
-	/**
-	 * Get {@link LocalDate} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link Date}.
-	 */
+	/// Get [LocalDate] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [Date].
 	public LocalDate getLocalDate() {
 		return getValueAs(LocalDate.class);
 	}
 
-	/**
-	 * Get {@link UUID} value.
-	 *
-	 * @return Value (may be {@code null}).
-	 * @throws UnsupportedOperationException If current value cannot be casted as {@link UUID}.
-	 */
+	/// Get [UUID] value.
+	///
+	/// @return Value (may be `null`).
+	/// @throws UnsupportedOperationException If current value cannot be casted as [UUID].
 	public UUID getUUID() {
 		return getValueAs(UUID.class);
 	}

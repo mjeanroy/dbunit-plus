@@ -24,25 +24,19 @@
 
 package com.github.mjeanroy.dbunit.exception;
 
-/**
- * Exception thrown if an error occurred during SQL parsing.
- */
+/// Exception thrown if an error occurred during SQL parsing.
 public class SqlParserException extends AbstractDbUnitException {
 
-	/**
-	 * Create exception with custom message.
-	 *
-	 * @param message Custom message.
-	 */
+	/// Create exception with custom message.
+	///
+	/// @param message Custom message.
 	public SqlParserException(String message) {
 		super(message);
 	}
 
-	/**
-	 * Create exception with original cause.
-	 *
-	 * @param ex Original cause.
-	 */
+	/// Create exception with original cause.
+	///
+	/// @param ex Original cause.
 	public SqlParserException(Exception ex) {
 		super(ex);
 	}

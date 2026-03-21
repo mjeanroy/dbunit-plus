@@ -38,27 +38,21 @@ import java.util.Collection;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * Factory to create instance of {@link IDataSet}.
- */
+/// Factory to create instance of [IDataSet].
 public final class DataSetFactory {
 
-	/**
-	 * Class Logger.
-	 */
+	/// Class Logger.
 	private static final Logger log = Loggers.getLogger(DataSetFactory.class);
 
 	// Ensure non instantiation.
 	private DataSetFactory() {
 	}
 
-	/**
-	 * Create data set from collection of file path.
-	 *
-	 * @param paths List of file paths.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
-	 */
+	/// Create data set from collection of file path.
+	///
+	/// @param paths List of file paths.
+	/// @return Instance of [IDataSet].
+	/// @throws DataSetException If data set cannot be created.
 	public static IDataSet createDataSet(String[] paths) throws DataSetException {
 		IDataSet[] dataSets = new IDataSet[paths.length];
 
@@ -69,18 +63,16 @@ public final class DataSetFactory {
 		return createDataSet(dataSets);
 	}
 
-	/**
-	 * Creates a single {@link org.dbunit.dataset.IDataSet} by merging the
-	 * contents of multiple datasets into one composite instance.
-	 *
-	 * <p>The resulting dataset is a dataSet that exposes the combined tables of
-	 * all datasets in the order they are provided</p>
-	 *
-	 * @param dataSets A non-null collection of individual {@link IDataSet} instances to merge.
-	 * @return A new {@link org.dbunit.dataset.CompositeDataSet} containing all tables from the supplied datasets.
-	 * @throws org.dbunit.dataset.DataSetException if the composite dataset cannot be created.
-	 * @throws NullPointerException If {@code dataSets} is {@code null} or contains {@code null} elements.
-	 */
+	/// Creates a single [org.dbunit.dataset.IDataSet] by merging the
+	/// contents of multiple datasets into one composite instance.
+	///
+	/// The resulting dataset is a dataSet that exposes the combined tables of
+	/// all datasets in the order they are provided
+	///
+	/// @param dataSets A non-null collection of individual [IDataSet] instances to merge.
+	/// @return A new [org.dbunit.dataset.CompositeDataSet] containing all tables from the supplied datasets.
+	/// @throws org.dbunit.dataset.DataSetException if the composite dataset cannot be created.
+	/// @throws NullPointerException If `dataSets` is `null` or contains `null` elements.
 	public static IDataSet createDataSet(Collection<IDataSet> dataSets) throws DataSetException {
 		if (dataSets.isEmpty()) {
 			log.warn("Empty dataset, returning null");
@@ -99,15 +91,13 @@ public final class DataSetFactory {
 		);
 	}
 
-	/**
-	 * Create data set from collection of file path.
-	 *
-	 * @param first The first dataset to load.
-	 * @param second The second dataset to load.
-	 * @param others Additional dataset to include.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
-	 */
+	/// Create data set from collection of file path.
+	///
+	/// @param first The first dataset to load.
+	/// @param second The second dataset to load.
+	/// @param others Additional dataset to include.
+	/// @return Instance of [IDataSet].
+	/// @throws DataSetException If data set cannot be created.
 	public static IDataSet mergeDataSet(IDataSet first, IDataSet second, IDataSet... others) throws DataSetException {
 		IDataSet[] inputs = new IDataSet[2 + others.length];
 		inputs[0] = first;
@@ -122,19 +112,14 @@ public final class DataSetFactory {
 		return createDataSet(inputs);
 	}
 
-	/**
-	 * Create data set from array of datasets:
-	 *
-	 * <ul>
-	 *   <li>If {@code dataSets} is empty, {@code null} is returned.</li>
-	 *   <li>If {@code dataSets} contains one, and only one, element, this single dataset is returned.</li>
-	 *   <li>Otherwise, all datasets in this array are merged into one single dataset.</li>
-	 * </ul>
-	 *
-	 * @param dataSets List of datasets.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
-	 */
+	/// Create data set from array of datasets:
+	/// - If `dataSets` is empty, `null` is returned.
+	/// - If `dataSets` contains one, and only one, element, this single dataset is returned.
+	/// - Otherwise, all datasets in this array are merged into one single dataset.
+	///
+	/// @param dataSets List of datasets.
+	/// @return Instance of [IDataSet].
+	/// @throws DataSetException If data set cannot be created.
 	static IDataSet createDataSet(IDataSet[] dataSets) throws DataSetException {
 		if (dataSets.length == 0) {
 			log.warn("Empty dataset, skipping.");
@@ -148,14 +133,12 @@ public final class DataSetFactory {
 		return new CompositeDataSet(dataSets);
 	}
 
-	/**
-	 * Create data set from file path.
-	 * See also {@link #createDataSet(Resource)}.
-	 *
-	 * @param path File path.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
-	 */
+	/// Create data set from file path.
+	/// See also [#createDataSet(Resource)].
+	///
+	/// @param path File path.
+	/// @return Instance of [IDataSet].
+	/// @throws DataSetException If data set cannot be created.
 	static IDataSet createDataSet(String path) throws DataSetException {
 		ResourceLoader loader = ResourceLoader.find(
 			notNull(path, "Path must not be null to create data set")
@@ -170,31 +153,16 @@ public final class DataSetFactory {
 		return createDataSet(resource);
 	}
 
-	/**
-	 * Create data set from given file path.
-	 * Data set implementation will be evaluation with file type:
-	 * <ul>
-	 *   <li>
-	 *     If {@code file} is a directory, then an instance of {@link DirectoryDataSet} is returned.
-	 *   </li>
-	 *   <li>
-	 *     If {@code file} is a JSON file (i.e with {@code json} extension,
-	 *     then an instance of {@link JsonDataSet} is returned.
-	 *   </li>
-	 *   <li>
-	 *     If {@code file} is an XML file (i.e with {@code xml} extension,
-	 *     then an instance of {@link org.dbunit.dataset.xml.FlatXmlDataSet} is returned.
-	 *   </li>
-	 *   <li>
-	 *     If {@code file} is a CSV file (i.e with {@code csv} extension,
-	 *     then an instance of {@link CsvDataSet} is returned.
-	 *   </li>
-	 * </ul>
-	 *
-	 * @param resource Resource.
-	 * @return Instance of {@link IDataSet}.
-	 * @throws DataSetException If data set cannot be created.
-	 */
+	/// Create data set from given file path.
+	/// Data set implementation will be evaluation with file type:
+	/// - If `file` is a directory, then an instance of [DirectoryDataSet] is returned.
+	/// - If `file` is a JSON file (i.e with `json` extension, then an instance of [JsonDataSet] is returned.
+	/// - If `file` is an XML file (i.e with `xml` extension, then an instance of [org.dbunit.dataset.xml.FlatXmlDataSet] is returned.
+	/// - If `file` is a CSV file (i.e with `csv` extension, then an instance of [CsvDataSet] is returned.
+	///
+	/// @param resource Resource.
+	/// @return Instance of [IDataSet].
+	/// @throws DataSetException If data set cannot be created.
 	static IDataSet createDataSet(Resource resource) throws DataSetException {
 		notNull(resource, "Resource must not be null to create data set");
 
@@ -207,13 +175,11 @@ public final class DataSetFactory {
 		return type.create(resource);
 	}
 
-	/**
-	 * Extract type from given file.
-	 *
-	 * @param resource Resource.
-	 * @return Type.
-	 * @throws DataSetException If file type cannot be extracted.
-	 */
+	/// Extract type from given file.
+	///
+	/// @param resource Resource.
+	/// @return Type.
+	/// @throws DataSetException If file type cannot be extracted.
 	private static DataSetType extractFileType(Resource resource) throws DataSetException {
 		return Arrays.stream(DataSetType.values())
 			.filter(input -> input.match(resource))

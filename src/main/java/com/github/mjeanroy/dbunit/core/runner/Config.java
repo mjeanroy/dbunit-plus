@@ -37,23 +37,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 final class Config {
-	/**
-	 * Database schema to use with {@link org.dbunit.database.DatabaseConnection}
-	 */
+	/// Database schema to use with [org.dbunit.database.DatabaseConnection]
 	private final String schema;
 
-	/**
-	 * DBUnit interceptors.
-	 */
+	/// DBUnit interceptors.
 	private final List<DbUnitConfigInterceptor> interceptors;
 
-	/**
-	 * List of foreign key managers that will be called:
-	 * <ul>
-	 *   <li>Before the setup/teardown operations.</li>
-	 *   <li>After the setup/teardown operations.</li>
-	 * </ul>
-	 */
+	/// List of foreign key managers that will be called:
+	/// - Before the setup/teardown operations.
+	/// - After the setup/teardown operations.
 	private final List<JdbcForeignKeyManager> fkManagers;
 
 	Config(List<DbUnitConfigInterceptor> interceptors) {
@@ -70,29 +62,23 @@ final class Config {
 		this.fkManagers = new ArrayList<>(fkManagers);
 	}
 
-	/**
-	 * Get {@link #schema}
-	 *
-	 * @return {@link #schema}
-	 */
+	/// Get [#schema]
+	///
+	/// @return Returns [#schema]
 	String getSchema() {
 		return schema;
 	}
 
-	/**
-	 * Get {@link #interceptors}
-	 *
-	 * @return {@link #interceptors}
-	 */
+	/// Get [#interceptors]
+	///
+	/// @return Returns [#interceptors]
 	List<DbUnitConfigInterceptor> getInterceptors() {
 		return unmodifiableList(interceptors);
 	}
 
-	/**
-	 * Get {@link #fkManagers}
-	 *
-	 * @return {@link #fkManagers}
-	 */
+	/// Get [#fkManagers]
+	///
+	/// @return Returns [#fkManagers]
 	List<JdbcForeignKeyManager> getFkManagers() {
 		return unmodifiableList(fkManagers);
 	}

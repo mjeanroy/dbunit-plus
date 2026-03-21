@@ -30,66 +30,48 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
-/**
- * Resource item that abstracts from the actual type of underlying resource, such as:
- * <ul>
- *   <li>A {@link File}.</li>
- *   <li>A classpath resource.</li>
- *   <li>An {@link URL}.</li>
- * </ul>
- */
+/// Resource item that abstracts from the actual type of underlying resource, such as:
+/// - A [File].
+/// - A classpath resource.
+/// - An [URL].
 public interface Resource {
 
-	/**
-	 * Check if this resource actually exists in physical form.
-	 *
-	 * @return {@code true} if the resource exists, {@code false} otherwise.
-	 */
+	/// Check if this resource actually exists in physical form.
+	///
+	/// @return `true` if the resource exists, `false` otherwise.
 	boolean exists();
 
-	/**
-	 * Return a File handle for this resource.
-	 *
-	 * @return The file associated to this resource.
-	 */
+	/// Return a File handle for this resource.
+	///
+	/// @return The file associated to this resource.
 	File toFile();
 
-	/**
-	 * Open an {@link InputStream}.
-	 * It is expected that each call of this method returns a new fresh
-	 * instance of {@link InputStream}.
-	 *
-	 * @return New {@link InputStream}.
-	 * @throws IOException If the {@link InputStream} cannot be opened.
-	 */
+	/// Open an [InputStream].
+	/// It is expected that each call of this method returns a new fresh
+	/// instance of [InputStream].
+	///
+	/// @return New [InputStream].
+	/// @throws IOException If the [InputStream] cannot be opened.
 	InputStream openStream() throws IOException;
 
-	/**
-	 * Returns the filename of the resource.
-	 *
-	 * @return The filename.
-	 */
+	/// Returns the filename of the resource.
+	///
+	/// @return The filename.
 	String getFilename();
 
-	/**
-	 * Get full path of resource.
-	 *
-	 * @return Full path.
-	 */
+	/// Get full path of resource.
+	///
+	/// @return Full path.
 	String getPath();
 
-	/**
-	 * Check if this resource is a directory.
-	 *
-	 * @return {@code true} if the resource is a directory, {@code false} otherwise.
-	 */
+	/// Check if this resource is a directory.
+	///
+	/// @return `true` if the resource is a directory, `false` otherwise.
 	boolean isDirectory();
 
-	/**
-	 * Get all sub-resources: if the resource is not a directory, then this method should
-	 * returns an empty list.
-	 *
-	 * @return Sub-resources.
-	 */
+	/// Get all sub-resources: if the resource is not a directory, then this method should
+	/// returns an empty list.
+	///
+	/// @return Sub-resources.
 	Collection<Resource> listResources();
 }

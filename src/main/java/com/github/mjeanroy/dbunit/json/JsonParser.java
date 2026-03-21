@@ -27,26 +27,18 @@ package com.github.mjeanroy.dbunit.json;
 import java.io.Reader;
 import java.util.Map;
 
-/**
- * Parse JSON input and return {@link Map}.
- */
+/// Parse JSON input and return [Map].
 public interface JsonParser {
 
-	/**
-	 * Read and deserialize JSON content from the given {@link Reader}.
-	 *
-	 * <p>
-	 * The JSON content is expected to represent a JSON object and will
-	 * be converted into a {@link Map} where:
-	 * </p>
-	 * <ul>
-	 *   <li>Keys are {@link String}</li>
-	 *   <li>Values are {@link Object}.</li>
-	 * </ul>
-	 *
-	 * @param reader the reader containing JSON content (must not be {@code null})
-	 * @return the parsed JSON object as a {@link Map}
-	 */
+	/// Read and deserialize JSON content from the given [Reader].
+	///
+	/// The JSON content is expected to represent a JSON object and will
+	/// be converted into a [Map] where:
+	/// - Keys are [String]
+	/// - Values are [Object].
+	///
+	/// @param reader the reader containing JSON content (must not be `null`)
+	/// @return the parsed JSON object as a [Map]
 	Map<String, Object> readObject(Reader reader);
 }
 

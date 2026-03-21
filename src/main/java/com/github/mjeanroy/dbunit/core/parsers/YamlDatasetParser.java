@@ -31,34 +31,26 @@ import java.util.Map;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * {@link DatasetParser} implementation that parses datasets from YAML input.
- *
- * <p>
- * This parser delegates YAML deserialization to a provided
- * {@link YamlParser} implementation. The resulting {@code Map<String, Object>}
- * represents the raw dataset structure and is then processed to return
- * dataset as {@code Map<String, Collection<Map<String, Object>>>} instances.
- * </p>
- *
- * <p>
- * This class is immutable and thread-safe provided that the underlying
- * {@link YamlParser} implementation is itself thread-safe.
- * </p>
- */
+/// [DatasetParser] implementation that parses datasets from YAML input.
+///
+/// This parser delegates YAML deserialization to a provided
+/// [YamlParser] implementation. The resulting `Map<String, Object>`
+/// represents the raw dataset structure and is then processed to return
+/// dataset as `Map<String, Collection<Map<String, Object>>>` instances.
+///
+///
+/// This class is immutable and thread-safe provided that the underlying
+/// [YamlParser] implementation is itself thread-safe.
+///
 public final class YamlDatasetParser extends AbstractDatasetParser implements DatasetParser {
 
-	/**
-	 * Underlying YAML parser used to deserialize input content.
-	 */
+	/// Underlying YAML parser used to deserialize input content.
 	private final YamlParser parser;
 
-	/**
-	 * Create a new YAML dataset parser.
-	 *
-	 * @param parser the YAML parser to use (must not be {@code null})
-	 * @throws NullPointerException if {@code parser} is {@code null}
-	 */
+	/// Create a new YAML dataset parser.
+	///
+	/// @param parser the YAML parser to use (must not be `null`)
+	/// @throws NullPointerException if `parser` is `null`
 	public YamlDatasetParser(YamlParser parser) {
 		this.parser = notNull(parser, "YAML parser must not be null");
 	}

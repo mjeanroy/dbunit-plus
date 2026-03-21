@@ -36,9 +36,7 @@ import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.commons.jdbc.JdbcUtils.executeQuery;
 import static java.util.Collections.singletonList;
 
-/**
- * Implementation of {@link JdbcForeignKeyManager} for Microsoft SQL DBMS.
- */
+/// Implementation of [JdbcForeignKeyManager] for Microsoft SQL DBMS.
 public final class MsSQLForeignKeyManager extends AbstractJdbcDropCreateForeignKeyManager<MsSQLForeignKeyManager.ForeignKeyConstraint> {
 
 	private static final String C_CONSTRAINT_NAME = "constraint_name";
@@ -47,9 +45,7 @@ public final class MsSQLForeignKeyManager extends AbstractJdbcDropCreateForeignK
 
 	private static final ForeignKeyConstraintsMapFunction mapFunction = new ForeignKeyConstraintsMapFunction();
 
-	/**
-	 * Create FK Manager.
-	 */
+	/// Create FK Manager.
 	public MsSQLForeignKeyManager() {
 	}
 

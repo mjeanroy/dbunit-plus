@@ -31,30 +31,23 @@ import java.util.Objects;
 
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 
-/**
- * An SQL Script, containing a list of queries.
- */
+/// An SQL Script, containing a list of queries.
 final class SqlScript {
 
-	/**
-	 * List of queries in the SQL Script.
-	 */
+	/// List of queries in the SQL Script.
 	private final List<String> queries;
 
-	/**
-	 * Create the SQL Script.
-	 * @param queries The list of queries.
-	 * @throws NullPointerException If {@code queries} is {@code null}.
-	 */
+	/// Create the SQL Script.
+	///
+	/// @param queries The list of queries.
+	/// @throws NullPointerException If `queries` is `null`.
 	SqlScript(List<String> queries) {
 		this.queries = notNull(queries, "Queries must not be null");
 	}
 
-	/**
-	 * Get {@link #queries}
-	 *
-	 * @return {@link #queries}
-	 */
+	/// Get [#queries]
+	///
+	/// @return Returns [#queries]
 	List<String> getQueries() {
 		return queries;
 	}
