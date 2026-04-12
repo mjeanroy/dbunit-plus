@@ -26,6 +26,8 @@ name: Build & Test
 
 on: [push, workflow_dispatch]
 
+permissions: {}
+
 jobs:
   build:
 
