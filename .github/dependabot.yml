@@ -46,3 +46,6 @@ updates:
     # wiremock >= 3.0.0 requires Java 11
     - dependency-name: com.github.tomakehurst:wiremock
       update-types: [ "version-update:semver-major" ]
+    # liquiabse >= 5.0.0 requires Java 17
+    - dependency-name: org.liquibase:liquibase-core
+      update-types: [ "version-update:semver-major" ]
