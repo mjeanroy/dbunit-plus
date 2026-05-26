@@ -188,6 +188,11 @@ public class FakeExtensionContext implements ExtensionContext {
 	}
 
 	@Override
+	public void publishFile(String name, org.junit.jupiter.api.MediaType mediaType, ThrowingConsumer<Path> action) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public void publishDirectory(String name, ThrowingConsumer<Path> action) {
 		throw new UnsupportedOperationException();
 	}
