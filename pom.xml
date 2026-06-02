@@ -98,7 +98,7 @@
     <junit-platform-launcher.version>1.14.4</junit-platform-launcher.version>
     <classpath-junit-extension.version>1.0.0</classpath-junit-extension.version>
     <dbunit.version>3.0.0</dbunit.version>
-    <jackson-annotations.version>2.21</jackson-annotations.version>
+    <jackson-annotations.version>2.22</jackson-annotations.version>
     <jackson1.version>1.9.13</jackson1.version>
     <jackson2.version>2.21.3</jackson2.version>
     <jackson2-dataformat-yaml.version>${jackson2.version}</jackson2-dataformat-yaml.version>
