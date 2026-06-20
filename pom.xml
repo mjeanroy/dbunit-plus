@@ -95,7 +95,7 @@
     <log4j.version>2.26.0</log4j.version>
     <junit.version>4.13.2</junit.version>
     <jupiter.version>5.14.4</jupiter.version>
-    <junit-platform-launcher.version>1.14.4</junit-platform-launcher.version>
+    <junit-platform.version>1.14.4</junit-platform.version>
     <classpath-junit-extension.version>1.0.0</classpath-junit-extension.version>
     <dbunit.version>3.2.0</dbunit.version>
     <jackson-annotations.version>2.22</jackson-annotations.version>
@@ -389,7 +389,13 @@
     <dependency>
       <groupId>org.junit.platform</groupId>
       <artifactId>junit-platform-launcher</artifactId>
-      <version>${junit-platform-launcher.version}</version>
+      <version>${junit-platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.platform</groupId>
+      <artifactId>junit-platform-suite-engine</artifactId>
+      <version>${junit-platform.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
