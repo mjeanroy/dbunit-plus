@@ -129,6 +129,14 @@ public final class DataSetBuilder {
 		return table(tableName, rows);
 	}
 
+	/// Creates a new [DataSetBuilderTable#builder(String)] from a table name.
+	///
+	/// @param tableName Table name.
+	/// @return A new [DataSetBuilderTable].
+	public static DataSetBuilderTable.Builder table(String tableName) {
+		return DataSetBuilderTable.builder(tableName);
+	}
+
 	/// Creates a new immutable [DataSetBuilderRow] from a collection of column values.
 	///
 	/// @param values Collection of column values.

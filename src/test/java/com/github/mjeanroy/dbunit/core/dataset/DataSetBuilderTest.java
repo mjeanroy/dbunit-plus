@@ -119,6 +119,36 @@ class DataSetBuilderTest {
 	}
 
 	@Test
+	void it_should_create_table_from_builder() {
+		String tableName = "users";
+
+		DataSetBuilderTable table = table(tableName)
+			.row(
+				column("id", 1),
+				column("name", "John Doe")
+			)
+			.row(
+				column("id", 2),
+				column("name", "Jane Doe")
+			)
+			.build();
+
+		assertThat(table.getTableName()).isEqualTo("users");
+		assertThat(table.getRows()).hasSize(2);
+		assertThat(table.rowCount()).isEqualTo(2);
+
+		assertThat(table.getRow(0)).isNotNull().satisfies(row -> {
+			assertThat(row.getInteger("id")).isEqualTo(1);
+			assertThat(row.getString("name")).isEqualTo("John Doe");
+		});
+
+		assertThat(table.getRow(1)).isNotNull().satisfies(row -> {
+			assertThat(row.getInteger("id")).isEqualTo(2);
+			assertThat(row.getString("name")).isEqualTo("Jane Doe");
+		});
+	}
+
+	@Test
 	void it_should_create_row_with_duplicated_column_name() {
 		assertThatThrownBy(() -> row(column("id", 1), column("id", "Star Wars")))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
@@ -178,6 +208,110 @@ class DataSetBuilderTest {
 				column("movie_id", lordOfTheRings.getInteger("id"))
 			)
 		);
+
+		IDataSet dataSet = DataSetBuilder.builder()
+			.addTable(usersTable)
+			.addTable(moviesTable)
+			.addTable(usersMovies)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getTableNames()).hasSize(3).containsExactlyInAnyOrder(
+			usersTable.getTableName(),
+			moviesTable.getTableName(),
+			usersMovies.getTableName()
+		);
+
+		assertThat(dataSet.getTable(usersTable.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(2);
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.getString("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.getString("name"));
+		});
+
+		assertThat(dataSet.getTable(moviesTable.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(3);
+			assertThat(table.getValue(0, "id")).isEqualTo(lordOfTheRings.getInteger("id"));
+			assertThat(table.getValue(0, "title")).isEqualTo(lordOfTheRings.getString("title"));
+			assertThat(table.getValue(0, "synopsys")).isNull();
+
+			assertThat(table.getValue(1, "id")).isEqualTo(starWars.getInteger("id"));
+			assertThat(table.getValue(1, "title")).isEqualTo(starWars.getString("title"));
+			assertThat(table.getValue(1, "synopsys")).isNull();
+
+			assertThat(table.getValue(2, "id")).isEqualTo(backToTheFuture.getInteger("id"));
+			assertThat(table.getValue(2, "title")).isEqualTo(backToTheFuture.getString("title"));
+			assertThat(table.getValue(2, "synopsys")).isNotNull().isEqualTo(backToTheFuture.getString("synopsys"));
+		});
+
+		assertThat(dataSet.getTable(usersMovies.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(3);
+
+			assertThat(table.getValue(0, "user_id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(0, "movie_id")).isEqualTo(lordOfTheRings.getInteger("id"));
+
+			assertThat(table.getValue(1, "user_id")).isEqualTo(johnDoe.getInteger("id"));
+			assertThat(table.getValue(1, "movie_id")).isEqualTo(starWars.getInteger("id"));
+
+			assertThat(table.getValue(2, "user_id")).isEqualTo(janeDoe.getInteger("id"));
+			assertThat(table.getValue(2, "movie_id")).isEqualTo(lordOfTheRings.getInteger("id"));
+		});
+	}
+
+	@Test
+	void it_should_build_dataset_from_builder() throws Exception {
+		DataSetBuilderRow johnDoe = row(
+			column("id", 1),
+			column("name", "John Doe")
+		);
+
+		DataSetBuilderRow janeDoe = row(
+			column("id", 2),
+			column("name", "Jane Doe")
+		);
+
+		DataSetBuilderRow lordOfTheRings = row(
+			column("id", 1),
+			column("title", "Lord Of The Rings")
+		);
+
+		DataSetBuilderRow starWars = row(
+			column("id", 2),
+			column("title", "Star Wars")
+		);
+
+		DataSetBuilderRow backToTheFuture = row(
+			column("id", 3),
+			column("title", "Back To The Future"),
+			column("synopsys", "The Story of Marty MacFly")
+		);
+
+		DataSetBuilderTable usersTable = table("users")
+			.row(johnDoe)
+			.row(janeDoe)
+			.build();
+
+		DataSetBuilderTable moviesTable = table("movies")
+			.row(lordOfTheRings)
+			.row(starWars)
+			.row(backToTheFuture)
+			.build();
+
+		DataSetBuilderTable usersMovies = table("users_movies")
+			.row(
+				column("user_id", johnDoe.getInteger("id")),
+				column("movie_id", lordOfTheRings.getInteger("id"))
+			)
+			.row(
+				column("user_id", johnDoe.getInteger("id")),
+				column("movie_id", starWars.getInteger("id"))
+			)
+			.row(
+				column("user_id", janeDoe.getInteger("id")),
+				column("movie_id", lordOfTheRings.getInteger("id"))
+			)
+			.build();
 
 		IDataSet dataSet = DataSetBuilder.builder()
 			.addTable(usersTable)
@@ -339,6 +473,33 @@ class DataSetBuilderTest {
 	}
 
 	@Test
+	void it_should_build_dataset_with_rows_builder_from_object_instances() throws Exception {
+		UserRow johnDoe = new UserRow(1, "John Doe");
+		UserRow janeDoe = new UserRow(2, "Jane Doe");
+		DataSetBuilderTable usersTable = table("users")
+			.row(johnDoe)
+			.row(janeDoe)
+			.build();
+
+		IDataSet dataSet = DataSetBuilder.builder()
+			.addTable(usersTable)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getTableNames()).hasSize(1).containsExactlyInAnyOrder(
+			usersTable.getTableName()
+		);
+
+		assertThat(dataSet.getTable(usersTable.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(2);
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.id);
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.name);
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.id);
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.name);
+		});
+	}
+
+	@Test
 	void it_should_build_dataset_with_rows_from_map() throws Exception {
 		Map<String, Object> johnDoe = userRowMap(1, "John Doe");
 		Map<String, Object> janeDoe = userRowMap(2, "Jane Doe");
@@ -346,6 +507,33 @@ class DataSetBuilderTest {
 			row(johnDoe),
 			row(janeDoe)
 		);
+
+		IDataSet dataSet = DataSetBuilder.builder()
+			.addTable(usersTable)
+			.build();
+
+		assertThat(dataSet).isNotNull();
+		assertThat(dataSet.getTableNames()).hasSize(1).containsExactlyInAnyOrder(
+			usersTable.getTableName()
+		);
+
+		assertThat(dataSet.getTable(usersTable.getTableName())).isNotNull().satisfies(table -> {
+			assertThat(table.getRowCount()).isEqualTo(2);
+			assertThat(table.getValue(0, "id")).isEqualTo(johnDoe.get("id"));
+			assertThat(table.getValue(0, "name")).isEqualTo(johnDoe.get("name"));
+			assertThat(table.getValue(1, "id")).isEqualTo(janeDoe.get("id"));
+			assertThat(table.getValue(1, "name")).isEqualTo(janeDoe.get("name"));
+		});
+	}
+
+	@Test
+	void it_should_build_dataset_with_rows_builder_from_map() throws Exception {
+		Map<String, Object> johnDoe = userRowMap(1, "John Doe");
+		Map<String, Object> janeDoe = userRowMap(2, "Jane Doe");
+		DataSetBuilderTable usersTable = table("users")
+			.row(johnDoe)
+			.row(janeDoe)
+			.build();
 
 		IDataSet dataSet = DataSetBuilder.builder()
 			.addTable(usersTable)

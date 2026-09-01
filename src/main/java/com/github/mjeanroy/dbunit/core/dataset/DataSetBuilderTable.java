@@ -35,11 +35,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notEmpty;
 import static com.github.mjeanroy.dbunit.commons.lang.PreConditions.notNull;
 import static com.github.mjeanroy.dbunit.commons.lang.Strings.trimToNull;
 import static java.util.Collections.unmodifiableList;
@@ -47,6 +49,10 @@ import static java.util.Collections.unmodifiableList;
 /// Immutable representation of a database table consisting of a name and an
 /// ordered list of rows.
 public final class DataSetBuilderTable {
+
+	static Builder builder(String tableName) {
+		return new Builder(tableName);
+	}
 
 	/// Table name.
 	private final String tableName;
@@ -160,5 +166,36 @@ public final class DataSetBuilderTable {
 			.append("tableName", tableName)
 			.append("rows", rows)
 			.build();
+	}
+
+	public static final class Builder {
+		private final String tableName;
+		private final List<DataSetBuilderRow> rows;
+
+		private Builder(String tableName) {
+			this.tableName = notEmpty(tableName, "Table name must not be empty");
+			this.rows = new ArrayList<>();
+		}
+
+		public Builder row(DataSetBuilderRow row) {
+			this.rows.add(row);
+			return this;
+		}
+
+		public Builder row(DataSetBuilderRowValue value, DataSetBuilderRowValue... others) {
+			return row(DataSetBuilder.row(value, others));
+		}
+
+		public Builder row(Map<String, Object> values) {
+			return row(DataSetBuilder.row(values));
+		}
+
+		public Builder row(Object value) {
+			return row(DataSetBuilder.rowFromObject(value));
+		}
+
+		public DataSetBuilderTable build() {
+			return new DataSetBuilderTable(tableName, rows);
+		}
 	}
 }
